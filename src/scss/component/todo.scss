@@ -1,0 +1,11 @@
+.todo {
+  margin-bottom: 15px;
+}
+
+.todo__checkbox {
+
+  input:checked ~ .todo__checkbox-label {
+    color: $color-additional;
+    text-decoration: line-through;
+  }
+}
