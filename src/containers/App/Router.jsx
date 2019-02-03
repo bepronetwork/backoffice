@@ -94,6 +94,7 @@ import ECommerceDashboardEdit from '../Dashboards/ECommerceTableEdit/index';
 import Landing from '../Landing/index';
 import BetProtocol from '../Dashboards/BetProtocol';
 import UsersContainer from '../Users/index';
+import Applications from '../Applications';
 
 
 const UI = () => (
@@ -251,6 +252,7 @@ const routes = () => (
     <div className="container__wrap">
       <Route path="/home" component={DefaultDashboard} />
       <Route path="/users" component={UsersContainer} />
+      <Route path="/application" component={Applications} />
 
     </div>
   </div>

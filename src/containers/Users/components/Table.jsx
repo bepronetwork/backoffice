@@ -38,6 +38,11 @@ class Table extends PureComponent {
 			key: 'profit',
 			name: 'Profit',
 			sortable: true,
+		},
+		{
+			key: 'playBalance',
+			name: 'Current Balance',
+			sortable: true,
 		}
 		];
 	}
@@ -69,6 +74,7 @@ class Table extends PureComponent {
 
 
 const fromDatabasetoTable = (data) => {
+	console.log(data)
 	return Object.keys(data).map( (key, index) => {
 		return {
 			id :  data[key]._id,
@@ -76,6 +82,7 @@ const fromDatabasetoTable = (data) => {
 			turnoverAmount: Numbers.formatNumber(data[key].betAmount) + ' €',
 			bets: Numbers.formatNumber(data[key].bets),
 			email: data[key].email,
+			playBalance :  Numbers.formatNumber(data[key].playBalance)  + ' €',
 			profit: Numbers.formatNumber(data[key].profit) + ' €'
 		}
 	})
