@@ -21,7 +21,7 @@ let notification = null;
 const showNotification = () => {
   notification.notice({
     content: <BasicNotification
-      title="👋 Welcome to BPRO"
+      title="👋 Welcome to BetProtocol"
       message="You have successfully registered in the BPRO. Now you can start to explore the BackOffice. Enjoy!"
     />,
     duration: 5,

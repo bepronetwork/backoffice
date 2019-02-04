@@ -1,5 +1,7 @@
 import config from "./config";
 
+const URL = config.server.production;
+
 class Connection {
 
     constructor(){}
@@ -10,7 +12,7 @@ class Connection {
 
     login = async ({username, password}) => {
         try{
-            let response = await fetch(config.server + '/api/users/login', {
+            let response = await fetch(URL + '/api/users/login', {
                 method : 'POST',
                 headers : config.headers,
                 body : JSON.stringify({username, password})
@@ -24,7 +26,7 @@ class Connection {
     
     getSummary = async ({app, type}) => {
         try{
-            let response = await fetch(config.server + '/api/app/summary', {
+            let response = await fetch(URL+ '/api/app/summary', {
                 method : 'POST',
                 headers : config.headers,
                 body : JSON.stringify({app, type})

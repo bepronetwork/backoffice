@@ -20,7 +20,7 @@ class LogIn extends React.Component{
 					<Col lg={6}>
 						<div className="account__wrapper">
 							<div className="account__card">
-							<h3 className="account__title" style={{marginBottom : '20%'}}>Welcome to BPRO
+							<h3 className="account__title" style={{marginBottom : '20%'}}>Welcome to BetProtocol
 							</h3>
 							<LogInForm {...this.props} onSubmit={false} />
 							</div>

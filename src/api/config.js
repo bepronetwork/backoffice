@@ -2,7 +2,8 @@ export default {
     headers : {
         'Content-Type' : 'application/json'
     },
-    server : (
-        'http://localhost:80'
-    )
+    server : {
+        development : 'http://localhost:80',
+        production : 'https://betprotocol-server.herokuapp.com'
+    }
 }

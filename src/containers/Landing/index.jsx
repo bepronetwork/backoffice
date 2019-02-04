@@ -47,7 +47,7 @@ class Landing extends PureComponent {
                     >
                       Features
                     </button>
-                    <button
+                    < button
                       onClick={() => scrollToComponent(this.Demos, { offset: -50, align: 'top', duration: 2000 })}
                     >
                       Integrations
