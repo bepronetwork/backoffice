@@ -1,6 +1,6 @@
 {
-  "short_name": "EasyDEV",
-  "name": "EasyDEV",
+  "short_name": "build",
+  "name": "build",
   "icons": [
     {
       "src": "fav.ico",
