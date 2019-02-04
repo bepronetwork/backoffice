@@ -100,7 +100,6 @@
   "devDependencies": {
     "@babel/core": "7.1.0",
     "@svgr/webpack": "2.4.1",
-    "case-sensitive-paths-webpack-plugin": "2.1.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
     "babel-jest": "23.6.0",
@@ -108,6 +107,7 @@
     "babel-plugin-named-asset-import": "^0.2.2",
     "babel-preset-react-app": "^5.0.2",
     "babel-runtime": "6.26.0",
+    "case-sensitive-paths-webpack-plugin": "2.1.2",
     "css-loader": "1.0.0",
     "eslint": "5.6.0",
     "eslint-config-airbnb": "^16.1.0",
@@ -120,7 +120,7 @@
     "node-sass": "^4.9.3",
     "react-hot-loader": "^4.3.4",
     "sass-loader": "^7.1.0",
-    "webpack": "4.19.1",
+    "webpack": "^4.19.1",
     "webpack-dev-server": "3.1.9",
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "3.6.2"
