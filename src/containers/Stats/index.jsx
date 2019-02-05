@@ -1,18 +1,18 @@
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import { Card, Col, Container, Row } from 'reactstrap';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
-import Table from './components/Table';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
-import UsersProfile from './components/UsersProfile';
-import UsersProfit from './components/UsersProfit';
-import UsersInfo from './components/UsersInfo';
-import UsersResumeEntries from './components/UsersResumeEntries';
-import VectorMap from './components/VectorMap';
+import DepositsWidget from './components/DepositsWidget';
+import DepositsInfo from './components/DepositsInfo';
+import WithdrawalsInfo from './components/WithdrawalsInfo';
+import LiquidityInfo from './components/LiquidityInfo';
+import PlatformCostsInfo from './components/PlatformCostsInfo';
+import RevenueChart from './components/RevenueChart';
 
 
-class UsersContainer extends React.Component{
+class StatsContainer extends React.Component{
 
     constructor(props){
         super(props)
@@ -23,30 +23,33 @@ class UsersContainer extends React.Component{
         return (
             <Container className="dashboard">
                 <Row>
+                  
                     <Col lg={3}>
-                        <UsersResumeEntries/>
+                        <LiquidityInfo data={this.props.profile.getApp().getSummaryData('wallet')}/>
                     </Col>
                     <Col lg={3}>
-                        <UsersProfile data={this.props.profile.getApp().getSummaryData('users')}/>
+                        <DepositsInfo/>
                     </Col>
                     <Col lg={3}>
-                        <UsersProfit data={this.props.profile.getApp().getSummaryData('users')}/>
+                        <WithdrawalsInfo/>
                     </Col>
                     <Col lg={3}>
-                        <UsersInfo data={this.props.profile.getApp().getSummaryData('users')}/>
+                        <PlatformCostsInfo/>
                     </Col>
+                   
                 </Row>
                 <Row>
                     <Col lg={12}>
-                        <Table data={this.props.profile.getApp().getSummaryData('users')}/>
+                        <RevenueChart data={this.props.profile.getApp().getSummaryData('revenue')} />
                     </Col>
                 </Row>
                 <Row>
-                    <Col lg={12}>
-                        <VectorMap/>
+                    <Col lg={6}>
+                        <DepositsWidget/>
                     </Col>
+                   
                 </Row>
-          </Container>
+            </Container>
         )
     }
 
@@ -60,7 +63,7 @@ function mapStateToProps(state){
     };
 }
 
-UsersContainer.propTypes = {
+StatsContainer.propTypes = {
     t: PropTypes.func.isRequired
 };
 
@@ -68,5 +71,5 @@ UsersContainer.propTypes = {
 export default compose(
     translate('common'),
     connect(mapStateToProps)
-)(UsersContainer);
+)(StatsContainer);
 

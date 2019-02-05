@@ -95,7 +95,8 @@ import Landing from '../Landing/index';
 import BetProtocol from '../Dashboards/BetProtocol';
 import UsersContainer from '../Users/index';
 import Applications from '../Applications';
-
+import StatsContainer from '../Stats'
+import WalletContainer from '../Wallet';
 
 const UI = () => (
   <Switch>
@@ -253,6 +254,8 @@ const routes = () => (
       <Route path="/home" component={DefaultDashboard} />
       <Route path="/users" component={UsersContainer} />
       <Route path="/application" component={Applications} />
+      <Route path="/stats" component={StatsContainer} />
+      <Route path="/wallet" component={WalletContainer} />
 
     </div>
   </div>

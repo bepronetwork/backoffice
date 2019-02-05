@@ -10,6 +10,7 @@ import BudgetStatistic from './components/BudgetStatistic';
 import CompanyId from './components/CompanyId';
 import ProfitResume from './components/ProfitResume';
 import TurnoverResume from './components/TurnoverResume';
+import LiquidityWalletWidget from './components/LiquidityWalletWidget';
 
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
@@ -24,9 +25,12 @@ class DefaultDashboard extends React.Component{
         return (
             <Container className="dashboard">   
                 <Row>
-                    <Col lg={4}>
+                    <Col lg={3}>
                         <CompanyId app={this.props.profile.getApp()}/>
                     </Col>  
+                    <Col lg={3}>
+                        <LiquidityWalletWidget data={this.props.profile.getApp().getSummaryData('wallet')} />
+                    </Col>
                     <Col lg={3}>
                         <ProfitResume data={this.props.profile.getApp().getSummaryData('revenue')} />
                     </Col> 

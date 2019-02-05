@@ -6,7 +6,7 @@ import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import Numbers from '../../../services/numbers';
 
-class UsersProfile extends PureComponent {
+class LiquidityInfo extends PureComponent {
  
     constructor() {
         super();
@@ -22,20 +22,20 @@ class UsersProfile extends PureComponent {
     };
 
     render() {
-        console.log(this.props.data) 
         
-        let users = Object.keys(this.props.data).length;
+        let liquidity = this.props.data.playBalance;
+
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
                     <CardBody className="dashboard__card-widget">
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
-                                {color : '#646777'}
-                            }><AnimationNumber  number={users}/></p>
+                                {color : liquidity >= 0 ? '#76d076' : '#646777'}
+                            }><AnimationNumber  number={liquidity}/> €</p>
                         </div>
                         <div className="dashboard__visitors-chart">
-                            <p className="dashboard__visitors-chart-title"> Active Users <span> this week </span></p>
+                            <p className="dashboard__visitors-chart-title"> Liquidity <span> Available </span></p>
                         </div>
                     </CardBody>
                 </Card>
@@ -44,4 +44,4 @@ class UsersProfile extends PureComponent {
     }
 }
 
-export default UsersProfile;
+export default LiquidityInfo;

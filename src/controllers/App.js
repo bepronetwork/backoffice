@@ -30,8 +30,13 @@ class App{
                 ConnectionSingleton.getSummary({
                     app : this.params._id,
                     type : 'REVENUE'
+                }),
+                ConnectionSingleton.getSummary({
+                    app : this.params._id,
+                    type : 'WALLET'
                 })
             ])
+            console.log(res)
 
             this.data = {
                 ...this.data,
@@ -39,7 +44,8 @@ class App{
                     users : res[0].data.message,
                     games : res[1].data.message,
                     bets : res[2].data.message,
-                    revenue : res[3].data.message
+                    revenue : res[3].data.message,
+                    wallet : res[4].data.message[0]
                 }
             };
 
