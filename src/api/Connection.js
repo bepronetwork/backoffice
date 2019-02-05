@@ -1,6 +1,6 @@
 import config from "./config";
 
-const URL = config.server.production;
+const URL = config.server.development;
 
 class Connection {
 
