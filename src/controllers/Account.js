@@ -3,17 +3,27 @@ import store from "../containers/App/store";
 import { setProfileInfo } from "../redux/actions/profile";
 import App from "./App";
 import Timer from 'tiny-timer';
+import Cache from "../services/cache";
 
 let timer = new Timer()
 
 class Account{    
-    constructor(params){
+    constructor(params={}){
         this.params = params;
         this.date = null;
     }
 
     login = async () => {
         try{
+
+            let cache = this.getFromCache('Authentication');
+            console.log(cache)
+            if(cache && cache.password){
+                //Cache had data
+                this.params.username = cache.username;
+                this.params.password = cache.password;
+            }
+
             let response = await ConnectionSingleton.login({
                 username : this.params.username, 
                 password : this.params.password
@@ -24,10 +34,12 @@ class Account{
                 status
             } = response.data;
 
-
+            
             if(status == 200){
                 /* SET Profile Data */
                 this.setProfileData(data);
+                /* Save Data in Cache */
+                this.saveToCache(this.params);
                 /* SET APP */
                 this.setApp(data.apps[0]);
                 /* GET APP Stats */
@@ -47,7 +59,14 @@ class Account{
     
     }
 
+    saveToCache = (data) => {
+        return Cache.setToCache("Authentication", data);
 
+    }
+
+    getFromCache = (type) => {
+        return Cache.getFromCache(type);
+    }
 
     getData = async () => {
         await this.getAppStatistics();
@@ -55,7 +74,6 @@ class Account{
         await store.dispatch(setProfileInfo(this));
 
     }
-    
 
     setProfileData = (data) => {
         this.User = data;
@@ -86,6 +104,46 @@ class Account{
             () => {
             this.getData();
           }, 2000);
+    }
+
+    getDepositReference = async (currency) => {
+        // TO DO : Change App to the Entity Type coming from Login
+        try{
+            let response = await ConnectionSingleton.getDepositReference(
+                currency,
+                this.getApp().getId(),
+                'app');
+            return processServerResponse(response);
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getDepositInfo = async (_id) => {
+        try{
+            let response = await ConnectionSingleton.getDepositInfo(_id);
+            return processServerResponse(response);
+        }catch(err){
+            throw err;
+        }
+    }
+}
+
+/**
+ * 
+ * @param {*} response 
+ */
+
+const processServerResponse = (response) => {
+    let {
+        message,
+        status
+    } = response.data;
+
+    if(status == 200){
+        return message
+    }else{
+        throw new Error('Bad Request on Deposit Reference')
     }
 }
 

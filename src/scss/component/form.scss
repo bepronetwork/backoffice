@@ -30,8 +30,6 @@
     }
 
     @include themify($themes) {
-      border: 1px solid themed('colorFieldsBorder');
-      color: themed('colorText');
     }
 
     &[disabled] {
@@ -66,6 +64,8 @@
     }
 
     .form__form-group-field {
+      border : 1px solid #ccc;
+      border-radius:  5px;
       width: calc(100% - 80px);
       padding-left: 10px;
       margin-left: 80px;
@@ -300,6 +300,8 @@
 
 .form__form-group-field {
   width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   display: flex;
   margin: auto;
 }
@@ -324,8 +326,11 @@
   transition: all 0.3s;
 
   @include themify($themes) {
-    background: themed('colorFieldsBorder');
-    border: 1px solid themed('colorFieldsBorder');
+    background: transparent;
+    border: none;
+  }
+  &:hover{
+    opacity: 0.5;
   }
 
   svg {
@@ -383,8 +388,7 @@
   height: 32px;
 
   @include themify($themes) {
-    background: themed('colorFieldsBorder');
-    border: 1px solid themed('colorFieldsBorder');
+ 
   }
 
   svg {

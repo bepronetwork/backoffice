@@ -81,7 +81,7 @@ class LogInForm extends React.Component {
             </div>
             </div>
             <div className="form__form-group">
-            <div className="form__form-group-field">
+            <div className="">
                 <Field
                 name="remember_me"
                 component={renderCheckBoxField}

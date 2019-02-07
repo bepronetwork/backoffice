@@ -86,6 +86,7 @@ class Layout extends Component {
 
     return (
       <div className={layoutClass}>
+
         {/* <Customizer
           customizer={customizer}
           sidebar={sidebar}

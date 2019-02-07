@@ -4,6 +4,6 @@ export default {
     },
     server : {
         development : 'http://localhost:80',
-        production : 'https://betprotocol-server.herokuapp.com'
+        production : 'https:///api.betprotocol.com'
     }
 }

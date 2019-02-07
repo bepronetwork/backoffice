@@ -4,7 +4,11 @@ import { Card, CardBody, Col, Row , Button} from 'reactstrap';
 import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import SettingsIcon from 'mdi-react/SettingsIcon';
+import {Link} from 'react-router-dom';
+
 import { ArrowDownIcon, ArrowCollapseDownIcon, ArrowUpDropCircleIcon } from 'mdi-react';
+import ConverterSingleton from '../../../services/converter';
+import Numbers from '../../../services/numbers';
 const Ava = `${process.env.PUBLIC_URL}/img/ethereum.png`;
 
 class ETHWalletWidget extends PureComponent {
@@ -12,19 +16,23 @@ class ETHWalletWidget extends PureComponent {
     constructor() {
         super();
         this.state = {
-        activeIndex: 0,
+            usd: 0,
         };
     }
 
-    handleClick = (index) => {
-        this.setState({
-        activeIndex: index,
-        });
-    };
+    componentWillReceiveProps(props){
+        this.getUSDValue(props.data.eth);
+    }
+
+    getUSDValue = async (eth) => {
+        let usd = await ConverterSingleton.fromETHtoUsd(eth);
+        this.setState({...this.state, usd : usd});
+    }
 
     render() {        
-        console.log(this.props.data)
+
         let eth = this.props.data.eth;
+
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
@@ -37,14 +45,16 @@ class ETHWalletWidget extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
-                                    }><AnimationNumber number={eth}/> ETH</p>
+                                    }><AnimationNumber decimals number={eth}/> ETH</p>
                                 </div>
                                 <div className="dashboard__visitors-chart">
-                                    <p className="dashboard__visitors-chart-title"> ETH <span> Available </span></p>
+                                    <p className="dashboard__visitors-chart-title"> <span style={{fontSize : 15}}>{Numbers.toMoney(this.state.usd)} €</span></p>
                                 </div>
                             </Col>
                             <Col lg={4}>
-                                <Button style={{margin : 0}} className="icon" outline><p><ArrowCollapseDownIcon className="deposit-icon"/> Deposit </p></Button>
+                                <Link to='/wallet/deposit' >
+                                    <Button style={{margin : 0}} className="icon" outline><p><ArrowCollapseDownIcon className="deposit-icon"/> Deposit </p></Button>
+                                </Link>
                                 <Button style={{margin : 0, marginTop : 10}} className="icon" ><p><ArrowUpDropCircleIcon className="deposit-icon"/> Convert </p></Button>
                             </Col>
                         </Row>

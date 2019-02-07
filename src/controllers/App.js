@@ -36,7 +36,6 @@ class App{
                     type : 'WALLET'
                 })
             ])
-            console.log(res)
 
             this.data = {
                 ...this.data,
@@ -63,9 +62,14 @@ class App{
         return this.params.description;
     }
 
+    getId(){
+        return this.params._id;
+    }
+
     getSummaryData(type){
         return this.data.summary[type];
     }
+
 }
 
 export default App;
