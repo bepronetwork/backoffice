@@ -8,7 +8,7 @@ import Cache from "../services/cache";
 let timer = new Timer()
 
 class Account{    
-    constructor(params={}){
+    constructor(params=null){
         this.params = params;
         this.date = null;
     }
@@ -17,13 +17,17 @@ class Account{
         try{
 
             let cache = this.getFromCache('Authentication');
-            console.log(cache)
-            if(cache && cache.password){
+            if(!this.params && (cache && cache.password)){
                 //Cache had data
-                this.params.username = cache.username;
-                this.params.password = cache.password;
+                this.params = {
+                    username :  cache.username,
+                    password : cache.password
+                }
+            }else if(this.params){
+                //
+            }else{
+                throw new Error('Login didn´t work')
             }
-
             let response = await ConnectionSingleton.login({
                 username : this.params.username, 
                 password : this.params.password
@@ -49,10 +53,9 @@ class Account{
                 // TO DO : Create an Initial Screen to choose between Apps or a top Dropdown for it
                 return response;
             }else{
-                throw new Error('Login didn´t work')
+                throw new Error(response.data.message)
             }
         }catch(err){
-            console.log(err)
             // TO DO
             throw err;
 		}

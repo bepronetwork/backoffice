@@ -34,9 +34,13 @@ class LogInForm extends React.Component {
     }
 
     login = async () => {
-        let account = new Account(this.state);
-        await account.login();
-        this.props.history.push('/home')
+        try{
+            let account = new Account(this.state);
+            await account.login();
+            this.props.history.push('/home')
+        }catch(err){
+            this.props.showNotification(err.message);
+        }
     }
 
     render() {
@@ -91,8 +95,8 @@ class LogInForm extends React.Component {
             </div>
             <div className="account__btns">
             <button className="btn btn-primary account__btn" onClick={ () => this.login() } >Log In</button>
-            <Link className="btn btn-outline-primary account__btn" to="/register">Create Account
-            </Link>
+            <button disabled={true} className="btn btn-outline-primary account__btn" to="/register">Create Account
+            </button>
             </div>
         </form>
         );

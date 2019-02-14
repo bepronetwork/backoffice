@@ -35,10 +35,12 @@ class MainRoute extends React.Component {
 
 
 	asyncCalls = async () => {
-        console.log("Logging");
-        let data = await this.loginAccount();
-        console.log(data)
-        this.enterWebsite();
+        try{
+            await this.loginAccount();
+            this.enterWebsite();
+        }catch(err){
+            this.props.history.push('/login')
+        }
 	}
 
 	enterWebsite = () => {
@@ -49,9 +51,9 @@ class MainRoute extends React.Component {
     async loginAccount(){
         let Acc = new Account();
         try{
-            let res = await Acc.login();
+            await Acc.login();
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 

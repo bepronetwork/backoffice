@@ -26,19 +26,8 @@ class SidebarContent extends Component {
           <SidebarLink title="Affiliates" icon="gift" route="/affiliates" onClick={this.hideSidebar} />
 
         </ul>
-       <ul className="sidebar__block">
-          <SidebarCategory title="Account" icon="user">
-            <SidebarLink title="Email Confirmation" route="/account/email_confirmation" />
-            <SidebarLink title="Lock Screen" route="/lock_screen" />
-            <SidebarLink title="Log In" route="/log_in" />
-            <SidebarLink title="Log In Photo" route="/log_in_photo" />
-            <SidebarLink title="Profile" route="/account/profile" onClick={this.hideSidebar} />
-            <SidebarLink title="Register" route="/register" />
-            <SidebarLink title="Register Photo" route="/register_photo" />
-          </SidebarCategory>
-        </ul>
         <ul className="sidebar__block">
-          <SidebarLink title="Log Out" icon="exit" route="/log_in" />
+          <SidebarLink title="Log Out" icon="exit" route="/login" />
         </ul>
        
       </div>

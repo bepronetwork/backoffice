@@ -4,6 +4,6 @@ export default {
     },
     server : {
         development : 'http://localhost:80',
-        production : 'https:///api.betprotocol.com'
+        production : 'https://api.betprotocol.com'
     }
 }

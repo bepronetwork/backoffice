@@ -4,11 +4,41 @@ import FacebookIcon from 'mdi-react/FacebookIcon';
 import GooglePlusIcon from 'mdi-react/GooglePlusIcon';
 import LogInForm from './components/LogInForm';
 import { Col, Container, Row } from 'reactstrap';
+import { BasicNotification } from '../../../shared/components/Notification';
+import NotificationSystem from 'rc-notification';
+
 const Back = `${process.env.PUBLIC_URL}/img/background-login.jpg`;
+
+let notification = null;
+
+const showNotification = (message) => {
+	notification.notice({
+		content: <BasicNotification
+			title="🤔 There is a problem with your Login"
+			message={message}
+		/>,
+		duration: 5,
+		closable: true,
+		style: { top: 0, left: 'calc(100vw - 100%)' },
+		className: 'right-up',
+	});
+};
 
 class LogIn extends React.Component{
 
 	constructor(props){super(props)}
+
+	componentDidMount() {
+		NotificationSystem.newInstance({}, n => notification = n);
+	}
+
+	componentWillUnmount() {
+		notification.destroy();
+	}
+
+	showNotification = (message) => {
+		showNotification(message)
+	}
 
 	render = () => {
 		return (
@@ -22,7 +52,7 @@ class LogIn extends React.Component{
 							<div className="account__card">
 							<h3 className="account__title" style={{marginBottom : '20%'}}>Welcome to BetProtocol
 							</h3>
-							<LogInForm {...this.props} onSubmit={false} />
+							<LogInForm handleSubmit={(e) => e.preventDefault()} showNotification={this.showNotification} {...this.props} onSubmit={false} />
 							</div>
 						</div>
 					</Col>
