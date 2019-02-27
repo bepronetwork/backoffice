@@ -101,6 +101,7 @@ import routesStructure from './routes';
 	import DepositWidget from '../Wallet/components/paths/DepositWidget';
 
 import MainRoute from './MainRoute';
+import CreateApp from '../Wizards/CreateApp';
 
 	const UI = () => (
 	<Switch>
@@ -322,6 +323,7 @@ const Router = () => (
 			<Route path="/log_in_photo" component={LogInPhoto} />
 			<Route path="/register" component={Register} />
 			<Route path="/register_photo" component={RegisterPhoto} />
+			<Route path='/initial' component={CreateApp}/>
 			<Route path="/" component={MainRoute} />
 		</Switch>
 		</main>

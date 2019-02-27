@@ -13,6 +13,31 @@ class Account{
         this.date = null;
     }
 
+    register = async () => {
+        try{
+            let response = await ConnectionSingleton.register({
+                username        : this.params.username, 
+                name            : this.params.name,
+                password        : this.params.password,
+                email           : this.params.email
+            });
+
+            let {
+                message,
+                status
+            } = response.data;
+
+            if(status == 200){
+                return await this.login();
+            }else{
+                throw new Error(message)
+            }
+        }catch(err){
+            throw err
+        }
+        
+    }
+
     login = async () => {
         try{
 
@@ -38,14 +63,14 @@ class Account{
                 status
             } = response.data;
 
-            
             if(status == 200){
+                console.log(data)
                 /* SET Profile Data */
                 this.setProfileData(data);
                 /* Save Data in Cache */
                 this.saveToCache(this.params);
                 /* SET APP */
-                this.setApp(data.apps[0]);
+                //this.setApp(data.apps[0]);
                 /* GET APP Stats */
                 await this.getData();
                 // Set Timer
@@ -72,10 +97,9 @@ class Account{
     }
 
     getData = async () => {
-        await this.getAppStatistics();
+        //await this.getAppStatistics();
         /* Add Everything to the Redux State */  
         await store.dispatch(setProfileInfo(this));
-
     }
 
     setProfileData = (data) => {
@@ -84,6 +108,20 @@ class Account{
 
     getProfileData = () => {
         return this.data;
+    }
+
+    createApp = async (params) => {
+        console.log(this.getProfileData())
+        try{
+            let res = await ConnectionSingleton.createApp({
+                ...params,
+                admin_id : this.getProfileData().id
+            });
+            await this.login();
+            return res; 
+        }catch(err){
+            throw err;
+        }
     }
 
     setApp = (app) => {

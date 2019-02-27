@@ -95,8 +95,9 @@ class LogInForm extends React.Component {
             </div>
             <div className="account__btns">
             <button className="btn btn-primary account__btn" onClick={ () => this.login() } >Log In</button>
-            <button disabled={true} className="btn btn-outline-primary account__btn" to="/register">Create Account
-            </button>
+            <Link className='btn btn-outline-primary account__btn' to="/register">
+               Create Account
+            </Link>
             </div>
         </form>
         );

@@ -13,6 +13,10 @@ export default [
         component : DefaultDashboard
     },
     {
+        path: "/initial",
+        name: 'Initial'
+    },
+    {
         path: "/users",
         name: 'Users',
         component : UsersContainer

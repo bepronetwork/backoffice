@@ -23,6 +23,7 @@ import WalletContainer from '../Wallet';
 import AffiliatesContainer from '../Affiliates';
 import DepositWidget from '../Wallet/components/paths/DepositWidget';
 import DefaultDashboard from '../Dashboards/Default/index';
+import CreateApp from '../Wizards/CreateApp';
 
 class MainRoute extends React.Component {
 	constructor() {
