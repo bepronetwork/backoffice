@@ -14,6 +14,9 @@ import LiquidityWalletWidget from './components/LiquidityWalletWidget';
 
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
+import DataWidget from '../../DataWidget/DataWidget';
+import _ from 'lodash';
+import NoData from '../../NoData';
 
 class DefaultDashboard extends React.Component{
 
@@ -22,6 +25,9 @@ class DefaultDashboard extends React.Component{
     }
 
     render = () => {
+        let data = this.props.profile.hasAppStats('revenue');
+        let hasData = data && !_.isEmpty(data.data);
+                
         return (
             <Container className="dashboard">   
                 <Row>
@@ -29,39 +35,65 @@ class DefaultDashboard extends React.Component{
                         <CompanyId app={this.props.profile.getApp()}/>
                     </Col>  
                     <Col lg={3}>
-                        <LiquidityWalletWidget data={this.props.profile.getApp().getSummaryData('wallet')} />
+                        <DataWidget>
+                            <LiquidityWalletWidget data={this.props.profile.getApp().getSummaryData('wallet')} />
+                        </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        <ProfitResume data={this.props.profile.getApp().getSummaryData('revenue')} />
+                        <DataWidget>
+                            <ProfitResume data={this.props.profile.getApp().getSummaryData('revenue')} />
+                        </DataWidget>
                     </Col> 
                     <Col lg={3}>
-                        <TurnoverResume data={this.props.profile.getApp().getSummaryData('revenue')} />
+                        <DataWidget>
+                            <TurnoverResume data={this.props.profile.getApp().getSummaryData('revenue')} />
+                        </DataWidget>
                     </Col>
                 </Row>
-                <Row>
-                    <Col lg={12}>
-                        <ABTestingAnalytics data={this.props.profile.getApp().getSummaryData('revenue')} />
-                    </Col>    
-                </Row>
-                <Row>
-                    <Col md={4}>
-                        <BudgetStatistic data={this.props.profile.getApp().getSummaryData('bets')}/>
-                    </Col>
-                    <Col md={4}>
-                        <VisitorsSessions data={{
-                            users : this.props.profile.getApp().getSummaryData('games'),
-                            bets : this.props.profile.getApp().getSummaryData('bets')
-                        }}/>
-                    </Col>
-                    <Col md={4}>
-                        <BounceRateArea />
-                    </Col>
-                </Row>
-          </Container>
+                { hasData ? 
+                    <div>
+                        <Row>
+                            <Col lg={12}>
+                                <DataWidget>
+                                    <ABTestingAnalytics data={this.props.profile.getApp().getSummaryData('revenue')} />
+                                </DataWidget>
+                            </Col>    
+                        </Row>
+                        <Row>
+                            <Col md={4}>
+                                <DataWidget>
+                                    <BudgetStatistic data={this.props.profile.getApp().getSummaryData('bets')}/>
+                                </DataWidget>
+                            </Col>
+                            <Col md={4}>
+                                <DataWidget>
+                                    <VisitorsSessions data={{
+                                        users : this.props.profile.getApp().getSummaryData('games'),
+                                        bets : this.props.profile.getApp().getSummaryData('bets')
+                                    }}/>
+                                </DataWidget>
+                            </Col>
+                            <Col md={4}>
+                                <DataWidget>
+                                    <BounceRateArea />
+                                </DataWidget>
+                            </Col>
+                        </Row>
+                    </div>
+                : 
+                    <div>
+                        <NoData {...this.props} app={this.props.profile.getApp()}/>
+                    </div>
+                }
+                
+        </Container>
         )
     }
 
 }
+
+
+
 
 
 

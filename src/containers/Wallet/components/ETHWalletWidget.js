@@ -21,7 +21,7 @@ class ETHWalletWidget extends PureComponent {
     }
 
     componentWillReceiveProps(props){
-        this.getUSDValue(props.data.eth);
+        this.getUSDValue(props.data.data.eth);
     }
 
     getUSDValue = async (eth) => {
@@ -31,7 +31,7 @@ class ETHWalletWidget extends PureComponent {
 
     render() {        
 
-        let eth = this.props.data.eth;
+        let eth = this.props.data.data.eth;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>

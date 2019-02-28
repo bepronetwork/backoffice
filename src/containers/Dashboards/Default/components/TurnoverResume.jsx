@@ -35,7 +35,7 @@ class TurnoverResume extends PureComponent {
     };
 
     render() {
-        let revenue = DashboardMapperSingleton.toDateRevenue(this.props.data);
+        let revenue = DashboardMapperSingleton.toDateRevenue(this.props.data.data);
 
         return (
         <Col md={12} xl={12} lg={12} xs={12}>

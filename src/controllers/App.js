@@ -13,38 +13,38 @@ class App{
 
     getSummary = async () => {
         try{
-
             let res = await Promise.all([
                 ConnectionSingleton.getSummary({
-                    app : this.params._id,
+                    app : this.params.id,
                     type : 'USERS'
                 }),
                 ConnectionSingleton.getSummary({
-                    app : this.params._id,
+                    app : this.params.id,
                     type : 'GAMES'
                 }),
                 ConnectionSingleton.getSummary({
-                    app : this.params._id,
+                    app : this.params.id,
                     type : 'BETS'
                 }),
                 ConnectionSingleton.getSummary({
-                    app : this.params._id,
+                    app : this.params.id,
                     type : 'REVENUE'
                 }),
                 ConnectionSingleton.getSummary({
-                    app : this.params._id,
+                    app : this.params.id,
                     type : 'WALLET'
                 })
             ])
+            console.log(res)
 
             this.data = {
                 ...this.data,
                 summary : {
-                    users : res[0].data.message,
-                    games : res[1].data.message,
-                    bets : res[2].data.message,
+                    users   : res[0].data.message,
+                    games   : res[1].data.message,
+                    bets    : res[2].data.message,
                     revenue : res[3].data.message,
-                    wallet : res[4].data.message[0]
+                    wallet  : res[4].data.message[0]
                 }
             };
 
@@ -63,12 +63,17 @@ class App{
     }
 
     getId(){
-        return this.params._id;
+        return this.id;
     }
 
     getSummaryData(type){
-        return this.data.summary[type];
+        return {
+            data :  this.data.summary[type],
+            type : type
+        }
     }
+
+
 
 }
 

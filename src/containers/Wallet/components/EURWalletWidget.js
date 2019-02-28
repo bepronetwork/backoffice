@@ -23,7 +23,7 @@ class EURWalletWidget extends PureComponent {
     };
 
     render() {        
-        let euros = this.props.data.eur;
+        let euros = this.props.data.data.eur;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>

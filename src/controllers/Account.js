@@ -64,17 +64,21 @@ class Account{
             } = response.data;
 
             if(status == 200){
-                console.log(data)
                 /* SET Profile Data */
                 this.setProfileData(data);
                 /* Save Data in Cache */
                 this.saveToCache(this.params);
                 /* SET APP */
-                //this.setApp(data.apps[0]);
-                /* GET APP Stats */
-                await this.getData();
-                // Set Timer
-                this.setTimer();
+                // If App Already Exists for this User
+                if(data.app.id){
+                    this.setApp(data.app);
+                     /* GET APP Stats */
+                    await this.getData();
+                     // Set Timer
+                    this.setTimer();
+                }
+                /* Add Everything to the Redux State */  
+                await store.dispatch(setProfileInfo(this));
                 // TO DO : Create an Initial Screen to choose between Apps or a top Dropdown for it
                 return response;
             }else{
@@ -97,9 +101,23 @@ class Account{
     }
 
     getData = async () => {
-        //await this.getAppStatistics();
-        /* Add Everything to the Redux State */  
+        await this.getAppStatistics();
         await store.dispatch(setProfileInfo(this));
+    }
+
+    hasApp = () => {
+        return (typeof this.App != 'undefined')
+    }
+
+    hasAppStats = (type) => {
+        try{
+            if(!this.hasApp()){throw new Error('There is no App Attributed')}
+            let res = this.getApp().getSummaryData(type);
+            return res;
+        }   
+        catch(err){
+            return false
+        }
     }
 
     setProfileData = (data) => {
@@ -107,11 +125,11 @@ class Account{
     }
 
     getProfileData = () => {
-        return this.data;
+        return this.User;
     }
 
     createApp = async (params) => {
-        console.log(this.getProfileData())
+        
         try{
             let res = await ConnectionSingleton.createApp({
                 ...params,
@@ -125,6 +143,7 @@ class Account{
     }
 
     setApp = (app) => {
+        clearTimeout(this.timer);
         this.App = new App(app);
     }
 
@@ -141,10 +160,10 @@ class Account{
     }
 
     setTimer = () => {
-        window.setInterval(
+        this.timer = window.setInterval(
             () => {
             this.getData();
-          }, 2000);
+        }, 2000);
     }
 
     getDepositReference = async (currency) => {

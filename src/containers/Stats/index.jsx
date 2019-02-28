@@ -10,6 +10,7 @@ import WithdrawalsInfo from './components/WithdrawalsInfo';
 import LiquidityInfo from './components/LiquidityInfo';
 import PlatformCostsInfo from './components/PlatformCostsInfo';
 import RevenueChart from './components/RevenueChart';
+import DataWidget from '../DataWidget/DataWidget';
 
 
 class StatsContainer extends React.Component{
@@ -25,27 +26,39 @@ class StatsContainer extends React.Component{
                 <Row>
                   
                     <Col lg={3}>
-                        <LiquidityInfo data={this.props.profile.getApp().getSummaryData('wallet')}/>
+                        <DataWidget>
+                            <LiquidityInfo data={this.props.profile.getApp().getSummaryData('wallet')}/>
+                        </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        <DepositsInfo/>
+                        <DataWidget>
+                            <DepositsInfo/>
+                        </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        <WithdrawalsInfo/>
+                        <DataWidget>
+                            <WithdrawalsInfo/>
+                        </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        <PlatformCostsInfo/>
+                        <DataWidget>
+                            <PlatformCostsInfo/>
+                        </DataWidget>
                     </Col>
                    
                 </Row>
                 <Row>
                     <Col lg={12}>
-                        <RevenueChart data={this.props.profile.getApp().getSummaryData('revenue')} />
+                        <DataWidget>
+                            <RevenueChart data={this.props.profile.getApp().getSummaryData('revenue')} />
+                        </DataWidget>
                     </Col>
                 </Row>
                 <Row>
                     <Col lg={6}>
-                        <DepositsWidget/>
+                        <DataWidget>
+                            <DepositsWidget/>
+                        </DataWidget>
                     </Col>
                    
                 </Row>

@@ -14,7 +14,7 @@ let notification = null;
 const showNotification = (message) => {
 	notification.notice({
 		content: <BasicNotification
-			title="🤔 There is a problem with your Login"
+			title="There is a problem with your Login"
 			message={message}
 		/>,
 		duration: 5,

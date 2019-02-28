@@ -52,3 +52,11 @@
   display: block;
   position: relative;
 }
+
+
+.background_pink{
+    
+  @include themify($themes) {
+    background-color: themed('coloPrimary');
+  }
+}

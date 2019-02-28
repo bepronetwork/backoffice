@@ -10,6 +10,7 @@ import UsersProfit from './components/UsersProfit';
 import UsersInfo from './components/UsersInfo';
 import UsersResumeEntries from './components/UsersResumeEntries';
 import VectorMap from './components/VectorMap';
+import DataWidget from '../DataWidget/DataWidget';
 
 
 class UsersContainer extends React.Component{
@@ -24,26 +25,38 @@ class UsersContainer extends React.Component{
             <Container className="dashboard">
                 <Row>
                     <Col lg={3}>
-                        <UsersResumeEntries/>
+                        <DataWidget>
+                            <UsersResumeEntries/>
+                        </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        <UsersProfile data={this.props.profile.getApp().getSummaryData('users')}/>
+                        <DataWidget>
+                            <UsersProfile data={this.props.profile.getApp().getSummaryData('users')}/>
+                        </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        <UsersProfit data={this.props.profile.getApp().getSummaryData('users')}/>
+                        <DataWidget>
+                            <UsersProfit data={this.props.profile.getApp().getSummaryData('users')}/>
+                        </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        <UsersInfo data={this.props.profile.getApp().getSummaryData('users')}/>
+                        <DataWidget>
+                            <UsersInfo data={this.props.profile.getApp().getSummaryData('users')}/>
+                        </DataWidget>
                     </Col>
                 </Row>
                 <Row>
                     <Col lg={12}>
-                        <Table data={this.props.profile.getApp().getSummaryData('users')}/>
+                        <DataWidget>
+                            <Table data={this.props.profile.getApp().getSummaryData('users')}/>
+                        </DataWidget>
                     </Col>
                 </Row>
                 <Row>
                     <Col lg={12}>
-                        <VectorMap/>
+                        <DataWidget>
+                            <VectorMap/>
+                        </DataWidget>
                     </Col>
                 </Row>
           </Container>

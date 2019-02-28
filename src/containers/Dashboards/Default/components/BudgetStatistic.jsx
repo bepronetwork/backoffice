@@ -8,10 +8,10 @@ import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 
 const BudgetStatistic = (props) =>  {
 	let data = {
-		bets : props.data[0].bets,
+		bets : props.data.data[0].bets,
 		graph : [
-		{ value: 100-Numbers.toFloat(props.data[0].bets.percentage_won*100), fill: '#894798' },
-		{ value: 100-Numbers.toFloat(props.data[0].bets.percentage_won*100), fill: '#eeeeee' }]
+		{ value: 100-Numbers.toFloat(props.data.data[0].bets.percentage_won*100), fill: '#894798' },
+		{ value: 100-Numbers.toFloat(props.data.data[0].bets.percentage_won*100), fill: '#eeeeee' }]
 	}
 
 	let percentage = 100-Numbers.toFloat(data.bets.percentage_won*100);

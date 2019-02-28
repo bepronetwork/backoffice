@@ -23,7 +23,7 @@ class UsersInfo extends PureComponent {
 
     render() {
         
-        let users = Object.keys(this.props.data).length;
+        let users = Object.keys(this.props.data.data).length;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>

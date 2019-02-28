@@ -48,13 +48,11 @@ class Table extends PureComponent {
 	}
 
 	onChangePage = (pageOfItems) => {
-		console.log(pageOfItems)
 		this.setState({ pageOfItems });
 	};
 
 	render() {
-		let tableData = fromDatabasetoTable(this.props.data);
-		console.log(tableData);
+		let tableData = fromDatabasetoTable(this.props.data.data);
 		return (
 		<Col md={12} lg={12}>
 			<Card>
@@ -74,7 +72,6 @@ class Table extends PureComponent {
 
 
 const fromDatabasetoTable = (data) => {
-	console.log(data)
 	return Object.keys(data).map( (key, index) => {
 		return {
 			id :  data[key]._id,

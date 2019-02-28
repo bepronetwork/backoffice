@@ -40,8 +40,8 @@ renderLegend.propTypes = {
 const VisitorsSessions  = (props) =>  {
 	console.log(props)
 	let data = {
-		betAmount : props.data.bets[0].bets.amount,
-		games : DashboardMapperSingleton.toPieChart(props.data.users[0].games)
+		betAmount : props.data.data.bets[0].bets.amount,
+		games : DashboardMapperSingleton.toPieChart(props.data.data.users[0].games)
 	}
 	return (
 		<Panel

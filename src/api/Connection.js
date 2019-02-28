@@ -1,6 +1,6 @@
 import config from "./config";
 
-const URL = config.server.development;
+const URL = config.server.production;
 
 class Connection {
 
@@ -58,7 +58,6 @@ class Connection {
                 headers : config.headers,
                 body : JSON.stringify({app, type})
             });
-
             return response.json();
         }catch(err){
             throw err;

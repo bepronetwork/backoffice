@@ -4,11 +4,11 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
-import GamesContainer from './components/GamesContainer';
 import DataWidget from '../DataWidget/DataWidget';
 
 
-class ApplicationsContainer extends React.Component{
+
+class DevelopersContainer extends React.Component{
 
     constructor(props){
         super(props)
@@ -16,15 +16,16 @@ class ApplicationsContainer extends React.Component{
 
 
     render = () => {
-        console.log(this.props)
         return (
             <Container className="dashboard">
                 <Row>
-                    <Col lg={12}>
-                        <DataWidget>
-                            <GamesContainer data={this.props.profile.getApp().getSummaryData('games')}/>
-                        </DataWidget>
-                    </Col>
+                    
+                </Row>
+                <Row>
+                    
+                </Row>
+                <Row>
+                  
                 </Row>
           </Container>
         )
@@ -40,7 +41,7 @@ function mapStateToProps(state){
     };
 }
 
-ApplicationsContainer.propTypes = {
+DevelopersContainer.propTypes = {
     t: PropTypes.func.isRequired
 };
 
@@ -48,5 +49,5 @@ ApplicationsContainer.propTypes = {
 export default compose(
     translate('common'),
     connect(mapStateToProps)
-)(ApplicationsContainer);
+)(DevelopersContainer);
 

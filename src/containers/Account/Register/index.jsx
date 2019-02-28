@@ -48,7 +48,7 @@ class Register extends React.Component{
 							<div className="account__card">
 							<h3 className="account__title" style={{marginBottom : '20%'}}>Register at B-Pro
 							</h3>
-							<RegisterForm handleSubmit={(e) => e.preventDefault()} {...this.props} onSubmit={false} />
+							<RegisterForm showNotification={this.showNotification} handleSubmit={(e) => e.preventDefault()} {...this.props} onSubmit={false} />
 								<div className="account__have-account">
 									<p>Already have an account? <Link to="/login">Login</Link></p>
 								</div>

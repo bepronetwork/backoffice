@@ -8,7 +8,7 @@ import DashboardMapperSingleton from '../../../../services/mappers/Dashboard';
 
 
 const ABTestingAnalytics = (props) => {
-  let data = DashboardMapperSingleton.toRevenueChart(props.data)
+  let data = DashboardMapperSingleton.toRevenueChart(props.data.data)
   return(
     <Panel naked={true} md={12} lg={12} xl={12} title={'Weekly Summary'}>
       <ResponsiveContainer height={250} className="dashboard__area">

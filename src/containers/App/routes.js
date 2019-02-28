@@ -48,4 +48,8 @@ export default [
         name: 'Affiliates',
         component : AffiliatesContainer
     },
+    {
+        path: "/developers",
+        name: 'Developers'
+    },
 ];
