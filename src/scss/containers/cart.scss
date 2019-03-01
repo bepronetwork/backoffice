@@ -14,8 +14,7 @@
 }
 
 	.container__all{
-        overflow: hidden;
-	    height: -webkit-fill-available;
+        overflow-x: hidden;
 	}
 	.cart__preview-img {
         width: 50px;

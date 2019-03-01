@@ -3,16 +3,11 @@ import { Col, Row, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 const back = `${process.env.PUBLIC_URL}/img/front.png`;
-const back_1 = `${process.env.PUBLIC_URL}/img/landing/back_1.png`;
-const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
 
-const img = `${process.env.PUBLIC_URL}/img/landing/macbook.png`;
 
 const Header = ({ onClick }) => (
 	<div className="landing__header">
-        <img className="landing_1_back" src={back_1} />
-        <img className="landing_2_back" src={back_2} />
-
+      
 		<Container>
 			<Row>
 			

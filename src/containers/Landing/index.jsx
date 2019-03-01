@@ -8,7 +8,8 @@ import Header from './components/Header';
 import { changeThemeToDark, changeThemeToLight } from '../../redux/actions/themeActions';
 import { ThemeProps } from '../../shared/prop-types/ReducerProps';
 import { Link } from 'react-router-dom';
-
+const back_1 = `${process.env.PUBLIC_URL}/img/landing/back_1.png`;
+const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
 const logo = `${process.env.PUBLIC_URL}/img/landing/logo.png`;
 
 class Landing extends PureComponent {
@@ -30,6 +31,11 @@ class Landing extends PureComponent {
 
     return (
       <div className="landing">
+        <div className='landing__heading'>
+            <img className="landing_1_back" src={back_1} />
+            <img className="landing_2_back" src={back_2} />
+        </div>
+
         <div className="landing__menu">
           <Container>
             <Row>

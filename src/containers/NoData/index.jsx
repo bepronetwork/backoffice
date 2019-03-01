@@ -36,7 +36,6 @@ class NoDataContainer extends PureComponent {
         let 
         hasBearerToken =  !_.isUndefined(app.getBearerToken()),
         isConnected     =  !_.isUndefined(app.isConnected());
-        
 
         let progress = this.getProgress(hasBearerToken, isConnected)
         this.setState({...this.state, progress, hasBearerToken, isConnected});
@@ -55,7 +54,7 @@ class NoDataContainer extends PureComponent {
                             <CardBody className="dashboard__card-widget">
                                 <Row>
                                     <Col lg={4}>
-                                        <img style={{width : 400, margin : 'auto'}} src={Ava} alt="avatar" />
+                                        <img style={{width : '80%', margin : 'auto'}} src={Ava} alt="avatar" />
                                     </Col>
                                     <Col lg={8}>
                                             <h6 style={{marginTop : 20, marginBottom : 40}} className={"dashboard__total-stat"}>

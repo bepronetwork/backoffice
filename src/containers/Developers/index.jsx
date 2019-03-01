@@ -18,9 +18,8 @@ class DevelopersContainer extends React.Component{
 
     generateBearerToken = async () => {
         try{
-            let res = await this.props.profile.getApp().createBearerToken();
-            console.log(res)
-
+            let res = await this.props.profile.createBearerToken();
+            
             let {
                 message,
                 status

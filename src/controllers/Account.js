@@ -102,11 +102,26 @@ class Account{
 
     getData = async () => {
         await this.getAppStatistics();
-        await store.dispatch(setProfileInfo(this));
+        await this.update();
     }
 
     hasApp = () => {
         return (typeof this.App != 'undefined')
+    }
+
+    update = async () => {
+        /* Add Everything to the Redux State */  
+        await store.dispatch(setProfileInfo(this));
+    }
+
+    createBearerToken = async () => {
+        try{
+            let res = await this.getApp().createBearerToken();
+            await this.update();
+            return res;
+        }catch(err){
+            throw err;
+        }
     }
 
     hasAppStats = (type) => {
@@ -160,6 +175,7 @@ class Account{
     }
 
     setTimer = () => {
+        clearTimeout(this.timer);
         this.timer = window.setInterval(
             () => {
             this.getData();

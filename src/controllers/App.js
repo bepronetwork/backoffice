@@ -84,6 +84,7 @@ class App{
             } = res.data;
 
             this.params.bearerToken = data.bearerToken;
+
             return res;
         }catch(err){
             throw err;
