@@ -2,12 +2,51 @@ import React, { PureComponent } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import EyeIcon from 'mdi-react/EyeIcon';
 import KeyVariantIcon from 'mdi-react/KeyVariantIcon';
-import AccountOutlineIcon from 'mdi-react/AccountOutlineIcon';
+import {CheckboxMultipleBlankCircleIcon, AccountOutlineIcon, AccountIcon} from 'mdi-react';
 import MailRuIcon from 'mdi-react/MailRuIcon';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Account from '../../../../controllers/Account';
+import TextField from '@material-ui/core/TextField';
+import TextInput from '../../../../shared/components/TextInput';
 
+
+const renderTextField = ({
+    input, label, meta: { touched, error }, children, select, type
+    }) => (
+    <TextField
+        className="material-form__field"
+        label={label}
+        error={touched && error}
+        value={input.value}
+        children={children}
+        type={type}
+        select={select}
+        onChange={(e) => {
+            e.preventDefault();
+            input.onChange(e);
+        }}
+    />
+    );
+    
+    renderTextField.propTypes = {
+        input: PropTypes.shape().isRequired,
+        label: PropTypes.string.isRequired,
+        meta: PropTypes.shape({
+            touched: PropTypes.bool,
+            error: PropTypes.string,
+        }),
+        select: PropTypes.bool,
+        children: PropTypes.arrayOf(PropTypes.element),
+        
+    };
+    
+    renderTextField.defaultProps = {
+            meta: null,
+            select: false,
+            children: [],
+        };
+    
 class RegisterForm extends PureComponent {
     static propTypes = {
         handleSubmit: PropTypes.func.isRequired,
@@ -50,68 +89,43 @@ class RegisterForm extends PureComponent {
         return (
         <form className="form" onSubmit={handleSubmit}>
             <div className="form__form-group">
-            <span className="form__form-group-label">Username</span>
-            <div className="form__form-group-field">
-                <div className="form__form-group-icon">
-                <AccountOutlineIcon />
-                </div>
-                <Field
-                name="username"
-                component="input"
-                type="text"
-                placeholder="Username"
-                onChange={(e) =>  this.changeContent('username', e.target.value)}/>
-            </div>
-            </div>
-            <div className="form__form-group">
-            <span className="form__form-group-label">Name</span>
-            <div className="form__form-group-field">
-                <div className="form__form-group-icon">
-                <AccountOutlineIcon />
-                </div>
-                <Field
-                name="name"
-                component="input"
-                type="text"
-                placeholder="Name"
-                onChange={(e) =>  this.changeContent('name', e.target.value)}/>
-            </div>
-            </div>
-            <div className="form__form-group">
-            <span className="form__form-group-label">E-mail</span>
-            <div className="form__form-group-field">
-                <div className="form__form-group-icon">
-                <MailRuIcon />
-                </div>
-                <Field
-                name="email"
-                component="input"
-                type="email"
-                placeholder="example@mail.com"
-                onChange={(e) =>  this.changeContent('email', e.target.value)}/>
-            </div>
-            </div>
-            <div className="form__form-group form__form-group--forgot">
-            <span className="form__form-group-label">Password</span>
-            <div className="form__form-group-field">
-                <div className="form__form-group-icon">
-                <KeyVariantIcon />
-                </div>
-                <Field
-                name="password"
-                component="input"
-                type={this.state.showPassword ? 'text' : 'password'}
-                placeholder="Password"
-                onChange={(e) =>  this.changeContent('password', e.target.value)}/>
-                <button
-                className={`form__form-group-button${this.state.showPassword ? ' active' : ''}`}
-                onClick={e => this.showPassword(e)}
-                ><EyeIcon />
-                </button>
-            </div>
-            </div>
+            <h3 className="account__title" style={{marginBottom : '20%'}}>Register
+							</h3>
+                <TextInput
+                    icon={CheckboxMultipleBlankCircleIcon}
+                    name="username"
+                    label="Username"
+                    type="text"
+                    placeholder="James2345"
+                    changeContent={this.changeContent}
+                />
+                 <TextInput
+                    icon={AccountIcon}
+                    name="name"
+                    label="Name"
+                    type="text"
+                    placeholder="James"
+                    changeContent={this.changeContent}
+                />
+                <TextInput
+                    icon={MailRuIcon}
+                    name="email"
+                    label="Email"
+                    type="text"
+                    placeholder="example@email.com"
+                    changeContent={this.changeContent}
+                />
+                <TextInput
+                    icon={KeyVariantIcon}
+                    name="password"
+                    label="Password"
+                    type="password"
+                    placeholder="**********"
+                    changeContent={this.changeContent}
+                />
+            </div>            
             <div className="account__btns">
-            <button   onClick={ () => this.register() }className="btn btn-primary account__btn" to="/dashboard_default">Sign Up</button>
+                <button   onClick={ () => this.register() }className="btn btn-primary account__btn" to="/dashboard_default">Sign Up</button>
             </div>
         </form>
         );

@@ -44,24 +44,24 @@ class App extends Component {
 		const { loaded, loading } = this.state;
 		return (
 			<Provider store={store}>
-			<BrowserRouter basename="/">
-				<I18nextProvider i18n={i18next}>
-				<ScrollToTop>
-				{!loaded &&
-					<div className={`load${loading ? '' : ' loaded'}`}>
-					<div className="load__icon-wrap">
-						<svg className="load__icon">
-						<path fill="#894798" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
-						</svg>
-					</div>
-					</div>
-				}
-				<div>
-					<Router />
-				</div>
-				</ScrollToTop>
-				</I18nextProvider>
-			</BrowserRouter>
+                <BrowserRouter basename="/">
+                    <I18nextProvider i18n={i18next}>
+                    <ScrollToTop>
+                    {!loaded &&
+                        <div className={`load${loading ? '' : ' loaded'}`}>
+                        <div className="load__icon-wrap">
+                            <svg className="load__icon">
+                            <path fill="#894798" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                            </svg>
+                        </div>
+                        </div>
+                    }
+                    <div>
+                        <Router />
+                    </div>
+                    </ScrollToTop>
+                    </I18nextProvider>
+                </BrowserRouter>
 			</Provider>
 		);
 		}

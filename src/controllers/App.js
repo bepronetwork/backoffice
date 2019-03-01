@@ -35,7 +35,6 @@ class App{
                     type : 'WALLET'
                 })
             ])
-            console.log(res)
 
             this.data = {
                 ...this.data,
@@ -63,7 +62,32 @@ class App{
     }
 
     getId(){
-        return this.id;
+        return this.params.id;
+    }
+
+    getBearerToken(){
+        return this.params.bearerToken;
+    }
+
+    isConnected(){
+        return this.params.isConnected;
+    }
+
+    async createBearerToken(){
+        try{
+            let res = await ConnectionSingleton.createBearerToken({
+                app : this.getId()
+            });
+
+            let {
+                message : data
+            } = res.data;
+
+            this.params.bearerToken = data.bearerToken;
+            return res;
+        }catch(err){
+            throw err;
+		}
     }
 
     getSummaryData(type){

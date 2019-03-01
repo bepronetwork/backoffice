@@ -2,22 +2,27 @@ import React from 'react';
 import { Col, Row, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-const back = `${process.env.PUBLIC_URL}/img/landing/back.jpg`;
+const back = `${process.env.PUBLIC_URL}/img/front.png`;
+const back_1 = `${process.env.PUBLIC_URL}/img/landing/back_1.png`;
+const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
 
 const img = `${process.env.PUBLIC_URL}/img/landing/macbook.png`;
 
 const Header = ({ onClick }) => (
 	<div className="landing__header">
+        <img className="landing_1_back" src={back_1} />
+        <img className="landing_2_back" src={back_2} />
+
 		<Container>
 			<Row>
 			
 				<Col md={6} style={{textAlign : 'left'}}>
 					<h2 className="landing__header-title"> Start your Betting Application with <b>Scale</b> and <b>Security</b>
           			</h2>
-					<p className="landing__header-subhead">We provide <b>Engines</b>, easy to use <b>API</b>, <b>Licensing</b> and <b>Management</b> for your needs {' '}
-						
-          </p>
-					<Link className="landing__btn landing__btn--header" to="/documentation/introduction" target="_blank">
+					<p className="landing__header-subhead">Where the Future of Commerce meets Betting Engines{' '}	
+                    </p>
+
+					<Link style={{width : 200}} className="btn btn-primary account__btn"  to="/register">
 						Start today
           			</Link>
 					

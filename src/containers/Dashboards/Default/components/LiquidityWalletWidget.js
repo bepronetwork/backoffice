@@ -23,8 +23,9 @@ class LiquidityWalletWidget extends PureComponent {
     };
 
     render() {        
-        console.log(this.props.data)
+        
         let playBalance = this.props.data.data.playBalance;
+
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>

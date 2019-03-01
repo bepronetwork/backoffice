@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react';
-import { Button, ButtonToolbar } from 'reactstrap';
+import { Button, ButtonToolbar, Container, Row, Col, CardBody } from 'reactstrap';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import PropTypes from 'prop-types';
-import { ApplicationIcon, DesktopMacDashboardIcon, BusinessIcon, DownloadNetworkIcon, MediaNetworkIcon } from 'mdi-react';
+import { ApplicationIcon, DesktopMacDashboardIcon, BusinessIcon, CheckboxMultipleBlankCircleIcon, MediaNetworkIcon } from 'mdi-react';
+import TextInput from '../../../../shared/components/TextInput';
+import { Card } from '@material-ui/core';
+const Back = `${process.env.PUBLIC_URL}/img/background-login.png`;
 
 class WizardFormOne extends PureComponent {
 
@@ -48,71 +51,64 @@ class WizardFormOne extends PureComponent {
 		const { handleSubmit } = this.props;
 
 		return (
-		<form className="form form--horizontal wizard__form" onSubmit={handleSubmit}>
-			<h3 className="wizard__title">Create your First Application</h3>
-			<div className="form__form-group">
-				<span className="form__form-group-label">Name</span>
-				<div className="form__form-group-field">
-					<div className="form__form-group-icon">
-					<ApplicationIcon />
-					</div>
-					<Field
-					name="name"
-					component="input"
-					type="text"
-					placeholder="RiskYou"
-					onChange={(e) =>  this.changeContent('name', e.target.value)}/>
-				</div>
-			</div>
-			<div className="form__form-group">
-				<span className="form__form-group-label">Description</span>
-				<div className="form__form-group-field">
-					<div className="form__form-group-icon">
-					<DesktopMacDashboardIcon />
-					</div>
-					<Field
-					name="description"
-					component="input"
-					type="text"
-					placeholder="A Great Casino Platform for Risk Users"
-					onChange={(e) =>  this.changeContent('description', e.target.value)}/>
-				</div>
-			</div>
-
-            <div className="form__form-group">
-				<span className="form__form-group-label">Market</span>
-				<div className="form__form-group-field">
-					<div className="form__form-group-icon">
-					<BusinessIcon />
-					</div>
-					<Field
-					name="market"
-					component="input"
-					type="text"
-					placeholder="Casino"
-					onChange={(e) =>  this.changeContent('market', e.target.value)}/>
-				</div>
-			</div>
-
-            <div className="form__form-group">
-				<span className="form__form-group-label">Website</span>
-				<div className="form__form-group-field">
-					<div className="form__form-group-icon">
-					<MediaNetworkIcon />
-					</div>
-					<Field
-					name="website"
-					component="input"
-					type="text"
-					placeholder="https://www.risk.you"
-					onChange={(e) =>  this.changeContent('website', e.target.value)}/>
-				</div>
-			</div>
-			
-			<ButtonToolbar className="form__button-toolbar wizard__toolbar">
-			    <Button onClick={() => this.createApp()} color="primary" type="submit" className="next"> Enter the B-PRO Ecosystem</Button>
-			</ButtonToolbar>
-		</form>
+            <div className={'container__all'}>
+				<Row className={'container__all'}  style={{marginTop : '10%'}}>
+                    <Col lg={6} className={'login_background indexed'} >
+						<img className="login_background indexed" src={Back} />
+					</Col>
+                    <Col lg={6}>
+                    <div className="account__wrapper">
+							<div className="account__card">
+							
+                            <form className="form" onSubmit={handleSubmit}>
+                        <div className="form__form-group">
+                            <h3 className="wizard__title">Create your First Application</h3>
+                                <TextInput
+                                    icon={ApplicationIcon}
+                                    name="name"
+                                    label="App"
+                                    type="text"
+                                    placeholder="RiskYou"
+                                    changeContent={this.changeContent}
+                                />
+                                <TextInput
+                                    icon={DesktopMacDashboardIcon}
+                                    name="description"
+                                    label="Description"
+                                    type="text"
+                                    placeholder="A Great Casino Platform for Risk Users"
+                                    changeContent={this.changeContent}
+                                />
+                                <TextInput
+                                    icon={BusinessIcon}
+                                    name="market"
+                                    type="text"
+                                    placeholder="Casino"
+                                    label="Market"
+                                    changeContent={this.changeContent}
+                                />
+                                <TextInput
+                                    icon={MediaNetworkIcon}
+                                    name="website"
+                                    label="Website"
+                                    type="text"
+                                    placeholder="https://www.risk.you"
+                                    changeContent={this.changeContent}
+                                />
+                                
+                            </div>
+                    
+                            <div className="account__btns">
+                                <button style={{maxWidth : 350, marginTop  :30}}  onClick={() => this.createApp()} c className="btn btn-primary account__btn">Create</button>
+                            </div>
+                          
+                        </form>
+                        </div>
+                        </div>
+		                    
+                    </Col>
+                </Row>
+            </div>
 		);
 	}
 }

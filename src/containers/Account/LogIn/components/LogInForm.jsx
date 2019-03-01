@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import renderCheckBoxField from '../../../../shared/components/form/CheckBox';
 import Account from '../../../../controllers/Account';
+import { CheckboxMultipleBlankCircleIcon } from 'mdi-react';
+import TextInput from '../../../../shared/components/TextInput';
 
 class LogInForm extends React.Component {
   static propTypes = {
@@ -49,51 +51,28 @@ class LogInForm extends React.Component {
         return (
         <form className="form" onSubmit={handleSubmit}>
             <div className="form__form-group">
-            <span className="form__form-group-label">Username</span>
-            <div className="form__form-group-field">
-                <div className="form__form-group-icon">
-                <AccountOutlineIcon />
-                </div>
-                <Field
+                <TextInput
+                    icon={CheckboxMultipleBlankCircleIcon}
                     name="username"
-                    component="input"
+                    label="Username"
                     type="text"
-                    placeholder="Name"
-                    onChange={(e) =>  this.changeContent('username', e.target.value)}/>
-            </div>
-            </div>
-            <div className="form__form-group">
-            <span className="form__form-group-label">Password</span>
-            <div className="form__form-group-field">
-                <div className="form__form-group-icon">
-                <KeyVariantIcon />
-                </div>
-                <Field
-                    name="password"
-                    component="input"
-                    type={this.state.showPassword ? 'text' : 'password'}
-                    placeholder="Password"
-                    onChange={(e) =>  this.changeContent('password', e.target.value)}/>
-                <button
-                    className={`form__form-group-button${this.state.showPassword ? ' active' : ''}`}
-                    onClick={e => this.showPassword(e)}
-                ><EyeIcon />
-                </button>
-            </div>
-            <div className="account__forgot-password">
-                <a href="/">Forgot a password?</a>
-            </div>
-            </div>
-            <div className="form__form-group">
-            <div className="">
-                <Field
-                name="remember_me"
-                component={renderCheckBoxField}
-                label="Remember me"
+                    placeholder="James2345"
+                    changeContent={this.changeContent}
                 />
+                <TextInput
+                    icon={KeyVariantIcon}
+                    name="password"
+                    label="Password"
+                    type="password"
+                    placeholder="**********"
+                    changeContent={this.changeContent}
+                />
+                  <div className="account__forgot-password" >
+                <a href="/">Forgot a password?</a>
+            </div>    
             </div>
-            </div>
-            <div className="account__btns">
+                 
+            <div className="account__btns" style={{marginTop  :40}}>
             <button className="btn btn-primary account__btn" onClick={ () => this.login() } >Log In</button>
             <Link className='btn btn-outline-primary account__btn' to="/register">
                Create Account

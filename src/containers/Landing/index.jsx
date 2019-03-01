@@ -36,7 +36,7 @@ class Landing extends PureComponent {
               <Col md={12}>
                 <div className="landing__menu-wrap">
                   <p className="landing__menu-logo">
-                    <img src={logo} className={'landing__logo'} alt="" />
+                    <img src={logo} className={'landing__logo'} style={{marginLeft : 20}} alt="" />
                   </p>
                   <nav className="landing__menu-nav">
                     <button onClick={() => scrollToComponent(this.Features, {
@@ -52,15 +52,15 @@ class Landing extends PureComponent {
                     >
                       Integrations
                     </button>
-                    <button
-                      onClick={() => scrollToComponent(this.FeatureRequest, {
-                        offset: -50,
-                        align: 'top',
-                        duration: 2500,
-                      })}
-                    >
-                      Docs <span className="landing__menu-nav-new" />
+                    <a  href={'https://docs.betprotocol.com'}
+                            target={'__blank'}>
+                        <button
+                           
+                        
+                        >
+                        Docs <span className="landing__menu-nav-new" />
                     </button>
+                        </a>
                     <Link
                       className={'landing__signin'}
                       to={'/login'}

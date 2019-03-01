@@ -95,6 +95,19 @@ class Connection {
         }
     }
 
+    createBearerToken = async (app) => {
+        try{
+            let response = await fetch(URL+ `/api/app/api/createToken`, {
+                method : 'POST',
+                headers : config.headers,
+                body : JSON.stringify(app)
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
 }
 
 

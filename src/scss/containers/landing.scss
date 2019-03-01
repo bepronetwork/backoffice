@@ -11,6 +11,7 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
   position: absolute;
   z-index: 0;
   overflow-x: hidden;
+  height: -webkit-fill-available;
 
   .container {
     transition: 0.3s;
@@ -68,13 +69,13 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 }
 
 .landing__btn {
-  background: linear-gradient(to right, #ad78a7, #858dcd);;
-  box-shadow: 0 20px 30px 0 #f8e7ec;
+  background: linear-gradient(to right, #a198c1, #858dcd);;
+  box-shadow: 0 20px 100px 0 #ccc;
   color: white;
   font-size: 14px;
   font-weight: 500;
   line-height: 14px;
-  border-radius: 23px;
+  border-radius: 10px;
   height: 46px;
   padding: 10px 30px;
   transition: 0.3s;
@@ -82,9 +83,9 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
   border: none;
 
   &:hover {
-    color: #b087b4;
+    color: #858dcd;
     background: darken(#ffffff, 5%);
-    box-shadow: 0 5px 15px 0 #b087b4;
+    box-shadow: 0 5px 15px 0 #ccc;
   }
 
   &.landing__btn--header {
@@ -94,6 +95,7 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
     width: auto;
     padding: 16px 30px;
     font-family: 'Poppins', sans-serif;
+    font-size: 15px;
   }
 }
 
@@ -132,7 +134,7 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
     position: relative;
     background: transparent;
     border: none;
-    color: #696969;
+    color: white;
     padding: 0;
     margin-right: 60px;
     font-size: 14px;
@@ -142,7 +144,7 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
     font-family: 'Poppins', sans-serif;
 
     &:hover {
-      color: darken(#696969, 15%);
+      color: darken(white, 15%);
     }
 
     @media screen and (min-width: 992px) {
@@ -163,10 +165,13 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 }
 
 .landing__signin{
-  color : #9f80aa;
+  color : white;
+  border-radius: 20px;
+  padding : 5px 20px;
+  border : 1px solid white;
 
   &:hover{
-    color: #134989;
+    opacity: 0.6;
   }
 }
 //Header
@@ -178,13 +183,20 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
   background-size: 100% 100%;
 }
 
+.indexed{
+    z-index: 1 !important;
+}
+
 .landing .landing__header-title {
-  max-width: 680px;
-  line-height: normal;
-  margin: auto;
-  padding-left: 20px;
-  color: #696969;
-  margin-bottom: 20px;
+    max-width: 780px;
+    line-height: normal;
+    margin: auto;
+    padding-left: 20px;
+    @include themify($themes) {
+        color: themed('colorBetProtocol');
+      }
+    font-size: 35px;
+    margin-bottom: 20px;
 }
 
 .landing__header-img {
@@ -193,8 +205,8 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 }
 
 .landing .landing__header-subhead {
-  color: #9189ba;
-  font-size: 16px;
+  color: #d4cbe1;
+  font-size: 15px;
   line-height: 1.8;
   max-width: 500px;
   margin-bottom: 30px;
@@ -934,4 +946,20 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
   font-size: 13px;
   line-height: 1.54;
   margin: 0;
+}
+
+
+
+.landing_1_back{
+    position: absolute;
+    display: block;
+    top: 0;
+    z-index: -1;
+}
+
+.landing_2_back{
+    position: absolute;
+    display: block;
+    z-index: -1;
+    top: 0;
 }

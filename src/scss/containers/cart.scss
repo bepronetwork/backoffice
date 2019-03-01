@@ -14,18 +14,19 @@
 }
 
 	.container__all{
-	height: -webkit-fill-available;
+        overflow: hidden;
+	    height: -webkit-fill-available;
 	}
 	.cart__preview-img {
-	width: 50px;
-	height: 45px;
-	border: 1px solid #f0f0f0;
-	display: inline-block;
-	overflow: hidden;
-	text-align: center;
-	padding: 5px;
-	position: absolute;
-	top: 8px;
+        width: 50px;
+        height: 45px;
+        border: 1px solid #f0f0f0;
+        display: inline-block;
+        overflow: hidden;
+        text-align: center;
+        padding: 5px;
+        position: absolute;
+        top: 8px;
 
 	& + span {
 		padding-left: 60px;

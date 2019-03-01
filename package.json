@@ -1,6 +1,6 @@
 {
-  "name": "Easydev",
-  "version": "1.4.0",
+  "name": "BetProtocol",
+  "version": "0.2.0",
   "private": true,
   "homepage": "",
   "dependencies": {
@@ -125,7 +125,8 @@
     "dev": "node scripts/start.js",
     "start": "node bin/www.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "generate-docs" : "docsify init docs"
   },
   "devDependencies": {
     "@babel/core": "7.1.0",

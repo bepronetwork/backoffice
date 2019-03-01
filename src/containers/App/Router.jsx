@@ -1,104 +1,93 @@
-	import React from 'react';
-	import { Route, Switch } from 'react-router-dom';
-	import MainWrapper from './MainWrapper';
-	import Layout from '../Layout/index';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import MainWrapper from './MainWrapper';
+import Layout from '../Layout/index';
 import routesStructure from './routes';
-	import Alerts from '../UI/Alerts/index';
-	import Buttons from '../UI/Buttons/index';
-	import Carousel from '../UI/Carousel/index';
-	import Collapse from '../UI/Collapse/index';
-	import Grids from '../UI/Grids';
-	import Modals from '../UI/Modals/index';
-	import Notifications from '../UI/Notification/index';
-	import Panels from '../UI/Panels/index';
-	import ProgressBars from '../UI/ProgressBars/index';
-	import RangeSliders from '../UI/RangeSliders/index';
-	import Tabs from '../UI/Tabs/index';
-	import Timeline from '../UI/Timeline/index';
-	import Tooltips from '../UI/Tooltips/index';
-	import Typography from '../UI/Typography/index';
+import Alerts from '../UI/Alerts/index';
+import Buttons from '../UI/Buttons/index';
+import Carousel from '../UI/Carousel/index';
+import Collapse from '../UI/Collapse/index';
+import Grids from '../UI/Grids';
+import Modals from '../UI/Modals/index';
+import Notifications from '../UI/Notification/index';
+import Panels from '../UI/Panels/index';
+import ProgressBars from '../UI/ProgressBars/index';
+import RangeSliders from '../UI/RangeSliders/index';
+import Tabs from '../UI/Tabs/index';
+import Timeline from '../UI/Timeline/index';
+import Tooltips from '../UI/Tooltips/index';
+import Typography from '../UI/Typography/index';
 
-	import BasicTables from '../Tables/BasicTables/index';
-	import DataTable from '../Tables/DataTable/index';
-	import EditableTable from '../Tables/EditableTable/index';
-	import MaterialTable from '../Tables/MaterialTable/index';
+import BasicTables from '../Tables/BasicTables/index';
+import DataTable from '../Tables/DataTable/index';
+import EditableTable from '../Tables/EditableTable/index';
+import MaterialTable from '../Tables/MaterialTable/index';
 
-	import GoogleMap from '../Maps/GoogleMap/index';
-	import VectorMap from '../Maps/VectorMap/index';
+import GoogleMap from '../Maps/GoogleMap/index';
+import VectorMap from '../Maps/VectorMap/index';
 
-	import NotFound404 from '../DefaultPage/404/index';
-	import Calendar from '../DefaultPage/Calendar/index';
-	import FAQ from '../DefaultPage/Faq/index';
-	import Gallery from '../DefaultPage/Gallery/index';
-	import Chat from '../Chat/index';
-	import PricingCards from '../DefaultPage/PricingCards/index';
-	import TextEditor from '../DefaultPage/TextEditor/index';
-	import InvoiceTemplate from '../DefaultPage/InvoiceTemplate/index';
-	import SearchResults from '../DefaultPage/SearchResults/index';
-	import ProjectSummary from '../DefaultPage/ProjectSummary/index';
+import NotFound404 from '../DefaultPage/404/index';
+import Calendar from '../DefaultPage/Calendar/index';
+import FAQ from '../DefaultPage/Faq/index';
+import Gallery from '../DefaultPage/Gallery/index';
+import Chat from '../Chat/index';
+import PricingCards from '../DefaultPage/PricingCards/index';
+import TextEditor from '../DefaultPage/TextEditor/index';
+import InvoiceTemplate from '../DefaultPage/InvoiceTemplate/index';
+import SearchResults from '../DefaultPage/SearchResults/index';
+import ProjectSummary from '../DefaultPage/ProjectSummary/index';
 
-	import Catalog from '../ECommerce/Catalog/index';
-	import ProductPage from '../ECommerce/product_page/index';
+import Catalog from '../ECommerce/Catalog/index';
+import ProductPage from '../ECommerce/product_page/index';
 
-	import Profile from '../Account/Profile/index';
-	import EmailConfirmation from '../Account/EmailConfimation/index';
-	import LockScreen from '../Account/LockScreen/index';
-	import LogIn from '../Account/LogIn/index';
-	import LogInPhoto from '../Account/log_in_photo/index';
-	import Register from '../Account/Register/index';
-	import RegisterPhoto from '../Account/RegisterPhoto/index';
+import Profile from '../Account/Profile/index';
+import EmailConfirmation from '../Account/EmailConfimation/index';
+import LockScreen from '../Account/LockScreen/index';
+import LogIn from '../Account/LogIn/index';
+import LogInPhoto from '../Account/log_in_photo/index';
+import Register from '../Account/Register/index';
+import RegisterPhoto from '../Account/RegisterPhoto/index';
 
-	import BasicForm from '../Form/BasicForm/index';
-	import FormDropzone from '../Form/FormDropzone/index';
-	import FileUpload from '../Form/FileUpload/index';
-	import FormLayouts from '../Form/FormLayouts/index';
-	import CheckFormControls from '../Form/CheckFormControls/index';
-	import FormValidation from '../Form/FormValidation/index';
-	import MaskForm from '../Form/MaskForm/index';
-	import WizardForm from '../Form/WizardForm/index';
-	import MaterialForm from '../Form/MaterialForm/index';
-	import FloatingLabelsForm from '../Form/FloatingLabelsForm/index';
-	import FormPicker from '../Form/FormPicker/index';
+import BasicForm from '../Form/BasicForm/index';
+import FormDropzone from '../Form/FormDropzone/index';
+import FileUpload from '../Form/FileUpload/index';
+import FormLayouts from '../Form/FormLayouts/index';
+import CheckFormControls from '../Form/CheckFormControls/index';
+import FormValidation from '../Form/FormValidation/index';
+import MaskForm from '../Form/MaskForm/index';
+import WizardForm from '../Form/WizardForm/index';
+import MaterialForm from '../Form/MaterialForm/index';
+import FloatingLabelsForm from '../Form/FloatingLabelsForm/index';
+import FormPicker from '../Form/FormPicker/index';
 
-	import Cart from '../ECommerce/Cart/index';
-	import OrdersList from '../ECommerce/OrdersList/index';
-	import Payment from '../ECommerce/Payment/index';
-	import ProductEdit from '../ECommerce/ProductEdit/index';
-	import ProductsList from '../ECommerce/ProductsList/index';
+import Cart from '../ECommerce/Cart/index';
+import OrdersList from '../ECommerce/OrdersList/index';
+import Payment from '../ECommerce/Payment/index';
+import ProductEdit from '../ECommerce/ProductEdit/index';
+import ProductsList from '../ECommerce/ProductsList/index';
 
-	import ChartsJS from '../Charts/ChartJs/index';
-	import ReactVis from '../Charts/ReactVis/index';
-	import Recharts from '../Charts/Recharts/index';
+import ChartsJS from '../Charts/ChartJs/index';
+import ReactVis from '../Charts/ReactVis/index';
+import Recharts from '../Charts/Recharts/index';
 
-	import FitnessDashboard from '../Dashboards/Fitness/index';
-	import DefaultDashboard from '../Dashboards/Default/index';
-	import ECommerceDashboard from '../Dashboards/ECommerce/index';
-	import CryptoDashboard from '../Dashboards/Crypto/index';
+import FitnessDashboard from '../Dashboards/Fitness/index';
+import DefaultDashboard from '../Dashboards/Default/index';
+import ECommerceDashboard from '../Dashboards/ECommerce/index';
+import CryptoDashboard from '../Dashboards/Crypto/index';
 
-	import Mail from '../Mail/index';
+import Mail from '../Mail/index';
 
-	import Introduction from '../Documentation/01_introduction/index';
-	import Installation from '../Documentation/02_installation/index';
-	import FileStructure from '../Documentation/03_files_structure/index';
-	import Components from '../Documentation/04_components/index';
-	import Form from '../Documentation/05_forms/index';
-	import ColorThemes from '../Documentation/06_change_and_add_color_themes/index';
-	import NavigationItem from '../Documentation/07_new_navigation_item/index';
-	import Resources from '../Documentation/08_resources/index';
-	import Changelog from '../Documentation/09_changelog/index';
+import CryptoDashboardEdit from '../Dashboards/CryptoTableEdit/index';
+import ECommerceDashboardEdit from '../Dashboards/ECommerceTableEdit/index';
 
-
-	import CryptoDashboardEdit from '../Dashboards/CryptoTableEdit/index';
-	import ECommerceDashboardEdit from '../Dashboards/ECommerceTableEdit/index';
-
-	import Landing from '../Landing/index';
-	import BetProtocol from '../Dashboards/BetProtocol';
-	import UsersContainer from '../Users';
-	import Applications from '../Applications';
-	import StatsContainer from '../Stats'
-	import WalletContainer from '../Wallet';
-	import AffiliatesContainer from '../Affiliates';
-	import DepositWidget from '../Wallet/components/paths/DepositWidget';
+import Landing from '../Landing/index';
+import BetProtocol from '../Dashboards/BetProtocol';
+import UsersContainer from '../Users';
+import Applications from '../Applications';
+import StatsContainer from '../Stats'
+import WalletContainer from '../Wallet';
+import AffiliatesContainer from '../Affiliates';
+import DepositWidget from '../Wallet/components/paths/DepositWidget';
 
 import MainRoute from './MainRoute';
 import CreateApp from '../Wizards/CreateApp';
@@ -194,19 +183,6 @@ import CreateApp from '../Wizards/CreateApp';
 	</Switch>
 	);
 
-	const Documentation = () => (
-	<Switch>
-		<Route path="/documentation/introduction" component={Introduction} />
-		<Route path="/documentation/installation" component={Installation} />
-		<Route path="/documentation/file_structure" component={FileStructure} />
-		<Route path="/documentation/components" component={Components} />
-		<Route path="/documentation/form" component={Form} />
-		<Route path="/documentation/color_themes" component={ColorThemes} />
-		<Route path="/documentation/navigation_item" component={NavigationItem} />
-		<Route path="/documentation/resources" component={Resources} />
-		<Route path="/documentation/changelog" component={Changelog} />
-	</Switch>
-	);
 
 	const Crypto = () => (
 	<Switch>
@@ -241,7 +217,6 @@ import CreateApp from '../Wizards/CreateApp';
 		<Route path="/account" component={Account} />
 		<Route path="/e-commerce" component={ECommerce} />
 		<Route path="/default_pages" component={DefaultPages} />
-		<Route path="/documentation" component={Documentation} />
 		</div>
 	</div>
 	);

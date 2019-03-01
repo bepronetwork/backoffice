@@ -5,7 +5,7 @@ import { Col, Container, Row } from 'reactstrap';
 import { BasicNotification } from '../../../shared/components/Notification';
 import NotificationSystem from 'rc-notification';
 
-const Back = `${process.env.PUBLIC_URL}/img/background-login.jpg`;
+const Back = `${process.env.PUBLIC_URL}/img/background-login.png`;
 let notification = null;
 
 const showNotification = (message) => {
@@ -46,8 +46,7 @@ class Register extends React.Component{
 					<Col lg={6}>
 						<div className="account__wrapper">
 							<div className="account__card">
-							<h3 className="account__title" style={{marginBottom : '20%'}}>Register at B-Pro
-							</h3>
+							
 							<RegisterForm showNotification={this.showNotification} handleSubmit={(e) => e.preventDefault()} {...this.props} onSubmit={false} />
 								<div className="account__have-account">
 									<p>Already have an account? <Link to="/login">Login</Link></p>
