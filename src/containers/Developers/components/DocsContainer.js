@@ -18,20 +18,22 @@ class DocsContainer extends React.Component{
     render = () => {
         return (
             <Col md={12} lg={12}>
-                <Card>
-                <CardBody className="dashboard__card-widget no_padding_card">
-                    <Row style={{overflow : 'hidden'}}>
-                        <Col lg={4}>
-                            <h4 style={{marginTop : 0, paddingTop : 40, paddingBottom : 40, marginBottom : 20}} className={"dashboard__total-stat"}>
-                                API Documentation 
-                            </h4>
-                        </Col>
-                        <Col style={{overflow : 'hidden'}} lg={8}>
-                            <img style={{width : 400, margin : 'auto'}} src={Ava} alt="avatar" className='image__doc'/>
-                        </Col>
-                    </Row>
-                </CardBody>     
-                </Card>
+                <a href={'https://docs.betprotocol.com'} target={'__blank'}>
+                    <Card>
+                    <CardBody className="dashboard__card-widget no_padding_card">
+                        <Row style={{overflow : 'hidden'}}>
+                            <Col lg={4}>
+                                <h4 style={{marginTop : 0, paddingTop : 40, paddingBottom : 40, marginBottom : 20}} className={"dashboard__total-stat"}>
+                                    API Documentation 
+                                </h4>
+                            </Col>
+                            <Col style={{overflow : 'hidden'}} lg={8}>
+                                <img style={{width : 400, margin : 'auto'}} src={Ava} alt="avatar" className='image__doc'/>
+                            </Col>
+                        </Row>
+                    </CardBody>     
+                    </Card>
+                </a>
             </Col>
         )
     }

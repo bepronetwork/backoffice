@@ -82,9 +82,7 @@ class App{
             let {
                 message : data
             } = res.data;
-
             this.params.bearerToken = data.bearerToken;
-
             return res;
         }catch(err){
             throw err;

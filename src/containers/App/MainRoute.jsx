@@ -9,6 +9,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../../scss/app.scss';
 import Router from './Router';
 import store from './store';
+import { connect } from "react-redux";
+import { compose } from 'lodash/fp'
 import ScrollToTop from './ScrollToTop';
 import { config as i18nextConfig } from '../../translations';
 import Layout from '../Layout';
@@ -50,8 +52,10 @@ class MainRoute extends React.Component {
         this.setState({ loading: false });
     }
 
-    async loginAccount(){
-        let Acc = new Account();
+    async loginAccount(){        
+        let Acc = this.props.profile;
+        //If there is no Account
+        if(!Acc){ Acc = new Account() };
         try{
             await Acc.login();
         }catch(err){
@@ -150,4 +154,13 @@ const wrappedWalletRoutes = (props) => {
 	)
 }
 
-export default MainRoute;
+function mapStateToProps(state){
+    return {
+        profile: state.profile
+    };
+}
+
+
+export default compose(
+    connect(mapStateToProps)
+)(MainRoute);

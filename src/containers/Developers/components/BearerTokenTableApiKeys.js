@@ -29,7 +29,6 @@ class BearerTokenTableApiKeys extends PureComponent {
     }
 
 	render() {
-		let tableData = fromDatabasetoTable(this.props.data);
 		return (
 		<Col md={12} lg={12}>
 			<Card>
@@ -38,7 +37,10 @@ class BearerTokenTableApiKeys extends PureComponent {
                         <h5 className="bold-text">Bearer Token</h5>
                     </div>
                     <button style={{margin : 'auto',  maxWidth : 200, marginBottom : 30}} className="btn btn-primary account__btn" outline onClick={() => this.generateBearerToken()} > Generate API Token </button>
-                    <EditTable heads={this.heads} rows={tableData} />
+                    <hr></hr>
+                    <h6>
+                        {this.props.data}
+                    </h6>
                 </CardBody>
 			</Card>
 		</Col>
@@ -46,14 +48,5 @@ class BearerTokenTableApiKeys extends PureComponent {
 	}
 }
 
-
-
-const fromDatabasetoTable = (data) => {
-    return [{
-        index       : 1,
-        bearerToken : data,
-    }]
-	
-}
 
 export default BearerTokenTableApiKeys;

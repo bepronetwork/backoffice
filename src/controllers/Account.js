@@ -2,10 +2,7 @@ import ConnectionSingleton from "../api/Connection";
 import store from "../containers/App/store";
 import { setProfileInfo } from "../redux/actions/profile";
 import App from "./App";
-import Timer from 'tiny-timer';
 import Cache from "../services/cache";
-
-let timer = new Timer()
 
 class Account{    
     constructor(params=null){
@@ -75,10 +72,10 @@ class Account{
                      /* GET APP Stats */
                     await this.getData();
                      // Set Timer
+                    
                     this.setTimer();
                 }
-                /* Add Everything to the Redux State */  
-                await store.dispatch(setProfileInfo(this));
+                this.update()
                 // TO DO : Create an Initial Screen to choose between Apps or a top Dropdown for it
                 return response;
             }else{
@@ -110,6 +107,7 @@ class Account{
     }
 
     update = async () => {
+        console.log(store, this)
         /* Add Everything to the Redux State */  
         await store.dispatch(setProfileInfo(this));
     }
@@ -158,7 +156,6 @@ class Account{
     }
 
     setApp = (app) => {
-        clearTimeout(this.timer);
         this.App = new App(app);
     }
 
@@ -176,7 +173,7 @@ class Account{
 
     setTimer = () => {
         clearTimeout(this.timer);
-        this.timer = window.setInterval(
+        this.timer = setInterval(
             () => {
             this.getData();
         }, 2000);
