@@ -107,7 +107,6 @@ class Account{
     }
 
     update = async () => {
-        console.log(store, this)
         /* Add Everything to the Redux State */  
         await store.dispatch(setProfileInfo(this));
     }
