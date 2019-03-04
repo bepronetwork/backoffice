@@ -40,13 +40,12 @@ class App{
                     headers : authHeaders(this.params.bearerToken)
                 })
             ]);
-            
             let params = {
                 user : res[0].data.message ? res[0].data.message : null,
                 games : res[1].data.message ? res[1].data.message : null,
                 bets : res[2].data.message ? res[2].data.message : null,
                 revenue : res[3].data.message ? res[3].data.message : null,
-                wallet :res[4].data.message ? res[4].data.message[0] : null,
+                wallet :res[4].data.message ? res[4].data.message : null,
             } 
 
             this.data = {

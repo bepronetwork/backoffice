@@ -15,23 +15,15 @@ class ETHWalletWidget extends PureComponent {
  
     constructor() {
         super();
-        this.state = {
-            usd: 0,
-        };
-    }
-
-    componentWillReceiveProps(props){
-        this.getUSDValue(props.data.data.eth);
-    }
-
-    getUSDValue = async (eth) => {
-        let usd = await ConverterSingleton.fromETHtoUsd(eth);
-        this.setState({...this.state, usd : usd});
-    }
+        
+    } 
 
     render() {        
 
-        let eth = this.props.data.data.eth;
+        let {
+            eth ,
+            eth_usd
+        } =  this.props.data.data;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -48,7 +40,7 @@ class ETHWalletWidget extends PureComponent {
                                     }><AnimationNumber decimals number={eth}/> ETH</p>
                                 </div>
                                 <div className="dashboard__visitors-chart">
-                                    <p className="dashboard__visitors-chart-title"> <span style={{fontSize : 15}}>{Numbers.toMoney(this.state.usd)} €</span></p>
+                                    <p className="dashboard__visitors-chart-title"> <span style={{fontSize : 15}}>$ {Numbers.toMoney(eth_usd)}</span></p>
                                 </div>
                             </Col>
                             <Col lg={4}>

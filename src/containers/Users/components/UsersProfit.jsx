@@ -13,9 +13,7 @@ class UsersProfit extends PureComponent {
         };
     }
 
-    render() {
-        console.log(this.props.data.data) 
-        
+    render() {        
         let profit = getProfits(this.props.data.data)
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
