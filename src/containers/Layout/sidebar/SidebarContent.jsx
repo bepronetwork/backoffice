@@ -46,7 +46,6 @@ class SidebarContent extends Component {
             affiliates  : this.hasData(props.profile.hasAppStats('affiliates')),
             developers  : true
         }
-        console.log(newState)
         this.setState({...this.state, ...newState})
     }
 

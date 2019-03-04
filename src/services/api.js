@@ -1,8 +1,14 @@
+import config from "../api/config";
+
+
 class API{
 
     getETHPriceAPI = async () => {
         return new Promise( (resolve, reject) => {
-            fetch('https://api.coinmarketcap.com/v1/ticker/ethereum/')
+            fetch('https://api.coinmarketcap.com/v1/ticker/ethereum', {
+                headers : config.headers,
+                mode    : 'cors'
+            })
             .then(response => resolve(response.json()))
             .catch(error => console.log(error))
         })

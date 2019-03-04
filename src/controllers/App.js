@@ -62,6 +62,34 @@ class App{
 		}
     }
 
+    getDepositReference = async ({currency}) => {
+        // TO DO : Change App to the Entity Type coming from Login
+        try{
+            return await ConnectionSingleton.getDepositReference(
+                {   
+                    currency, 
+                    entity : this.getId(), 
+                    headers : authHeaders(this.params.bearerToken)
+                });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getDepositInfo = async ({id}) => {
+        // TO DO : Change App to the Entity Type coming from Login
+        try{
+            return await ConnectionSingleton.getDepositInfo(
+                {   
+                    id, 
+                    headers : authHeaders(this.params.bearerToken)
+                });
+        }catch(err){
+            throw err;
+        }
+    }
+
+
     getName(){
         return this.params.name;
     }

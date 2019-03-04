@@ -63,14 +63,13 @@ class Connection {
         }
     }
 
-    getDepositReference = async (currency, entity, entityType) => {
+    getDepositReference = async ({currency, entity, headers}) => {
         try{
-            let response = await fetch(URL+ '/api/deposit/generateReference', {
+            let response = await fetch(URL+ '/api/app/deposit/generateReference', {
                 method : 'POST',
-                headers : config.headers,
+                headers : addHeaders(config, headers),
                 body : JSON.stringify({
                     "entity" : entity,
-                    "entityType" : entityType,
                     "currency" : currency
                 })
             });
@@ -81,11 +80,11 @@ class Connection {
         }
     }
 
-    getDepositInfo = async (deposit_id) => {
+    getDepositInfo = async ({id, headers}) => {
         try{
-            let response = await fetch(URL+ `/api/deposit/${deposit_id}/info`, {
+            let response = await fetch(URL+ `/api/deposit/${id}/info`, {
                 method : 'POST',
-                headers : config.headers
+                headers : addHeaders(config, headers),
             });
 
             return response.json();

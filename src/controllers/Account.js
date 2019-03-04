@@ -177,22 +177,19 @@ class Account{
         }, 2000);
     }
 
-    getDepositReference = async (currency) => {
+    getDepositReference = async (params) => {
         // TO DO : Change App to the Entity Type coming from Login
         try{
-            let response = await ConnectionSingleton.getDepositReference(
-                currency,
-                this.getApp().getId(),
-                'app');
+            let response = await this.getApp().getDepositReference(params);
             return processServerResponse(response);
         }catch(err){
             throw err;
         }
     }
 
-    getDepositInfo = async (_id) => {
+    getDepositInfo = async (params) => {
         try{
-            let response = await ConnectionSingleton.getDepositInfo(_id);
+            let response = await this.getApp().getDepositInfo(params); 
             return processServerResponse(response);
         }catch(err){
             throw err;

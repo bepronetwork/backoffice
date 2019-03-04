@@ -44,7 +44,7 @@ class CurrencyBox extends PureComponent {
 
     getReference = async () => {
         // TO DO : Change ETH to the Currency Type;
-        let data = await this.props.profile.getDepositReference('eth');
+        let data = await this.props.profile.getDepositReference({currency : 'eth'});
         let {address, id} = data;
         this.setState({...this.state, id, referenceAddress : address, generatedReference : true});
         this.setTimer()
@@ -52,7 +52,7 @@ class CurrencyBox extends PureComponent {
 
     confirmDeposit = async () => {
            // TO DO : Change ETH to the Currency Type;
-           let data = await this.props.profile.getDepositInfo(this.state.id);
+           let data = await this.props.profile.getDepositInfo({id : this.state.id});
            let {
                confirmed,
                amount,
