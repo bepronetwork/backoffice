@@ -38,7 +38,6 @@ class Connection {
     }
 
     createApp = async ({name, description, metadataJSON, admin_id, marketType}) => {
-        console.log(name, description, metadataJSON, admin_id, marketType)
         try{
             let response = await fetch(URL + '/api/app/create', {
                 method : 'POST',
@@ -51,11 +50,11 @@ class Connection {
         }
     }
     
-    getSummary = async ({app, type}) => {
+    getSummary = async ({app, type, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/summary', {
                 method : 'POST',
-                headers : config.headers,
+                headers : addHeaders(config, headers),
                 body : JSON.stringify({app, type})
             });
             return response.json();
@@ -110,8 +109,15 @@ class Connection {
 
 }
 
+function addHeaders(config, newHeaders){
+    return {
+            ...config.headers,
+            ...newHeaders   
+    }
+}
 
 let ConnectionSingleton = new Connection();
 
 
 export default ConnectionSingleton;
+

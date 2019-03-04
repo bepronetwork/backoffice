@@ -72,7 +72,6 @@ class Account{
                      /* GET APP Stats */
                     await this.getData();
                      // Set Timer
-                    
                     this.setTimer();
                 }
                 this.update()

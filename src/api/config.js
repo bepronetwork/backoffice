@@ -3,7 +3,7 @@ export default {
         'Content-Type' : 'application/json'
     },
     server : {
-        development : 'http://localhost:3000',
+        development : 'http://localhost:80',
         production : 'https://api.betprotocol.com'
     }
 }

@@ -16,34 +16,43 @@ class App{
             let res = await Promise.all([
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
-                    type : 'USERS'
+                    type : 'USERS',
+                    headers : authHeaders(this.params.bearerToken)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
-                    type : 'GAMES'
+                    type : 'GAMES',
+                    headers : authHeaders(this.params.bearerToken)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
-                    type : 'BETS'
+                    type : 'BETS',
+                    headers : authHeaders(this.params.bearerToken)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
-                    type : 'REVENUE'
+                    type : 'REVENUE',
+                    headers : authHeaders(this.params.bearerToken)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
-                    type : 'WALLET'
+                    type : 'WALLET',
+                    headers : authHeaders(this.params.bearerToken)
                 })
-            ])
+            ]);
+            
+            let params = {
+                user : res[0].data.message ? res[0].data.message : null,
+                games : res[1].data.message ? res[1].data.message : null,
+                bets : res[2].data.message ? res[2].data.message : null,
+                revenue : res[3].data.message ? res[3].data.message : null,
+                wallet :res[4].data.message ? res[4].data.message[0] : null,
+            } 
 
             this.data = {
                 ...this.data,
                 summary : {
-                    users   : res[0].data.message,
-                    games   : res[1].data.message,
-                    bets    : res[2].data.message,
-                    revenue : res[3].data.message,
-                    wallet  : res[4].data.message[0]
+                    ...params
                 }
             };
 
@@ -82,6 +91,8 @@ class App{
             let {
                 message : data
             } = res.data;
+
+            //Add Connection Bearer Token to App Object
             this.params.bearerToken = data.bearerToken;
             return res;
         }catch(err){
@@ -95,9 +106,13 @@ class App{
             type : type
         }
     }
+}
 
 
-
+function authHeaders(bearerToken){
+    return {
+        "authorization" : "Bearer " + bearerToken
+    }
 }
 
 export default App;
