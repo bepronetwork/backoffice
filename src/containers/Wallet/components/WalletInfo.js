@@ -30,17 +30,18 @@ class WalletInfo extends PureComponent {
   render() {
     const { activeIndex } = this.state;
     const app = this.props.app;
-    
+
     return (
 		<Col md={12} lg={12} xl={12} >
 			<Card>
 				<Row>
 					<Col lg={6}>
-						<h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>Wallets</h3>
-						<p className="">
+						<h4 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>Wallets</h4>
+						{/* <p className="">
 							Total Balance 
 						</p>
-                <p className="bold-text dashboard__total-stat"><AnimationNumber number={48456.45}/> €</p>
+                            <p className="bold-text dashboard__total-stat"><AnimationNumber number={48456.45}/> €</p>
+    */}
 					</Col>
 				</Row>
 			</Card>

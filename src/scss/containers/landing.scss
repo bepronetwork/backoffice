@@ -19,31 +19,33 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 
   @media (min-width: 576px) {
 
-    .container {
-      max-width: 540px;
+      
+
+        .container {
+            max-width: 540px;
+        }
     }
-  }
 
-  @media (min-width: 768px) {
-
-    .container {
-      max-width: 720px;
+    @media (min-width: 768px) {
+     
+        .container {
+            max-width: 720px;
+        }
     }
-  }
 
-  @media (min-width: 992px) {
+    @media (min-width: 992px) {
 
-    .container {
-      max-width: 960px;
+        .container {
+        max-width: 960px;
+        }
     }
-  }
 
-  @media (min-width: 1200px) {
+    @media (min-width: 1200px) {
 
-    .container {
-      max-width: 1140px;
+        .container {
+        max-width: 1140px;
+        }
     }
-  }
 }
 
 
@@ -120,7 +122,7 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 .landing__menu-wrap {
   width: 100%;
   display: flex;
-  padding-top: 62px;
+  padding-top: 20px;
 }
 
 .landing__menu-logo {
@@ -155,25 +157,30 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 }
 
 .landing__menu-nav-new {
-  position: absolute;
-  background: #f06a8e;
-  height: 6px;
-  width: 6px;
-  border-radius: 50%;
-  right: -6px;
-  display: block;
-  top: -3px;
+    position: absolute;
+    @include themify($themes) {
+        background: themed('colorBetProtocolSecondary');
+    }
+        height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    right: -6px;
+    display: block;
+    top: -3px;
 }
 
 .landing__signin{
-  color : white;
-  border-radius: 20px;
-  padding : 5px 20px;
-  border : 1px solid white;
-
-  &:hover{
-    opacity: 0.6;
-  }
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 5px 10px 1px 1px #8162a5;
+    font-size: 15px;
+    padding : 5px 20px;
+    @include themify($themes) {
+        color: themed('colorBetProtocol');
+    }
+    &:hover{
+        opacity: 0.6;
+    }
 }
 //Header
 
@@ -188,9 +195,8 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 }
 
 .landing__header {
-  padding-top: 245px;
+  padding-top: 185px;
   position: relative;
-  height: -webkit-fill-available;
   text-align: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -218,13 +224,13 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 }
 
 .landing .landing__header-subhead {
-  color: #d4cbe1;
-  font-size: 15px;
-  line-height: 1.8;
-  max-width: 500px;
-  margin-bottom: 30px;
-  margin-right: auto;
-  margin-left: auto;
+    color: #b1b1b1 !important;
+    font-size: 15px;
+    line-height: 1.8;
+    max-width: 500px;
+    margin-bottom: 30px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .landing__header-subhead-update {
@@ -240,7 +246,7 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 //Section
 
 .landing__section {
-  margin-bottom: 180px;
+  margin-bottom: 20px;
   position: relative;
 }
 
@@ -300,14 +306,130 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
   }
 }
 
+.landing__section-text{
+    margin-top: 30px;
+    max-width: 400px;
+    font-size: 15px;
+    color: #b1b1b1 !important;
+}
+
+.landing__image__big{
+    height: 450px;
+    width: auto;
+    border-radius: 10px; 
+    float: left;
+    margin: 50px 0px;
+    box-shadow: 1px 10px 100px 1px #ececec;
+}
 .landing .landing__section-title {
-  max-width: 680px;
-  text-align: center;
-  color: $landing-accent-color;
-  margin: auto auto 50px;
-  line-height: 40px;
-  position: relative;
-  font-weight: 500;
+    max-width: 380px;
+    line-height: 1.4;
+    text-align: left;
+    @include themify($themes) {
+        color: themed('colorBetProtocol');
+    }
+    position: relative;
+    font-weight: 500;
+}
+
+.landing__widget-competitor{
+    width: 400px;
+    height: 300px;
+    border-radius: 10px;
+    padding: 30px;
+    position: relative;
+    display: block;
+    background-color: #fdfdfd;
+    margin: 50px auto;
+    box-shadow: 1px 10px 100px 1px #d2d2d2;
+
+    img{
+        height: 40px;
+        width:  auto;
+        margin : 15px auto;
+        opacity: 0.4;
+    }
+    .section-title{
+        text-align: center;
+        font-size: 30px !important;
+        color : #cacaca !important;
+    }
+
+    .text {
+        text-align: center;
+        font-size: 20px;
+        color : #b4b4b4;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 15px;
+        color : #cacaca;
+        font-weight: 100;
+    
+    }
+}
+
+.section-title{
+    font-size: 25px;
+    font-weight: 300;
+    @include themify($themes) {
+        color: themed('colorBetProtocol');
+    }
+}
+
+.landing__widget-betprotocol{
+    width: 400px;
+    height: 300px;
+    border-radius: 10px;
+    padding: 30px;
+    position: relative;
+    display: block;
+    margin: 50px auto;
+    @include themify($themes) {
+        background: linear-gradient(to right, themed('colorBetProtocol'), themed('colorBetProtocolSecondary'));
+        box-shadow: 1px 10px 100px 1px themed('colorBetProtocol');
+
+    }
+
+    img{
+        height: 60px;
+        width:  auto;
+        margin : 10px auto;
+    }
+
+    .section-title{
+        text-align: center;
+        font-size: 30px !important;
+        color : #efefef !important;
+    }
+
+    .text {
+        text-align: center;
+        font-size: 20px;
+        color : white;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 15px;
+        color : #efefef;
+        font-weight: 100;
+    
+    }
+}
+
+.landing .landing__section-bigtitle{
+    line-height: 1.4; 
+    text-align: center;
+    position: relative;
+    margin: auto;
+    display: block;
+    font-size: 40px;
+    @include themify($themes) {
+        color: themed('colorBetProtocol');
+      }
+
 }
 
 .landing .landing__additional-title {
@@ -809,7 +931,7 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 }
 
 @media screen and (max-width: 576px) {
-
+  
   .landing__features-wrap {
     max-width: 400px;
   }
@@ -826,6 +948,23 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
       order: 1;
     }
   }
+}
+
+@media screen and (max-width: 800px) {
+    .widget__container-main{
+        display: none !important;
+    }
+
+    .images__features{
+        margin-top : 130px !important;
+    }
+
+    .landing__widget-competitor{
+        width : 300px !important;
+    }
+    .landing__widget-betprotocol{
+        width : 300px !important;
+    }
 }
 
 @media screen and (max-width: 520px) {
@@ -973,15 +1112,279 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
 .landing_2_back{
     position: absolute;
     display: block;
-    z-index: -1;
+    z-index: 1;
     bottom: 0;
+    width: 300%;
+    left: 0;
 }
 
+.landing_3_back{
+    position: absolute;
+    display: block;
+    z-index: -1;
+    bottom: 0;
+    width: 50%;
+    right: 0;
+    opacity: 0.4;
+}
+
+.landing_3_back-1{
+    position: absolute;
+    display: block;
+    z-index: -1;
+    bottom: 0;
+    width: 50%;
+    left: 0;
+    opacity: 0.4;
+    transform: rotate(180deg);
+}
 @media only screen and (max-width: 800px) {
-    .landing_2_back{
-        display: none !important;
-    }
+  
     .landing .landing__header-subhead {
         padding-left: 20px;
     }
+    
+    .widget__landing-4{
+        display: none !important;
+    }
+    .widget__landing-5{
+        display: none !important;
+    }
+    .widget__landing-6{
+        display: none !important; 
+    }
+    .widget__landing-3{
+       height: 100px !important;
+    }
+    .widget__container{
+        width: 150%;
+        left: -50px !important;
+        z-index: -1;
+        margin-top : 30px !important;
+    }
+    .widget__container-main{
+        height: 500px !important;
+    }
 } 
+
+.newsletter-section{
+    margin: 60px 0 !important;
+    height: auto !important;
+    padding: 40px 10% !important;
+    max-width: 550px !important;
+    background-color: #f7f7f7 !important;
+    border-radius: 0px 130px 10px 0px;
+    text-shadow: 0 0 black;
+}
+
+.widget__container-main{
+    height: 340px;
+}
+
+.container__all__landing{
+    display: block;
+    position: relative;
+    height: -webkit-fill-available;
+   
+}
+
+p, h1, h2, h3, h4, h5, h6{
+    font-family: 'Poppins', sans-serif !important;
+}
+
+
+a{
+    opacity : 1;
+    transition: 0.3s;
+
+    &:hover{
+        opacity : 0.6 !important;
+        transition: 0.3s;
+
+    }
+}
+
+.landing__footer{
+    padding-bottom: 60px;
+    button{
+        position: relative;
+        background: transparent;
+        border: none;
+        @include themify($themes) {
+            color: themed('colorBetProtocol');
+        }        
+        padding: 0;
+        margin-right: 60px;
+        font-size: 14px;
+        transition: 0.3s;
+        cursor: pointer;
+        display: none;
+        font-family: 'Poppins', sans-serif
+    }
+    a{
+        margin-top: 40px;
+        @include themify($themes) {
+            color: themed('colorBetProtocol');
+        }
+        border : none;
+    }
+
+    p{
+        @include themify($themes) {
+            color: themed('colorBetProtocol');
+        }
+    }
+    h5{
+        text-align: left;
+        margin-top: 10px;
+        color: #9876ae; 
+    }
+    h4{
+        text-align: left;
+        margin-top: 10px;
+        @include themify($themes) {
+            color: themed('colorBetProtocol');
+        }    
+    }
+}
+
+.pricing__section{
+    text-align: center !important;
+    p{
+        text-align: center !important;
+        margin : auto;
+    }
+    .landing__section-text{
+        margin : 30px auto;
+    }
+}
+
+.available {
+    transition: 0.3s;
+
+    &:hover{
+        height: 360px;
+        width: 250px;
+
+    }
+}
+
+
+.landing__product__widget{
+    height: 350px;
+    width: 250px;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 30px;
+    position: relative;
+    margin: 50px auto;    
+    display: block;
+    background-color: white;
+    transition: 0.3s;
+    box-shadow: 1px 10px 100px 1px #cccccc;
+
+    
+    .coming-text{
+        background-color: #936fa9;
+        border-radius: 10px;
+        padding: 10px;
+        position: absolute;
+        color: white;
+        box-shadow: 1px 10px 10px 1px #ccc;
+        z-index: 1;
+        bottom: 20px;
+        left: 30px;
+    }
+        
+    .on-coming{
+        opacity: 0.3;
+    }
+
+    h2{
+        @include themify($themes) {
+            color: themed('colorBetProtocol');
+        } 
+    }
+
+    .description{
+        height: 120px;
+    }
+    h4{
+        @include themify($themes) {
+            color: themed('colorBetProtocol');
+        } 
+    }
+
+    .image_widget{
+        width: auto;
+        position: absolute;
+        height: 100px;
+        right: -20px;
+        top: 70%;
+        border-radius: 140px;
+        background-color: #fefefe;
+    }
+
+    h5{
+        text-align: left;
+        margin-top: 10px;
+        color: #9876ae; 
+    }
+
+    p{
+        color : #b1b1b1;
+    }
+}
+.container-auto-height{
+    height: auto !important;
+}
+
+
+.float-right{
+    float: right;
+}
+
+
+.landing__widget{
+    height: 250px;
+    width: 200px;
+    border-radius: 10px;
+    padding: 30px;
+    float: left;
+    position: absolute;
+    background-color: white;
+    margin: 50px 0px;
+    box-shadow: 1px 10px 100px 1px #cccccc;
+}
+
+
+.landing__widget-3{
+    left: 50%;
+    top: -30%;
+    z-index: 12;
+    display: block;
+    position: absolute;
+}
+
+.landing__widget-2{
+    z-index: auto;
+    left: 35%;
+    top: 10%;
+}
+
+.text_widget{
+    font-size: 15px;
+    text-align: center;
+    color: #85599a !important;
+    margin: 20px auto !important;
+}
+
+.widget__span{
+    position: absolute;
+    padding: 10px;
+    top: -10px;
+    left: 10px;
+    background-color: #9973aa;
+    border-radius: 70px;
+    color: white;
+}

@@ -18,13 +18,32 @@ class DataWidget extends React.Component{
             data
         } = this.props.children.props
 
-        let summary = {};
-        if(data){
-            summary = this.props.profile.hasAppStats(data.type);
+        let summary = {
+            data : {}
+        };
+
+        // TO DO : To setup correctly Condition Statement
+        try{
+            if(data){
+                if(data.data){
+                    summary = this.props.profile.hasAppStats(data.type);
+                }else if(!_.has(data,'data')){
+                    let array = Object.keys(data).map( (key) => {
+                        return this.props.profile.hasAppStats(data[key].type);
+                    })
+                    for(var i = 0; i < array.length; i++){
+                        summary.data[array[i].type] = array[i]
+                    }
+                }else{
+                    throw new Error('No Data')
+                }
+            }
+        }catch(err){
+            summary = null;
         }
 
         let hasData = summary && !_.isEmpty(summary.data);
-                
+        
         return (
             hasData ? 
                 this.props.children
