@@ -120,6 +120,36 @@ class Account{
         }
     }
 
+    addPaybearToken = async (paybearToken) => {
+        try{
+            let res = await this.getApp().addPaybearToken(paybearToken);
+            await this.update();
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+    
+    addServices = async (services) => {
+        try{
+            let res = await this.getApp().addServices(services);
+            await this.update();
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getTransactions = async (filters) => {
+        try{
+            let res = await this.getApp().getTransactions(filters);
+            await this.update();
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     hasAppStats = (type) => {
         try{
             if(!this.hasApp()){throw new Error('There is no App Attributed')}

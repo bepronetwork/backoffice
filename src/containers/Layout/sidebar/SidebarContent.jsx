@@ -20,6 +20,7 @@ class SidebarContent extends Component {
             application : true,
             users : true,
             stats : true,
+            transactions : true,
             wallet : true,
             affiliates : true,
             developers : true
@@ -44,6 +45,7 @@ class SidebarContent extends Component {
             stats       : this.hasData(props.profile.hasAppStats('revenue')),
             wallet      : this.hasData(props.profile.hasAppStats('wallet')),
             affiliates  : this.hasData(props.profile.hasAppStats('affiliates')),
+            transactions: this.hasData(props.profile.hasAppStats('transactions')),
             developers  : true
         }
         this.setState({...this.state, ...newState})
@@ -56,6 +58,7 @@ class SidebarContent extends Component {
                     <SidebarLink disabled={!this.state.home} title="Home" icon="home" route="/home" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.application} title="Application" icon="laptop-phone" route="/application" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.users} title="Users" icon="users" route="/users" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.transactions} title="Transactions" icon="cart" route="/transactions" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.stats} title="Stats" icon="chart-bars" route="/stats" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.wallet} title="Wallet" icon="store" route="/wallet" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.affiliates} title="Affiliates" icon="gift" route="/affiliates" onClick={this.hideSidebar} />

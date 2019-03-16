@@ -58,14 +58,13 @@ export default class EditableTable extends PureComponent {
         return (
         <div className="table">
             <ReactDataGrid
-            onGridSort={this.handleGridSort}
-            enableCellSelect
-            columns={this.props.heads}
-            rowGetter={this.rowGetter}
-            rowsCount={this.state.rows.length}
-            onGridRowsUpdated={this.handleGridRowsUpdated}
-            rowHeight={44}
-            minColumnWidth={100}
+                onGridSort={this.handleGridSort}
+                enableCellSelect
+                columns={this.props.heads}
+                rowGetter={this.rowGetter}
+                rowsCount={this.state.rows.length}
+                onGridRowsUpdated={this.handleGridRowsUpdated}
+                rowHeight={44}
             />
         </div>
         );

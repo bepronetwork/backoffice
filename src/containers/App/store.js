@@ -4,6 +4,7 @@ import {
   cryptoTableReducer,
   newOrderTableReducer,
   sidebarReducer,
+  widgetsReducer,
   themeReducer,
   profileReducer,
   customizerReducer,
@@ -17,7 +18,8 @@ const reducer = combineReducers({
   cryptoTable: cryptoTableReducer,
   newOrder: newOrderTableReducer,
   customizer: customizerReducer,
-  profile  : profileReducer
+  profile  : profileReducer,
+  widgets : widgetsReducer
 });
 const store = createStore(reducer);
 

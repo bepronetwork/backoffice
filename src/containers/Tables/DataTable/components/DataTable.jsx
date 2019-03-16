@@ -82,26 +82,26 @@ export default class DataTable extends PureComponent {
 
   render() {
     return (
-      <Col md={12} lg={12}>
-        <Card>
-          <CardBody>
-            <div className="card__title">
-              <h5 className="bold-text">data table</h5>
-              <h5 className="subhead">Use table with column's option <span className="red-text">sortable</span></h5>
-            </div>
-            <p>Show
-              <select className="select-options">
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-              </select>
-              entries
-            </p>
-            <EditTable heads={this.heads} rows={this.state.rows} />
-            <Pagination items={this.state.rows} onChangePage={this.onChangePage} />
-          </CardBody>
-        </Card>
-      </Col>
+        <Col md={12} lg={12}>
+            <Card>
+            <CardBody>
+                <div className="card__title">
+                <h5 className="bold-text">data table</h5>
+                <h5 className="subhead">Use table with column's option <span className="red-text">sortable</span></h5>
+                </div>
+                <p>Show
+                <select className="select-options">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                </select>
+                entries
+                </p>
+                <EditTable heads={this.heads} rows={this.state.rows} />
+                <Pagination items={this.state.rows} onChangePage={this.onChangePage} />
+            </CardBody>
+            </Card>
+        </Col>
     );
   }
 }

@@ -1138,6 +1138,7 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
     opacity: 0.4;
     transform: rotate(180deg);
 }
+
 @media only screen and (max-width: 800px) {
   
     .landing .landing__header-subhead {
@@ -1270,14 +1271,15 @@ a{
 }
 
 
-.landing__product__widget{
-    height: 350px;
+.landing__product__widget__small{
+    height: 150px;
     width: 250px;
     overflow: hidden;
     border-radius: 10px;
-    padding: 30px;
+    padding: 20px;
+    text-align: left;
     position: relative;
-    margin: 50px auto;    
+    margin: 10px auto;    
     display: block;
     background-color: white;
     transition: 0.3s;
@@ -1321,6 +1323,73 @@ a{
         height: 100px;
         right: -20px;
         top: 70%;
+        border-radius: 140px;
+        background-color: #fefefe;
+    }
+
+    h5{
+        text-align: left;
+        margin-top: 10px;
+        color: #9876ae; 
+    }
+
+    p{
+        color : #b1b1b1;
+    }
+}
+
+.landing__product__widget{
+    height: 350px;
+    width: 250px;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 30px;
+    position: relative;
+    margin: 50px auto;    
+    display: block;
+    background-color: white;
+    transition: 0.3s;
+    box-shadow: 1px 10px 100px 1px #cccccc;
+
+    
+    .coming-text{
+        background-color: #936fa9;
+        border-radius: 10px;
+        padding: 10px;
+        position: absolute;
+        color: white;
+        box-shadow: 1px 10px 10px 1px #ccc;
+        z-index: 1;
+        bottom: 20px;
+        left: 30px;
+    }
+        
+    .on-coming{
+        opacity: 0.3;
+    }
+
+    h2{
+        text-align: left;
+        @include themify($themes) {
+            color: themed('colorBetProtocol');
+        } 
+    }
+
+    .description{
+        height: 120px;
+    }
+    h4{
+        @include themify($themes) {
+            color: themed('colorBetProtocol');
+        } 
+    }
+
+    .image_widget{
+        width: auto;
+        position: absolute;
+        height: 100px;
+        right: -20px;
+        top: 80%;
         border-radius: 140px;
         background-color: #fefefe;
     }

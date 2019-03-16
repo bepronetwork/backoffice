@@ -61,13 +61,14 @@ export default class WizardForm extends PureComponent {
     return (
         <Row>
             <Col md={12} lg={12}>
-            <Card>
-                <div className="wizard">
-                <div className="wizard__form-wrapper">
-                    {page === 1 && <WizardFormOne showNotification={this.showNotification} handleSubmit={(e) => e.preventDefault()} {...this.props} onSubmit={false}  />}
-                </div>
-                </div>
-            </Card>
+                <Card>
+                    <div className="wizard">
+                    
+                        <div className="wizard__form-wrapper">
+                            {page === 1 && <WizardFormOne showNotification={this.showNotification} handleSubmit={(e) => e.preventDefault()} {...this.props} onSubmit={false}  />}
+                        </div>
+                    </div>
+                </Card>
             </Col>
         </Row>
         );

@@ -21,7 +21,6 @@ class DataWidget extends React.Component{
         let summary = {
             data : {}
         };
-
         // TO DO : To setup correctly Condition Statement
         try{
             if(data){

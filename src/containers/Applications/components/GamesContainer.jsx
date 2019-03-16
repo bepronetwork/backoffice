@@ -16,7 +16,7 @@ class GamesContainer extends PureComponent {
 
     render() {
         let games = this.props.data.data[0].games;
-        console.log(games)
+
         return (
             <Row md={12} xl={12} lg={12} xs={12}>
                 {Object.keys(games).map( key => {

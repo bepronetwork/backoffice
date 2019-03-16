@@ -24,6 +24,10 @@ class Landing extends PureComponent {
         dispatch: PropTypes.func.isRequired,
         theme: ThemeProps.isRequired,
     };
+    constructor(props){
+        super(props);
+        this.state = {};
+    }
 
     changeToDark = () => {
         this.props.dispatch(changeThemeToDark());
@@ -32,6 +36,10 @@ class Landing extends PureComponent {
     changeToLight = () => {
         this.props.dispatch(changeThemeToLight());
     };
+
+    changeComponent = (key, value) => {
+        this.setState({...this.state, [key] : value})
+    }
 
     render() {
         const { theme } = this.props;
@@ -66,26 +74,24 @@ class Landing extends PureComponent {
                     
                         <a  href={'https://docs.betprotocol.com'}
                                 target={'__blank'}>
-                            <button
-                            
-                            
+                            <button  
                             >
                             Docs <span className="landing__menu-nav-new" />
                         </button>
                             </a>
-                        <Link
+                        {/* <Link
                         className={'landing__signin'}
                         to={'/login'}
                         >
                         Sign In
-                        </Link>
+                        </Link> */}
                     </nav>
                     </div>
                 </Col>
                 </Row>
             </Container>
             </div>
-            <Header onClick={() => scrollToComponent(this.Demos, { offset: -50, align: 'top', duration: 2000 })} />
+            <Header changeComponent={this.changeComponent} onClick={() => scrollToComponent(this.Demos, { offset: -50, align: 'top', duration: 2000 })} />
                 <span ref={(section) => {
                 this.About = section;
                 }}

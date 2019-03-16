@@ -32,6 +32,10 @@ export default [
         component : StatsContainer
     },
     {
+        path: "/transactions",
+        name: 'Transactions'
+    },
+    {
         path: "/wallet",
         name: 'Operator Wallet',
         component : WalletContainer,

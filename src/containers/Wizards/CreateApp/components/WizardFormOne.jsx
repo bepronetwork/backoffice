@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
-import { Button, ButtonToolbar, Container, Row, Col, CardBody } from 'reactstrap';
+import { Button, ButtonToolbar, Container, Row, Col, CardBody, Card } from 'reactstrap';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import PropTypes from 'prop-types';
 import { ApplicationIcon, DesktopMacDashboardIcon, BusinessIcon, CheckboxMultipleBlankCircleIcon, MediaNetworkIcon } from 'mdi-react';
 import TextInput from '../../../../shared/components/TextInput';
-import { Card } from '@material-ui/core';
 const Back = `${process.env.PUBLIC_URL}/img/background-login.png`;
+
 
 class WizardFormOne extends PureComponent {
 

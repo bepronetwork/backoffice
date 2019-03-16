@@ -63,6 +63,32 @@ class Connection {
         }
     }
 
+    getApp =  async ({app, headers}) => {
+        try{
+            let response = await fetch(URL+ '/api/app/get', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({app})
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getTransactions =  async ({app, filters, headers}) => {
+        try{
+            let response = await fetch(URL + '/api/app/transactions', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({app, filters})
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getDepositReference = async ({currency, entity, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/deposit/generateReference', {
@@ -106,12 +132,46 @@ class Connection {
         }
     }
 
+    addPaybearToken = async ({app, paybearToken, headers}) => {
+        console.log(app, paybearToken)
+        try{
+            let response = await fetch(URL+ `/api/app/paybearsecretkey/add`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    app,
+                    paybearApiSecretKey : paybearToken
+                })
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    addServices = async ({app, services, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/services/add`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    app,
+                    services
+                })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
 }
 
 function addHeaders(config, newHeaders){
     return {
-            ...config.headers,
-            ...newHeaders   
+        ...config.headers,
+        ...newHeaders   
     }
 }
 

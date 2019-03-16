@@ -117,3 +117,40 @@
     margin-top: 100px;
     padding-top: 100px;
 }
+
+.button__widget{
+    border : none;
+    background-color: transparent;
+    margin: auto;
+    display: block;
+    position: relative;
+}
+
+.widget__choosen{
+    background-color : #f2f4f7;
+}
+
+
+.widget__use{
+    display: block;
+    position: absolute;
+    padding: 10px;
+    top: -10px;
+    left: 0px;
+    border-radius: 50px;
+    background-color: #805699;
+    z-index: 1;
+    color: white !important;
+}
+
+.widget__use__big{
+    display: block;
+    position: absolute;
+    padding: 10px;
+    top: 30px;
+    left: 0px;
+    border-radius: 50px;
+    background-color: #805699;
+    z-index: 1;
+    color: white !important;
+}

@@ -9,6 +9,7 @@ import EURWalletWidget from './components/EURWalletWidget';
 import ETHWalletWidget from './components/ETHWalletWidget';
 import LiquidityInfo from './components/LiquidityInfo';
 import LiquidityWalletWidget from './components/LiquidityWalletWidget';
+import PaybearWidget from './components/PaybearWidget';
 
 
 class WalletContainer extends React.Component{
@@ -39,11 +40,16 @@ class WalletContainer extends React.Component{
                 </Row> 
                 <Row>
                     <Col lg={5}>
+                        <PaybearWidget data={this.props.profile.getApp().hasPaybearToken()}/>
+                    </Col>
+                { /*
+                    <Col lg={5}>
                         <EURWalletWidget data={this.props.profile.getApp().getSummaryData('wallet')}/>
                     </Col>
                     <Col lg={5}>
                         <ETHWalletWidget data={this.props.profile.getApp().getSummaryData('wallet')}/>
                     </Col>
+                */ }
                 </Row>
           </Container>
         )

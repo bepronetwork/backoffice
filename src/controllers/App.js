@@ -38,16 +38,28 @@ class App{
                     app : this.params.id,
                     type : 'WALLET',
                     headers : authHeaders(this.params.bearerToken)
-                })
+                }),
+                ConnectionSingleton.getApp({
+                    app : this.params.id,
+                    headers : authHeaders(this.params.bearerToken)
+                }),
+                ConnectionSingleton.getTransactions({
+                    app : this.params.id,
+                    filters : [],
+                    headers : authHeaders(this.params.bearerToken)
+                }),
             ]);
+
             let params = {
-                user : res[0].data.message ? res[0].data.message : null,
+                users : res[0].data.message ? res[0].data.message : null,
                 games : res[1].data.message ? res[1].data.message : null,
                 bets : res[2].data.message ? res[2].data.message : null,
                 revenue : res[3].data.message ? res[3].data.message : null,
                 wallet :res[4].data.message ? res[4].data.message : null,
+                app : res[5].data.message ? res[5].data.message : null,
+                transactions :  res[6].data.message ? res[6].data.message : null
             } 
-
+            this.params = params.app;
             this.data = {
                 ...this.data,
                 summary : {
@@ -75,6 +87,19 @@ class App{
         }
     }
 
+    getTransactions = async ({filters}) => {
+        // TO DO : Change App to the Entity Type coming from Login
+        try{
+            return await ConnectionSingleton.getTransactions(
+                {   
+                    app : this.getId(),
+                    filters,
+                    headers : authHeaders(this.params.bearerToken)
+                });
+        }catch(err){
+            throw err;
+        }
+    }
     getDepositInfo = async ({id}) => {
         // TO DO : Change App to the Entity Type coming from Login
         try{
@@ -88,6 +113,19 @@ class App{
         }
     }
 
+    async addServices(services){
+        try{
+            let res = await ConnectionSingleton.addServices({
+                app : this.getId(),
+                headers : authHeaders(this.params.bearerToken),
+                services
+            });
+            return res;
+        }catch(err){
+            throw err;
+		}
+    }
+
 
     getName(){
         return this.params.name;
@@ -95,6 +133,10 @@ class App{
 
     getDescription(){
         return this.params.description;
+    }
+
+    getServices(){
+        return this.params.services;
     }
 
     getId(){
@@ -109,6 +151,10 @@ class App{
         return this.params.isConnected;
     }
 
+    hasPaybearToken(){
+        return this.params.paybearToken;
+    }
+
     async createBearerToken(){
         try{
             let res = await ConnectionSingleton.createBearerToken({
@@ -121,6 +167,27 @@ class App{
 
             //Add Connection Bearer Token to App Object
             this.params.bearerToken = data.bearerToken;
+            return res;
+        }catch(err){
+            throw err;
+		}
+    }
+
+    async addPaybearToken(paybearToken){
+        try{
+            let res = await ConnectionSingleton.addPaybearToken({
+                app : this.getId(),
+                headers : authHeaders(this.params.bearerToken),
+                paybearToken
+            });
+
+            let {
+                message : data,
+                status
+            } = res.data;
+            if(parseInt(status) == 200)
+                //Add Connection Bearer Token to App Object
+                this.params.paybearToken = paybearToken;
             return res;
         }catch(err){
             throw err;
