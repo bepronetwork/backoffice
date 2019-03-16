@@ -21,9 +21,9 @@ const Pricing = () => (
                     </Row>
                 </div>
             </div>
-            <h3 className="landing__section-title" style={{textAlign : 'center', margin : 'auto'}}>Almost For Free?</h3>
+            <h3 className="landing__section-title" style={{textAlign : 'center', margin : 'auto'}}>Our Pricing</h3>
             <p className='landing__section-text' style={{textAlign : 'center'}}>
-                We only take a small percentage every time you make money, we are here to make you grow.
+                Simple, Transparent and the best in the Market .
             </p>
             <Row>
                 <Col lg={6}>
