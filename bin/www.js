@@ -9,9 +9,9 @@ app.use(express.static(path.join(__dirname, '../build')));
 
 
 app.get('/*', function(req, res) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
 
 app.listen(PORT, () => {
