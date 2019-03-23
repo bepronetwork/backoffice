@@ -64,7 +64,7 @@ class RegisterForm extends PureComponent {
     showPassword(e) {
         e.preventDefault();
         this.setState({
-        showPassword: !this.state.showPassword,
+            showPassword: !this.state.showPassword,
         });
     }
 

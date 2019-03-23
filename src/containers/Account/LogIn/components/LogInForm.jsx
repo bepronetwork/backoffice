@@ -24,6 +24,14 @@ class LogInForm extends React.Component {
         this.showPassword = this.showPassword.bind(this);
     }
 
+    componentDidMount(){
+        let {
+            username,
+            password
+        } = this.props.query;
+        this.setState({...this.state, username, password})
+    }
+
     showPassword(e) {
         e.preventDefault();
         this.setState({
@@ -47,7 +55,6 @@ class LogInForm extends React.Component {
 
     render() {
         const { handleSubmit } = this.props;
-
         return (
         <form className="form" onSubmit={handleSubmit}>
             <div className="form__form-group">
@@ -57,6 +64,7 @@ class LogInForm extends React.Component {
                     label="Username"
                     type="text"
                     placeholder="James2345"
+                    defaultValue={this.state.username}
                     changeContent={this.changeContent}
                 />
                 <TextInput
@@ -64,6 +72,7 @@ class LogInForm extends React.Component {
                     name="password"
                     label="Password"
                     type="password"
+                    defaultValue={this.state.password}
                     placeholder="**********"
                     changeContent={this.changeContent}
                 />

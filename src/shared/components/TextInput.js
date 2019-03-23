@@ -5,24 +5,28 @@ import TextField from '@material-ui/core/TextField';
 
 
 const renderTextField = ({
-    input, label, meta: { touched, error }, children, select, type
-    }) => (
-    <TextField
-        className="material-form__field"
-        label={label}
-        color={'#ccc'}
-        error={touched && error}
-        value={input.value}
-        children={children}
-        type={type}
-        classes={{ label: 'text__input-name' } }
-        select={select}
-        onChange={(e) => {
-            e.preventDefault();
-            input.onChange(e);
-        }}
-    />
-    );
+    input, label, meta: { touched, error }, children, select, type, defaultValue
+    }) => {
+        return (
+            <TextField
+                className="material-form__field"
+                label={label}
+                color={'#ccc'}
+                error={touched && error}
+                value={defaultValue}
+                defaultValue={defaultValue}
+                children={children}
+                type={type}
+                classes={{ label: 'text__input-name' } }
+                select={select}
+                onChange={(e) => {
+                    e.preventDefault();
+                    input.onChange(e);
+                }}
+        />
+        )
+    }
+    
     
     renderTextField.propTypes = {
         input: PropTypes.shape().isRequired,
@@ -61,7 +65,7 @@ class TextInput extends PureComponent {
 
 
     render() {
-
+        console.log(this.props.defaultValue)
         return (
             <div className="form__form-group-field">
                 <div className="form__form-group-icon" style={{marginRight : 10}}>
@@ -71,6 +75,7 @@ class TextInput extends PureComponent {
                     name={this.props.name}
                     label={this.props.label}
                     type={this.props.type}
+                    defaultValue={this.props.defaultValue}
                     component={renderTextField}
                     placeholder={this.props.placehlder}
                     onChange={(e) =>  this.changeContent(this.props.name, e.target.value)}/>
