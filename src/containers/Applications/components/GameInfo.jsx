@@ -34,7 +34,6 @@ class GameInfo extends PureComponent {
                             <Col lg={6} >
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-title" style={{fontSize : 25}}> {game.name} </p>
-                                    <span className="application__span">#{game._id}</span> 
                                 </div>
                             </Col>
                             <Col lg={2} >
@@ -62,7 +61,7 @@ class GameInfo extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
-                                    }><AnimationNumber number={game.betAmount}/></p>
+                                    }><AnimationNumber number={game.betAmount-1}/></p>
                                 </div>
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-title"> Bets Amount</p>

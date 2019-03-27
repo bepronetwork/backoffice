@@ -2,7 +2,6 @@ import React from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
-import Table from './components/Table';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import UsersProfile from './components/UsersProfile';
@@ -11,6 +10,7 @@ import UsersInfo from './components/UsersInfo';
 import UsersResumeEntries from './components/UsersResumeEntries';
 import VectorMap from './components/VectorMap';
 import DataWidget from '../DataWidget/DataWidget';
+import EnhancedTableUsers from './components/EnhancedTableUsers';
 
 
 class UsersContainer extends React.Component{
@@ -48,7 +48,7 @@ class UsersContainer extends React.Component{
                 <Row>
                     <Col lg={12}>
                         <DataWidget>
-                            <Table data={this.props.profile.getApp().getSummaryData('users')}/>
+                            <EnhancedTableUsers data={this.props.profile.getApp().getSummaryData('users')}/>
                         </DataWidget>
                     </Col>
                 </Row>

@@ -24,6 +24,7 @@ class ApplicationsContainer extends React.Component{
     render = () => {
         let services = this.props.profile.getApp().getServices();
         let servicesCodes = fromCodesToServices(services);
+        console.log(this.props.profile.getApp().getSummaryData('games'))
         return (
             <Container className="dashboard">
                 <Row>
