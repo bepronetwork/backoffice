@@ -54,7 +54,8 @@ const fromDatabasetoTable = (data) => {
             id :  data[key]._id,
             amount: data[key].amount,
             currency: data[key].currency,
-			name : data[key].user.full_name,
+            name : data[key].user.full_name,
+            usd_amount :  data[key].usd_amount,
 			email: data[key].user.email,
 			nationality: data[key].user.nationality,
 			external_id: data[key].user.external_id,
@@ -68,6 +69,12 @@ const rows = [
         id: 'id',
         label: 'Id',
         numeric: false
+    },
+    {
+        id: 'usd_amount',
+        label: 'USD',
+        sortable: true,
+        numeric: true
     },
     {
         id: 'amount',
@@ -351,6 +358,7 @@ class EnhancedTable extends React.Component {
                             <Checkbox checked={isSelected} />
                         </TableCell> 
                             <TableCell align="left">{n.id}</TableCell>
+                            <TableCell align="center">$ {n.usd_amount ? n.usd_amount : 'N/A' }</TableCell>
                             <TableCell align="center">{n.amount ? n.amount : 'N/A'}</TableCell>
                             <TableCell align="center">{n.currency}</TableCell>
                             <TableCell align="left">{n.name}</TableCell>

@@ -349,6 +349,7 @@ class EnhancedTable extends React.Component {
                             <TableCell align="center">{n.email}</TableCell>
                             <TableCell align="left">{n.turnoverAmount} €</TableCell>
                             <TableCell align="left">{n.bets}</TableCell>
+                            
                             <TableCell align="left">{n.profit} €</TableCell>
                             <TableCell align="left">{n.playBalance} €</TableCell>
                         </TableRow>
