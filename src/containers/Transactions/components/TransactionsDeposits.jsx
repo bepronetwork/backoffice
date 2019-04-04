@@ -23,7 +23,7 @@ class TransactionsDeposits extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : depositAmount >= 0 ? '#76d076' : '#646777'}
-                            }>$ <AnimationNumber number={depositAmount}/></p>
+                            }>$ <AnimationNumber decimals number={depositAmount}/></p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Users Deposits <span> this week </span></p>
