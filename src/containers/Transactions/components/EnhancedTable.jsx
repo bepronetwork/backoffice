@@ -47,18 +47,17 @@ function getSorting(order, orderBy) {
 
 
 const fromDatabasetoTable = (data) => {
-    let counter = 1;
-	return Object.keys(data).map( (key) => {
-        let status = data[key].confirmed ? 'Confirmed' : 'Processing';
+	return data.map( (key) => {
+        let status = key.confirmed ? 'Confirmed' : 'Processing';
 		return {
-            id :  data[key]._id,
-            amount: data[key].amount,
-            currency: data[key].currency,
-            name : data[key].user.full_name,
-            usd_amount :  data[key].usd_amount,
-			email: data[key].user.email,
-			nationality: data[key].user.nationality,
-			external_id: data[key].user.external_id,
+            id :  key._id,
+            amount: key.amount,
+            currency: key.currency,
+            name : key.user.full_name,
+            usd_amount :  key.usd_amount,
+			email: key.user.email,
+			nationality: key.user.nationality,
+			external_id: key.user.external_id,
 			status : status 
 		}
 	})
@@ -259,12 +258,13 @@ const styles = theme => ({
 class EnhancedTable extends React.Component {
     
     constructor(props){
+        console.log(props.data.data)
         super(props)
         this.state = {
             order: 'asc',
             orderBy: 'id',
             selected: [],
-            data: fromDatabasetoTable(props.data.data),
+            data: fromDatabasetoTable(props.data.data.deposits),
             page: 0,
             rowsPerPage: 5,
         };

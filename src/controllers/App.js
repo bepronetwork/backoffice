@@ -57,7 +57,7 @@ class App{
                 revenue : res[3].data.message ? res[3].data.message : null,
                 wallet :res[4].data.message ? res[4].data.message : null,
                 app : res[5].data.message ? res[5].data.message : null,
-                transactions :  res[6].data.message ? res[6].data.message : null
+                transactions :  res[6].data.message ? res[6].data.message[0] : null
             } 
             this.params = params.app;
             this.data = {

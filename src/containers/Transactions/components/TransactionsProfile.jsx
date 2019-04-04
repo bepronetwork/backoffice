@@ -22,8 +22,7 @@ class UsersProfile extends PureComponent {
     };
 
     render() {
-        console.log(this.props.data.data) 
-        let transactions = Object.keys(this.props.data.data).length;
+        let transactions = this.props.data.data.amount;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>

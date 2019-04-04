@@ -14,7 +14,7 @@ class TransactionsDeposits extends PureComponent {
     }
 
     render() {        
-        let depositAmount = getDepositsAmount(this.props.data.data)
+        let depositAmount = this.props.data.data.totalDeposited;
         
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -23,7 +23,7 @@ class TransactionsDeposits extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : depositAmount >= 0 ? '#76d076' : '#646777'}
-                            }><AnimationNumber number={depositAmount}/> €</p>
+                            }>$ <AnimationNumber number={depositAmount}/></p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Users Deposits <span> this week </span></p>
