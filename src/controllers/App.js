@@ -59,6 +59,7 @@ class App{
                 app : res[5].data.message ? res[5].data.message : null,
                 transactions :  res[6].data.message ? res[6].data.message[0] : null
             } 
+            console.log(params.transactions)
             this.params = params.app;
             this.data = {
                 ...this.data,

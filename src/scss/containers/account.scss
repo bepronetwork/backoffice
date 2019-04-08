@@ -244,3 +244,162 @@
     flex-wrap: wrap;
   }
 }
+
+
+.avatar-name{
+    font-size: 18px;
+    text-align: left;
+    margin-bottom: 0px;
+    color: white !important;
+}
+
+.avatar-function{
+    text-align: left;
+    font-size: 14px;
+    text-align: left;
+    color: #41a9d8;
+    margin-bottom: 5px;
+    
+}
+
+.avatar-hand{
+    color: white;
+    margin-top: 0px;
+    font-size: 10px;
+
+}
+
+.avatar-image{
+    min-width: 100px;
+    max-height: 100px;
+    max-width: 100px;   
+    border-radius: 50px;
+    position: relative;
+    object-fit: cover;
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    display: block;
+}
+.avatar-image-box{
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 3px;
+}
+.avatar-box{
+    margin: 20px;
+    position: relative;
+    width: 250px;
+    display: block;
+    transition: all 0.3s ease 0s;
+    height: 280px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.avatar-box:hover{
+    max-height: auto !important;
+}
+
+.avatar-box-front{
+    max-height : 170px !important;
+    transition: all 0.3s ease 0s;
+    opacity : 1 !important;
+    padding-bottom: 30px;
+}
+
+.avatar-box-front:hover{
+    padding-bottom: 0px !important;
+    max-height : 0px !important;
+    transition: all 0.3s ease 0s;
+    opacity : 0 !important;
+}
+
+.avatar-box-back{
+    padding-right: 20px;
+    transition: all 0.3s ease 0s;
+}
+
+.avatar-box-back:hover{
+    transition: all 0.3s ease 0s;
+}
+.linkedin{
+    width: 20px;
+    position: absolute;
+    left: 125px;
+    top: 110px;
+}
+.user-title{
+    position: absolute;
+    bottom: 25px;
+    font-size: 15px;
+    left: 20px;
+    color : #e2e2e2 !important;
+}
+
+.user-name{
+    position: absolute;
+    z-index: 100;
+    font-size: 30px;
+    color : white !important;
+    bottom: 50px;
+    left: 20px;
+    line-height: 30px;
+}
+
+.advisor-name{
+    font-size: 20px !important;
+    max-width: 150px;
+}
+
+.user-image{
+    border-radius: 10px;
+}
+
+.user-linkedin{
+    bottom: 0px;
+    position: absolute;
+    left: -5px;
+    width: 40px;
+    top: 50px;
+}
+.background-pink{
+    height: 100%;
+    background: linear-gradient(359.6deg, #7C0C84 0.1%, rgba(251, 251, 251, 0.4) 99.66%);
+}
+
+.bpro-team-enter{
+    width: 250px;
+    /* height: 50px; */
+    margin: 20px 100px;
+    display: block;
+    position: relative;
+    z-index: 100;
+    opacity: 0.2;
+}
+
+
+.linkedin-image{
+    width: 20px;
+    display: block;
+    position: absolute;
+    z-index: 1100;
+    left: 0;
+    top: 0;
+    margin-left: -20px;
+    margin-top: -30px;
+}
+.avatar-bio{
+    font-size: 12px;
+    text-align: left;
+    color: #9bc3ff !important;
+}
+
+
+.avatar-cover{
+    box-shadow: inset 0px 0px 40px rgba(68, 68, 68, 0.3);
+    width: 300px;
+    height: 320px;
+    position: absolute;
+    top: 0;
+}

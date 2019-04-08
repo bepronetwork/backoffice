@@ -23,6 +23,7 @@ class UsersProfile extends PureComponent {
 
     render() {
         let transactions = this.props.data.data.amount;
+        let depositAmount = this.props.data.data.totalDeposited;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>

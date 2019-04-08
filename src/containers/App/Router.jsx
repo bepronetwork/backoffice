@@ -81,6 +81,7 @@ import CryptoDashboardEdit from '../Dashboards/CryptoTableEdit/index';
 import ECommerceDashboardEdit from '../Dashboards/ECommerceTableEdit/index';
 
 import Landing from '../Landing/index';
+import TeamLanding from '../Landing/Team'
 import BetProtocol from '../Dashboards/BetProtocol';
 import UsersContainer from '../Users';
 import Applications from '../Applications';
@@ -292,6 +293,7 @@ const Router = () => (
 		<main>
 		<Switch>
 			<Route exact path="/" component={Landing} />
+			<Route path="/about-us" component={TeamLanding} />
 			<Route path="/404" component={NotFound404} />
 			<Route path="/lock_screen" component={LockScreen} />
 			<Route path="/login" component={LogIn} />

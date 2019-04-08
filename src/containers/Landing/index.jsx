@@ -59,12 +59,19 @@ class Landing extends PureComponent {
                         <img src={logo} className={'landing__logo'} style={{marginLeft : 20}} alt="" />
                     </p>
                     <nav className="landing__menu-nav">
-                    <a href={'https://token.betprotocol.com'} target={'__blank'}
+                        {/* <a href={'https://token.betprotocol.com'} target={'__blank'}
                         >
-                        <button>
-                            BPRO Token
-                        </button>
+                            <button>
+                                BPRO Token
+                            </button>
                         </a>
+                        */}
+                        <Link  to={'/about-us'}
+                        >
+                            <button>
+                                About us
+                            </button>
+                        </Link>
                         <a href={'https://medium.com/@betprotocol'} target={'__blank'}
                         >
                         <button>
@@ -76,7 +83,7 @@ class Landing extends PureComponent {
                                 target={'__blank'}>
                             <button  
                             >
-                            Docs <span className="landing__menu-nav-new" />
+                            API <span className="landing__menu-nav-new" />
                         </button>
                             </a>
                         {/* <Link

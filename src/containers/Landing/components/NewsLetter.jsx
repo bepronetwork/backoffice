@@ -24,22 +24,12 @@ class NewsLetter extends React.Component{
                 <Row>
                     <Col lg={12}>
                         <h3 className="landing__section-title">Want to Know More?</h3>
-                        <p className='landing__section-text '>
-                            Join our Newsletter
-                        </p>
-                        <div className="form__form-group">
-                                <TextInput
-                                    icon={EmailIcon}
-                                    name="email"
-                                    label="Email"
-                                    type="text"
-                                    placeholder="your@email.com"
-                                    changeContent={this.changeContent}
-                                />
-                        </div>
-                        <div className="account__btns" style={{marginTop  :40}}>
-                            <button style={{width : 150}} className="btn btn-primary account__btn" onClick={ () => this.login() } >Submit</button>
-                        </div>
+                        <a href={'https://www.t.me/betprotocol'} target={'__blank'}
+                        >
+                            <button style={{width : 200, marginTop : 50}} className="btn btn-primary account__btn">
+                                🏇 Join the conversation
+                            </button>
+                        </a>
                     </Col>
               
                 </Row>

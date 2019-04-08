@@ -19,11 +19,11 @@ const Header = (props) => (
 			<Row>
 			
 				<Col sd={12} md={6} style={{textAlign : 'left'}}>
-					<h2 className="landing__header-title"> Start your own Betting Application <b>Today</b>
+					<h2 className="landing__header-title"> Start your own Betting Application <b>in Minutes</b>
           			</h2>
 					<p className="landing__header-subhead"> Scalable, Secure, Regulated. No Coding Required.
                     </p>
-                    <div style={{marginLeft : 20, marginBottom  : 20, width : 400}}>
+                    {/* <div style={{marginLeft : 20, marginBottom  : 20, width : 400}}>
                         <Row>
                             <Col lg={6}>
                                 <div className='widget__landing__one'>
@@ -46,10 +46,16 @@ const Header = (props) => (
                             </Col>
 
                         </Row>
-                    </div>
-                    <button type="button"  style={{width : 200, marginLeft : 20}} className="btn btn-primary account__btn vrlps-trigger">
+                </div> */}
+                    {/* <button type="button"  style={{width : 200, marginLeft : 20}} className="btn btn-primary account__btn vrlps-trigger">
                         🏇 Get Early Access
+            </button> */}
+                <a href={'https://www.t.me/betprotocol'} target={'__blank'}
+                        >
+                    <button style={{width : 200, marginLeft : 20}} className="btn btn-primary account__btn">
+                        🏇 Join our conversation
                     </button>
+                </a>
 				</Col>
 				<Col sd={12} md={6} className={'login_background'}>
 					<img className="login_background" src={back} />

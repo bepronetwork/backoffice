@@ -9,6 +9,7 @@ import TransactionsProfile from './components/TransactionsProfile';
 import TransactionsResumeEntries from './components/TransactionsResumeEntries';
 import DataWidget from '../DataWidget/DataWidget';
 import TransactionsDeposits from './components/TransactionsDeposits';
+import TransactionsFilterUserId from './components/TransactionsFilterUserId';
 
 
 class TransactionsContainer extends React.Component{
@@ -24,11 +25,6 @@ class TransactionsContainer extends React.Component{
                 <Row>
                     <Col lg={3}>
                         <DataWidget>
-                            <TransactionsResumeEntries/>
-                        </DataWidget>
-                    </Col>
-                    <Col lg={3}>
-                        <DataWidget>
                             <TransactionsProfile data={this.props.profile.getApp().getSummaryData('transactions')}/>
                         </DataWidget>
                     </Col>
@@ -37,9 +33,13 @@ class TransactionsContainer extends React.Component{
                             <TransactionsDeposits data={this.props.profile.getApp().getSummaryData('transactions')}/>
                         </DataWidget>
                     </Col>
-                    <Col lg={3}>
-                      
+                   {/* <Col lg={6}>         
+                        <div className="dashboard__visitors-chart">
+                            <p className="dashboard__visitors-chart-title" style={{fontSize : 20, marginLeft : 20, marginBottom : 10}}> Filters <span>  </span></p>
+                        </div>  
+                        <TransactionsFilterUserId data={this.props.profile.getApp().getSummaryData('transactions')}/>
                     </Col>
+                    */}
                 </Row>
                 <Row>
                     <Col lg={12}>
