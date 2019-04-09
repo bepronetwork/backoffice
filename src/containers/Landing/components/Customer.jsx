@@ -15,9 +15,9 @@ const Customer = () => (
         <Container className='container__all__landing' >
             <h3 className="landing__section-title">Focus on Customer Experience</h3>
             <p className='landing__section-text '>
-                Don't worry about hiring a huge tech team or developing a betting platform by yourself. 
+                Don't worry about hiring a huge tech team or developing a betting platform by yourself
                 <br></br>
-                We handle the technology so you can focus on your customer.
+                We handle the technology so developers and entrepreneurs can focus on the customer.
             </p>
             <img src={sports} className='landing__image__big'></img>
             <img src={backoffice} className='landing__image__big_mockup'></img>

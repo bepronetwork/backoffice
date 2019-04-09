@@ -27,7 +27,7 @@ class NewsLetter extends React.Component{
                         <a href={'https://www.t.me/betprotocol'} target={'__blank'}
                         >
                             <button style={{width : 200, marginTop : 50}} className="btn btn-primary account__btn">
-                                🏇 Join the conversation
+                                🦄 Join the conversation
                             </button>
                         </a>
                     </Col>

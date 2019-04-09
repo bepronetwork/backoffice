@@ -23,9 +23,12 @@ class Products extends React.Component{
              <Container className='container__all__landing container-auto-height'>  
                 <h3 className="landing__section-title">What is BetProtocol?</h3>
                 <p className='landing__section-text '>
-                    We leverage Blockchain Technology to let you create the best App for your users.
+                    BetProtocol enables entrepreneurs and developers to create betting platforms in minutes. No coding required. 
                     <br></br>
-                    By creating an Hybrid Ecosystem we deliver the best User Experience alongside with Transparency & Security.                
+                    By leveraging Blockchain Technology these platforms are secure, scalable and regulated.
+                </p>
+                <p className=' roadmap-text landing__section-text' >
+                    Roadmap                   
                 </p>
                 <Row>
                     <Col md={6} lg={3}>
@@ -33,7 +36,7 @@ class Products extends React.Component{
                             <div className='landing__product__widget available'>
                                 <div className='description'>
                                     <h4> CryptoCurrency Integration</h4>
-                                    <p> Accept Multiple CryptoCurrencies for your Platform </p>
+                                    <p> Accept cryptocurrency payments on your betting platform and access a $200B market. </p>
                                 </div>
                                 <h2 style={{marginTop : 30}}> 0,5% <h5>Per Transaction</h5></h2>
                                 <img className='image_widget' src={bitcoin}></img>

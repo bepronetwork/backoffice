@@ -54,7 +54,7 @@ class Team extends React.Component{
              <Container className='container__all__landing container-auto-height'>  
                 <h3 className="landing__section-title">Core Team 🎲</h3>
                 <p className='landing__section-text '>
-                    Serial Entrepreuners & Product Freak Guys
+                    Our vision is to enable anyone in the world to dream of being a betting platform owner one morning and actually being one that same day.
                 </p>
                 <Row style={{marginTop : 30}}>
                     {team.map( (avatar) => {
@@ -65,7 +65,7 @@ class Team extends React.Component{
                 
              </Container>
              <Container className='container__all__landing container-auto-height'>  
-                <h3 className="landing__section-title">Advisors 🏇🏻</h3>
+                <h3 className="landing__section-title">Advisors 🦄</h3>
                 <Row style={{marginTop : 30}}>
                     {advisors.map( (avatar) => {
                         return renderAvatar(avatar)
