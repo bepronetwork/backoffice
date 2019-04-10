@@ -72,7 +72,7 @@ class TeamLanding extends PureComponent {
                         <Link  to={'/about-us'}
                         >
                             <button>
-                                About us
+                                Team
                             </button>
                         </Link>
                         <a href={'https://medium.com/@betprotocol'} target={'__blank'}

@@ -28,7 +28,7 @@ class Products extends React.Component{
                     By leveraging Blockchain Technology these platforms are secure, scalable and regulated.
                 </p>
                 <p className=' roadmap-text landing__section-text' >
-                    Roadmap                   
+                    <strong>Roadmap</strong>                   
                 </p>
                 <Row>
                     <Col md={6} lg={3}>

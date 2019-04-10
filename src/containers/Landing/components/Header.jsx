@@ -21,7 +21,7 @@ const Header = (props) => (
 				<Col sd={12} md={6} style={{textAlign : 'left'}}>
 					<h2 className="landing__header-title"> Start your own Betting Application <b>in Minutes</b>
           			</h2>
-					<p className="landing__header-subhead"> Scalable, Secure & Regulated. No Coding Required. <br></br>Powered by <strong>Blockchain</strong>
+					<p className="landing__header-subhead"> Scalable, Secure & Regulated. <br></br>Powered by Blockchain. No Coding Required. 
                     </p>
                     {/* <div style={{marginLeft : 20, marginBottom  : 20, width : 400}}>
                         <Row>
