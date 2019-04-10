@@ -14,7 +14,7 @@ const Footer = () => (
                     <h5 style={{maxWidth : 300, marginTop : 50}}>BetProtocol App is SaaS Platform built on Top of @BetProtocol</h5>
 				</Col>
 				<Col lg={4}>
-                    <h4 style={{marginBottom : 20}}>Make your Way</h4>
+                    <h4 style={{marginBottom : 20}}>Find your Way</h4>
                     <a href={'https://medium.com/@betprotocol'} target={'__blank'}
                     >
                         <h5>Blog</h5>
