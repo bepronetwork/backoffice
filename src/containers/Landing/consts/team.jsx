@@ -4,7 +4,7 @@ const andre = `${process.env.PUBLIC_URL}/img/team/andre.png`;
 const miguel = `${process.env.PUBLIC_URL}/img/team/miguel.png`;
 const ben = `${process.env.PUBLIC_URL}/img/team/ben.png`;
 const linkedin = `${process.env.PUBLIC_URL}/img/team/linkedin.svg`;
-const tiago = `${process.env.PUBLIC_URL}/img/team/tiago.png`;
+const tiago = `${process.env.PUBLIC_URL}/img/team/a.png`;
 const goncalo = `${process.env.PUBLIC_URL}/img/team/goncalo.png`;
 
 
