@@ -38,7 +38,7 @@ const Features = () => (
                 <Col  xs={{order : 1}}  lg={{order : 2, size : 6}}>
                     <h3 className="landing__section-title"> Designed for the Future of Regulation & Technology </h3>
                     <p className='landing__section-text'>
-                        BetProtocol enables entrepreneurs and developers to launch complaint and regulated cryptocurrency integrations and betting platforms.
+                        BetProtocol enables entrepreneurs and developers to launch compliant and regulated cryptocurrency integrations and betting platforms.
                     </p>
                 </Col>
             </Row>

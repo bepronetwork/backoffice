@@ -53,7 +53,7 @@ const Header = (props) => (
                 <a href={'https://www.t.me/betprotocol'} target={'__blank'}
                         >
                     <button style={{width : 200, marginLeft : 20}} className="btn btn-primary account__btn">
-                        🦄 Join our conversation
+                        🦄 Join our Telegram
                     </button>
                 </a>
 				</Col>
