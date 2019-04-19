@@ -17,25 +17,25 @@ class NewsLetter extends React.Component{
     render = () => {
         return(
             <section className="landing__section ">
-            <div className=''>
-                 <img className="landing_3_back" src={back} />
-             </div>
-             <Container className='container__all__landing newsletter-section'>  
-                <Row>
-                    <Col lg={12}>
-                        <h3 className="landing__section-title">Want to Know More?</h3>
-                        <a href={'https://www.t.me/betprotocol'} target={'__blank'}
-                        >
-                            <button style={{width : 200, marginTop : 50}} className="btn btn-primary account__btn">
-                                🦄 Join the Telegram
-                            </button>
-                        </a>
-                    </Col>
-              
-                </Row>
-               
-             </Container>
-         </section>
+                <div className=''>
+                    <img className="landing_3_back" src={back} />
+                </div>
+                <Container className='container__all__landing newsletter-section'>  
+                    <Row>
+                        <Col lg={12}>
+                            <h3 className="landing__section-title">Want to Know More?</h3>
+                            <a href={'https://www.t.me/betprotocol'} target={'__blank'}
+                            >
+                                <button style={{width : 200, marginTop : 50}} className="btn btn-primary account__btn">
+                                    🦄 Join the Telegram
+                                </button>
+                            </a>
+                        </Col>
+                
+                    </Row>
+                
+                </Container>
+            </section>
         )
     }
 
