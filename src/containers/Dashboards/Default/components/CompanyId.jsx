@@ -5,43 +5,37 @@ import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
 import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
+import { DirectionsIcon } from 'mdi-react';
+import CasinoContract from '../../../../controllers/CasinoContract';
 const Ava = `${process.env.PUBLIC_URL}/img/brand.jpg`;
 
-const data = [
-  { name: 'Page A', amt: 2400 },
-  { name: 'Page B', amt: 2210 },
-  { name: 'Page C', amt: 2290 },
-  { name: 'Page D', amt: 2000 },
-  { name: 'Page E', amt: 2181 },
-  { name: 'Page F', amt: 2500 },
-  { name: 'Page G', amt: 2100 },
-  { name: 'Page H', amt: 2290 },
-  { name: 'Page I', amt: 2000 },
-  { name: 'Page J', amt: 2181 },
-];
-
 class CompanyId extends PureComponent {
-  static propTypes = {
-    t: PropTypes.func.isRequired,
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeIndex: 0,
+    static propTypes = {
+        t: PropTypes.func.isRequired,
     };
-  }
 
-  handleClick = (index) => {
-    this.setState({
-      activeIndex: index,
-    });
-  };
+    constructor(props) {
+        super(props);
+        this.state = {
+        activeIndex: 0,
+        };
+    }
 
-  render() {
-    const { activeIndex } = this.state;
-    const activeItem = data[activeIndex];
-    const app = this.props.app;
+    handleClick = (index) => {
+        this.setState({
+        activeIndex: index,
+        });
+    };
+
+    render() {
+
+        const app = this.props.app;
+        let platformAddress = app.getInformation('platformAddress') || '0x';
+        let platformName = app.getName();
+        let platformDescription = app.getDescription();
+
+        let contract = new CasinoContract({contractAddress : platformAddress});
+
     return (
 		<Col md={12} lg={12} xl={12} >
 			<Card>
@@ -52,10 +46,11 @@ class CompanyId extends PureComponent {
 						</CardBody>
 					</Col>
 					<Col lg={6}>
-						<h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{app.getName()}</h5>
-						<p className="">
-							{app.getDescription()}
-						</p>
+						<h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{platformName}</h5>
+						<p className="">{platformDescription}</p>
+                        <a target={'__blank'} className='ethereum-address-a' href={'https://ropsten.etherscan.io/address/' + platformAddress}>
+                           <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{`${platformAddress.substring(0, 6)}...${platformAddress.substring(platformAddress.length - 2)}`}</p>
+                        </a>
 					</Col>
 				</Row>
 			</Card>
