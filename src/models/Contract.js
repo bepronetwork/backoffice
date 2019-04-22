@@ -1,16 +1,11 @@
-var fs = require('fs');
-const _ = require('lodash');
-const web = require('web3');
+class contract{
 
-class Contract{
-
-    constructor(web3, contract_json, address)
-    {
-        this.web3 = web3;
-        this.json = contract_json;      
-        this.abi = contract_json.abi;
-        this.address = address;
-        this.contract = new web3.eth.Contract(contract_json.abi, address)
+    constructor(params){
+        this.web3 = params.web3;
+        this.abi = params.contract.abi;
+        this.address = params.address;
+        this.json = params.contract;
+        this.contract = new params.web3.eth.Contract(params.contract.abi, params.address)
     }
 
     async deploy(account, abi, byteCode, args=[]){
@@ -49,14 +44,13 @@ class Contract{
             data : byteCode,
             from  : account.address,
             to : this.address,
-            gas : 4430000,
-            gasPrice : 800000000,
+            gasPrice : 20000000000,
+            gas : 4000000,
             value: value ? value : '0x0'
         }
 
         let result = await account.signTransaction(tx);
         let transaction = await this.web3.eth.sendSignedTransaction(result.rawTransaction);
-        console.log('Call done!');
         return transaction;
     }
     
@@ -78,4 +72,4 @@ class Contract{
 }
 
 
-export default Contract;
+export default contract;

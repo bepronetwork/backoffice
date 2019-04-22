@@ -23,9 +23,6 @@ import DataTable from '../Tables/DataTable/index';
 import EditableTable from '../Tables/EditableTable/index';
 import MaterialTable from '../Tables/MaterialTable/index';
 
-import GoogleMap from '../Maps/GoogleMap/index';
-import VectorMap from '../Maps/VectorMap/index';
-
 import NotFound404 from '../DefaultPage/404/index';
 import Calendar from '../DefaultPage/Calendar/index';
 import FAQ from '../DefaultPage/Faq/index';
@@ -41,7 +38,7 @@ import Catalog from '../ECommerce/Catalog/index';
 import ProductPage from '../ECommerce/product_page/index';
 
 import Profile from '../Account/Profile/index';
-import EmailConfirmation from '../Account/EmailConfimation/index';
+
 import LockScreen from '../Account/LockScreen/index';
 import LogIn from '../Account/LogIn/index';
 import LogInPhoto from '../Account/log_in_photo/index';
@@ -75,7 +72,6 @@ import DefaultDashboard from '../Dashboards/Default/index';
 import ECommerceDashboard from '../Dashboards/ECommerce/index';
 import CryptoDashboard from '../Dashboards/Crypto/index';
 
-import Mail from '../Mail/index';
 
 import CryptoDashboardEdit from '../Dashboards/CryptoTableEdit/index';
 import ECommerceDashboardEdit from '../Dashboards/ECommerceTableEdit/index';
@@ -145,17 +141,12 @@ import CreateApp from '../Wizards/CreateApp';
 	</Switch>
 	);
 
-	const Maps = () => (
-	<Switch>
-		<Route path="/maps/google_map" component={GoogleMap} />
-		<Route path="/maps/vector_map" component={VectorMap} />
-	</Switch>
-	);
+
 
 	const Account = () => (
 	<Switch>
 		<Route path="/account/profile" component={Profile} />
-		<Route path="/account/email_confirmation" component={EmailConfirmation} />
+
 	</Switch>
 	);
 
@@ -209,12 +200,10 @@ import CreateApp from '../Wizards/CreateApp';
 		<Route path="/dashboard_fitness" component={FitnessDashboard} />
 		<Route path="/dashboard_crypto" component={Crypto} />
 		<Route path="/ui" component={UI} />
-		<Route path="/mail" component={Mail} />
 		<Route path="/chat" component={Chat} />
 		<Route path="/forms" component={Forms} />
 		<Route path="/tables" component={Tables} />
 		<Route path="/charts" component={Charts} />
-		<Route path="/maps" component={Maps} />
 		<Route path="/account" component={Account} />
 		<Route path="/e-commerce" component={ECommerce} />
 		<Route path="/default_pages" component={DefaultPages} />

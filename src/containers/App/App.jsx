@@ -11,7 +11,8 @@ import Router from './Router';
 import store from './store';
 import ScrollToTop from './ScrollToTop';
 import { config as i18nextConfig } from '../../translations';
-
+import Web3 from 'web3';
+    
 i18next.init(i18nextConfig);
 
 class App extends Component {
@@ -21,8 +22,7 @@ class App extends Component {
 			loading: true,
 			loaded: false,
 		};
-	}
-
+    }
 
 	asyncCalls = async () => {
 		this.enterWebsite();
@@ -37,8 +37,44 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		this.asyncCalls();
-	}
+        this.asyncCalls();
+        this.startWallet();
+        
+    }
+    
+    startWallet = async () => {
+        // Modern dapp browsers...
+        if (window.ethereum) {
+            let ethereum = window.ethereum;
+            window.web3 = new Web3(window.ethereum);
+            let web3 = window.web3;
+            try {
+                await ethereum.enable();
+                var accounts= await web3.eth.getAccounts();
+                var option = { from: accounts[0] };
+                //var myContract = new web3.eth.Contract(abi,contractAddress);
+                /* myContract.methods.RegisterInstructor('11','Ali')
+                .send(option,function(error,result){
+                    if (! error)
+                        console.log(result);
+                    else
+                        console.log(error);
+                }); */
+            } catch (error) {
+                // User denied account access...
+            }
+        }
+        // Legacy dapp browsers...
+        else if (window.web3) {
+            window.web3 = new Web3(window.web3.currentProvider);
+            // Acccounts always exposed
+        }
+        // Non-dapp browsers...
+        else {
+            console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+        }
+    }
+    
 
 	render() {
 		const { loaded, loading } = this.state;
