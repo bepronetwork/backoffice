@@ -128,6 +128,7 @@
     "start": "node bin/www.js",
     "build": "node --max_old_space_size=8192 scripts/build.js",
     "test": "node scripts/test.js",
+    "heroku-postbuild": "npm run build",
     "generate-docs": "docsify init docs"
   },
   "devDependencies": {
