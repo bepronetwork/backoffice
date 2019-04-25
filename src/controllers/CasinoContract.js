@@ -3,18 +3,25 @@ import {
 } from "./interfaces";
 
 import Contract from "../models/Contract";
+import ERC20TokenContract from "./ERC20Contract";
+import { fromBigNumberToInteger } from "./services/services";
 
 let self;
 
 class CasinoContract{
-
-    constructor({contractAddress}){
+    constructor({contractAddress, tokenAddress}){
+        console.log(window.web3)
         self = {
             contract : 
             new Contract({
-                web3 : global.web3,
+                web3 : window.web3,
                 contract : casino, 
-                address : contractAddress
+                address : contractAddress,
+                tokenAddress : tokenAddress
+            }),
+            erc20TokenContract : new ERC20TokenContract({
+                web3 : global.web3,
+                contractAddress : tokenAddress
             })
         }
     }
@@ -111,6 +118,36 @@ class CasinoContract{
         return Math.round(int*100);
     }
 
+    async getHouseTokenAmount(){
+        try{
+            let playersTokenAmount = await this.getAllPlayersTokenAmount();
+            let houseAmount = await this.getSmartContractLiquidity();
+            console.log(houseAmount, playersTokenAmount)
+            return houseAmount - playersTokenAmount;
+        }catch(err){
+            console.log(err);
+            return 'N/A';
+        }
+    }
+
+    async getAllPlayersTokenAmount(){
+        try{
+            return fromBigNumberToInteger(await self.contract.getContract().methods.playerBalance().call());
+        }catch(err){
+            console.log(err);
+            return 'N/A';
+        }
+    }
+
+    async getSmartContractLiquidity(){
+        try{
+            return fromBigNumberToInteger(await self.erc20TokenContract.getTokenAmount(this.getAddress()));
+        }catch(err){
+            console.log(err);
+            return 'N/A';
+        }
+    }
+
 
     /**
      * @Functions
@@ -135,7 +172,7 @@ class CasinoContract{
     }
 
     getAddress(){
-        return self.contractAddress;
+        return self.contract.getAddress();
     }
 
 }

@@ -1,4 +1,3 @@
-
 let services = {
     casino : 101,
     crypto : 201
@@ -22,8 +21,12 @@ function fromCodesToServices(servicesObject){
     })
 }
 
+function fromBigNumberToInteger(value, decimals=18){
+    return value.toNumber() / Math.pow(10, decimals)*1000000000000000000;
+}
 export {
     services,
+    fromBigNumberToInteger,
     fromServicesToCodes,
     fromCodesToServices
 }
