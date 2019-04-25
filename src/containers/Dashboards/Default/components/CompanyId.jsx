@@ -34,29 +34,27 @@ class CompanyId extends PureComponent {
         let platformName = app.getName();
         let platformDescription = app.getDescription();
 
-        let contract = new CasinoContract({contractAddress : platformAddress});
-
-    return (
-		<Col md={12} lg={12} xl={12} >
-			<Card>
-				<Row>
-					<Col lg={6}>
-						<CardBody className="dashboard__card-widget">
-							<img className="company-logo-card" src={Ava} alt="avatar" />
-						</CardBody>
-					</Col>
-					<Col lg={6}>
-						<h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{platformName}</h5>
-						<p className="">{platformDescription}</p>
-                        <a target={'__blank'} className='ethereum-address-a' href={'https://ropsten.etherscan.io/address/' + platformAddress}>
-                           <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{`${platformAddress.substring(0, 6)}...${platformAddress.substring(platformAddress.length - 2)}`}</p>
-                        </a>
-					</Col>
-				</Row>
-			</Card>
-		</Col>
-    );
-  }
+        return (
+            <Col md={12} lg={12} xl={12} >
+                <Card>
+                    <Row>
+                        <Col lg={6}>
+                            <CardBody className="dashboard__card-widget">
+                                <img className="company-logo-card" src={Ava} alt="avatar" />
+                            </CardBody>
+                        </Col>
+                        <Col lg={6}>
+                            <h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{platformName}</h5>
+                            <p className="">{platformDescription}</p>
+                            <a target={'__blank'} className='ethereum-address-a' href={'https://ropsten.etherscan.io/address/' + platformAddress}>
+                            <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{`${platformAddress.substring(0, 6)}...${platformAddress.substring(platformAddress.length - 2)}`}</p>
+                            </a>
+                        </Col>
+                    </Row>
+                </Card>
+            </Col>
+        );
+    }
 }
 
 export default translate('common')(CompanyId);

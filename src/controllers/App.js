@@ -1,14 +1,13 @@
 import ConnectionSingleton from "../api/Connection";
 import store from "../containers/App/store";
 import { setProfileInfo } from "../redux/actions/profile";
+import CasinoContract from "./CasinoContract";
 
 class App{    
     constructor(params){
         this.params = params;
-        this.data = {
-            
-        };
-
+        this.data = {};
+        this.casinoContract = null;
     }
 
     getSummary = async () => {
@@ -50,20 +49,27 @@ class App{
                 }),
             ]);
 
-            let params = {
+            let serverApiInfo = {
                 users : res[0].data.message ? res[0].data.message : null,
                 games : res[1].data.message ? res[1].data.message : null,
                 bets : res[2].data.message ? res[2].data.message : null,
                 revenue : res[3].data.message ? res[3].data.message : null,
-                wallet :res[4].data.message ? res[4].data.message : null,
+                wallet : res[4].data.message ? res[4].data.message : null,        
                 app : res[5].data.message ? res[5].data.message : null,
                 transactions :  res[6].data.message ? res[6].data.message[0] : null
             } 
-            this.params = params.app;
+
+            this.params = serverApiInfo.app;
+
+            this.casinoContract = new CasinoContract({
+                contractAddress : this.getInformation('platformAddress'),
+                tokenAddress : this.getInformation('platformTokenAddress')
+            })
+
             this.data = {
                 ...this.data,
                 summary : {
-                    ...params
+                    ...serverApiInfo
                 }
             };
 
@@ -71,6 +77,14 @@ class App{
         }catch(err){
             throw err;
 		}
+    }
+
+    getTokenAmount = async () => {
+        try{
+            return await this.casinoContract.getHouseTokenAmount();
+        }catch(err){
+            throw 'N/A';
+        }
     }
 
     getDepositReference = async ({currency}) => {

@@ -44,14 +44,14 @@ class App extends Component {
     
     startWallet = async () => {
         // Modern dapp browsers...
+
         if (window.ethereum) {
             let ethereum = window.ethereum;
-            window.web3 = new Web3(window.ethereum);
-            let web3 = window.web3;
+            global.web3 = new Web3(window.ethereum);
+            
             try {
                 await ethereum.enable();
-                var accounts= await web3.eth.getAccounts();
-                var option = { from: accounts[0] };
+
                 //var myContract = new web3.eth.Contract(abi,contractAddress);
                 /* myContract.methods.RegisterInstructor('11','Ali')
                 .send(option,function(error,result){
@@ -61,18 +61,22 @@ class App extends Component {
                         console.log(error);
                 }); */
             } catch (error) {
+                alert('Allow Metamask')
+                global.web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/'));
                 // User denied account access...
             }
         }
         // Legacy dapp browsers...
         else if (window.web3) {
-            window.web3 = new Web3(window.web3.currentProvider);
-            // Acccounts always exposed
+            global.web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/'));
+             // Acccounts always exposed
         }
         // Non-dapp browsers...
         else {
+            global.web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/'));
             console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-        }
+        }        
+
     }
     
 
