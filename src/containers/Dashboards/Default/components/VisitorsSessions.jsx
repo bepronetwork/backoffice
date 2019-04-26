@@ -43,7 +43,6 @@ const VisitorsSessions  = (props) =>  {
 		betAmount : props.data.bets.data[0].bets.amount,
 		games : DashboardMapperSingleton.toPieChart(props.data.users.data[0].games)
     }
-    
 	return (
 		<Panel
             title={'Users´ Stats'}

@@ -10,7 +10,6 @@ let self;
 
 class CasinoContract{
     constructor({contractAddress, tokenAddress}){
-        console.log(window.web3)
         self = {
             contract : 
             new Contract({

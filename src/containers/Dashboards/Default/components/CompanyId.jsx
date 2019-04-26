@@ -9,30 +9,48 @@ import { DirectionsIcon } from 'mdi-react';
 import CasinoContract from '../../../../controllers/CasinoContract';
 const Ava = `${process.env.PUBLIC_URL}/img/brand.jpg`;
 
+
+const defaultProps = {
+    platformAddress : 'N/A',
+    platformBlockchain : 'N/A',
+    platformName : 'N/A',
+    platformDescription : 'N/A',
+    platformAddressLink : 'N/A'
+}
+
 class CompanyId extends PureComponent {
     static propTypes = {
         t: PropTypes.func.isRequired,
     };
 
+
     constructor(props) {
         super(props);
-        this.state = {
-        activeIndex: 0,
-        };
+        this.state = { ...defaultProps};
+
+        this.projectData(props);
     }
 
-    handleClick = (index) => {
-        this.setState({
-        activeIndex: index,
-        });
-    };
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    projectData = (props) => {
+        let app = props.app;
+
+        this.setState({...this.state, 
+            platformAddress : app.getInformation('platformAddress') ? 
+            `${app.getInformation('platformAddress').substring(0, 6)}...${app.getInformation('platformAddress').substring(app.getInformation('platformAddress').length - 2)}` : 
+            defaultProps.platformAddress,
+            platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
+            platformName : app.getName() ? app.getName() : defaultProps.platformName,
+            platformDescription  :app.getDescription() ? app.getDescription() : defaultProps.platformDescription,
+            platformAddressLink : 'https://ropsten.etherscan.io/address/' + app.getInformation('platformAddress'),
+        })
+    }
+
 
     render() {
-
-        const app = this.props.app;
-        let platformAddress = app.getInformation('platformAddress') || '0x';
-        let platformName = app.getName();
-        let platformDescription = app.getDescription();
 
         return (
             <Col md={12} lg={12} xl={12} >
@@ -44,10 +62,10 @@ class CompanyId extends PureComponent {
                             </CardBody>
                         </Col>
                         <Col lg={6}>
-                            <h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{platformName}</h5>
-                            <p className="">{platformDescription}</p>
-                            <a target={'__blank'} className='ethereum-address-a' href={'https://ropsten.etherscan.io/address/' + platformAddress}>
-                            <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{`${platformAddress.substring(0, 6)}...${platformAddress.substring(platformAddress.length - 2)}`}</p>
+                            <h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.platformName}</h5>
+                            <p className="">{new String(this.state.platformBlockchain).toUpperCase()}</p>
+                            <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
+                                <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.platformAddress}</p>
                             </a>
                         </Col>
                     </Row>
