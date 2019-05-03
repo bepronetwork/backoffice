@@ -1,29 +1,47 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row , Button} from 'reactstrap';
-import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
+import {Link} from 'react-router-dom';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
-import SettingsIcon from 'mdi-react/SettingsIcon';
-import { ArrowDownIcon, ArrowCollapseDownIcon, ArrowUpDropCircleIcon } from 'mdi-react';
+import { ArrowDownIcon, ArrowCollapseDownIcon,  DirectionsIcon } from 'mdi-react';
 const Ava = `${process.env.PUBLIC_URL}/img/euro.png`;
+
+
+
+const defaultProps = {
+    playBalance : 'N/A',
+    ticker : 'N/A',
+    platformBlockchain : 'N/A'
+}
+
 
 class LiquidityWalletWidget extends PureComponent {
  
-    constructor() {
-        super();
-        this.state = {
-        activeIndex: 0,
-        };
+    constructor(props){
+        super(props);
+        this.state = { ...defaultProps};
+        this.projectData(props);
     }
 
-    handleClick = (index) => {
-        this.setState({
-        activeIndex: index,
-        });
-    };
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    projectData = (props) => {
+        let data = props.data;
+        let tokenAddress = data.wallet.data.blockchain.tokenAddress;
+        
+        this.setState({...this.state, 
+            playBalance : data.wallet.data.playBalance ? data.wallet.data.playBalance : defaultProps.playBalance,
+            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
+            platformBlockchain : data.app.getInformation('platformBlockchain') ? data.app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
+            platformAddressLink : 'https://ropsten.etherscan.io/token/' + data.wallet.data.blockchain.tokenAddress,
+            tokenAddress :  `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
+        })
+    }
+
 
     render() {        
-        let playBalance = this.props.data.data.playBalance;
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
@@ -36,15 +54,20 @@ class LiquidityWalletWidget extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
-                                    }><AnimationNumber number={playBalance}/> €</p>
+                                    }><AnimationNumber number={this.state.playBalance}/> <span>{this.state.ticker}</span></p>
                                 </div>
                                 <div className="dashboard__visitors-chart">
-                                    <p className="dashboard__visitors-chart-title"> Wrapped EUR <span> Available </span></p>
+                                    <p className="dashboard__visitors-chart-title">{new String(this.state.platformBlockchain).toUpperCase()} <strong>|</strong> {this.state.ticker} <span> Available </span></p>
                                 </div>
+                                <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
+                                    <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.tokenAddress}</p>
+                                </a>
                             </Col>
                             <Col lg={4}>
-                                <Button style={{margin : 0}} className="icon" outline color="primary"><p><ArrowCollapseDownIcon className="deposit-icon"/> Deposit </p></Button>
-                                <Button style={{margin : 0, marginTop : 10}} className="icon"  color="primary"><p><ArrowDownIcon className="deposit-icon"/> Transfer </p></Button>
+                                <Link to='/wallet/deposit' >
+                                    <Button style={{margin : 0, width : 120}} className="icon" outline color="primary"><p><ArrowCollapseDownIcon className="deposit-icon"/> Deposit </p></Button>
+                                </Link>
+                                <Button style={{margin : 0, marginTop : 10, width : 120}} className="icon"  color="primary"><p><ArrowDownIcon className="deposit-icon"/> Withdraw </p></Button>
                             </Col>
                         </Row>
                     </CardBody>

@@ -6,47 +6,50 @@ import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 import DashboardMapperSingleton from '../../../../services/mappers/Dashboard';
 
-const data = [
-  { name: 'Page A', uv: 4000 },
-  { name: 'Page B', uv: 3000 },
-  { name: 'Page C', uv: 2000 },
-  { name: 'Page D', uv: 2780 },
-  { name: 'Page E', uv: 1890 },
-  { name: 'Page F', uv: 2390 },
-  { name: 'Page G', uv: 3490 },
-  { name: 'Page H', uv: 2000 },
-  { name: 'Page I', uv: 2780 },
-  { name: 'Page J', uv: 1890 },
-];
+const defaultProps = {
+    profit : '0',
+    ticker : 'N/A',
+    timeline  : 'this week'
+}
+
 
 class ProfitResume extends PureComponent {
  
-    constructor() {
-        super();
-        this.state = {
-        activeIndex: 0,
-        };
+    constructor(props){
+        super(props);
+        this.state = { ...defaultProps};
+        this.projectData(props);
     }
 
-    handleClick = (index) => {
-        this.setState({
-        activeIndex: index,
-        });
-    };
+    componentDidMount(){
+        this.projectData(this.props)
+    }
 
+    projectData = (props) => {
+        let data = props.data;
+
+        this.setState({...this.state, 
+            profit : data.revenue.data ? DashboardMapperSingleton.toDateProfit(data.revenue.data) : defaultProps.profit,
+            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
+            timeline : data.revenue.data ? defaultProps.timeline : defaultProps.timeline
+        })
+    }
+
+
+  
     render() {
-        let profit = DashboardMapperSingleton.toDateProfit(this.props.data.data);
         return (
         <Col md={12} xl={12} lg={12} xs={12}>
             <Card>
                 <CardBody className="dashboard__card-widget">
                     <div className="dashboard__visitors-chart">
                         <p className="dashboard__visitors-chart-number-second" style={
-                            {color : profit >= 0 ? '#76d076' : '#646777'}
-                        }><AnimationNumber  number={profit}/> €</p>
+                            {color : this.state.profit >= 0 ? '#76d076' : '#646777'}
+                        }><AnimationNumber  number={this.state.profit}/> 
+                        <span style={ {color : this.state.profit >= 0 ? '#76d076' : '#646777'}}> {this.state.ticker}</span> </p>
                     </div>
                     <div className="dashboard__visitors-chart">
-                        <p className="dashboard__visitors-chart-title"> Profit <span> this week </span></p>
+                        <p className="dashboard__visitors-chart-title"> Profit <span> {this.state.timeline}</span></p>
                     </div>
                 </CardBody>
             </Card>

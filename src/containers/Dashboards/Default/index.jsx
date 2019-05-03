@@ -3,10 +3,10 @@ import { Col, Container, Row } from 'reactstrap';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 
-import ABTestingAnalytics from './components/ABTestingAnalytics';
+import RevenueChart from './components/RevenueChart';
 import VisitorsSessions from './components/VisitorsSessions';
 import BounceRateArea from './components/BounceRateArea';
-import BudgetStatistic from './components/BudgetStatistic';
+import BetsStatistics from './components/BetsStatistics';
 import CompanyId from './components/CompanyId';
 import ProfitResume from './components/ProfitResume';
 import TurnoverResume from './components/TurnoverResume';
@@ -41,12 +41,18 @@ class DefaultDashboard extends React.Component{
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <ProfitResume data={this.props.profile.getApp().getSummaryData('revenue')} />
+                            <ProfitResume data={{
+                                revenue : this.props.profile.getApp().getSummaryData('revenue'),
+                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                }} />
                         </DataWidget>
                     </Col> 
                     <Col lg={3}>
                         <DataWidget>
-                            <TurnoverResume data={this.props.profile.getApp().getSummaryData('revenue')} />
+                            <TurnoverResume data={{
+                                revenue : this.props.profile.getApp().getSummaryData('revenue'),
+                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                            }} />
                         </DataWidget>
                     </Col>
                 </Row>
@@ -55,21 +61,29 @@ class DefaultDashboard extends React.Component{
                         <Row>
                             <Col lg={12}>
                                 <DataWidget>
-                                    <ABTestingAnalytics data={this.props.profile.getApp().getSummaryData('revenue')} />
+                                    <RevenueChart data={{
+                                        revenue : this.props.profile.getApp().getSummaryData('revenue'),
+                                        wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                        }} 
+                                    />
                                 </DataWidget>
                             </Col>    
                         </Row>
                         <Row>
                             <Col md={4}>
                                 <DataWidget>
-                                    <BudgetStatistic data={this.props.profile.getApp().getSummaryData('bets')}/>
+                                    <BetsStatistics data={{
+                                        bets : this.props.profile.getApp().getSummaryData('bets'),
+                                        wallet : this.props.profile.getApp().getSummaryData('wallet')
+                                        }}/>
                                 </DataWidget>
                             </Col>
                             <Col md={4}>
                                 <DataWidget>
                                     <VisitorsSessions data={{
                                         users : this.props.profile.getApp().getSummaryData('games'),
-                                        bets : this.props.profile.getApp().getSummaryData('bets')
+                                        bets : this.props.profile.getApp().getSummaryData('bets'),
+                                        wallet : this.props.profile.getApp().getSummaryData('wallet')
                                     }}/>
                                 </DataWidget>
                             </Col>

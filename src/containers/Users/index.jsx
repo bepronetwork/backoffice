@@ -10,7 +10,7 @@ import UsersInfo from './components/UsersInfo';
 import UsersResumeEntries from './components/UsersResumeEntries';
 import VectorMap from './components/VectorMap';
 import DataWidget from '../DataWidget/DataWidget';
-import EnhancedTableUsers from './components/EnhancedTableUsers';
+import BetsTable from './components/BetsTable';
 
 
 class UsersContainer extends React.Component{
@@ -36,7 +36,11 @@ class UsersContainer extends React.Component{
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <UsersProfit data={this.props.profile.getApp().getSummaryData('users')}/>
+                            <UsersProfit data={{
+                                users : this.props.profile.getApp().getSummaryData('users'),
+                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                revenue : this.props.profile.getApp().getSummaryData('revenue')
+                            }}/>
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
@@ -48,7 +52,11 @@ class UsersContainer extends React.Component{
                 <Row>
                     <Col lg={12}>
                         <DataWidget>
-                            <EnhancedTableUsers data={this.props.profile.getApp().getSummaryData('users')}/>
+                            <BetsTable
+                                data={{
+                                    users : this.props.profile.getApp().getSummaryData('users'),
+                                    wallet : this.props.profile.getApp().getSummaryData('wallet')
+                                }}/>
                         </DataWidget>
                     </Col>
                 </Row>
