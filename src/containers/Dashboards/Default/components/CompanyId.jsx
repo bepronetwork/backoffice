@@ -1,12 +1,9 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
-import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
-import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { DirectionsIcon } from 'mdi-react';
-import CasinoContract from '../../../../controllers/CasinoContract';
 const Ava = `${process.env.PUBLIC_URL}/img/brand.jpg`;
 
 

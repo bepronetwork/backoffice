@@ -50,7 +50,12 @@ class StatsContainer extends React.Component{
                 <Row>
                     <Col lg={12}>
                         <DataWidget>
-                            <RevenueChart data={this.props.profile.getApp().getSummaryData('revenue')} />
+                            <RevenueChart  
+                                data={{
+                                    revenue : this.props.profile.getApp().getSummaryData('revenue'),
+                                    wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                }}  
+                            />
                         </DataWidget>
                     </Col>
                 </Row>

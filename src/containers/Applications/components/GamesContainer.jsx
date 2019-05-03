@@ -15,14 +15,15 @@ class GamesContainer extends PureComponent {
     }
 
     render() {
-        let games = this.props.data.data[0].games;
-
+        let games = this.props.data.games.data[0].games;
+        let wallet = this.props.data.wallet.data;
+        
         return (
             <Row md={12} xl={12} lg={12} xs={12}>
                 {Object.keys(games).map( key => {
                     return (
                     <Col lg={4}>
-                        <GameInfo game={games[key]} />
+                        <GameInfo game={games[key]} wallet={wallet} />
                     </Col>
                     )
                 })}

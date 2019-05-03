@@ -7,24 +7,37 @@ import { ArrowDownIcon, ArrowCollapseDownIcon, ArrowUpDropCircleIcon } from 'mdi
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 const Ava = `${process.env.PUBLIC_URL}/img/euro.png`;
 
+
+const defaultProps = {
+    playBalance : 'N/A',
+    ticker : 'N/A'
+}
+
 class LiquidityWalletWidget extends PureComponent {
  
-    constructor() {
-        super();
-        this.state = {
-        activeIndex: 0,
-        };
+    constructor(props){
+        super(props);
+        this.state = { ...defaultProps};
+        this.projectData(props);
     }
 
-    handleClick = (index) => {
-        this.setState({
-        activeIndex: index,
-        });
-    };
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    projectData = (props) => {
+        let data = props.data.data;
+
+        this.setState({...this.state, 
+            playBalance : data.playBalance ? data.playBalance : defaultProps.playBalance,
+            ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
+        })
+    }
+
+
 
     render() {        
         
-        let playBalance = this.props.data.data.playBalance;
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
@@ -37,10 +50,10 @@ class LiquidityWalletWidget extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
-                                    }><AnimationNumber number={playBalance}/> €</p>
+                                    }><AnimationNumber number={this.state.playBalance}/> <span>{this.state.ticker}</span></p>
                                 </div>
                                 <div className="dashboard__visitors-chart">
-                                    <p className="dashboard__visitors-chart-title"> Wrapped EUR <span> Available </span></p>
+                                    <p className="dashboard__visitors-chart-title"> {this.state.ticker} <span> Available </span></p>
                                 </div>
                             </Col>
                            

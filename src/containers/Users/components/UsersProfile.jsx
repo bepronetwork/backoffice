@@ -22,7 +22,6 @@ class UsersProfile extends PureComponent {
     };
 
     render() {
-        console.log(this.props.data.data) 
         
         let users = Object.keys(this.props.data.data).length;
         return (

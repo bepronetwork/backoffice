@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row , Button} from 'reactstrap';
-import {  BarcodeIcon, TickCircleIcon } from 'mdi-react';
+import {  BarcodeIcon, TickCircleIcon, DirectionsIcon } from 'mdi-react';
 import AnimationNumber from '../../../../UI/Typography/components/AnimationNumber';
 import ConverterSingleton from '../../../../../services/converter';
 import QRCodeContainer from './QRCode';
@@ -12,34 +12,70 @@ import { compose } from 'lodash/fp'
 import ReciptBox from './ReciptBox';
 const Ava = `${process.env.PUBLIC_URL}/img/ethereum.png`;
 
+
+
+const defaultProps = {
+    playBalance : 'N/A',
+    ticker : 'N/A',
+    liquidity : 0,
+    platformBlockchain : 'N/A'
+}
+
+
+
+
 class CurrencyBox extends PureComponent {
- 
-    constructor() {
-        super();
-        this.state = {
-            usd : 0,
-            referenceAddress : '0x',
-            generatedReference : false
-        };
+
+    constructor(props){
+        super(props);
+        this.state = { ...defaultProps};
+        this.projectData(props);
+
+        this.deposit_buttons = {
+            ethereum : (amount, address) => {
+                return (
+                    <Button onClick={() => this.createTokenTransfer('eth', amount, address)}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Metamask </p></Button>
+                )
+            }
+        }
     }
 
-    componentWillReceiveProps(props){
-        this.getAsyncCalls(props);
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+
+    createTokenTransfer = async  (currency, amount, address) => {
+        // TO DO : Create generateTokenTransfer Function in App via this infocmation
+        let res = await this.props.profile.getApp().generateTokenTransfer(currency, amount, address);
+        // TO DO : Finalize Work
+    }
+
+
+    projectData = (props) => {
+        let data = props.profile.getApp().getSummaryData('wallet').data;
+        let app = props.profile.getApp();
+        let tokenAddress = data.blockchain.tokenAddress;
+        let platformAddress = app.getInformation('platformAddress');
+
+        this.setState({...this.state, 
+            referenceAddress : '0x',
+            generatedReference : false,
+            liquidity : data.blockchain.totalLiquidity,
+            ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
+            platformAddress  :`${platformAddress.substring(0, 6)}...${platformAddress.substring(platformAddress.length - 2)}`,
+            platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
+            platformAddressLink : 'https://ropsten.etherscan.io/token/' + data.blockchain.tokenAddress,
+            tokenAddress :  `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
+        })
     }
 
     getAsyncCalls = async (props) => {
-        let usd = await ConverterSingleton.fromETHtoUsd(props.data.eth);
-        this.setState({...this.state, usd : usd});
+        //let usd = await ConverterSingleton.fromETHtoUsd(props.data.eth);
     }
 
-    handleClick = (index) => {
-        this.setState({
-            activeIndex: index,
-        });
-    };
-
     setTimer = () => {
-        window.setInterval( () => {this.confirmDeposit()}, 2000);
+        //window.setInterval( () => {this.confirmDeposit()}, 2000);
     }
 
     getReference = async () => {
@@ -51,26 +87,25 @@ class CurrencyBox extends PureComponent {
     }
 
     confirmDeposit = async () => {
-           // TO DO : Change ETH to the Currency Type;
-           let data = await this.props.profile.getDepositInfo({id : this.state.id});
-           let {
-               confirmed,
-               amount,
-               timestamp,
-               block
-            } = data;
-            let usd_amount = await ConverterSingleton.fromETHtoUsd(amount);
-           this.setState({...this.state, 
-                confirmedDeposit : confirmed,
-                recipt : {
-                    confirmedDeposit : confirmed, 
-                    amount, timestamp, block, usd_amount
-                }
-            });
+        // TO DO : Change ETH to the Currency Type;
+        let data = await this.props.profile.getDepositInfo({id : this.state.id});
+        let {
+            confirmed,
+            amount,
+            timestamp,
+            block
+        } = data;
+        let usd_amount = await ConverterSingleton.fromETHtoUsd(amount);
+        this.setState({...this.state, 
+            confirmedDeposit : confirmed,
+            recipt : {
+                confirmedDeposit : confirmed, 
+                amount, timestamp, block, usd_amount
+            }
+        });
     }
 
     render() {        
-        let eth = this.props.data.eth;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -84,27 +119,24 @@ class CurrencyBox extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
-                                    }><AnimationNumber decimals number={eth}/> ETH</p>
+                                    }><AnimationNumber decimals number={this.state.liquidity}/> {this.state.ticker}</p>
                                 </div>
-                                <div className="dashboard__visitors-chart">
-                                    <p className="dashboard__visitors-chart-title"> <AnimationNumber decimals number={this.state.usd}/> <span> EUR </span></p>
-                                </div>
+                                <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
+                                    <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.tokenAddress}</p>
+                                </a>
+                              
                             </Col>
                             <div className='container' style={{textAlign : 'center'}}>
-                                {!this.state.generatedReference ? 
-                                    <Col lg={12} style={{marginTop : 30}}>
-                                        <Button onClick={() => this.getReference()} style={{margin : 0, marginTop : 10}} outline className="primary" ><p><BarcodeIcon className="deposit-icon"/>  Generate Reference </p></Button>
+                                {!this.state.confirmedDeposit ?
+                                    <Col lg={12} style={{margin : '10px auto', textAlign : 'center'}} >
+                                        <QRCodeContainer value={this.state.platformBlockchain}/>
+                                        <AddressBox value={this.state.platformAddress}/>
+                                        <hr></hr>
+                                        <Button disabled={true} onClick={() => this.confirmDeposit()}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Waiting for Deposit...</p></Button>
+                                        {this.deposit_buttons.ethereum()}
                                     </Col>
-                                :
-                                    !this.state.confirmedDeposit ?
-                                        <Col lg={12} style={{margin : '10px auto', textAlign : 'center'}} >
-                                            <QRCodeContainer value={this.state.referenceAddress}/>
-                                            <AddressBox value={this.state.referenceAddress}/>
-                                            <hr></hr>
-                                            <Button disabled={true} onClick={() => this.confirmDeposit()}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Waiting for Deposit...</p></Button>
-                                        </Col>
-                                    :   
-                                        <ReciptBox recipt={this.state.recipt}/>
+                                :   
+                                    <ReciptBox recipt={this.state.recipt}/>
                                 }
 
                             </div>

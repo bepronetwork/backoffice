@@ -1,51 +1,52 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col } from 'reactstrap';
-import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
-import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 import DashboardMapperSingleton from '../../../../services/mappers/Dashboard';
 
-const data = [
-  { name: 'Page A', uv: 4000 },
-  { name: 'Page B', uv: 3000 },
-  { name: 'Page C', uv: 2000 },
-  { name: 'Page D', uv: 2780 },
-  { name: 'Page E', uv: 1890 },
-  { name: 'Page F', uv: 2390 },
-  { name: 'Page G', uv: 3490 },
-  { name: 'Page H', uv: 2000 },
-  { name: 'Page I', uv: 2780 },
-  { name: 'Page J', uv: 1890 },
-];
+
+const defaultProps = {
+    turnover : '0',
+    ticker : 'N/A',
+    timeline  : 'this week'
+}
+
 
 class TurnoverResume extends PureComponent {
  
-    constructor() {
-        super();
-        this.state = {
-        activeIndex: 0,
-        };
+    constructor(props){
+        super(props);
+        this.state = { ...defaultProps};
+        this.projectData(props);
     }
 
-    handleClick = (index) => {
-        this.setState({
-        activeIndex: index,
-        });
-    };
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    projectData = (props) => {
+        let data = props.data;
+
+        this.setState({...this.state, 
+            turnover : data.revenue.data ? DashboardMapperSingleton.toDateRevenue(data.revenue.data) : defaultProps.turnover,
+            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
+            timeline : data.revenue.data ? defaultProps.timeline : defaultProps.timeline
+        })
+    }
+
 
     render() {
-        let revenue = DashboardMapperSingleton.toDateRevenue(this.props.data.data);
 
         return (
         <Col md={12} xl={12} lg={12} xs={12}>
             <Card>
                 <CardBody className="dashboard__card-widget">
                     <div className="dashboard__visitors-chart">
-                        <p className="dashboard__visitors-chart-number-second"><AnimationNumber number={revenue}/> €</p>
+                        <p className="dashboard__visitors-chart-number-second">
+                        <AnimationNumber number={this.state.turnover}/> <span> {this.state.ticker} </span> </p>
                     </div>
                     <div className="dashboard__visitors-chart">
-                        <p className="dashboard__visitors-chart-title">TurnOver <span> this week </span></p>
+                        <p className="dashboard__visitors-chart-title"> Turnover <span> {this.state.timeline} </span></p>
                     </div>
                 </CardBody>
             </Card>

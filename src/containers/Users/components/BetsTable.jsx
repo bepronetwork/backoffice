@@ -243,7 +243,13 @@ const styles = theme => ({
   },
 });
 
-class EnhancedTable extends React.Component {
+const defaultProps = {
+    profit : '0',
+    ticker : 'N/A',
+}
+
+
+class BetsTable extends React.Component {
     
     constructor(props){
         super(props)
@@ -251,11 +257,27 @@ class EnhancedTable extends React.Component {
             order: 'asc',
             orderBy: 'id',
             selected: [],
-            data: fromDatabasetoTable(props.data.data),
+            data: fromDatabasetoTable(props.data.users.data),
             page: 0,
             rowsPerPage: 5,
+            ...defaultProps
         };
     }
+
+
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    projectData = (props) => {
+        let data = props.data;
+
+        this.setState({...this.state, 
+            data : fromDatabasetoTable(data.users.data),
+            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
+        })
+    }
+
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
@@ -307,84 +329,83 @@ class EnhancedTable extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-  render() {
-    const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    render() {
+        const { classes } = this.props;
+        const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+        const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
-    return (
-      <Paper className={classes.root}>
-            <EnhancedTableToolbar numSelected={selected.length} />
-                <div className={classes.tableWrapper}>
-            <Table className={classes.table} aria-labelledby="tableTitle">
-                <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={this.handleSelectAllClick}
-                    onRequestSort={this.handleRequestSort}
-                    rowCount={data.length}
+        return (
+            <Paper className={classes.root}>
+                    <EnhancedTableToolbar numSelected={selected.length} />
+                        <div className={classes.tableWrapper}>
+                    <Table className={classes.table} aria-labelledby="tableTitle">
+                        <EnhancedTableHead
+                            numSelected={selected.length}
+                            order={order}
+                            orderBy={orderBy}
+                            onSelectAllClick={this.handleSelectAllClick}
+                            onRequestSort={this.handleRequestSort}
+                            rowCount={data.length}
+                        />
+                    <TableBody>
+                        {stableSort(data, getSorting(order, orderBy))
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map(n => {
+                            const isSelected = this.isSelected(n.id);
+                            return (
+                                <TableRow
+                                    hover
+                                    onClick={event => this.handleClick(event, n.id)}
+                                    role="checkbox"
+                                    style={{padding : 0}}
+                                    aria-checked={isSelected}
+                                    tabIndex={-1}
+                                    key={n.id}
+                                    selected={isSelected}
+                                >
+                                <TableCell padding="checkbox">
+                                    <Checkbox checked={isSelected} />
+                                </TableCell> 
+                                    <TableCell align="left">{n.id}</TableCell>
+                                    <TableCell align="center">{n.name}</TableCell>
+                                    <TableCell align="center">{n.email}</TableCell>
+                                    <TableCell align="left">{n.turnoverAmount} {this.state.ticker} </TableCell>
+                                    <TableCell align="left">{n.bets}</TableCell>
+                                    <TableCell align="left">{n.profit} {this.state.ticker}</TableCell>
+                                    <TableCell align="left">{n.playBalance} {this.state.ticker}</TableCell>
+                                </TableRow>
+                            );
+                        })}
+                        {emptyRows > 0 && (
+                            <TableRow style={{ height: 49 * emptyRows }}>
+                            <TableCell colSpan={6} />
+                            </TableRow>
+                        )}
+                        </TableBody>
+                    </Table>
+                </div>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={data.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    backIconButtonProps={{
+                        'aria-label': 'Previous Page',
+                    }}
+                    nextIconButtonProps={{
+                        'aria-label': 'Next Page',
+                    }}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-            <TableBody>
-                {stableSort(data, getSorting(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(n => {
-                    const isSelected = this.isSelected(n.id);
-                    return (
-                        <TableRow
-                            hover
-                            onClick={event => this.handleClick(event, n.id)}
-                            role="checkbox"
-                            style={{padding : 0}}
-                            aria-checked={isSelected}
-                            tabIndex={-1}
-                            key={n.id}
-                            selected={isSelected}
-                        >
-                        <TableCell padding="checkbox">
-                            <Checkbox checked={isSelected} />
-                        </TableCell> 
-                            <TableCell align="left">{n.id}</TableCell>
-                            <TableCell align="center">{n.name}</TableCell>
-                            <TableCell align="center">{n.email}</TableCell>
-                            <TableCell align="left">{n.turnoverAmount} €</TableCell>
-                            <TableCell align="left">{n.bets}</TableCell>
-                            
-                            <TableCell align="left">{n.profit} €</TableCell>
-                            <TableCell align="left">{n.playBalance} €</TableCell>
-                        </TableRow>
-                    );
-                })}
-                {emptyRows > 0 && (
-                    <TableRow style={{ height: 49 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                    </TableRow>
-                )}
-                </TableBody>
-            </Table>
-        </div>
-        <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            backIconButtonProps={{
-                'aria-label': 'Previous Page',
-            }}
-            nextIconButtonProps={{
-                'aria-label': 'Next Page',
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
-      </Paper>
-    );
-  }
+            </Paper>
+        );
+    }
 }
 
-EnhancedTable.propTypes = {
+BetsTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(EnhancedTable);
+export default withStyles(styles)(BetsTable);

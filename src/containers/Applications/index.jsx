@@ -24,7 +24,7 @@ class ApplicationsContainer extends React.Component{
     render = () => {
         let services = this.props.profile.getApp().getServices();
         let servicesCodes = fromCodesToServices(services);
-        console.log(this.props.profile.getApp().getSummaryData('games'))
+
         return (
             <Container className="dashboard">
                 <Row>
@@ -44,7 +44,10 @@ class ApplicationsContainer extends React.Component{
                                     </CardBody>
                                 </Card>
                                 <DataWidget>
-                                    <GamesContainer data={this.props.profile.getApp().getSummaryData('games')}/>
+                                    <GamesContainer  data={{
+                                        games : this.props.profile.getApp().getSummaryData('games'),
+                                        wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                    }}/>
                                 </DataWidget>
                             </div>   
                         }

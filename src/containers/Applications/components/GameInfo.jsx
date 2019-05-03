@@ -14,14 +14,9 @@ class GameInfo extends PureComponent {
         };
     }
 
-    handleClick = (index) => {
-        this.setState({
-        activeIndex: index,
-        });
-    };
-
     render() {
         let game = this.props.game;
+        let ticker = this.props.wallet.blockchain.ticker;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -51,7 +46,7 @@ class GameInfo extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
-                                    }><AnimationNumber number={game.profit}/> €</p>
+                                    }><AnimationNumber number={game.profit}/> <span> {ticker}</span></p>
                                 </div>
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-title"> Profit  </p>
