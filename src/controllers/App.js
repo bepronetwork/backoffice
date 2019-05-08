@@ -140,6 +140,15 @@ class App{
 		}
     }
 
+    async generateTokenTransfer(){
+        try{
+            // TO DO : Create Web3 Transfer to Address
+
+        }catch(err){
+            throw err;
+        }
+    }
+
 
     getName(){
         return this.params.name;

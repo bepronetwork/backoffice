@@ -50,7 +50,7 @@ class App extends Component {
             global.web3 = new Web3(window.ethereum);
             
             try {
-                await ethereum.enable();
+                //await ethereum.enable();
 
                 //var myContract = new web3.eth.Contract(abi,contractAddress);
                 /* myContract.methods.RegisterInstructor('11','Ali')

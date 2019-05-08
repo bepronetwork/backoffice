@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import ReciptBox from './ReciptBox';
+import TextInput from '../../../../../shared/components/TextInput';
 const Ava = `${process.env.PUBLIC_URL}/img/ethereum.png`;
 
 
@@ -17,6 +18,7 @@ const Ava = `${process.env.PUBLIC_URL}/img/ethereum.png`;
 const defaultProps = {
     playBalance : 'N/A',
     ticker : 'N/A',
+    platformAddress : 'N/A',
     liquidity : 0,
     platformBlockchain : 'N/A'
 }
@@ -32,9 +34,13 @@ class CurrencyBox extends PureComponent {
         this.projectData(props);
 
         this.deposit_buttons = {
-            ethereum : (amount, address) => {
+            ethereum : (amount, platformAddress, tokenAddress) => {
                 return (
-                    <Button onClick={() => this.createTokenTransfer('eth', amount, address)}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Metamask </p></Button>
+                    <Button onClick={() => this.createTokenTransfer({
+                        currency : 'eth', 
+                        amount, 
+                        platformAddress, 
+                        tokenAddress })}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Metamask </p></Button>
                 )
             }
         }
@@ -45,9 +51,9 @@ class CurrencyBox extends PureComponent {
     }
 
 
-    createTokenTransfer = async  (currency, amount, address) => {
+    createTokenTransfer = async  (currency, amount, platformAddress, tokenAddress) => {
         // TO DO : Create generateTokenTransfer Function in App via this infocmation
-        let res = await this.props.profile.getApp().generateTokenTransfer(currency, amount, address);
+        let res = await this.props.profile.getApp().generateTokenTransfer(currency, amount, platformAddress, tokenAddress);
         // TO DO : Finalize Work
     }
 
@@ -63,10 +69,12 @@ class CurrencyBox extends PureComponent {
             generatedReference : false,
             liquidity : data.blockchain.totalLiquidity,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
-            platformAddress  :`${platformAddress.substring(0, 6)}...${platformAddress.substring(platformAddress.length - 2)}`,
+            platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
             platformAddressLink : 'https://ropsten.etherscan.io/token/' + data.blockchain.tokenAddress,
-            tokenAddress :  `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
+            tokenAddress :  tokenAddress,
+            tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
+
         })
     }
 
@@ -105,6 +113,10 @@ class CurrencyBox extends PureComponent {
         });
     }
 
+    changeContent = (type, item) => {
+        this.setState({[type] : item});
+    }
+
     render() {        
 
         return (
@@ -117,12 +129,32 @@ class CurrencyBox extends PureComponent {
                             </Col>
                             <Col lg={9}>
                                 <div className="dashboard__visitors-chart">
-                                    <p className="dashboard__visitors-chart-number-second" style={
-                                        {color : '#646777'}
-                                    }><AnimationNumber decimals number={this.state.liquidity}/> {this.state.ticker}</p>
+                                <Row>
+                                    <Col lg={6}>
+                                        <TextInput
+                                            name="amount"
+                                            label="Amount"
+                                            type="number"
+                                            placeholder="100"
+                                            defaultValue={this.state.amount}
+                                            changeContent={this.changeContent}
+                                        />
+                                    </Col>
+                                    <Col lg={6} style={{marginTop : 30}}>
+                                        <p className="dashboard__visitors-chart-number-second" style={
+                                            {color : '#646777'}
+                                        }>
+                                        {this.state.ticker}
+                                        </p>
+                                    </Col>
+                                </Row>
+
+                                  
                                 </div>
                                 <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
-                                    <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.tokenAddress}</p>
+                                    <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />
+                                        {this.state.tokenAddressTrimmed}
+                                    </p>
                                 </a>
                               
                             </Col>
@@ -132,8 +164,8 @@ class CurrencyBox extends PureComponent {
                                         <QRCodeContainer value={this.state.platformBlockchain}/>
                                         <AddressBox value={this.state.platformAddress}/>
                                         <hr></hr>
-                                        <Button disabled={true} onClick={() => this.confirmDeposit()}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Waiting for Deposit...</p></Button>
-                                        {this.deposit_buttons.ethereum()}
+                                        <Button disabled={true} onClick={() => this.generateTokenTransfer()}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Waiting for Deposit...</p></Button>
+                                        {this.deposit_buttons.ethereum(this.state.amount, this.state.platformAddress, this.state.tokenAddress)}
                                     </Col>
                                 :   
                                     <ReciptBox recipt={this.state.recipt}/>

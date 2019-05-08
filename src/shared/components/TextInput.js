@@ -67,9 +67,11 @@ class TextInput extends PureComponent {
     render() {
         return (
             <div className="form__form-group-field">
-                <div className="form__form-group-icon" style={{marginRight : 10}}>
-                    <this.props.icon />
-                </div>
+                {this.props.icon ?
+                    <div className="form__form-group-icon" style={{marginRight : 10}}>
+                        <this.props.icon />
+                    </div>
+                : null}
                 <Field
                     name={this.props.name}
                     label={this.props.label}

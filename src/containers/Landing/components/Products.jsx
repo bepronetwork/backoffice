@@ -36,9 +36,9 @@ class Products extends React.Component{
                             <div className='landing__product__widget available'>
                                 <div className='description'>
                                     <h4> CryptoCurrency Integration</h4>
-                                    <p> Accept cryptocurrency payments on your betting platform and access a $200B market. </p>
+                                    <p> Accept cryptocurrency payments on your betting platform directly to your bank account and access a $200B market. </p>
                                 </div>
-                                <h2 style={{marginTop : 30}}> 0,5% <h5>Per Transaction</h5></h2>
+                                <h2 style={{marginTop : 50}}> 0,5% <h5>Per Transaction</h5></h2>
                                 <img className='image_widget' src={bitcoin}></img>
                                 <img className="landing_2_back" style={{left : '0%',  bottom : '-20%',width : '200%'}} src={back_2} />
                             </div>
@@ -46,7 +46,7 @@ class Products extends React.Component{
                     </Col>
                     <Col md={6} lg={3}>
                         <div className='landing__product__widget'>
-                             <p className='coming-text'>Coming in May</p>
+                             <p className='coming-text'>Coming in June</p>
                              <div className='on-coming'>
 
                                 <div className='description'>
@@ -61,7 +61,7 @@ class Products extends React.Component{
                      </Col>
                      <Col md={6} lg={3}>
                         <div className='landing__product__widget'>
-                            <p className='coming-text'>Coming in September</p>
+                            <p className='coming-text'>Coming in December</p>
                             <div className='on-coming'>
                                 <div className='description'>
                                     <h4> SportsBooking </h4>
