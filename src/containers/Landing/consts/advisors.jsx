@@ -3,6 +3,7 @@ const nuno = `${process.env.PUBLIC_URL}/img/team/nuno.png`;
 const fakhri = `${process.env.PUBLIC_URL}/img/team/fakhri.png`;
 const alvaro = `${process.env.PUBLIC_URL}/img/team/alvaro.png`;
 const linkedin = `${process.env.PUBLIC_URL}/img/team/linkedin.svg`;
+const alessandro = `${process.env.PUBLIC_URL}/img/team/alessandro.png`;
 
 
 export default [
@@ -31,6 +32,14 @@ export default [
         name : 'Álvaro Nogueiras',
         position : 'Tech Entrepreuner',
         image : alvaro,
+        linkedin : linkedin,
+        linkedinurl : 'https://www.linkedin.com/in/alvarogomeznog/'
+    },
+    ,
+    {
+        name : 'Alessandro Papadopoulos',
+        position : 'VP Ventures UTRUST',
+        image : alessandro,
         linkedin : linkedin,
         linkedinurl : 'https://www.linkedin.com/in/alvarogomeznog/'
     }

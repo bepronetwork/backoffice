@@ -31,14 +31,14 @@ export default [
         linkedinurl : 'https://www.linkedin.com/in/andremoniz/'
     },
     {
-        name : 'Miguel',
+        name : 'Miguel Leite',
         position : 'CMO',
         image : miguel,
         linkedin : linkedin,
         linkedinurl : 'https://www.linkedin.com/in/miguelleite/'
     },
     {
-        name : 'Tiago',
+        name : 'Tiago Martins',
         position : 'Engineering',
         image : tiago,
         linkedin : linkedin,

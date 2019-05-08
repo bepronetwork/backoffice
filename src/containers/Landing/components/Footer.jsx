@@ -1,5 +1,6 @@
 import React from 'react';
 import { Col, Row, Container } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 const logo = `${process.env.PUBLIC_URL}/img/landing/logo.png`;
 
@@ -25,11 +26,12 @@ const Footer = () => (
                         <h5>Docs</h5>
                       
                     </a>
-                    <a href={'#'} target={'__blank'}
-                    >
+                    <Link  to={'/about-us'}
+                        >
+            
                         <h5>About Us</h5>
                       
-                    </a>
+                    </Link>
 				</Col>
 			</Row>
 		</Container>

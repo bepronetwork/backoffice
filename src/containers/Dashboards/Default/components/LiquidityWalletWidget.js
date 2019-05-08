@@ -1,9 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
-import { Card, CardBody, Col, Row , Button} from 'reactstrap';
-import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
-import SettingsIcon from 'mdi-react/SettingsIcon';
-import { ArrowDownIcon, ArrowCollapseDownIcon, ArrowUpDropCircleIcon } from 'mdi-react';
+import { Card, CardBody, Col, Row } from 'reactstrap';
+
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 const Ava = `${process.env.PUBLIC_URL}/img/euro.png`;
 
