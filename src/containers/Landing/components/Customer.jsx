@@ -8,7 +8,7 @@ const back = `${process.env.PUBLIC_URL}/img/landing/back-3.png`;
 
 
 const Customer = () => (
-    <section className="landing__section" >
+    <section className="landing__section landing_customer_section" >
         <div className='landing__heading'>
             <img className="landing_3_back" src={back} />
         </div>
