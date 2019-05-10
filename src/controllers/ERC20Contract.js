@@ -3,6 +3,7 @@ import {
 } from "./interfaces";
 
 import Contract from "../models/Contract";
+import Numbers from "../services/numbers";
 
 let self;
 const options = {
@@ -16,7 +17,7 @@ class ERC20TokenContract{
         self = {
             contract : 
                 new Contract({
-                    web3 : params.web3,
+                    web3 : window.web3,
                     contract : ierc20, 
                     address : params.contractAddress
             }),
@@ -63,6 +64,17 @@ class ERC20TokenContract{
 
     async getTokenAmount(address){
         return await self.contract.getContract().methods.balanceOf(address).call();
+    }
+
+    async sendTokens({to, amount, decimals}){
+        let amountWithDecimals = Numbers.toSmartContractDecimals(amount, decimals);
+        let accounts = await window.web3.eth.getAccounts()
+        var myContract = new window.web3.eth.Contract(ierc20.abi, self.contractAddress);
+        return await myContract.methods.transfer(
+            to,
+            amountWithDecimals
+        ).send({from : accounts[0]}); 
+        //return await self.contract.getABI().send(self.account.getAccount(), data);
     }
 
     getABI(){

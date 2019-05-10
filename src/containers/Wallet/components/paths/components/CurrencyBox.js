@@ -20,6 +20,7 @@ const defaultProps = {
     ticker : 'N/A',
     platformAddress : 'N/A',
     liquidity : 0,
+    amount : 100,
     platformBlockchain : 'N/A'
 }
 
@@ -51,10 +52,16 @@ class CurrencyBox extends PureComponent {
     }
 
 
-    createTokenTransfer = async  (currency, amount, platformAddress, tokenAddress) => {
-        // TO DO : Create generateTokenTransfer Function in App via this infocmation
-        let res = await this.props.profile.getApp().generateTokenTransfer(currency, amount, platformAddress, tokenAddress);
-        // TO DO : Finalize Work
+    createTokenTransfer = async  ({currency, amount, platformAddress, tokenAddress}) => {
+        try{
+            // TO DO : Create generateTokenTransfer Function in App via this infocmation
+            let res = await this.props.profile.getApp().generateTokenTransfer({currency, amount, platformAddress, tokenAddress,
+                decimals : this.state.decimals
+            });
+            // TO DO : Finalize Work
+        }catch(err){
+            console.log(err);
+        }
     }
 
 
@@ -63,10 +70,11 @@ class CurrencyBox extends PureComponent {
         let app = props.profile.getApp();
         let tokenAddress = data.blockchain.tokenAddress;
         let platformAddress = app.getInformation('platformAddress');
-
+        console.log(data)
         this.setState({...this.state, 
             referenceAddress : '0x',
             generatedReference : false,
+            decimals : data.blockchain.decimals,
             liquidity : data.blockchain.totalLiquidity,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,

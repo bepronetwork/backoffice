@@ -50,7 +50,7 @@ class contract{
         }
 
         let result = await account.signTransaction(tx);
-        let transaction = await this.web3.eth.sendSignedTransaction(result.rawTransaction);
+        let transaction = await window.web3.eth.sendSignedTransaction(result.rawTransaction);
         return transaction;
     }
     

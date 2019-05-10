@@ -46,7 +46,6 @@ class App extends Component {
         // Modern dapp browsers...
 
         if (window.ethereum) {
-            let ethereum = window.ethereum;
             global.web3 = new Web3(window.ethereum);
             
             try {
@@ -61,7 +60,6 @@ class App extends Component {
                         console.log(error);
                 }); */
             } catch (error) {
-                alert('Allow Metamask')
                 global.web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/'));
                 // User denied account access...
             }
