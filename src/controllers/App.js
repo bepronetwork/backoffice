@@ -2,6 +2,8 @@ import ConnectionSingleton from "../api/Connection";
 import store from "../containers/App/store";
 import { setProfileInfo } from "../redux/actions/profile";
 import CasinoContract from "./CasinoContract";
+import ERC20TokenContract from "./ERC20Contract";
+import Web3 from 'web3';
 
 class App{    
     constructor(params){
@@ -140,9 +142,19 @@ class App{
 		}
     }
 
-    async generateTokenTransfer(){
+    async generateTokenTransfer({currency, decimals, amount, platformAddress, tokenAddress}){
         try{
-            // TO DO : Create Web3 Transfer to Address
+            await this.enableMetamask(currency);
+            let erc20Contract = new ERC20TokenContract({
+                web3 : window.web3,
+                contractAddress : tokenAddress
+            });
+
+            return await erc20Contract.sendTokens({
+                decimals,
+                to : platformAddress,
+                amount
+            })
 
         }catch(err){
             throw err;
@@ -225,6 +237,16 @@ class App{
         return {
             data :  this.data.summary[type],
             type : type
+        }
+    }
+
+    async enableMetamask(currency){
+        let ethereum = window.ethereum;
+        // TO DO : When User Rejects Connect Question throw err
+        switch(currency) {
+            case 'eth' : {
+                await ethereum.enable();
+            }
         }
     }
 }
