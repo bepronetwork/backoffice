@@ -4,14 +4,18 @@ import { Card, CardBody, Col, Row , Button} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import { ArrowDownIcon, ArrowCollapseDownIcon,  DirectionsIcon } from 'mdi-react';
+import { InformationIcon } from 'mdi-react';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 const Ava = `${process.env.PUBLIC_URL}/img/euro.png`;
-
 
 
 const defaultProps = {
     playBalance : 'N/A',
     ticker : 'N/A',
-    platformBlockchain : 'N/A'
+    platformBlockchain : 'N/A',
+    houseBlockchainBalance : 'N/A'
+
 }
 
 
@@ -31,7 +35,8 @@ class LiquidityWalletWidget extends PureComponent {
         let data = props.data;
         let tokenAddress = data.wallet.data.blockchain.tokenAddress;
         
-        this.setState({...this.state, 
+        this.setState({...this.state,
+            houseBlockchainBalance :  data.wallet.data.blockchain.houseBalance ? data.wallet.data.blockchain.houseBalance : defaultProps.houseBlockchainBalance, 
             playBalance : data.wallet.data.playBalance ? data.wallet.data.playBalance : defaultProps.playBalance,
             ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
             platformBlockchain : data.app.getInformation('platformBlockchain') ? data.app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
@@ -55,10 +60,20 @@ class LiquidityWalletWidget extends PureComponent {
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
                                     }><AnimationNumber number={this.state.playBalance}/> <span>{this.state.ticker}</span></p>
-                                </div>
+                                  <p className='small-text-info'>
+                                    <AnimationNumber number={this.state.houseBlockchainBalance}/> 
+                                    <Tooltip title="Liquidity in Smart-Contract">
+                                        <IconButton aria-label="Liquidity in Smart-Contract">
+                                            <InformationIcon size={20}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                </p>
+                               </div>
+                              
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-title">{new String(this.state.platformBlockchain).toUpperCase()} <strong>|</strong> {this.state.ticker} <span> Available </span></p>
                                 </div>
+                             
                                 <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
                                     <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.tokenAddress}</p>
                                 </a>

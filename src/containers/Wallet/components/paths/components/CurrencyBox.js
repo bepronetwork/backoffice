@@ -70,7 +70,6 @@ class CurrencyBox extends PureComponent {
         let app = props.profile.getApp();
         let tokenAddress = data.blockchain.tokenAddress;
         let platformAddress = app.getInformation('platformAddress');
-        console.log(data)
         this.setState({...this.state, 
             referenceAddress : '0x',
             generatedReference : false,

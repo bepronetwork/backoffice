@@ -10,6 +10,8 @@ import Account from '../../../../controllers/Account';
 import { CheckboxMultipleBlankCircleIcon } from 'mdi-react';
 import TextInput from '../../../../shared/components/TextInput';
 
+const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
+
 class LogInForm extends React.Component {
   static propTypes = {
         handleSubmit: PropTypes.func.isRequired,
@@ -45,10 +47,13 @@ class LogInForm extends React.Component {
 
     login = async () => {
         try{
+            this.setState({...this.state, isLoading : true})
             let account = new Account(this.state);
             await account.login();
             this.props.history.push('/home')
+            this.setState({...this.state, isLoading : false})
         }catch(err){
+            this.setState({...this.state, isLoading : false})
             this.props.showNotification(err.message);
         }
     }
@@ -82,7 +87,14 @@ class LogInForm extends React.Component {
             </div>
                  
             <div className="account__btns" style={{marginTop  :40}}>
-            <button className="btn btn-primary account__btn" onClick={ () => this.login() } >Log In</button>
+            <button className="btn btn-primary account__btn" onClick={ () => this.login() } >
+                {
+                    !this.state.isLoading ?
+                    'Log In'
+                    : 
+                    <img src={loading} className={'loading_gif'}></img>
+                }
+            </button>
             <Link className='btn btn-outline-primary account__btn' to="/register">
                Create Account
             </Link>
