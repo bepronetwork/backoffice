@@ -444,3 +444,10 @@ button:focus, button:active {
     background-color: themed('colorBackground');
   }
 }
+
+.loading_gif{
+    width : 20px;
+    display: block;
+    position: relative;
+    margin : auto;
+}
