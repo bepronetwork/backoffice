@@ -68,7 +68,6 @@ class ERC20TokenContract{
 
     async sendTokens({to, amount, decimals}){
         let amountWithDecimals = Numbers.toSmartContractDecimals(amount, decimals);
-        console.log(amountWithDecimals)
         let accounts = await window.web3.eth.getAccounts()
         var myContract = new window.web3.eth.Contract(ierc20.abi, self.contractAddress);
         return await myContract.methods.transfer(

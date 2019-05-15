@@ -11,8 +11,6 @@ class ReciptBox extends PureComponent {
         super(props);
             this.state = {
         };
-
-        
     }
 
   
@@ -22,7 +20,7 @@ class ReciptBox extends PureComponent {
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
-                 <hr></hr>
+                <hr></hr>
                 <div className="dashboard__visitors-chart">
                     <h3>Amount</h3> 
                     <p style={{fontSize : 20}} className="dashboard__visitors-chart-title">{Numbers.toMoney(recipt.amount)}<span> ETH </span></p>
@@ -34,7 +32,9 @@ class ReciptBox extends PureComponent {
                 </div>
                 <img style={{width : 200, margin : 'auto', display : 'block'}} src={tick}></img>
                 <Link to={'/wallet'}>
-                    <Button outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Confirm </p></Button> 
+                    <Button outline className="primary" >
+                        <p><TickCircleIcon className="deposit-icon"/> Confirm </p>   
+                    </Button> 
                 </Link>
 
             </Col>

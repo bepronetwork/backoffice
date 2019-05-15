@@ -15,7 +15,6 @@ class DepositWidget extends React.Component{
         super(props)
     }
 
-
     render = () => {
         return (
             <Container className="dashboard">
@@ -23,7 +22,7 @@ class DepositWidget extends React.Component{
                     <CurrencyInfo/>
                 </Col>
                 <Col lg={4}>
-                    <CurrencyBox  data={this.props.profile.getApp().getSummaryData('wallet')}/>
+                    <CurrencyBox confirmWalletUpdate={this.confirmWalletUpdate} data={this.props.profile.getApp().getSummaryData('wallet')}/>
                 </Col>
                 <Row>
                 </Row>
