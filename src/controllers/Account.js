@@ -14,12 +14,11 @@ class Account{
     register = async () => {
         try{
             
-            let hash_password = new Security(this.params.password).hash();
 
             let response = await ConnectionSingleton.register({
                 username        : this.params.username, 
                 name            : this.params.name,
-                hash_password,
+                password        : this.params.password,
                 email           : this.params.email
             });
 
@@ -44,11 +43,11 @@ class Account{
 
             let cache = this.getFromCache('Authentication');
 
-            if(!this.params && (cache && cache.hash_password)){
+            if(!this.params && (cache && cache.password)){
                 //Cache had data
                 this.params = {
                     username :  cache.username,
-                    hash_password : cache.hash_password
+                    password : cache.password
                 }
             }else if(this.params){
                 //
@@ -56,14 +55,11 @@ class Account{
                 throw new Error('Login didn´t work')
             }
 
-            let hash_password = new Security(this.params.password).hash();
-            console.log(this.params.password, hash_password)
-
             let response = await ConnectionSingleton.login({
                 username : this.params.username, 
-                hash_password : hash_password
+                password : this.params.password
             });
-            console.log(response)
+
             let {
                 message : data,
                 status

@@ -17,6 +17,7 @@
     "babel-preset-react-app": "^5.0.2",
     "babel-runtime": "6.26.0",
     "bcrypt-nodejs": "0.0.3",
+    "bcryptjs": "^2.4.3",
     "bfj": "6.1.1",
     "big-number": "^2.0.0",
     "bootstrap": "^4.1.3",

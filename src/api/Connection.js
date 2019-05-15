@@ -10,12 +10,12 @@ class Connection {
      *  @param
      */
 
-    register = async ({username, hash_password, name, email}) => {
+    register = async ({username, password, name, email}) => {
         try{
             let response = await fetch(URL + '/api/admins/register', {
                 method : 'POST',
                 headers : config.headers,
-                body : JSON.stringify({username, hash_password, name, email})
+                body : JSON.stringify({username, password, name, email})
             });
 
             return response.json();
@@ -24,13 +24,12 @@ class Connection {
         }
     }
 
-    login = async ({username, hash_password}) => {
-        console.log(hash_password)
+    login = async ({username, password}) => {
         try{
             let response = await fetch(URL + '/api/admins/login', {
                 method : 'POST',
                 headers : config.headers,
-                body : JSON.stringify({username, hash_password})
+                body : JSON.stringify({username, password})
             });
             return response.json();
         }catch(err){

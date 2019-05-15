@@ -1,6 +1,5 @@
-
-const bcrypt = require('bcrypt-nodejs');
-const SALT_ROUNDS = 10;
+var bcrypt = require('bcryptjs');
+var SALT_ROUNDS = bcrypt.genSaltSync(10);
 
 class Security {
 
