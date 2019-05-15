@@ -166,6 +166,24 @@ class Connection {
         }
     }
 
+
+    updateWallet = async ({app, amount, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/updateWallet`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    app,
+                    amount
+                })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
 }
 
 function addHeaders(config, newHeaders){

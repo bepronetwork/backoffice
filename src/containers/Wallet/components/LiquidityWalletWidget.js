@@ -14,8 +14,8 @@ const defaultProps = {
     playBalance : 'N/A',
     ticker : 'N/A',
     platformBlockchain : 'N/A',
+    totalLiquidity : 'N/A',
     houseBlockchainBalance : 'N/A'
-
 }
 
 
@@ -36,6 +36,7 @@ class LiquidityWalletWidget extends PureComponent {
         let tokenAddress = data.wallet.data.blockchain.tokenAddress;
         
         this.setState({...this.state,
+            totalLiquidity :  data.wallet.data.blockchain.totalLiquidity ? data.wallet.data.blockchain.totalLiquidity : defaultProps.totalLiquidity, 
             houseBlockchainBalance :  data.wallet.data.blockchain.houseBalance ? data.wallet.data.blockchain.houseBalance : defaultProps.houseBlockchainBalance, 
             playBalance : data.wallet.data.playBalance ? data.wallet.data.playBalance : defaultProps.playBalance,
             ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
@@ -59,9 +60,9 @@ class LiquidityWalletWidget extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
-                                    }><AnimationNumber number={this.state.playBalance}/> <span>{this.state.ticker}</span></p>
+                                    }><AnimationNumber number={this.state.houseBlockchainBalance}/> <span> {this.state.ticker}</span></p>
                                   <p className='small-text-info'>
-                                    <AnimationNumber number={this.state.houseBlockchainBalance}/> 
+                                    <AnimationNumber number={this.state.totalLiquidity}/> 
                                     <Tooltip title="Liquidity in Smart-Contract">
                                         <IconButton aria-label="Liquidity in Smart-Contract">
                                             <InformationIcon size={20}/>

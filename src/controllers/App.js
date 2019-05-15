@@ -233,6 +233,30 @@ class App{
 		}
     }
 
+
+    async updateWallet(amount){
+        try{
+            let res = await ConnectionSingleton.updateWallet({
+                app : this.getId(),
+                headers : authHeaders(this.params.bearerToken),
+                amount
+            });
+
+            let {
+                message,
+                status
+            } = res.data;
+
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
+            }
+        }catch(err){
+            throw err;
+		}
+    }
+
     getSummaryData(type){
         return {
             data :  this.data.summary[type],

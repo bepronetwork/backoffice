@@ -32,7 +32,7 @@ class PaybearWidget extends PureComponent {
     render() {        
 
         let paybearToken =  this.props.data;
-        console.log(paybearToken)
+
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>

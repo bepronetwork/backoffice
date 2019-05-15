@@ -7,7 +7,7 @@ import Numbers from '../../../services/numbers';
 
 
 const defaultProps = {
-    liquidity : 0,
+    totalLiquidity : 0,
     ticker : 'N/A',
 }
 
@@ -27,7 +27,7 @@ class LiquidityInfo extends PureComponent {
         let data = props.data.data;
 
         this.setState({...this.state, 
-            playBalance : data.playBalance ? data.playBalance : defaultProps.playBalance,
+            totalLiquidity : data.blockchain.totalLiquidity ? data.blockchain.totalLiquidity : defaultProps.totalLiquidity,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
         })
     }
@@ -41,7 +41,7 @@ class LiquidityInfo extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : this.state.playBalance >= 0 ? '#76d076' : '#646777'}
-                            }><AnimationNumber  number={this.state.playBalance}/> <span> {this.state.ticker}</span></p>
+                            }><AnimationNumber  number={this.state.totalLiquidity}/> <span> {this.state.ticker}</span></p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Liquidity <span> Available </span></p>
