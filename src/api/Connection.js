@@ -11,6 +11,7 @@ class Connection {
      */
 
     register = async ({username, password, name, email}) => {
+    
         try{
             let response = await fetch(URL + '/api/admins/register', {
                 method : 'POST',
