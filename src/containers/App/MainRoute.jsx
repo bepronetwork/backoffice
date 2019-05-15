@@ -28,6 +28,7 @@ import DefaultDashboard from '../Dashboards/Default/index';
 import CreateApp from '../Wizards/CreateApp';
 import Developers from '../Developers';
 import TransactionsContainer from '../Transactions';
+import WithdrawWidget from '../Wallet/components/paths/WithdrawWidget';
 
 class MainRoute extends React.Component {
 	constructor() {
@@ -152,6 +153,7 @@ const wrappedWalletRoutes = (props) => {
 		<div>
 			<Route exact path="/wallet" component={WalletContainer} />
 			<Route path="/wallet/deposit" component={DepositWidget} />
+            <Route path="/wallet/withdraw" component={WithdrawWidget} />
 		</div>
 	)
 }

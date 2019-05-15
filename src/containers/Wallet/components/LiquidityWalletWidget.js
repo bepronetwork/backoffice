@@ -83,7 +83,9 @@ class LiquidityWalletWidget extends PureComponent {
                                 <Link to='/wallet/deposit' >
                                     <Button style={{margin : 0, width : 120}} className="icon" outline color="primary"><p><ArrowCollapseDownIcon className="deposit-icon"/> Deposit </p></Button>
                                 </Link>
-                                <Button style={{margin : 0, marginTop : 10, width : 120}} className="icon"  color="primary"><p><ArrowDownIcon className="deposit-icon"/> Withdraw </p></Button>
+                                <Link to='/wallet/withdraw' >
+                                    <Button style={{margin : 0, marginTop : 10, width : 120}} className="icon"  color="primary"><p><ArrowDownIcon className="deposit-icon"/> Withdraw </p></Button>
+                                </Link>
                             </Col>
                         </Row>
                     </CardBody>

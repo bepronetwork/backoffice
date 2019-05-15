@@ -5,6 +5,7 @@ import {
 import Contract from "../models/Contract";
 import ERC20TokenContract from "./ERC20Contract";
 import { fromBigNumberToInteger } from "./services/services";
+import Numbers from "../services/numbers";
 
 let self;
 
@@ -93,6 +94,32 @@ class CasinoContract{
             console.log(err);
         }   
     }
+
+
+    async withdrawTokens({amount, decimals}){
+
+        let amountWithDecimals = Numbers.toSmartContractDecimals(amount, decimals);
+        let accounts = await window.web3.eth.getAccounts();
+
+        return await self.contract.getContract().methods.withdraw(
+            accounts[0],
+            amountWithDecimals
+        ).send({from : accounts[0]}); 
+    }
+
+
+    async getBankRoll(){
+        try{
+            let res = await self.contract.getContract().methods.bankroll().call()
+            const BN = window.web3.utils.BN;
+            let number = new BN(res._hex).toString();
+            console.log(number)
+            return fromBigNumberToInteger(res); 
+        }catch(err){
+            console.log(err)
+        }
+    }
+
 
     async determinePlayer( signedMessageObject, winBalance,  nonce, category){
         try{

@@ -161,6 +161,21 @@ class App{
         }
     }
 
+    async createTokenWithdraw({currency, decimals, amount}){
+        try{
+            let res = await this.casinoContract.getBankRoll();
+            console.log(res)
+            await this.enableMetamask(currency);
+            return await this.casinoContract.withdrawTokens({
+                decimals,
+                amount
+            })
+
+        }catch(err){
+            throw err;
+        }
+    }
+
 
     getName(){
         return this.params.name;

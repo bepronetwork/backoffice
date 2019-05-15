@@ -5,6 +5,7 @@ import WalletContainer from '../Wallet';
 import DefaultDashboard from '../Dashboards/Default';
 import AffiliatesContainer from '../Affiliates';
 import DepositWidget from '../Wallet/components/paths/DepositWidget';
+import WithdrawWidget from '../Wallet/components/paths/WithdrawWidget';
 
 export default [
     {
@@ -44,6 +45,11 @@ export default [
                 path : "/deposit",
                 name : 'Deposit',
                 component : DepositWidget
+            },
+            {
+                path : "/withdraw",
+                name : 'Withdraw',
+                component : WithdrawWidget
             }
         ]
     },

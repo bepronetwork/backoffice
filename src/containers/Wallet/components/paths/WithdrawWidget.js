@@ -4,10 +4,10 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
-import CurrencyBox from './components/CurrencyBox';
+import WithdrawBox from './components/WithdrawBox';
 
 
-class DepositWidget extends React.Component{
+class WithdrawWidget extends React.Component{
 
     constructor(props){
         super(props)
@@ -19,13 +19,13 @@ class DepositWidget extends React.Component{
                 <Col lg={12}>
                     <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>Deposit</h3>
                     <p className="">
-                        Choose the Amount of Liquidity you want to Deposit
+                        Choose the amount of Liquidity you want to withdraw
                     </p>
                 </Col>
                 <Col lg={4}>
-                    <CurrencyBox data={this.props.profile.getApp().getSummaryData('wallet')}/>
+                    <WithdrawBox data={this.props.profile.getApp().getSummaryData('wallet')}/>
                 </Col>
-             
+                
             </Container>
         )
     }
@@ -40,7 +40,7 @@ function mapStateToProps(state){
     };
 }
 
-DepositWidget.propTypes = {
+WithdrawWidget.propTypes = {
     t: PropTypes.func.isRequired
 };
 
@@ -48,5 +48,5 @@ DepositWidget.propTypes = {
 export default compose(
     translate('common'),
     connect(mapStateToProps)
-)(DepositWidget);
+)(WithdrawWidget);
 
