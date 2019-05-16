@@ -3,6 +3,7 @@ import store from "../containers/App/store";
 import { setProfileInfo } from "../redux/actions/profile";
 import App from "./App";
 import Cache from "../services/cache";
+import Security from "./Security";
 
 class Account{    
     constructor(params=null){
@@ -12,6 +13,8 @@ class Account{
 
     register = async () => {
         try{
+            
+
             let response = await ConnectionSingleton.register({
                 username        : this.params.username, 
                 name            : this.params.name,
@@ -39,6 +42,7 @@ class Account{
         try{
 
             let cache = this.getFromCache('Authentication');
+
             if(!this.params && (cache && cache.password)){
                 //Cache had data
                 this.params = {
@@ -50,6 +54,7 @@ class Account{
             }else{
                 throw new Error('Login didn´t work')
             }
+
             let response = await ConnectionSingleton.login({
                 username : this.params.username, 
                 password : this.params.password
