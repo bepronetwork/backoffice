@@ -17,12 +17,12 @@ class WithdrawWidget extends React.Component{
         return (
             <Container className="dashboard">
                 <Col lg={12}>
-                    <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>Deposit</h3>
+                    <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>Withdraw</h3>
                     <p className="">
                         Choose the amount of Liquidity you want to withdraw
                     </p>
                 </Col>
-                <Col lg={4}>
+                <Col lg={4} style={{marginTop : 50}}>
                     <WithdrawBox data={this.props.profile.getApp().getSummaryData('wallet')}/>
                 </Col>
                 
