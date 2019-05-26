@@ -134,7 +134,6 @@ class Connection {
     }
 
     addPaybearToken = async ({app, paybearToken, headers}) => {
-        console.log(app, paybearToken)
         try{
             let response = await fetch(URL+ `/api/app/paybearsecretkey/add`, {
                 method : 'POST',

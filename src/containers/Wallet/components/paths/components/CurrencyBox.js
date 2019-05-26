@@ -98,7 +98,8 @@ class CurrencyBox extends PureComponent {
             referenceAddress : '0x',
             generatedReference : false,
             decimals : data.blockchain.decimals,
-            houseBlockchainBalance :  data.blockchain.houseBalance,
+            totalLiquidity :  data.playBalance ? data.playBalance : defaultProps.totalLiquidity,
+            totalDecentralizedLiquidity :  data.blockchain.decentralized.totalLiquidity ? data.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
@@ -163,11 +164,11 @@ class CurrencyBox extends PureComponent {
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
-                <Card>
+                <Card style={{marginTop : 50}}>
                     <CardBody className="dashboard__card-widget" >
-                        <div className="dashboard__visitors-chart">
+                        <div  className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title" style={{fontSize : 20, textAlign : 'center'}}> 
-                                House Liquidity <span style={{fontSize : 20}}> {this.state.houseBlockchainBalance}</span> {this.state.ticker}
+                                House Liquidity <span style={{fontSize : 20}}> {this.state.totalDecentralizedLiquidity}</span> {this.state.ticker}
                             </p>
                             <hr></hr>
                         </div>

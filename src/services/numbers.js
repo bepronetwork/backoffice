@@ -21,6 +21,7 @@ Number.prototype.noExponents= function(){
 
 class numbers{
     constructor() {
+        
     }
 
     fromDayMonthYear(date){

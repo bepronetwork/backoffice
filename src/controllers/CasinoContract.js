@@ -77,9 +77,10 @@ class CasinoContract{
         }
     }
 
-    async updateState(signedMessageObject, nonce, winBalance, category, chargeGas){
+    async updateState(signedMessageObject, nonce, tokenAmount, winBalance, category, chargeGas){
         try{          
             let data = await self.contract.getContract().methods.updateState(
+                parseInt(tokenAmount),
                 parseInt(winBalance),
                 nonce,
                 category,
