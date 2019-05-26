@@ -11,11 +11,10 @@ const Ava = `${process.env.PUBLIC_URL}/img/euro.png`;
 
 
 const defaultProps = {
-    playBalance : 'N/A',
     ticker : 'N/A',
     platformBlockchain : 'N/A',
     totalLiquidity : 'N/A',
-    houseBlockchainBalance : 'N/A'
+    totalDecentralizedLiquidity : 'N/A'
 }
 
 
@@ -34,11 +33,11 @@ class LiquidityWalletWidget extends PureComponent {
     projectData = (props) => {
         let data = props.data;
         let tokenAddress = data.wallet.data.blockchain.tokenAddress;
-        
+        let appData = props.data.wallet.data;
+
         this.setState({...this.state,
-            totalLiquidity :  data.wallet.data.blockchain.totalLiquidity ? data.wallet.data.blockchain.totalLiquidity : defaultProps.totalLiquidity, 
-            houseBlockchainBalance :  data.wallet.data.blockchain.houseBalance ? data.wallet.data.blockchain.houseBalance : defaultProps.houseBlockchainBalance, 
-            playBalance : data.wallet.data.playBalance ? data.wallet.data.playBalance : defaultProps.playBalance,
+            totalLiquidity :  appData.playBalance ? appData.playBalance : defaultProps.totalLiquidity,
+            totalDecentralizedLiquidity :  appData.blockchain.decentralized.totalLiquidity ? appData.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
             ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
             platformBlockchain : data.app.getInformation('platformBlockchain') ? data.app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
             platformAddressLink : 'https://ropsten.etherscan.io/token/' + data.wallet.data.blockchain.tokenAddress,
@@ -60,9 +59,9 @@ class LiquidityWalletWidget extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
-                                    }><AnimationNumber number={this.state.houseBlockchainBalance}/> <span> {this.state.ticker}</span></p>
+                                    }><AnimationNumber number={this.state.totalLiquidity}/> <span> {this.state.ticker}</span></p>
                                   <p className='small-text-info'>
-                                    <AnimationNumber number={this.state.totalLiquidity}/> 
+                                    <AnimationNumber number={this.state.totalDecentralizedLiquidity}/> 
                                     <Tooltip title="Liquidity in Smart-Contract">
                                         <IconButton aria-label="Liquidity in Smart-Contract">
                                             <InformationIcon size={20}/>

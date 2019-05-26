@@ -87,7 +87,7 @@ class LogInForm extends React.Component {
             </div>
                  
             <div className="account__btns" style={{marginTop  :40}}>
-            <button className="btn btn-primary account__btn" onClick={ () => this.login() } >
+            <button disabled={this.state.isLoading} className="btn btn-primary account__btn" onClick={ () => this.login() } >
                 {
                     !this.state.isLoading ?
                     'Log In'

@@ -13,7 +13,7 @@ const defaultProps = {
     playBalance : 'N/A',
     totalLiquidity : 'N/A',
     ticker : 'N/A',
-    houseBlockchainBalance : 'N/A'
+    totalDecentralizedLiquidity : 'N/A'
 }
 
 class LiquidityWalletWidget extends PureComponent {
@@ -27,12 +27,13 @@ class LiquidityWalletWidget extends PureComponent {
     componentDidMount(){
         this.projectData(this.props)
     }
-
     projectData = (props) => {
         let data = props.data.data;
+
+        console.log(data)
         this.setState({...this.state, 
-            totalLiquidity :  data.blockchain.totalLiquidity ? data.blockchain.totalLiquidity : defaultProps.totalLiquidity,
-            houseBlockchainBalance :  data.blockchain.houseBalance ? data.blockchain.houseBalance : defaultProps.houseBlockchainBalance,
+            totalLiquidity :  data.playBalance ? data.playBalance : defaultProps.totalLiquidity,
+            totalDecentralizedLiquidity :  data.blockchain.decentralized.totalLiquidity ? data.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
             playBalance : data.playBalance ? data.playBalance : defaultProps.playBalance,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
         })
@@ -55,10 +56,10 @@ class LiquidityWalletWidget extends PureComponent {
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
                                     }>
-                                        <AnimationNumber number={this.state.houseBlockchainBalance}/> 
+                                        <AnimationNumber number={this.state.totalLiquidity}/> 
                                         <span> {this.state.ticker}</span>
                                         <p className='small-text-info'>
-                                            <AnimationNumber number={this.state.totalLiquidity}/> 
+                                            <AnimationNumber number={this.state.totalDecentralizedLiquidity}/> 
                                             <Tooltip title="Liquidity in Smart-Contract">
                                                 <IconButton aria-label="Liquidity in Smart-Contract">
                                                     <InformationIcon size={20}/>
