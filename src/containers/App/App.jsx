@@ -44,8 +44,8 @@ class App extends Component {
     
     startWallet = async () => {
         // Modern dapp browsers...
-
         if (window.ethereum) {
+
             global.web3 = new Web3(window.ethereum);
             
             try {

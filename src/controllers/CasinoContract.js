@@ -77,9 +77,10 @@ class CasinoContract{
         }
     }
 
-    async updateState(signedMessageObject, nonce, winBalance, category, chargeGas){
+    async updateState(signedMessageObject, nonce, tokenAmount, winBalance, category, chargeGas){
         try{          
             let data = await self.contract.getContract().methods.updateState(
+                parseInt(tokenAmount),
                 parseInt(winBalance),
                 nonce,
                 category,
@@ -111,8 +112,7 @@ class CasinoContract{
     async getBankRoll(){
         try{
             let res = await self.contract.getContract().methods.bankroll().call()
-            const BN = window.web3.utils.BN;
-            let number = new BN(res._hex).toString();
+            let number =  window.web3.utils.hexToNumber(res._hex);
             console.log(number)
             return fromBigNumberToInteger(res); 
         }catch(err){
