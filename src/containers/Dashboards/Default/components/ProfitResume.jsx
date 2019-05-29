@@ -25,14 +25,20 @@ class ProfitResume extends PureComponent {
         this.projectData(this.props)
     }
 
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+
     projectData = (props) => {
         let data = props.data;
-
-        this.setState({...this.state, 
-            profit : data.revenue.data ? DashboardMapperSingleton.toDateProfit(data.revenue.data) : defaultProps.profit,
-            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
-            timeline : data.revenue.data ? defaultProps.timeline : defaultProps.timeline
-        })
+        if(data.wallet.data.blockchain){
+            this.setState({...this.state, 
+                profit : data.revenue.data ? DashboardMapperSingleton.toDateProfit(data.revenue.data) : defaultProps.profit,
+                ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
+                timeline : data.revenue.data ? defaultProps.timeline : defaultProps.timeline
+            })
+        }
+       
     }
 
 

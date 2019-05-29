@@ -27,16 +27,23 @@ class LiquidityWalletWidget extends PureComponent {
     componentDidMount(){
         this.projectData(this.props)
     }
+
+
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+    
     projectData = (props) => {
         let data = props.data.data;
 
-        console.log(data)
-        this.setState({...this.state, 
-            totalLiquidity :  data.playBalance ? data.playBalance : defaultProps.totalLiquidity,
-            totalDecentralizedLiquidity :  data.blockchain.decentralized.totalLiquidity ? data.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
-            playBalance : data.playBalance ? data.playBalance : defaultProps.playBalance,
-            ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
-        })
+        if(data.blockchain){
+            this.setState({...this.state, 
+                totalLiquidity :  data.playBalance ? data.playBalance : defaultProps.totalLiquidity,
+                totalDecentralizedLiquidity :  data.blockchain.decentralized.totalLiquidity ? data.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
+                playBalance : data.playBalance ? data.playBalance : defaultProps.playBalance,
+                ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
+            })
+        }
     }
 
 

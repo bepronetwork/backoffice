@@ -25,6 +25,10 @@ class UsersProfit extends PureComponent {
         this.projectData(this.props)
     }
 
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+    
     projectData = (props) => {
         let data = props.data;
 

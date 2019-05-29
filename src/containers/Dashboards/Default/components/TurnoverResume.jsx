@@ -24,14 +24,19 @@ class TurnoverResume extends PureComponent {
         this.projectData(this.props)
     }
 
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+    
     projectData = (props) => {
         let data = props.data;
-
-        this.setState({...this.state, 
-            turnover : data.revenue.data ? DashboardMapperSingleton.toDateRevenue(data.revenue.data) : defaultProps.turnover,
-            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
-            timeline : data.revenue.data ? defaultProps.timeline : defaultProps.timeline
-        })
+        if(data.wallet.data.blockchain){
+            this.setState({...this.state, 
+                turnover : data.revenue.data ? DashboardMapperSingleton.toDateRevenue(data.revenue.data) : defaultProps.turnover,
+                ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
+                timeline : data.revenue.data ? defaultProps.timeline : defaultProps.timeline
+            })
+        }
     }
 
 

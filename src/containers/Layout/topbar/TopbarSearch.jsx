@@ -20,12 +20,12 @@ export default class TopbarSearch extends PureComponent {
     });
 
     return (
-      <form className="topbar__search">
-        <input className={searchClass} />
-        <button className="topbar__btn topbar__search-btn" onClick={this.onInputOpen}>
-          <SearchIcon />
-        </button>
-      </form>
+        <form className="topbar__search">
+            <input className={searchClass} />
+            <button className="topbar__btn topbar__search-btn" onClick={this.onInputOpen}>
+            <SearchIcon />
+            </button>
+        </form> 
     );
   }
 }
