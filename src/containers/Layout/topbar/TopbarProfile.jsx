@@ -34,8 +34,6 @@ class TopbarProfile extends PureComponent {
 				<Collapse isOpen={this.state.collapse} className="topbar__menu-wrap">
 					<div className="topbar__menu">
 						<TopbarMenuLink title="My Profile" icon="user" path="/home" />
-						<TopbarMenuLink title="Calendar" icon="calendar-full" path="/home"  />
-						<TopbarMenuLink title="Tasks" icon="list" path="/home"  />
 						<TopbarMenuLink title="Inbox" icon="inbox" path="/home"  />
 						<div className="topbar__menu-divider" />
 						<TopbarMenuLink title="Account Settings" icon="cog" path="/home" />

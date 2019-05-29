@@ -15,8 +15,13 @@ class GamesContainer extends PureComponent {
     }
 
     render() {
-        let games = this.props.data.games.data[0].games;
-        let wallet = this.props.data.wallet.data;
+        let games = [];
+        var wallet = {};
+
+        if(this.props.data.games.data[0]){
+            games = this.props.data.games.data[0].games;
+            wallet = this.props.data.wallet.data;
+        }
         
         return (
             <Row md={12} xl={12} lg={12} xs={12}>

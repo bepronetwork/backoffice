@@ -10,7 +10,7 @@ class GameInfo extends PureComponent {
     constructor() {
         super();
         this.state = {
-        activeIndex: 0,
+            activeIndex: 0,
         };
     }
 
@@ -24,7 +24,7 @@ class GameInfo extends PureComponent {
                     <CardBody className="dashboard__card-widget">
                         <Row>
                             <Col lg={4} >  
-                                <img className='application__game__image' src={game_images[new String(game.name).toLowerCase()]}/>
+                                <img className='application__game__image' src={game_images[new String(game.name).toLowerCase().replace(/ /g,"_")]}/>
                             </Col>
                             <Col lg={6} >
                                 <div className="dashboard__visitors-chart">
