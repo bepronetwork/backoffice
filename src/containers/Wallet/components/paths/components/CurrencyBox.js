@@ -21,7 +21,7 @@ const defaultProps = {
     playBalance : 'N/A',
     ticker : 'N/A',
     platformAddress : 'N/A',
-    liquidity : 0,
+    houseLiquidity : 0,
     amount : 100,
     platformBlockchain : 'N/A'
 }
@@ -69,7 +69,7 @@ class CurrencyBox extends PureComponent {
 
             if(eth_res.status){
                 /* Transaction was succeded */
-                await this.confirmWalletUpdate(amount);
+                await this.confirmWalletUpdate({amount, transactionHash : eth_res.transactionHash});
             }else{
                 // TO DO : Undertand why it didn´t succed
                 throw new Error('Transaction was not succeded')
@@ -98,8 +98,7 @@ class CurrencyBox extends PureComponent {
             referenceAddress : '0x',
             generatedReference : false,
             decimals : data.blockchain.decimals,
-            totalLiquidity :  data.playBalance ? data.playBalance : defaultProps.totalLiquidity,
-            totalDecentralizedLiquidity :  data.blockchain.decentralized.totalLiquidity ? data.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
+            houseLiquidity :  data.playBalance ? data.playBalance : defaultProps.houseLiquidity,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
@@ -127,9 +126,9 @@ class CurrencyBox extends PureComponent {
     }
 
 
-    confirmWalletUpdate = async (amount) => {
+    confirmWalletUpdate = async ({amount, transactionHash}) => {
         try{
-            return await this.props.profile.getApp().updateWallet(amount);
+            return await this.props.profile.getApp().updateWallet({amount, transactionHash});
         }catch(err){
             // TO DO : Raise Notification System
             throw err;
@@ -168,7 +167,7 @@ class CurrencyBox extends PureComponent {
                     <CardBody className="dashboard__card-widget" >
                         <div  className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title" style={{fontSize : 20, textAlign : 'center'}}> 
-                                House Liquidity <span style={{fontSize : 20}}> {this.state.totalDecentralizedLiquidity}</span> {this.state.ticker}
+                                House Liquidity <span style={{fontSize : 20}}> {this.state.houseLiquidity}</span> {this.state.ticker}
                             </p>
                             <hr></hr>
                         </div>

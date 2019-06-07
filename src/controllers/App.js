@@ -4,6 +4,9 @@ import { setProfileInfo } from "../redux/actions/profile";
 import CasinoContract from "./CasinoContract";
 import ERC20TokenContract from "./ERC20Contract";
 import Web3 from 'web3';
+import CryptographySingleton from "../services/security/Cryptography";
+import codes from "../config/codes";
+import Numbers from "../services/numbers";
 
 class App{    
     constructor(params){
@@ -65,7 +68,8 @@ class App{
 
             this.casinoContract = new CasinoContract({
                 contractAddress : this.getInformation('platformAddress'),
-                tokenAddress : this.getInformation('platformTokenAddress')
+                tokenAddress : this.getInformation('platformTokenAddress'),
+                decimals : this.params.decimals
             })
 
             this.data = {
@@ -144,6 +148,7 @@ class App{
 
     async generateTokenTransfer({currency, decimals, amount, platformAddress, tokenAddress}){
         try{
+            
             await this.enableMetamask(currency);
             let erc20Contract = new ERC20TokenContract({
                 web3 : window.web3,
@@ -164,7 +169,6 @@ class App{
     async createTokenWithdraw({currency, decimals, amount}){
         try{
             let res = await this.casinoContract.getBankRoll();
-            console.log(res)
             await this.enableMetamask(currency);
             return await this.casinoContract.withdrawTokens({
                 decimals,
@@ -249,12 +253,13 @@ class App{
     }
 
 
-    async updateWallet(amount){
+    async updateWallet({amount, transactionHash}){
         try{
             let res = await ConnectionSingleton.updateWallet({
                 app : this.getId(),
                 headers : authHeaders(this.params.bearerToken),
-                amount
+                amount,
+                transactionHash
             });
 
             let {
@@ -272,6 +277,99 @@ class App{
 		}
     }
 
+    requestWithdraw = async ({tokenAmount}) => {
+
+        try{
+            /* Get Accounts */
+            let accounts = await window.web3.eth.getAccounts();
+            var params = {
+                address : accounts[0],
+                nonce : Numbers.getRandom(100, 50000000),
+                decimals : this.params.decimals,
+                newBalance : Numbers.toFloat(this.getSummaryData('wallet').data.playBalance),
+                winBalance : Numbers.toFloat(this.getSummaryData('wallet').data.playBalance),
+                category : parseInt(codes.Withdraw)
+            }
+            console.log(params);
+
+            /* Get User Signature */
+            let { signature } = await CryptographySingleton.getUserSignature(params);
+
+            /* Get Request Withdraw Response */
+            return await ConnectionSingleton.requestWithdraw({
+                ...params,
+                tokenAmount,
+                signature,
+                app : this.getId(),
+                headers : authHeaders(this.params.bearerToken),
+            });
+
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    finalizeWithdraw = async ({tokenAmount, transactionHash}) => {
+        try{
+            
+            /* Get Accounts */
+            let accounts = await window.web3.eth.getAccounts();
+            
+            var params = {
+                address : accounts[0],
+                nonce : Numbers.getRandom(13400, 1002304534530),
+                decimals : this.params.decimals,
+                newBalance : Numbers.toFloat(this.getSummaryData('wallet').data.playBalance),
+                winBalance : Numbers.toFloat(this.getSummaryData('wallet').data.playBalance),
+                category : codes.Withdraw
+            }
+
+            /* Get User Signature */
+            let signature = await CryptographySingleton.getUserSignature(params);
+
+            /* Get Finalize Withdraw Response */
+            return await ConnectionSingleton.finalizeWithdraw({
+                ...params,
+                tokenAmount,
+                signature,
+                transactionHash,
+                app : this.getId(),
+                headers : authHeaders(this.params.bearerToken),
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    cancelWithdraw = async () => {
+        try{
+            /* Cancel Withdraw Response */
+            return await ConnectionSingleton.cancelWithdraw({               
+                app : this.getId(),
+                headers : authHeaders(this.params.bearerToken),
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    withdraw = async ({amount}) => {
+        try{
+            let accounts = await window.web3.eth.getAccounts();
+            return await this.casinoContract.withdrawApp({
+                receiverAddress : accounts[0],
+                amount 
+            })
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+  
     getSummaryData(type){
         return {
             data :  this.data.summary[type],
@@ -289,6 +387,16 @@ class App{
             }
         }
     }
+
+    async cancelWithdrawSC({currency}){
+        try{
+            await this.enableMetamask(currency);
+            return await this.casinoContract.cancelWithdraw();
+        }catch(err){
+            throw err;
+        }
+    }
+
 }
 
 
