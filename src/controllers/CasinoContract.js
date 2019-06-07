@@ -10,7 +10,7 @@ import Numbers from "../services/numbers";
 let self;
 
 class CasinoContract{
-    constructor({contractAddress, tokenAddress}){
+    constructor({contractAddress, tokenAddress, decimals}){
         self = {
             contract : 
             new Contract({
@@ -22,7 +22,8 @@ class CasinoContract{
             erc20TokenContract : new ERC20TokenContract({
                 web3 : global.web3,
                 contractAddress : tokenAddress
-            })
+            }),
+            decimals
         }
     }
 
@@ -97,8 +98,16 @@ class CasinoContract{
     }
 
 
-    async withdrawTokens({amount, decimals}){
+    async getApprovedWithdrawAmount(address){
+        try{
+            return Numbers.fromBigNumberToInteger(await self.contract.getContract().methods.approveWithdraw(address).call())
+        }catch(err){
+            throw err;
+        }
+    }
 
+
+    async withdrawTokens({amount, decimals}){
         let amountWithDecimals = Numbers.toSmartContractDecimals(amount, decimals);
         let accounts = await window.web3.eth.getAccounts();
 
@@ -106,6 +115,35 @@ class CasinoContract{
             accounts[0],
             amountWithDecimals
         ).send({from : accounts[0]}); 
+    }
+
+    async withdrawApp({receiverAddress, amount}){
+        try{
+            let accounts = await window.web3.eth.getAccounts();
+            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
+            let res = await self.contract.getContract().methods.withdrawBankroll(
+                receiverAddress,
+                amountWithDecimals
+            ).send({from : accounts[0]});
+            return res;
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+
+    async cancelWithdraw(){
+        try{
+            var res;
+            let accounts = await window.web3.eth.getAccounts();
+            let approvedWithdrawAmount = await this.getApprovedWithdrawAmount(accounts[0]);
+            if(approvedWithdrawAmount > 0){
+                res = await self.contract.getContract().methods.cancelWithdraw().send({from : accounts[0]}); 
+            }
+            return res;
+        }catch(err){
+            console.log(err)
+        }
     }
 
 
