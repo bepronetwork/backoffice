@@ -1,6 +1,6 @@
 import config from "./config";
 
-const URL = config.server.production;
+const URL = config.server.development;
 
 class Connection {
 
@@ -167,14 +167,64 @@ class Connection {
     }
 
 
-    updateWallet = async ({app, amount, headers}) => {
+    updateWallet = async ({app, amount, transactionHash, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/updateWallet`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({
                     app,
+                    transactionHash,
                     amount
+                })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    requestWithdraw = async ({app, address, signature, newBalance, tokenAmount, nonce, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/requestWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    app, address, signature, newBalance, tokenAmount, nonce
+                })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    finalizeWithdraw = async ({app, address, signature, newBalance, tokenAmount, nonce, transactionHash, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/finalizeWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    app, address, signature, newBalance, tokenAmount, nonce, transactionHash
+                })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+
+    cancelWithdraw = async ({app, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/cancelWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    app, 
                 })
             });
             

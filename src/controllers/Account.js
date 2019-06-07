@@ -230,6 +230,52 @@ class Account{
             throw err;
         }
     }
+
+    
+    requestWithdraw = async (params) => {
+        try{
+            let response = await this.getApp().requestWithdraw(params);
+            return processServerResponse(response);
+        }catch(err){
+            throw err;
+        }
+    }
+
+    finalizeWithdraw = async (params) => {
+        try{
+            let response = await this.getApp().finalizeWithdraw(params);
+            return processServerResponse(response);
+        }catch(err){
+            throw err;
+        }
+    }
+
+    cancelWithdraw = async (params) => {
+        try{
+            let response = await this.getApp().cancelWithdraw(params);
+            return processServerResponse(response);
+        }catch(err){
+            throw err;
+        }
+    }
+
+    cancelWithdrawSC = async (params) => {
+        try{
+            return await this.getApp().cancelWithdrawSC(params);
+        }catch(err){
+            throw err;
+        }
+    }
+
+
+    withdraw = async (params) => {
+        try{
+            return await this.getApp().withdraw(params);
+        }catch(err){
+            throw err;
+        }
+    }
+
 }
 
 /**
@@ -238,15 +284,18 @@ class Account{
  */
 
 const processServerResponse = (response) => {
+
+    console.log(response);
+
     let {
         message,
         status
     } = response.data;
 
     if(status == 200){
-        return message
+        return message;
     }else{
-        throw new Error('Bad Request on Deposit Reference')
+        return message;
     }
 }
 

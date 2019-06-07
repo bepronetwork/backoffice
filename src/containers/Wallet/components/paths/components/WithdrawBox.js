@@ -13,7 +13,7 @@ import ReciptBox from './ReciptBox';
 import TextInput from '../../../../../shared/components/TextInput';
 import Numbers from '../../../../../services/numbers';
 const Ava = `${process.env.PUBLIC_URL}/img/ethereum.png`;
-const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
+const loading = `${process.env.PUBLIC_URL}/img/loading-dots.gif`;
 
 
 
@@ -22,11 +22,28 @@ const defaultProps = {
     ticker : 'N/A',
     platformAddress : 'N/A',
     liquidity : 0,
+    houseLiquidity : 0,
     amount : 100,
     platformBlockchain : 'N/A'
 }
 
-
+const withdrawMessage = {
+    '1' : {
+        'message' : 'Cancel Open Withdrawals...'
+    },
+    '2' : {
+        'message' : 'Asking Withdraw Permission..'
+    },
+    '3' : {
+        'message' : 'Withdrawing..'
+    },
+    '4' : {
+        'message' : 'Finalizing Withdraw..'
+    },
+    '5' : {
+        'message' : 'Done!'
+    },
+}
 
 
 class WithdrawBox extends PureComponent {
@@ -54,34 +71,37 @@ class WithdrawBox extends PureComponent {
     }
 
 
-    createTokenWithdraw = async  ({currency, amount, platformAddress, tokenAddress}) => {
+    createTokenWithdraw = async  ({amount}) => {
+        
         try{
-            this.setState({...this.state, isLoading : true})
-            // TO DO : Create generateTokenTransfer Function in App via this infocmation
-            let eth_res = await this.props.profile.getApp().createTokenWithdraw({
-                currency, 
-                amount : Numbers.toFloat(amount), 
-                platformAddress, 
-                tokenAddress,
-                decimals : this.state.decimals
+            this.setState({...this.state, isLoading : true, state : 1});
+
+            /* 1 - Cancel Any Withdraws open (SC Side) */
+            await this.props.profile.getApp().cancelWithdrawSC({currency : 'eth'});
+            /* 2 - Cancel Any Withdraws Open (API Side) */
+            await this.props.profile.cancelWithdraw();
+
+            this.setState({...this.state, state : 2});
+
+            /* 3 -  Request Withdraw Platform */
+            await this.props.profile.requestWithdraw({tokenAmount : Numbers.toFloat(amount)});
+            this.setState({...this.state, state : 3});
+
+            /* 4 - Create Withdraw (SC Side) */
+            let response = await this.props.profile.withdraw({
+                amount : Numbers.toFloat(amount)
             });
-            console.log(eth_res)
 
-            if(eth_res.status){
-                /* Transaction was succeded */
-                await this.confirmWalletUpdate(amount);
-            }else{
-                // TO DO : Undertand why it didn´t succed
-                throw new Error('Transaction was not succeded')
-            }
+            this.setState({...this.state, state : 4});
+            
+            /* 5 - Finalize Withdraw Position */
+            await this.props.profile.finalizeWithdraw({tokenAmount : Numbers.toFloat(amount), transactionHash : response.transactionHash});
 
-            this.setState({...this.state, isLoading : false});
+            this.setState({...this.state, isLoading : false, state : 5});
             return true;
-            // TO DO : Finalize Work
         }catch(err){
             console.log(err)
             this.setState({...this.state, isLoading : false});
-            // TO DO : Create Better Messaging System for this
             alert(err.message)
         }
     }
@@ -96,9 +116,11 @@ class WithdrawBox extends PureComponent {
 
         this.setState({...this.state, 
             referenceAddress : '0x',
+            state : 1,
             generatedReference : false,
             decimals : data.blockchain.decimals,
             houseBlockchainBalance :  data.blockchain.houseBalance,
+            houseLiquidity :  data.playBalance ? data.playBalance : defaultProps.houseLiquidity,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
@@ -128,11 +150,11 @@ class WithdrawBox extends PureComponent {
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
-                <Card>
-                    <CardBody className="dashboard__card-widget" >
-                        <div className="dashboard__visitors-chart">
+                <Card style={{marginTop : 50}}>
+                <CardBody className="dashboard__card-widget" >
+                        <div  className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title" style={{fontSize : 20, textAlign : 'center'}}> 
-                                House Liquidity <span style={{fontSize : 20}}> {this.state.houseBlockchainBalance}</span> {this.state.ticker}
+                                House Liquidity <span style={{fontSize : 20}}> {this.state.houseLiquidity}</span> {this.state.ticker}
                             </p>
                             <hr></hr>
                         </div>
@@ -177,9 +199,32 @@ class WithdrawBox extends PureComponent {
                                             ?   
                                                 this.deposit_buttons.ethereum(this.state.amount, this.state.platformAddress, this.state.tokenAddress)
                                             :   
-                                                <Button disabled={true} outline className="primary" >
-                                                    <p><TickCircleIcon className="deposit-icon"/> Waiting for Transaction to Finalize...</p>
-                                                </Button>
+                                                <div>
+                                                    <Row>
+                                                        <Col lg={5}>
+                                                            <Button disabled={true} outline className="primary" >
+                                                                <p>
+                                                                    <TickCircleIcon className="deposit-icon"/> 
+                                                                    {this.state.state} 
+                                                                </p>
+                                                            </Button>
+                                                        </Col>
+                                                        <Col lg={2}>
+                                                            <img className={'loading-dots'} src={loading}></img>
+                                                        </Col>
+                                                        <Col lg={5}>
+                                                            <Button disabled={this.state.state != 5} className="secondary" >
+                                                                <p>
+                                                                    5 - Done
+                                                                </p>
+                                                            </Button>
+                                                        </Col>
+                                                    </Row>
+                                                   
+
+                                                    <p>                                                             {withdrawMessage[this.state.state].message}
+                                                    </p>
+                                                </div>
                                         }
                                         
                                     </Col>

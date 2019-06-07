@@ -22,7 +22,7 @@ class WithdrawWidget extends React.Component{
                         Choose the amount of Liquidity you want to withdraw
                     </p>
                 </Col>
-                <Col lg={4} style={{marginTop : 50}}>
+                <Col lg={4}>
                     <WithdrawBox data={this.props.profile.getApp().getSummaryData('wallet')}/>
                 </Col>
                 
