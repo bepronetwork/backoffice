@@ -60,18 +60,18 @@ class App extends Component {
                         console.log(error);
                 }); */
             } catch (error) {
-                global.web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/'));
+                global.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/'));
                 // User denied account access...
             }
         }
         // Legacy dapp browsers...
         else if (window.web3) {
-            global.web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/'));
+            global.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/'));
              // Acccounts always exposed
         }
         // Non-dapp browsers...
         else {
-            global.web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/'));
+            global.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/'));
             console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
         }        
 

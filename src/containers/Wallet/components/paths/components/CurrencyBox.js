@@ -65,11 +65,13 @@ class CurrencyBox extends PureComponent {
                 tokenAddress,
                 decimals : this.state.decimals
             });
+
             console.log(eth_res)
 
             if(eth_res.status){
                 /* Transaction was succeded */
                 await this.confirmWalletUpdate({amount, transactionHash : eth_res.transactionHash});
+                console.log("done")
             }else{
                 // TO DO : Undertand why it didn´t succed
                 throw new Error('Transaction was not succeded')
@@ -102,7 +104,7 @@ class CurrencyBox extends PureComponent {
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
-            platformAddressLink : 'https://ropsten.etherscan.io/token/' + data.blockchain.tokenAddress,
+            platformAddressLink : 'https://rinkeby.etherscan.io/token/' + data.blockchain.tokenAddress,
             tokenAddress :  tokenAddress,
             tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
 

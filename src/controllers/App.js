@@ -155,11 +155,12 @@ class App{
                 contractAddress : tokenAddress
             });
 
-            return await erc20Contract.sendTokens({
+            let res = await erc20Contract.sendTokens({
                 decimals,
                 to : platformAddress,
                 amount
             })
+            return res;
 
         }catch(err){
             throw err;
@@ -261,7 +262,7 @@ class App{
                 amount,
                 transactionHash
             });
-
+            console.log(res);
             let {
                 message,
                 status
@@ -273,6 +274,7 @@ class App{
                 throw new Error(res.data.message);
             }
         }catch(err){
+            console.log(err);
             throw err;
 		}
     }

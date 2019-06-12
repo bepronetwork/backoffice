@@ -1,4 +1,5 @@
 import config from "./config";
+import Numbers from "../services/numbers";
 
 const URL = config.server.production;
 
@@ -168,6 +169,7 @@ class Connection {
 
 
     updateWallet = async ({app, amount, transactionHash, headers}) => {
+        console.log(app, amount);
         try{
             let response = await fetch( URL + `/api/app/updateWallet`, {
                 method : 'POST',
@@ -175,12 +177,13 @@ class Connection {
                 body : JSON.stringify({
                     app,
                     transactionHash,
-                    amount
+                    amount : Numbers.toFloat(amount)
                 })
             });
             
             return response.json();
         }catch(err){
+            console.log(err);
             throw err;
         }
     }

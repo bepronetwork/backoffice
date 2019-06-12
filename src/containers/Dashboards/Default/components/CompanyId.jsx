@@ -46,7 +46,7 @@ class CompanyId extends PureComponent {
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
             platformName : app.getName() ? app.getName() : defaultProps.platformName,
             platformDescription  :app.getDescription() ? app.getDescription() : defaultProps.platformDescription,
-            platformAddressLink : 'https://ropsten.etherscan.io/address/' + app.getInformation('platformAddress'),
+            platformAddressLink : 'https://rinkeby.etherscan.io/address/' + app.getInformation('platformAddress'),
         })
     }
 

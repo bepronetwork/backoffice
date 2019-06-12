@@ -4,6 +4,7 @@ import {
 
 import Contract from "../models/Contract";
 import Numbers from "../services/numbers";
+import { HeadphonesBluetoothIcon } from "mdi-react";
 
 let self;
 const options = {
@@ -70,11 +71,18 @@ class ERC20TokenContract{
         let amountWithDecimals = Numbers.toSmartContractDecimals(amount, decimals);
         let accounts = await window.web3.eth.getAccounts();
         var myContract = new window.web3.eth.Contract(ierc20.abi, self.contractAddress);
-        return await myContract.methods.transfer(
-            to,
-            amountWithDecimals
-        ).send({from : accounts[0]}); 
-        //return await self.contract.getABI().send(self.account.getAccount(), data);
+        return new Promise ( (resolve, reject) => {
+            myContract.methods.transfer(
+                to,
+                amountWithDecimals
+            ).send({from : accounts[0]})
+            .on('transactionHash', (hash) => {
+            })
+            .on('confirmation', (confirmations, receipt) => {
+                resolve(receipt)
+            })
+            .on('error', () => {reject("Transaction Error")})
+        })
     }
 
     getABI(){

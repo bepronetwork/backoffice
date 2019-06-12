@@ -120,7 +120,7 @@ class WithdrawBox extends PureComponent {
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
-            platformAddressLink : 'https://ropsten.etherscan.io/token/' + data.blockchain.tokenAddress,
+            platformAddressLink : 'https://rinkeby.etherscan.io/token/' + data.blockchain.tokenAddress,
             tokenAddress :  tokenAddress,
             tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
 

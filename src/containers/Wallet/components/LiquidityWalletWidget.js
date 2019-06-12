@@ -45,7 +45,7 @@ class LiquidityWalletWidget extends PureComponent {
                 totalDecentralizedLiquidity :  appData.blockchain.decentralized.totalLiquidity ? appData.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
                 ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
                 platformBlockchain : data.app.getInformation('platformBlockchain') ? data.app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
-                platformAddressLink : 'https://ropsten.etherscan.io/token/' + data.wallet.data.blockchain.tokenAddress,
+                platformAddressLink : 'https://rinkeby.etherscan.io/token/' + data.wallet.data.blockchain.tokenAddress,
                 tokenAddress :  `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`,
                 isIntegrated : true
             })

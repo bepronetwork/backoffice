@@ -111,23 +111,38 @@ class CasinoContract{
         let amountWithDecimals = Numbers.toSmartContractDecimals(amount, decimals);
         let accounts = await window.web3.eth.getAccounts();
 
-        return await self.contract.getContract().methods.withdraw(
-            accounts[0],
-            amountWithDecimals
-        ).send({from : accounts[0]}); 
+        return new Promise ( (resolve, reject) => {
+            self.contract.getContract().methods.withdraw(
+                accounts[0],
+                amountWithDecimals
+            ).send({from : accounts[0]})
+            .on('transactionHash', (hash) => {
+            })
+            .on('confirmation', (confirmations, receipt) => {
+                resolve(receipt)
+            })
+            .on('error', () => {reject("Transaction Error")})
+        })
     }
 
     async withdrawApp({receiverAddress, amount}){
         try{
             let accounts = await window.web3.eth.getAccounts();
             let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
-            let res = await self.contract.getContract().methods.withdrawBankroll(
-                receiverAddress,
-                amountWithDecimals
-            ).send({from : accounts[0]});
-            return res;
+            return new Promise ( (resolve, reject) => {
+                self.contract.getContract().methods.withdrawBankroll(
+                    receiverAddress,
+                    amountWithDecimals
+                ).send({from : accounts[0]})
+                .on('transactionHash', (hash) => {
+                })
+                .on('confirmation', (confirmations, receipt) => {
+                    resolve(receipt)
+                })
+                .on('error', () => {reject("Transaction Error")})
+            })
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
@@ -138,7 +153,15 @@ class CasinoContract{
             let accounts = await window.web3.eth.getAccounts();
             let approvedWithdrawAmount = await this.getApprovedWithdrawAmount(accounts[0]);
             if(approvedWithdrawAmount > 0){
-                res = await self.contract.getContract().methods.cancelWithdraw().send({from : accounts[0]}); 
+                return new Promise ( (resolve, reject) => {
+                    self.contract.getContract().methods.cancelWithdraw().send({from : accounts[0]})
+                    .on('transactionHash', (hash) => {
+                    })
+                    .on('confirmation', (confirmations, receipt) => {
+                        resolve(receipt)
+                    })
+                    .on('error', () => {reject("Transaction Error")})
+                })
             }
             return res;
         }catch(err){
