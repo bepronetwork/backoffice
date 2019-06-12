@@ -2,10 +2,6 @@
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row , Button} from 'reactstrap';
 import {  BarcodeIcon, TickCircleIcon, DirectionsIcon } from 'mdi-react';
-import AnimationNumber from '../../../../UI/Typography/components/AnimationNumber';
-import ConverterSingleton from '../../../../../services/converter';
-import QRCodeContainer from './QRCode';
-import AddressBox from './AddressBox';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
