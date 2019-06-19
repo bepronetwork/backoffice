@@ -45,13 +45,6 @@ export default [
         linkedinurl : 'https://www.linkedin.com/in/temmartins/'
     },
     {
-        name : 'Benjamim Bradtke',
-        position : 'Macro Strategy',
-        image : ben,
-        linkedin : linkedin,
-        linkedinurl : 'https://www.linkedin.com/in/benjaminbradtke/'
-    },
-    {
         name : 'Gonçalo Almeida',
         position : 'Regulatory & Compliance',
         image : goncalo,

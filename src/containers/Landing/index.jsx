@@ -66,6 +66,13 @@ class Landing extends PureComponent {
                             </button>
                         </a>
                         */}
+                        { <a href={'/whitepaper.pdf'} target={'__blank'}
+                        >
+                            <button>
+                                Whitepaper
+                            </button>
+                        </a>
+                        }
                         <Link  to={'/about-us'}
                         >
                             <button>
