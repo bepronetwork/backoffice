@@ -89,14 +89,14 @@ const Header = (props) => (
                             <img src={utrust} style={{width : 120, marginTop : 20}} className='partner-icon'/>
                         </a>
                     </Col>
-                    <Col lg={3}>
+                    <Col lg={4}>
                         <a href={'https://matic.network'} target={'__blank'}>
                             <img src={matic} style={{width : 160, marginTop : 10}} className='partner-icon'/>
                         </a>
                     </Col>
                     <Col lg={3}>
                         <a href={'https://nexo.io'} target={'__blank'}>
-                            <img src={nexo}  style={{width : 120, marginTop : 5}} className='partner-icon'/>
+                            <img src={nexo}  style={{width : 100, marginTop : 30}} className='partner-icon'/>
                         </a>
                     </Col>
                 </Row> 
