@@ -12,8 +12,8 @@ const medium = `${process.env.PUBLIC_URL}/img/landing/medium.png`;
 const twitter = `${process.env.PUBLIC_URL}/img/landing/twitter.png`;
 
 
-const nexo  = `${process.env.PUBLIC_URL}/img/landing/nexo.png`;
-const utrust = `${process.env.PUBLIC_URL}/img/landing/utrust.png`;
+const nexo  = `${process.env.PUBLIC_URL}/img/landing/nexou.png`;
+const utrust = `${process.env.PUBLIC_URL}/img/landing/utrustu.png`;
 const matic = `${process.env.PUBLIC_URL}/img/landing/matic.png`;
 
 const Header = (props) => (
