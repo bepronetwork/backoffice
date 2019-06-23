@@ -4,6 +4,9 @@ import { setProfileInfo } from "../redux/actions/profile";
 import App from "./App";
 import Cache from "../services/cache";
 import Security from "./Security";
+import { enableMetamask } from "../lib/metamask";
+import { getNonce } from "../lib/number";
+import { processResponse } from "../lib/errors";
 
 class Account{    
     constructor(params=null){
@@ -155,6 +158,17 @@ class Account{
         }
     }
 
+    getMetamaskAddress = async () => {
+        /* Enable Metamask Auth */
+        await enableMetamask("eth");
+        let accounts = await window.web3.eth.getAccounts();
+        return accounts[0];
+    }
+
+    getAddress = () => {
+        return this.App.getManagerAddress();
+    }
+
     hasAppStats = (type) => {
         try{
             if(!this.hasApp()){throw new Error('There is no App Attributed')}
@@ -216,7 +230,7 @@ class Account{
         // TO DO : Change App to the Entity Type coming from Login
         try{
             let response = await this.getApp().getDepositReference(params);
-            return processServerResponse(response);
+            return processResponse(response);
         }catch(err){
             throw err;
         }
@@ -225,7 +239,7 @@ class Account{
     getDepositInfo = async (params) => {
         try{
             let response = await this.getApp().getDepositInfo(params); 
-            return processServerResponse(response);
+            return processResponse(response);
         }catch(err){
             throw err;
         }
@@ -235,7 +249,7 @@ class Account{
     requestWithdraw = async (params) => {
         try{
             let response = await this.getApp().requestWithdraw(params);
-            return processServerResponse(response);
+            return processResponse(response);
         }catch(err){
             throw err;
         }
@@ -244,16 +258,20 @@ class Account{
     finalizeWithdraw = async (params) => {
         try{
             let response = await this.getApp().finalizeWithdraw(params);
-            return processServerResponse(response);
+            return processResponse(response);
         }catch(err){
             throw err;
         }
     }
 
+    getWithdraws = () => {
+        return this.getApp().getWithdraws() || [];
+    }
+
     cancelWithdraw = async (params) => {
         try{
             let response = await this.getApp().cancelWithdraw(params);
-            return processServerResponse(response);
+            return processResponse(response);
         }catch(err){
             throw err;
         }
@@ -276,27 +294,6 @@ class Account{
         }
     }
 
-}
-
-/**
- * 
- * @param {*} response 
- */
-
-const processServerResponse = (response) => {
-
-    console.log(response);
-
-    let {
-        message,
-        status
-    } = response.data;
-
-    if(status == 200){
-        return message;
-    }else{
-        return message;
-    }
 }
 
 export default Account;

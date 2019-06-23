@@ -125,13 +125,13 @@ class CasinoContract{
         })
     }
 
-    async withdrawApp({receiverAddress, amount}){
+    async withdrawApp({address, amount}){
         try{
             let accounts = await window.web3.eth.getAccounts();
             let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
             return new Promise ( (resolve, reject) => {
                 self.contract.getContract().methods.withdrawBankroll(
-                    receiverAddress,
+                    address,
                     amountWithDecimals
                 ).send({from : accounts[0]})
                 .on('transactionHash', (hash) => {

@@ -5,15 +5,45 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import WithdrawBox from './components/WithdrawBox';
-
+import Numbers from '../../../../services/numbers';
+import WithdrawsTable from './withdraw/Table';
 
 class WithdrawWidget extends React.Component{
 
     constructor(props){
         super(props)
+        this.state = {
+            disabled : false
+        }
+    }
+
+    withdrawTokens = async (withdrawObject) => {
+        console.log(withdrawObject);
+        var { nonce, id, amount } = withdrawObject;
+        try{
+            this.setState({...this.state, disabled : true});
+            /* Create Withdraw */
+            await this.props.profile.finalizeWithdraw({amount : Numbers.toFloat(amount), nonce, withdraw_id : id });
+            /* Update User Balance */
+            this.setState({...this.state, disabled : false});
+        }catch(err){
+            console.log(err)
+            alert(err);
+            this.setState({...this.state, disabled : true});
+        }
+    }
+
+    disable = () => {
+        this.setState({...this.state, disabled : true});
+    }
+
+    enable = () => {
+        this.setState({...this.state, disabled : false});
     }
 
     render = () => {
+        let withdraws = this.props.profile.getApp().getWithdraws();
+        let ticker = this.props.profile.getApp().getSummaryData('wallet').data.blockchain.ticker;
         return (
             <Container className="dashboard">
                 <Col lg={12}>
@@ -22,10 +52,22 @@ class WithdrawWidget extends React.Component{
                         Choose the amount of Liquidity you want to withdraw
                     </p>
                 </Col>
-                <Col lg={4}>
-                    <WithdrawBox data={this.props.profile.getApp().getSummaryData('wallet')}/>
-                </Col>
-                
+                <Row>
+                    <Col lg={4}>
+                        <WithdrawBox 
+                        enable={this.enable} disable={this.disable}
+                        disabled={this.state.disabled} data={this.props.profile.getApp().getSummaryData('wallet')}/>
+                    </Col>
+                    <Col lg={8}>
+                        <div style={{marginTop : 50}}>
+                            <WithdrawsTable
+                                disabled={this.state.disabled}
+                                withdraw={this.withdrawTokens} 
+                                currency={ticker} data={withdraws}
+                            />
+                        </div>
+                    </Col>
+                </Row>
             </Container>
         )
     }

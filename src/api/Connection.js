@@ -204,13 +204,13 @@ class Connection {
         }
     }
 
-    finalizeWithdraw = async ({app, address, signature, newBalance, tokenAmount, nonce, transactionHash, headers}) => {
+    finalizeWithdraw = async ({app, address, signature, newBalance, tokenAmount, nonce, transactionHash, headers, withdraw_id}) => {
         try{
             let response = await fetch( URL + `/api/app/finalizeWithdraw`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({
-                    app, address, signature, newBalance, tokenAmount, nonce, transactionHash
+                    app, address, signature, newBalance, tokenAmount, nonce, transactionHash, withdraw_id
                 })
             });
             

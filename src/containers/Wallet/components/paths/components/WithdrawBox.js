@@ -25,16 +25,7 @@ const defaultProps = {
 
 const withdrawMessage = {
     '1' : {
-        'message' : 'Cancel Open Withdrawals...'
-    },
-    '2' : {
         'message' : 'Asking Withdraw Permission..'
-    },
-    '3' : {
-        'message' : 'Withdrawing..'
-    },
-    '4' : {
-        'message' : 'Finalizing Withdraw..'
     },
     '5' : {
         'message' : 'Done!'
@@ -52,7 +43,9 @@ class WithdrawBox extends PureComponent {
         this.deposit_buttons = {
             ethereum : (amount, platformAddress, tokenAddress) => {
                 return (
-                    <Button onClick={() => this.createTokenWithdraw({
+                    <Button 
+                        disabled={this.props.disabled}
+                        onClick={() => this.createTokenWithdraw({
                         currency : 'eth', 
                         amount, 
                         platformAddress, 
@@ -66,45 +59,30 @@ class WithdrawBox extends PureComponent {
         this.projectData(this.props)
     }
 
+    componentWillReceiveProps(props){
+        this.projectData(props)
+    }
+
 
     createTokenWithdraw = async  ({amount}) => {
-        
         try{
+            this.props.disable();
             this.setState({...this.state, isLoading : true, state : 1});
-
-            /* 1 - Cancel Any Withdraws open (SC Side) */
-            await this.props.profile.getApp().cancelWithdrawSC({currency : 'eth'});
-            /* 2 - Cancel Any Withdraws Open (API Side) */
-            await this.props.profile.cancelWithdraw();
-
-            this.setState({...this.state, state : 2});
-
             /* 3 -  Request Withdraw Platform */
             await this.props.profile.requestWithdraw({tokenAmount : Numbers.toFloat(amount)});
-            this.setState({...this.state, state : 3});
-
-            /* 4 - Create Withdraw (SC Side) */
-            let response = await this.props.profile.withdraw({
-                amount : Numbers.toFloat(amount)
-            });
-
-            this.setState({...this.state, state : 4});
-            
-            /* 5 - Finalize Withdraw Position */
-            await this.props.profile.finalizeWithdraw({tokenAmount : Numbers.toFloat(amount), transactionHash : response.transactionHash});
-
             this.setState({...this.state, isLoading : false, state : 5});
+            this.props.enable();
             return true;
         }catch(err){
             console.log(err)
             this.setState({...this.state, isLoading : false});
+            this.props.enable();
             alert(err.message)
         }
     }
 
 
     projectData = (props) => {
-
         let data = props.profile.getApp().getSummaryData('wallet').data;
         let app = props.profile.getApp();
         let tokenAddress = data.blockchain.tokenAddress;
@@ -116,7 +94,7 @@ class WithdrawBox extends PureComponent {
             generatedReference : false,
             decimals : data.blockchain.decimals,
             houseBlockchainBalance :  data.blockchain.houseBalance,
-            houseLiquidity :  data.playBalance ? data.playBalance : defaultProps.houseLiquidity,
+            houseLiquidity :  data.playBalance ? Numbers.toFloat(data.playBalance) : defaultProps.houseLiquidity,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
@@ -211,14 +189,13 @@ class WithdrawBox extends PureComponent {
                                                         <Col lg={5}>
                                                             <Button disabled={this.state.state != 5} className="secondary" >
                                                                 <p>
-                                                                    5 - Done
+                                                                    Done
                                                                 </p>
                                                             </Button>
                                                         </Col>
                                                     </Row>
-                                                   
-
-                                                    <p>                                                             {withdrawMessage[this.state.state].message}
+                                                    <p> 
+                                                        {withdrawMessage[this.state.state].message}
                                                     </p>
                                                 </div>
                                         }

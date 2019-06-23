@@ -100,7 +100,7 @@ class CurrencyBox extends PureComponent {
             referenceAddress : '0x',
             generatedReference : false,
             decimals : data.blockchain.decimals,
-            houseLiquidity :  data.playBalance ? data.playBalance : defaultProps.houseLiquidity,
+            houseLiquidity :  data.playBalance ? Numbers.toFloat(data.playBalance) : defaultProps.houseLiquidity,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,

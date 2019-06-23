@@ -7,6 +7,8 @@ import Web3 from 'web3';
 import CryptographySingleton from "../services/security/Cryptography";
 import codes from "../config/codes";
 import Numbers from "../services/numbers";
+import { getNonce } from "../lib/number";
+import { getMetamaskAddress } from "../lib/metamask";
 
 class App{    
     constructor(params){
@@ -279,71 +281,82 @@ class App{
 		}
     }
 
+    getWithdraws = () => this.params.withdraws || [];
+
     requestWithdraw = async ({tokenAmount}) => {
 
         try{
-            /* Get Accounts */
-            let accounts = await window.web3.eth.getAccounts();
-            var params = {
-                address : accounts[0],
-                nonce : Numbers.getRandom(100, 50000000),
+            let metamaskAddress = await getMetamaskAddress();
+            let params = {
+                address : metamaskAddress, 
+                newBalance :  Numbers.toFloat(this.getSummaryData('wallet').data.playBalance), 
+                winBalance :  Numbers.toFloat(this.getSummaryData('wallet').data.playBalance), 
+                nonce : getNonce(), 
                 decimals : this.params.decimals,
-                newBalance : Numbers.toFloat(this.getSummaryData('wallet').data.playBalance),
-                winBalance : Numbers.toFloat(this.getSummaryData('wallet').data.playBalance),
-                category : parseInt(codes.Withdraw)
-            }
-            console.log(params);
-
-            /* Get User Signature */
-            let { signature } = await CryptographySingleton.getUserSignature(params);
-
-            /* Get Request Withdraw Response */
-            return await ConnectionSingleton.requestWithdraw({
-                ...params,
-                tokenAmount,
-                signature,
-                app : this.getId(),
-                headers : authHeaders(this.params.bearerToken),
-            });
-
-
-        }catch(err){
-            throw err;
-        }
-    }
-
-    finalizeWithdraw = async ({tokenAmount, transactionHash}) => {
-        try{
-            
-            /* Get Accounts */
-            let accounts = await window.web3.eth.getAccounts();
-            
-            var params = {
-                address : accounts[0],
-                nonce : Numbers.getRandom(13400, 1002304534530),
-                decimals : this.params.decimals,
-                newBalance : Numbers.toFloat(this.getSummaryData('wallet').data.playBalance),
-                winBalance : Numbers.toFloat(this.getSummaryData('wallet').data.playBalance),
                 category : codes.Withdraw
             }
 
-            /* Get User Signature */
-            let signature = await CryptographySingleton.getUserSignature(params);
+            // Get Signature
+            let { signature } = await CryptographySingleton.getUserSignature(params);
 
-            /* Get Finalize Withdraw Response */
-            return await ConnectionSingleton.finalizeWithdraw({
+            /* Get Request Withdraw Response */
+            var res_with = await ConnectionSingleton.requestWithdraw({
                 ...params,
                 tokenAmount,
                 signature,
-                transactionHash,
                 app : this.getId(),
                 headers : authHeaders(this.params.bearerToken),
             });
+    
+            return res_with;
 
         }catch(err){
             throw err;
         }
     }
+
+    finalizeWithdraw = async ({ amount, nonce, withdraw_id }) => {
+        try {
+            let metamaskAddress = await getMetamaskAddress();
+            let params = {
+                address : metamaskAddress, 
+                newBalance :  Numbers.toFloat(this.getSummaryData('wallet').data.playBalance), 
+                winBalance :  Numbers.toFloat(this.getSummaryData('wallet').data.playBalance), 
+                nonce : getNonce(), 
+                decimals : this.params.decimals,
+                category : codes.Withdraw,
+            }
+
+            // Get Signature
+            let { signature } = await CryptographySingleton.getUserSignature(params);
+
+            /* Run Withdraw Function */
+            const resEthereum = await this.casinoContract.withdrawApp({
+                address : params.address,
+                amount,
+                nonce
+            });
+
+
+            /* Get Finalize Withdraw Response */
+            let res_fin = await ConnectionSingleton.finalizeWithdraw({
+                ...params,
+                tokenAmount : amount,
+                signature,
+                withdraw_id,
+                app : this.getId(),
+                transactionHash : resEthereum.transactionHash,
+                app : this.getId(),
+                headers : authHeaders(this.params.bearerToken),
+            });
+
+            return res_fin;
+
+        } catch (err) {
+            throw err;
+        }
+    };
+
 
     cancelWithdraw = async () => {
         try{
@@ -389,6 +402,8 @@ class App{
             }
         }
     }
+
+    getManagerAddress = () => this.params.address;
 
     async cancelWithdrawSC({currency}){
         try{
