@@ -18,7 +18,6 @@ class WithdrawWidget extends React.Component{
     }
 
     withdrawTokens = async (withdrawObject) => {
-        console.log(withdrawObject);
         var { nonce, id, amount } = withdrawObject;
         try{
             this.setState({...this.state, disabled : true});

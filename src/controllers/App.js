@@ -23,36 +23,36 @@ class App{
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'USERS',
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'GAMES',
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'BETS',
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'REVENUE',
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'WALLET',
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getApp({
                     app : this.params.id,
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getTransactions({
                     app : this.params.id,
                     filters : [],
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
             ]);
 
@@ -102,7 +102,7 @@ class App{
                 {   
                     currency, 
                     entity : this.getId(), 
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 });
         }catch(err){
             throw err;
@@ -116,7 +116,7 @@ class App{
                 {   
                     app : this.getId(),
                     filters,
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 });
         }catch(err){
             throw err;
@@ -128,7 +128,7 @@ class App{
             return await ConnectionSingleton.getDepositInfo(
                 {   
                     id, 
-                    headers : authHeaders(this.params.bearerToken)
+                    headers : authHeaders(this.params.bearerToken, this.params.id)
                 });
         }catch(err){
             throw err;
@@ -139,7 +139,7 @@ class App{
         try{
             let res = await ConnectionSingleton.addServices({
                 app : this.getId(),
-                headers : authHeaders(this.params.bearerToken),
+                headers : authHeaders(this.params.bearerToken, this.params.id),
                 services
             });
             return res;
@@ -238,7 +238,7 @@ class App{
         try{
             let res = await ConnectionSingleton.addPaybearToken({
                 app : this.getId(),
-                headers : authHeaders(this.params.bearerToken),
+                headers : authHeaders(this.params.bearerToken, this.params.id),
                 paybearToken
             });
 
@@ -260,7 +260,7 @@ class App{
         try{
             let res = await ConnectionSingleton.updateWallet({
                 app : this.getId(),
-                headers : authHeaders(this.params.bearerToken),
+                headers : authHeaders(this.params.bearerToken, this.params.id),
                 amount,
                 transactionHash
             });
@@ -305,7 +305,7 @@ class App{
                 tokenAmount,
                 signature,
                 app : this.getId(),
-                headers : authHeaders(this.params.bearerToken),
+                headers : authHeaders(this.params.bearerToken, this.params.id),
             });
     
             return res_with;
@@ -337,7 +337,6 @@ class App{
                 nonce
             });
 
-
             /* Get Finalize Withdraw Response */
             let res_fin = await ConnectionSingleton.finalizeWithdraw({
                 ...params,
@@ -347,12 +346,13 @@ class App{
                 app : this.getId(),
                 transactionHash : resEthereum.transactionHash,
                 app : this.getId(),
-                headers : authHeaders(this.params.bearerToken),
+                headers : authHeaders(this.params.bearerToken, this.params.id)
             });
 
             return res_fin;
 
         } catch (err) {
+            console.log(err);
             throw err;
         }
     };
@@ -363,7 +363,7 @@ class App{
             /* Cancel Withdraw Response */
             return await ConnectionSingleton.cancelWithdraw({               
                 app : this.getId(),
-                headers : authHeaders(this.params.bearerToken),
+                headers : authHeaders(this.params.bearerToken, this.params.id)
             });
 
         }catch(err){
@@ -417,9 +417,10 @@ class App{
 }
 
 
-function authHeaders(bearerToken){
+function authHeaders(bearerToken, id){
     return {
-        "authorization" : "Bearer " + bearerToken
+        "authorization" : "Bearer " + bearerToken,
+        "payload" : JSON.stringify({ id : id })
     }
 }
 
