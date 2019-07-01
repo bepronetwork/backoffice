@@ -1,7 +1,7 @@
 import config from "./config";
 import Numbers from "../services/numbers";
 
-const URL = config.server.development;
+const URL = config.server.production;
 
 class Connection {
 
