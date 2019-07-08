@@ -78,6 +78,32 @@ class Connection {
         }
     }
 
+    editTableLimit = async ({app, game, tableLimit, headers}) => {
+        try{
+            let response = await fetch(URL+ '/api/app/games/editTableLimit', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({app, game, tableLimit : parseInt(tableLimit)})
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editEdge = async ({app, game, edge, headers}) => {
+        try{
+            let response = await fetch(URL+ '/api/app/games/editEdge', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({app, game, edge})
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getTransactions =  async ({app, filters, headers}) => {
         try{
             let response = await fetch(URL + '/api/app/transactions', {
@@ -211,6 +237,22 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({
                     app, address, signature, newBalance, tokenAmount, nonce, transactionHash, withdraw_id
+                })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+  
+    getGames = async ({app, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/games/getAll`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    app
                 })
             });
             

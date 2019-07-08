@@ -2,12 +2,11 @@
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col } from 'reactstrap';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
-import Numbers from '../../../services/numbers';
 
 
 
 const defaultProps = {
-    totalLiquidity : 0,
+    playBalance : 0,
     ticker : 'N/A',
 }
 
@@ -25,9 +24,8 @@ class LiquidityInfo extends PureComponent {
 
     projectData = (props) => {
         let data = props.data.data;
-
         this.setState({...this.state, 
-            totalLiquidity : data.blockchain.totalLiquidity ? data.blockchain.totalLiquidity : defaultProps.totalLiquidity,
+            totalLiquidity : data.playBalance ? data.playBalance : defaultProps.playBalance,
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
         })
     }

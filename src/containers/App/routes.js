@@ -6,6 +6,7 @@ import DefaultDashboard from '../Dashboards/Default';
 import AffiliatesContainer from '../Affiliates';
 import DepositWidget from '../Wallet/components/paths/DepositWidget';
 import WithdrawWidget from '../Wallet/components/paths/WithdrawWidget';
+import GamePage from '../Applications/GamePage';
 
 export default [
     {
@@ -25,7 +26,14 @@ export default [
     {
         path: "/application",
         name: 'Application',
-        component : Applications
+        component : Applications,
+        children : [
+            {
+                path : "/game",
+                name : 'Game',
+                component : GamePage
+            }
+        ]
     },
     {
         path: "/stats",

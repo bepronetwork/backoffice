@@ -357,12 +357,52 @@ class App{
         }
     };
 
+    editTableLimit = async ({game, tableLimit}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            return await ConnectionSingleton.editTableLimit({               
+                app : this.getId(),
+                game, tableLimit,
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
 
     cancelWithdraw = async () => {
         try{
             /* Cancel Withdraw Response */
             return await ConnectionSingleton.cancelWithdraw({               
                 app : this.getId(),
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getGames = async () => {
+        try{
+            /* Cancel Withdraw Response */
+            return await ConnectionSingleton.getGames({               
+                app : this.getId(),
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editEdge = async ({game, edge}) => {
+        try{
+            return await ConnectionSingleton.editEdge({               
+                app : this.getId(),
+                game,
+                edge,
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
 
@@ -391,6 +431,8 @@ class App{
             type : type
         }
     }
+
+    getCurrencyTicker = () => this.getSummaryData('wallet').data.blockchain.ticker;
 
     async enableMetamask(currency){
         let ethereum = window.ethereum;
