@@ -460,3 +460,31 @@ button:focus, button:active {
 }
 
 
+
+
+.clean_button{
+    border : none;
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+    opacity : 1;
+
+    :hover {
+        opacity : 0.8;
+        transition: all 0.4s;
+
+    }
+
+}
+
+.game-container{
+    width : 350px !important;
+}
+
+.text-left{
+    text-align: left !important;
+}
+
+.locker-container{
+    opacity: 0.8;
+}

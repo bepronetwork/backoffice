@@ -28,7 +28,7 @@ class GamesContainer extends PureComponent {
                 {Object.keys(games).map( key => {
                     return (
                     <Col lg={4}>
-                        <GameInfo game={games[key]} wallet={wallet} />
+                        <GameInfo game={games[key]} wallet={wallet} {...this.props}/>
                     </Col>
                     )
                 })}

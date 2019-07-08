@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, CardBody, Col } from 'reactstrap';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
-import Slider from '../../../../shared/components/range_slider/Slider';
 
 const SliderStartPoint = ({ t }) => (
   <Col md={12} lg={6} xs={12}>

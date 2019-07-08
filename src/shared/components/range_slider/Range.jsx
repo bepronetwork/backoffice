@@ -8,41 +8,49 @@ const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
 
 export default class RangeTheme extends PureComponent {
-  static propTypes = {
-    marks: PropTypes.shape(),
-    value: PropTypes.arrayOf(PropTypes.number).isRequired,
-    min: PropTypes.number.isRequired,
-    max: PropTypes.number.isRequired,
-    tipFormatter: PropTypes.func,
-  };
+    static propTypes = {
+        marks: PropTypes.shape(),
+        value: PropTypes.arrayOf(PropTypes.number).isRequired,
+        min: PropTypes.number.isRequired,
+        max: PropTypes.number.isRequired,
+        tipFormatter: PropTypes.func,
+    };
 
-  static defaultProps = {
-    marks: {},
-    tipFormatter: value => value,
-  };
+    static defaultProps = {
+        marks: {},
+        tipFormatter: value => value,
+    };
 
-  render() {
-    const {
-      marks, value, min, max, tipFormatter,
-    } = this.props;
+    onChange = (e) => {
+        this.props.onChange(e[0]);
+    }
 
-    return (
-      <div className="slider">
-        <div className="slider__min">
-          <p>{tipFormatter ? tipFormatter(min) : min}</p>
+    render() {
+        const {
+        marks, value, min, max, tipFormatter
+        } = this.props;
+
+        return (
+        <div className="slider">
+            <div className="slider__min">
+            <p>{tipFormatter ? tipFormatter(min) : min}</p>
+            </div>
+            <div className="slider__max">
+            <p>{tipFormatter ? tipFormatter(max) : max}</p>
+            </div>
+            {value ?
+                <Range
+                    disabled={this.props.disabled}
+                    min={min}
+                    onChange={this.onChange}
+                    max={max}
+                    defaultValue={value}
+                    tipFormatter={tipFormatter}
+                    marks={marks}
+                    tipProps={{ visible: true }}
+                /> : null
+            }
         </div>
-        <div className="slider__max">
-          <p>{tipFormatter ? tipFormatter(max) : max}</p>
-        </div>
-        <Range
-          min={min}
-          max={max}
-          defaultValue={value}
-          tipFormatter={tipFormatter}
-          marks={marks}
-          tipProps={{ visible: true }}
-        />
-      </div>
-    );
-  }
+        );
+    }
 }

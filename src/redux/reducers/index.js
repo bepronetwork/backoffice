@@ -5,11 +5,13 @@ import newOrderTableReducer from './newOrderTableReducer';
 import customizerReducer from './customizerReducer';
 import profileReducer from './profileReducer';
 import widgetsReducer from './widgetsReducer';
+import gameReducer from './gameReducer';
 
 export {
     themeReducer,
     sidebarReducer,
     cryptoTableReducer,
+    gameReducer,
     newOrderTableReducer,
     customizerReducer,
     profileReducer,

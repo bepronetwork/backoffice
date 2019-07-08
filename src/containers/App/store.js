@@ -7,6 +7,7 @@ import {
   widgetsReducer,
   themeReducer,
   profileReducer,
+  gameReducer,
   customizerReducer,
 } from '../../redux/reducers/index';
 
@@ -16,6 +17,7 @@ const reducer = combineReducers({
     theme: themeReducer,
     sidebar: sidebarReducer,
     cryptoTable: cryptoTableReducer,
+    game : gameReducer,
     newOrder: newOrderTableReducer,
     customizer: customizerReducer,
     profile  : profileReducer,

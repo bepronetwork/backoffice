@@ -47,7 +47,7 @@ class ApplicationsContainer extends React.Component{
                                     <GamesContainer  data={{
                                         games : this.props.profile.getApp().getSummaryData('games'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                    }}/>
+                                    }} {...this.props}/>
                                 </DataWidget>
                             </div>   
                         }
