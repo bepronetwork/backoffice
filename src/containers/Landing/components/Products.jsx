@@ -28,7 +28,7 @@ class Products extends React.Component{
                     By leveraging Blockchain Technology these platforms are secure, scalable and regulated.
                 </p>
                 <p className=' roadmap-text landing__section-text' >
-                    <strong>Roadmap</strong>                   
+                    <strong>Products</strong>                   
                 </p>
                 <Row>
                     <Col md={6} lg={3}>
@@ -46,17 +46,13 @@ class Products extends React.Component{
                     </Col>
                     <Col md={6} lg={3}>
                         <div className='landing__product__widget'>
-                             <p className='coming-text'>Coming in June</p>
-                             <div className='on-coming'>
-
-                                <div className='description'>
-                                    <h4> Casino </h4>
-                                    <p> A Casino Application from Layout, Engines, Games to Deposits </p>
-                                </div>
-                            
-                                <img className='image_widget' src={casino}></img>
-                                <img className="landing_2_back" style={{left : '0%',  bottom : '-20%',width : '200%'}} src={back_2} />
+                            <div className='description'>
+                                <h4> Casino </h4>
+                                <p> A Casino Application from Layout, Engines, Games to Deposits </p>
                             </div>
+                        
+                            <img className='image_widget' src={casino}></img>
+                            <img className="landing_2_back" style={{left : '0%',  bottom : '-20%',width : '200%'}} src={back_2} />
                         </div>
                      </Col>
                      <Col md={6} lg={3}>

@@ -9,13 +9,6 @@ const laura = `${process.env.PUBLIC_URL}/img/team/laura.png`;
 
 export default [
     {
-        name : 'Lisa Rabbe',
-        position : 'Former Goldman Sachs',
-        image : lisa,
-        linkedin : linkedin,
-        linkedinurl : 'https://www.linkedin.com/in/lisarabbe/'
-    },
-    {
         name : 'Nuno Correia',
         position : 'CEO UTRUST',
         image : nuno,
@@ -48,6 +41,6 @@ export default [
         position : 'Marketing Advisor',
         image : laura,
         linkedin : linkedin,
-        linkedinurl : 'https://www.linkedin.com/in/laura-toma-59bb9a7//'
+        linkedinurl : 'https://www.linkedin.com/in/laura-toma-59bb9a7/'
     }
 ]
