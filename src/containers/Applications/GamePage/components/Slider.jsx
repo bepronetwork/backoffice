@@ -32,8 +32,9 @@ class SliderContainer extends React.Component{
 
 
     render = () => {
+        console.log(this.props.disabled, this.props.value)
         return (
-            <Slider disabled={this.props.disabled} min={0} max={20} value={this.props.value ? [this.props.value] : null} onChange={this.onChange}/>
+            <Slider disabled={this.props.disabled} min={0} max={20} value={this.props.value >= 0 ? [this.props.value] : null} onChange={this.onChange}/>
         )
     }
 };
