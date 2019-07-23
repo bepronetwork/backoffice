@@ -15,6 +15,7 @@ const twitter = `${process.env.PUBLIC_URL}/img/landing/twitter.png`;
 const nexo  = `${process.env.PUBLIC_URL}/img/landing/nexou.png`;
 const utrust = `${process.env.PUBLIC_URL}/img/landing/utrustu.png`;
 const matic = `${process.env.PUBLIC_URL}/img/landing/matic.png`;
+const ankr = `${process.env.PUBLIC_URL}/img/landing/ankr.png`;
 
 const Header = (props) => (
 	<div className="landing__header">
@@ -97,6 +98,11 @@ const Header = (props) => (
                     <Col lg={3}>
                         <a href={'https://nexo.io'} target={'__blank'}>
                             <img src={nexo}  style={{width : 100, marginTop : 30}} className='partner-icon'/>
+                        </a>
+                    </Col>
+                    <Col lg={3}>
+                        <a href={'https://https://www.ankr.com/'} target={'__blank'}>
+                            <img src={ankr}  style={{width : 100, marginTop : 30}} className='partner-icon'/>
                         </a>
                     </Col>
                 </Row> 
