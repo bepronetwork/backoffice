@@ -12,6 +12,7 @@ import store from './store';
 import ScrollToTop from './ScrollToTop';
 import { config as i18nextConfig } from '../../translations';
 import Web3 from 'web3';
+import { ETHEREUM_NET_DEFAULT } from '../../config/apiConfig';
     
 i18next.init(i18nextConfig);
 
@@ -60,18 +61,18 @@ class App extends Component {
                         console.log(error);
                 }); */
             } catch (error) {
-                global.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/'));
+                global.web3 = new Web3(new Web3.providers.HttpProvider(`https://${ETHEREUM_NET_DEFAULT}.infura.io/`));
                 // User denied account access...
             }
         }
         // Legacy dapp browsers...
         else if (window.web3) {
-            global.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/'));
+            global.web3 = new Web3(new Web3.providers.HttpProvider(`https://${ETHEREUM_NET_DEFAULT}.infura.io/`));
              // Acccounts always exposed
         }
         // Non-dapp browsers...
         else {
-            global.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/'));
+            global.web3 = new Web3(new Web3.providers.HttpProvider(`https://${ETHEREUM_NET_DEFAULT}.infura.io/`));
             console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
         }        
 

@@ -6,15 +6,47 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import DocsContainer from './components/DocsContainer';
 import BearerTokenTableApiKeys from './components/BearerTokenTableApiKeys';
-const Ava = `${process.env.PUBLIC_URL}/img/astronaur.png`;
+import TableKey from './components/TableKey';
 
-
+const defaultProps = {
+    platformAddress : 'N/A',
+    platformId : 'N/A',
+    tokenAddress : 'N/A',
+    apiKey : 'N/A',
+    authorizedAddress : 'N/A',
+    ownerAddress : 'N/A'
+}
 
 class DevelopersContainer extends React.Component{
 
     constructor(props){
         super(props)
+        this.state = defaultProps;
     }
+
+
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+    
+    projectData = (props) => {
+        let { profile } = props;
+        let app = profile.getApp();
+        
+        this.setState({...this.state, 
+            platformAddress : app.getInformation('platformAddress') ? app.getInformation('platformAddress') : defaultProps.platformAddress,
+            platformId  : app.getId(),
+            ownerAddress :  app.getInformation('ownerAddress') ? app.getInformation('ownerAddress') : defaultProps.ownerAddress,
+            authorizedAddress :  app.getInformation('authorizedAddress') ? app.getInformation('authorizedAddress') : defaultProps.authorizedAddress,
+            tokenAddress :  app.getInformation('platformTokenAddress') ? app.getInformation('platformTokenAddress') : defaultProps.tokenAddress,
+            apiKey : app.getBearerToken()
+        })
+    }
+
 
     generateBearerToken = async () => {
         try{
@@ -32,6 +64,8 @@ class DevelopersContainer extends React.Component{
     }
 
     render = () => {
+        const { platformId, platformAddress, apiKey, tokenAddress, ownerAddress, authorizedAddress} = this.state;
+
         return (
             
             <Container className="dashboard">
@@ -42,8 +76,27 @@ class DevelopersContainer extends React.Component{
                 </Row>
                 <Row>
                     <Col lg={12}>
-                        <BearerTokenTableApiKeys generateBearerToken={this.generateBearerToken} data={this.props.profile.getApp().getBearerToken()}/>           
-                    </Col>  
+                        <BearerTokenTableApiKeys generateBearerToken={this.generateBearerToken} data={apiKey}/>    
+                        <Row>
+                            <Col lg={4}>
+                                <TableKey type={'Platform Id'} value={platformId}/>                                  
+                            </Col>  
+                            <Col lg={4}>
+                                <TableKey type={'Platform Address'} value={platformAddress}/>  
+                            </Col>
+                            <Col lg={4}>
+                                <TableKey type={'Token Address'} value={tokenAddress}/>  
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col lg={6}>
+                                <TableKey type={'Croupier Authorized Address'} value={authorizedAddress}/>  
+                            </Col>
+                            <Col lg={6}>
+                                <TableKey type={'Owner Authorized Address'} value={ownerAddress}/>  
+                            </Col>
+                        </Row>
+                    </Col>
                 </Row>
           </Container>
         )

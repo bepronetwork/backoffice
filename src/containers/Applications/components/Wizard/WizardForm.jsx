@@ -9,20 +9,61 @@ import NotificationSystem from 'rc-notification';
 import { BasicNotification } from '../../../../shared/components/Notification';
 import WizardFormTwo from './WizardFormTwo';
 import { fromServicesToCodes } from '../../../../controllers/services/services';
+import _ from 'lodash';
+
 let notification = null;
+
+Object.filter = (obj, predicate) => 
+    Object.keys(obj)
+    .filter( key => predicate(obj[key]) )
+    .reduce( (res, key) => (res[key] = obj[key], res)
+, {} );
 
 const showNotification = (message) => {
 	notification.notice({
-		content: <BasicNotification
-			title="Your App was Not Created"
-			message={message}
-		/>,
+		content: 
+            <BasicNotification
+                title="Your App was Not Created"
+                message={message}
+            />,
 		duration: 5,
 		closable: true,
 		style: { top: 0, left: 'calc(100vw - 100%)' },
 		className: 'right-up',
 	});
 };
+
+
+const DEPLOYMENT_CONFIG = {
+    none        : {
+        isSet : true,
+        message : 'Ready for Deployment'
+    },
+    deployment  : {
+        isSet : false,
+        message : 'Smart-Contract Deployment being done...'
+    },
+    authorizing : {
+        isSet : false,
+        message : 'Authorizing the Address...'
+    },
+    choooseServices : {
+        isSet : false,
+        message : 'Alowing your Services..'
+    },
+}
+
+const defaultProps = {
+    page: 1,
+    blockchains : [],
+    currencies : [],
+    userMetamaskAddress : '0x',
+    authorizedAddress : '0x',
+    progress : 0,
+    deploymentConfig : DEPLOYMENT_CONFIG,
+    deploymentState : DEPLOYMENT_CONFIG['none'].message
+}
+
 
 class WizardForm extends PureComponent {
     static propTypes = {
@@ -31,13 +72,12 @@ class WizardForm extends PureComponent {
 
     constructor() {
         super();
-        this.state = {
-            page: 1,
-        };
+        this.state = defaultProps;
     }
 
     componentDidMount() {
         NotificationSystem.newInstance({}, n => notification = n);
+        this.projectData();
     }
 
     componentWillUnmount() {
@@ -48,10 +88,22 @@ class WizardForm extends PureComponent {
         showNotification(message)
     }
 
-    sendServices = async () => {
+    projectData = async () => {
+        const { profile } = this.props;
+        let app = profile.getApp();
+        let res = await app.getEcosystemVariables();
+        const { addresses, blockchains, currencies } = res.data.message;
+        this.setState({...this.state, 
+            blockchains,
+            authorizedAddress : addresses[0].address,
+            currencies
+        })
+
+    }
+
+    sendServices = async ({services}) => {
         try{
 
-            let services = fromServicesToCodes(this.props.widgets);
             let res = await this.props.profile.addServices(services);
             let{
                 status,
@@ -61,6 +113,75 @@ class WizardForm extends PureComponent {
             if(status != 200){throw res.data}
         }catch(err){
             // TO DO : Show notification Error
+        }
+    }
+
+
+    getProgress(args){
+        return (Object.keys(Object.filter(args, v => v.isSet)).length)/(Object.keys(args).length)*100;
+    }
+
+    getUpdateStateForProgress = ({deploymentConfig, state}) => {
+        let new_deploymentConfig = {
+            ...deploymentConfig, [state] : {
+                ...deploymentConfig[state],
+                isSet : true,
+            }
+        } 
+        let progress = this.getProgress(new_deploymentConfig);
+
+        this.setState({...this.state, 
+            deploymentState  : DEPLOYMENT_CONFIG[state].message,
+            deploymentConfig : new_deploymentConfig,
+            progress
+        });
+
+        return new_deploymentConfig;
+    }
+
+    deployApp = async () => {
+        try{
+            const { profile, appCreation } = this.props;
+            this.setState({...this.state, isLoading : true});
+            var { authorizedAddress, deploymentConfig } = this.state;
+            let user = !_.isEmpty(profile) ? profile : null ;
+            let metamaskAddress = user ? await user.getMetamaskAddress() : defaultProps.userMetamaskAddress;        
+
+            const { services, blockchain, currency } = appCreation;
+            /* 1 - Deploy the Smart-Contract */
+            let state = 'deployment';
+            deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig});
+
+            let params = {
+                tokenAddress : currency.address, 
+                decimals : currency.decimals,
+                authorizedAddress,
+                ownerAddress : metamaskAddress,
+                currencyTicker : currency.ticker, 
+                blockchainTicker : blockchain.ticker
+            }
+
+            let casino = await profile.deployPlatformContract(params);
+
+            /* 2 - Auth Address Croupier the Platform */
+            state = 'authorizing';
+            deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig})
+            await profile.authorizeAddressForCroupier({authorizedAddress, platformParams : {
+                ...params,
+                contractAddress : casino.getAddress()
+            }});
+            
+            
+            /* 3 - Update Service on the Platform */
+            state = 'choooseServices';
+            deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig})
+            await this.sendServices({services});
+
+            this.setState({...this.state, isLoading : false});
+        }catch(err){
+            console.log(err)
+            this.setState({...this.state, isLoading : false});
+
         }
     }
 
@@ -74,7 +195,7 @@ class WizardForm extends PureComponent {
 
     render() {
         const { onSubmit } = this.props;
-        const { page } = this.state;
+        const { page, isLoading } = this.state;
 
     return (
         <Row>
@@ -83,8 +204,8 @@ class WizardForm extends PureComponent {
                 <div className="wizard">
                     <div className="wizard__steps">
                         <div className={`wizard__step${page === 1 ? ' wizard__step--active' : ''}`}><p>Choose Integrations</p></div>
-                        <div className={`wizard__step${page === 2 ? ' wizard__step--active' : ''}`}><p>Chose Widgets</p></div>
-                        <div className={`wizard__step${page === 3 ? ' wizard__step--active' : ''}`}><p>Integrate</p></div>
+                        <div className={`wizard__step${page === 2 ? ' wizard__step--active' : ''}`}><p>Setup Platform</p></div>
+                        <div className={`wizard__step${page === 3 ? ' wizard__step--active' : ''}`}><p>Deploy</p></div>
                     </div>
                     <div className="wizard__form-wrapper">
                         {page === 1 && <WizardFormOne showNotification={this.showNotification}
@@ -94,10 +215,20 @@ class WizardForm extends PureComponent {
                         {page === 2 && <WizardFormTwo 
                             showNotification={this.showNotification} 
                             previousPage={this.previousPage}
+                            currencies={this.state.currencies}
+                            blockchains={this.state.blockchains}
                             handleSubmit={(e) => e.preventDefault()} {...this.props} 
                             onSubmit={this.nextPage}
                             />}
                         {page === 3 && <WizardFormThree 
+                            isLoading={isLoading}
+                            deployApp={this.deployApp}
+                            authorizedAddress={this.state.authorizedAddress}
+                            addresses={this.state.addresses}
+                            blockchains={this.state.blockchains}
+                            deploymentState={this.state.deploymentState}
+                            progress={this.state.progress}
+                            currencies={this.state.currencies}
                             showNotification={this.showNotification} 
                             previousPage={this.previousPage}
                             sendServices={this.sendServices}
@@ -115,7 +246,7 @@ class WizardForm extends PureComponent {
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        widgets: state.widgets
+        appCreation : state.appCreation
     };
 }
 

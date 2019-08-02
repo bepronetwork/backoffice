@@ -1,7 +1,8 @@
 import config from "./config";
 import Numbers from "../services/numbers";
+import { API_URL } from "../config/apiConfig";
 
-const URL = config.server.production;
+const URL = API_URL;
 
 class Connection {
 
@@ -126,6 +127,19 @@ class Connection {
                     "entity" : entity,
                     "currency" : currency
                 })
+            });
+
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getEcosystemVariables = async () => {
+        try{
+            let response = await fetch(URL+ `/api/ecosystem/all`, {
+                method : 'GET',
+                headers : addHeaders(config),
             });
 
             return response.json();
@@ -270,6 +284,23 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({
                     app, 
+                })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    addBlockchainInformation = async ({app, params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/addBlockchainInformation`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    app, 
+                    ...params
                 })
             });
             

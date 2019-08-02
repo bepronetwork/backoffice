@@ -32,7 +32,7 @@ class WizardFormOne extends PureComponent {
     createApp = async () => {
         try{
             
-            await this.props.profile.createApp({
+            let res = await this.props.profile.createApp({
                 ...this.state,
                 name : this.state.name,
                 description :  this.state.description,
@@ -43,6 +43,7 @@ class WizardFormOne extends PureComponent {
             });
             this.props.history.push('/home')
         }catch(err){
+            console.log(err);
             this.props.showNotification(err.message);
         }
     }
@@ -79,23 +80,6 @@ class WizardFormOne extends PureComponent {
                                     placeholder="A Great Casino Platform for Risk Users"
                                     changeContent={this.changeContent}
                                 />
-                                <TextInput
-                                    icon={BusinessIcon}
-                                    name="market"
-                                    type="text"
-                                    placeholder="Casino"
-                                    label="Market"
-                                    changeContent={this.changeContent}
-                                />
-                                <TextInput
-                                    icon={MediaNetworkIcon}
-                                    name="website"
-                                    label="Website"
-                                    type="text"
-                                    placeholder="https://www.risk.you"
-                                    changeContent={this.changeContent}
-                                />
-                                
                             </div>
                     
                             <div className="account__btns">

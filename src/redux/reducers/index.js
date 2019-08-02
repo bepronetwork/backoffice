@@ -4,16 +4,18 @@ import cryptoTableReducer from './cryptoTableReducer';
 import newOrderTableReducer from './newOrderTableReducer';
 import customizerReducer from './customizerReducer';
 import profileReducer from './profileReducer';
-import widgetsReducer from './widgetsReducer';
+import appCreationReducer from './appCreationReducer';
 import gameReducer from './gameReducer';
+import messageContainerReducer from './messageContainerReducer';
 
 export {
     themeReducer,
     sidebarReducer,
     cryptoTableReducer,
+    messageContainerReducer,
     gameReducer,
     newOrderTableReducer,
     customizerReducer,
     profileReducer,
-    widgetsReducer
+    appCreationReducer
 };

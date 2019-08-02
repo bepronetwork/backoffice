@@ -4,9 +4,10 @@ import {
   cryptoTableReducer,
   newOrderTableReducer,
   sidebarReducer,
-  widgetsReducer,
+  appCreationReducer,
   themeReducer,
   profileReducer,
+  messageContainerReducer,
   gameReducer,
   customizerReducer,
 } from '../../redux/reducers/index';
@@ -18,10 +19,11 @@ const reducer = combineReducers({
     sidebar: sidebarReducer,
     cryptoTable: cryptoTableReducer,
     game : gameReducer,
+    message : messageContainerReducer,
     newOrder: newOrderTableReducer,
     customizer: customizerReducer,
     profile  : profileReducer,
-    widgets : widgetsReducer
+    appCreation : appCreationReducer
 });
 const store = createStore(reducer);
 

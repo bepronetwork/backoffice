@@ -1,3 +1,5 @@
+import ERC20TokenContract from "../controllers/ERC20Contract";
+
 async function enableMetamask(currency) {
     const { ethereum } = window;
   
@@ -20,4 +22,14 @@ async function getMetamaskAddress ()  {
 }
 
 
-export { enableMetamask, getMetamaskAddress };
+async function getERC20Contract(tokenAddress){
+
+    let erc20Contract = new ERC20TokenContract({
+        contractAddress : tokenAddress
+    })
+
+    erc20Contract.__assert();
+
+    return erc20Contract;
+}
+export { enableMetamask, getMetamaskAddress, getERC20Contract };

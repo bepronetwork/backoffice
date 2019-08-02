@@ -24,26 +24,40 @@ class NoDataContainer extends PureComponent {
     goToDeveloperTools = () => {
         this.props.history.push('/developers')
     }
+
     goToWallet = () => {
         this.props.history.push('/wallet')
+    }
+
+    goToApplication = () => {
+        this.props.history.push('/application')
     }
 
     getProgress(...args){
         return (args.filter(v => v).length)/args.length*100;
     }
 
+    componentDidMount(){
+        this.projectData(this.props);
+    }
+
     componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+
+    projectData(props){
 
         const app = props.app;
 
         let 
         hasBearerToken      =  !_.isUndefined(app.getBearerToken()),
-        isConnected         =  !_.isUndefined(app.isConnected()),
-        hasPaybearToken     =  !_.isUndefined(app.hasPaybearToken());
+        isConnected         =  app.isConnected(),
+        isDeployed          =  !_.isUndefined(app.isDeployed());
 
-        let progress = this.getProgress(hasBearerToken, isConnected, hasPaybearToken)
-        this.setState({...this.state, progress, hasBearerToken, isConnected, hasPaybearToken});
+        let progress = this.getProgress(hasBearerToken, isConnected, isDeployed)
+        this.setState({...this.state, progress, hasBearerToken, isConnected, isDeployed});
     }
+
 
     render() {
 
@@ -64,7 +78,6 @@ class NoDataContainer extends PureComponent {
                                             <h4 style={{marginTop : 20, marginBottom : 40}} className={"dashboard__total-stat"}>
                                                 {parseInt(this.state.progress)}% Progress Until Starting your Betting Application!
                                             </h4>
-
                                             <div className="progress-wrap">
                                                 <Progress value={this.state.progress} style={{width : 100}} />
                                             </div>                                        
@@ -75,13 +88,13 @@ class NoDataContainer extends PureComponent {
                                                 </button>
                                             </Col>
                                             <Col lg={12}>
-                                                <button disabled={this.state.hasPaybearToken} style={{margin : 'auto', marginBottom  : 30,  maxWidth : 400}} className="btn btn-primary account__btn" onClick={() => this.goToWallet()} > 
-                                                    Create a Paybear Account and Connect API
+                                                <button disabled={this.state.isDeployed} style={{margin : 'auto', marginBottom  : 30,  maxWidth : 400}} className="btn btn-primary account__btn" onClick={() => this.goToApplication()} > 
+                                                    Deploy your Platform
                                                 </button>
                                             </Col>
                                             <Col lg={12}>
-                                                <button disabled={this.state.isConnected} style={{margin : 'auto', marginBottom  : 30,  maxWidth : 400}} className="btn btn-primary account__btn" onClick={() => this.goToDeveloperTools()} > 
-                                                    Connect your Platform
+                                                <button disabled={this.state.isConnected} style={{margin : 'auto', marginBottom  : 30,  maxWidth : 400}} className="btn btn-primary account__btn" > 
+                                                    Contact BetProtocol Team..
                                                 </button>
                                             </Col>
                                         </Row>

@@ -35,12 +35,9 @@ class CasinoProtocolStates{
      */
 
     async __init__(){
-        console.log("\nUser Address : " + self.clientAccount.getAddress());
-        console.log("\Contract Creator Address : " + self.account.getAddress());
 
         let contractDepolyed = await this.deploy();
         await this.sendTokensToCasinoContract();
-        console.log(self.account.getAddress())
         await this.authorize(self.account.getAddress());
         
         /*1 - Platform Provides
@@ -78,8 +75,6 @@ class CasinoProtocolStates{
     }
 
     sendTokensToCasinoContract = async () => {
-        console.log(self.erc20TokenContract);
-        console.log(self.contractAddress);
         try{
             let data = await self.erc20TokenContract.getContract().methods.transfer(
                 self.contractAddress,

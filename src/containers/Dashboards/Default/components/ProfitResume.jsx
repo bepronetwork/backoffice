@@ -31,7 +31,7 @@ class ProfitResume extends PureComponent {
 
     projectData = (props) => {
         let data = props.data;
-        if(data.wallet.data.blockchain){
+        if(data.wallet.data && data.wallet.data.blockchain){
             this.setState({...this.state, 
                 profit : data.revenue.data ? DashboardMapperSingleton.toDateProfit(data.revenue.data) : defaultProps.profit,
                 ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,

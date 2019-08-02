@@ -8,30 +8,27 @@ class contract{
         this.contract = new params.web3.eth.Contract(params.contract.abi, params.address)
     }
 
-    async deploy(account, abi, byteCode, args=[]){
-        this.contract = new this.web3.eth.Contract(abi);
-
-        let balance = await this.web3.eth.getBalance(account.address);
-        console.log("Balance is " + this.web3.utils.fromWei(balance, 'ether') + " ETH");
-        let data = this.contract.deploy({
-            data : byteCode,
-            arguments: args
-        }).encodeABI();
-
-        let tx = {
-            data : data,
-            from  : account.address,
-            gas : 5913388
-        }
+    async deploy(address, abi, byteCode, args=[]){
         
-        let result = await account.signTransaction(tx);
-        let transaction = await this.web3.eth.sendSignedTransaction(result.rawTransaction);
-        console.log("Contract Signed");
-        //fs.writeFile('Deployed.json', JSON.stringify(transaction), 'utf8', () => {});
+        this.contract = new this.web3.eth.Contract(abi);
+        let transaction = await new Promise ( (resolve, reject) => {
+            this.contract.deploy({
+                data : byteCode,
+                arguments: args
+            }).send({
+                from: address,
+                gasPrice : 20000000000,
+                gas : 4000000
+            })
+            .on('receipt', (receipt) => {
+                resolve(receipt)
+             })
+            .on('error', () => {reject("Transaction Error")})
+        })
         this.address = transaction.contractAddress;
         return transaction;
     }
-
+    
     async use(contract_json, address){
         this.json = contract_json;      
         this.abi = contract_json.abi;
@@ -64,6 +61,10 @@ class contract{
 
     getJSON(){
         return this.json;
+    }
+
+    setAddress(address){
+        this.address = address;
     }
 
     getAddress(){

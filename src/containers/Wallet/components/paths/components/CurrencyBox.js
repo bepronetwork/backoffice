@@ -12,6 +12,7 @@ import { compose } from 'lodash/fp'
 import ReciptBox from './ReciptBox';
 import TextInput from '../../../../../shared/components/TextInput';
 import Numbers from '../../../../../services/numbers';
+import { ETHEREUM_NET_DEFAULT } from '../../../../../config/apiConfig';
 const Ava = `${process.env.PUBLIC_URL}/img/ethereum.png`;
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -104,7 +105,7 @@ class CurrencyBox extends PureComponent {
             ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
             platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
-            platformAddressLink : 'https://rinkeby.etherscan.io/token/' + data.blockchain.tokenAddress,
+            platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + data.blockchain.tokenAddress,
             tokenAddress :  tokenAddress,
             tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
 

@@ -10,7 +10,7 @@ import Numbers from "../services/numbers";
 let self;
 
 class CasinoContract{
-    constructor({contractAddress, tokenAddress, decimals}){
+    constructor({contractAddress, tokenAddress, decimals, authorizedAddress}){
         self = {
             contract : 
             new Contract({
@@ -23,7 +23,8 @@ class CasinoContract{
                 web3 : global.web3,
                 contractAddress : tokenAddress
             }),
-            decimals
+            decimals,
+            authorizedAddress
         }
     }
 
@@ -32,14 +33,31 @@ class CasinoContract{
      */
 
     async __init__(){
-        console.log("\Contract Creator Address : " + self.account.getAddress());
         let contractDepolyed = await this.deploy();
-        console.log("\nContract Address " + contractDepolyed)
-        await this.sendTokensToCasinoContract(self.tokenTransferAmount || 1000000);
-        await this.authorize(self.account.getAddress());
         this.__assert(contractDepolyed);
         return this;
     }
+
+
+    async authorize(addr=self.authorized){
+        try{
+            let accounts = await window.web3.eth.getAccounts();
+            return new Promise ( (resolve, reject) => {
+                self.contract.getContract().methods.authorize(
+                    addr                 
+                ).send({from : accounts[0]})
+                .on('transactionHash', (hash) => {
+                })
+                .on('confirmation', (confirmations, receipt) => {
+                    resolve(receipt)
+                })
+                .on('error', () => {reject("Transaction Error")})
+            })          
+        }catch(err){
+            console.log(err);
+        }   
+    }
+
 
     __assert(){
         self.contract.use(
@@ -52,30 +70,30 @@ class CasinoContract{
      */
 
   
-    sendTokensToCasinoContract = async () => {
+    sendTokensToCasinoContract = async ({amount}) => {
         try{
-            console.log("Sending Tokens...")
-            let data = await self.erc20TokenContract.getContract().methods.transfer(
-                self.contractAddress,
-                100
-            ).encodeABI();
-            await self.erc20TokenContract.getABI().send(self.account.getAccount(), data);
-            console.log("Tokens Sent...");
-            return self.erc20TokenContract;
-          
+            let accounts = await window.web3.eth.getAccounts();
+            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
+
+            return new Promise ( (resolve, reject) => {
+                self.erc20TokenContract.getContract().methods.transfer(
+                    self.contractAddress,
+                    amountWithDecimals
+                ).send({from : accounts[0]})
+                .on('transactionHash', (hash) => {
+                })
+                .on('confirmation', (confirmations, receipt) => {
+                    resolve(receipt)
+                })
+                .on('error', () => {reject("Transaction Error")})
+            })          
         }catch(err){
             console.log(err);
         }   
     }
     
     async start(){
-        let balance = await self.account.getBalance();
-        console.log(balance + " ETH");
-        try{
-            console.log(await self.contract.getContract().methods.balanceOf(self.account.getAddress()).call());  
-        }catch(err){
-            console.log(err);
-        }
+       
     }
 
     async updateState(signedMessageObject, nonce, tokenAmount, winBalance, category, chargeGas){
@@ -240,25 +258,27 @@ class CasinoContract{
      */
 
     async deploy(){
-        console.log("Deploying...");
+        let accounts = await window.web3.eth.getAccounts();
+
         let params = [
-            self.erc20TokenContract.getAddress(),  // Predecessor Contract
-            self.erc20TokenContract.getAddress(),  // ERC-20 Token Contract
-            100,                      // Deposit Limit
-            1                         // K Gas Price
+            self.erc20TokenContract.getAddress(),   // Predecessor Contract
+            self.erc20TokenContract.getAddress(),   // ERC-20 Token Contract
+            100,                                    // Deposit Limit
+            1                                       // K Gas Price
         ];
 
         let res = await self.contract.deploy(
-            self.account.getAccount(), 
+            accounts[0],
             self.contract.getABI(), 
             self.contract.getJSON().bytecode, 
             params);
+        self.contract.setAddress(res.contractAddress);
         self.contractAddress = res.contractAddress;
         return res;
     }
 
     getAddress(){
-        return self.contract.getAddress();
+        return self.contractAddress || self.contract.getAddress();
     }
 
 }

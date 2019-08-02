@@ -4,9 +4,10 @@ import { setProfileInfo } from "../redux/actions/profile";
 import App from "./App";
 import Cache from "../services/cache";
 import Security from "./Security";
-import { enableMetamask } from "../lib/metamask";
+import { enableMetamask, getERC20Contract } from "../lib/metamask";
 import { getNonce } from "../lib/number";
 import { processResponse } from "../lib/errors";
+import CasinoContract from "./CasinoContract";
 
 class Account{    
     constructor(params=null){
@@ -75,6 +76,7 @@ class Account{
                 this.saveToCache(this.params);
                 /* SET APP */
                 // If App Already Exists for this User
+                console.log(data)
                 if(data.app.id){
                     this.setApp(data.app);
                      /* GET APP Stats */
@@ -223,7 +225,7 @@ class Account{
         this.timer = setInterval(
             () => {
             this.getData();
-        }, 2000);
+        }, 10000);
     }
 
     getDepositReference = async (params) => {
@@ -289,6 +291,56 @@ class Account{
     withdraw = async (params) => {
         try{
             return await this.getApp().withdraw(params);
+        }catch(err){
+            throw err;
+        }
+    }
+
+    authorizeAddressForCroupier = async ({authorizedAddress, platformParams}) => {
+        try{    
+            var platform;
+            if(!this.platform){
+                platform = this.platform;
+            }else{
+                platform = new CasinoContract(platformParams)
+            }
+
+            platform.__assert();
+
+            return await platform.authorize(authorizedAddress);
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    deployPlatformContract = async ({decimals, tokenAddress, currencyTicker, blockchainTicker, authorizedAddress, ownerAddress}) => {
+        try{
+
+
+            
+            let platform = new CasinoContract({
+                tokenAddress, 
+                decimals : decimals,
+                authorizedAddress
+            })
+
+            await platform.__init__();
+            
+            let params = {
+                platformAddress : platform.getAddress(),
+                decimals : decimals,
+                authorizedAddress,
+                address  : ownerAddress,
+                currencyTicker : currencyTicker,
+                platformTokenAddress : tokenAddress,
+                platformBlockchain : blockchainTicker
+            }
+            
+            this.platform = platform;
+            await this.getApp().addBlockchainInformation(params);
+
+            return platform;
         }catch(err){
             throw err;
         }

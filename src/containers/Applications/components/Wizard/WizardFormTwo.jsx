@@ -5,48 +5,118 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import store from '../../../App/store';
-import { setWidgetData } from '../../../../redux/actions/widgets';
-const bitcoin = `${process.env.PUBLIC_URL}/img/bitcoin.png`;
-const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
+import { AddressMarkerIcon, BitcoinIcon, Number1BoxOutlineIcon, DirectionsIcon } from 'mdi-react';
+import { AddressConcat } from '../../../../lib/string';
+import _ from 'lodash';
+import { setAppCreationInfo } from '../../../../redux/actions/appCreation';
+import appCreationConfig from '../../../../config/appCreation';
+import { ETHEREUM_NET_DEFAULT } from '../../../../config/apiConfig';
 
 class WizardFormTwo extends React.Component{
-    constructor(props){super(props)}
+    constructor(props){super(props); this.state = {}}
 
-    setWidget = (key) => {
-        store.dispatch(setWidgetData(key));
+    setWidget = ({key, value}) => {
+        store.dispatch(setAppCreationInfo({key, value}));
     }
-    
+
+  
+
+    currencyBox = (object) => {
+        const { type, ticker, image, address, decimals } = object;
+        const { appCreation } = this.props;
+        let isSet = (appCreation[`${type.toLowerCase()}`] && (appCreation[`${type.toLowerCase()}`].ticker == ticker));
+
+        return (
+            <button className='clean_button' onClick={ () => this.setWidget({key : `${type.toLowerCase()}`, value : object})}>
+                <Card>
+                    {isSet ? <div> <h5 className={`widget__use__big`} style={{marginTop : -40}}> Integrate </h5></div> : null}
+                    <div className='landing__product__widget__small'>
+                        <div className='description'>
+                            <h4> {type}</h4>
+                            <p> {ticker} </p>
+                            <a target={'__blank'} className='ethereum-address-a' href={`https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/${address}`}>
+                                <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address'/>
+                                    {AddressConcat(address)}
+                                </p>
+                            </a>
+                            <span> {decimals} Decimals </span>
+                        </div>
+                        <img className='image_widget' src={image}></img>
+                    </div>
+                </Card>
+            </button>
+        )
+    }
+
+    blockchainBox = (object) => {
+        const { type, ticker, image, name } = object;
+        const { appCreation } = this.props;
+        let isSet = (appCreation[`${type.toLowerCase()}`] && (appCreation[`${type.toLowerCase()}`].ticker == ticker));
+
+        return (
+            <button className='clean_button' onClick={ () => this.setWidget({key : `${type.toLowerCase()}`, value : object})}>
+                <Card>
+                    {isSet ? <div> <h5 className={`widget__use__big`} style={{marginTop : -40}}> Integrate </h5></div> : null}
+                    <div className='landing__product__widget__small'>
+                        <div className='description'>
+                            <h4> {type}</h4>
+                            <p> {name} </p>
+                        </div>
+                        <img className='image_widget' src={image}></img>
+                    </div>
+                </Card>
+            </button>
+        )
+    }
+
 
     render = () => {
-        let {
-            crypto
-        } = this.props.widgets;
+        const { blockchains, currencies } = this.props;
 
         return(
             <div style={{width : '80%'}}>
-                <div className="dashboard__visitors-chart" >
-                    <h3 className="dashboard__visitors-chart-title" style={{marginTop : 30, textAlign : 'center'}}> Full Integrations </h3>
-                </div>
-				<Row>                            
+                <Row>                            
                     <Col md={12} xl={12} lg={12} xs={12}>
                         <Card>
-                            <Row>  
-                                <Col>
-                                    <button className='button__widget' onClick={() => this.setWidget('crypto')}>
-                                        {crypto ? <div> <h5 className={`widget__use__big`}> Widget </h5></div> : null}
-
-                                        <div className='landing__product__widget available'>
-                                            <div className='description'>
-                                                <h4> CryptoCurrency </h4>
-                                                <p> Accept Multiple CryptoCurrencies for your Platform </p>
-                                            </div>
-                                            <h2 style={{marginTop : 30}}> 0,5% <h5>Per Transaction</h5></h2>
-                                            <img className='image_widget' src={bitcoin}></img>
-                                            <img className="landing_2_back" style={{left : '0%',  bottom : '-20%',width : '200%'}} src={back_2} />
-                                        </div>
-                                    </button>
-                                </Col>
-                            </Row>
+                            <Container>   
+                                <h4>
+                                    Blockchain Platform
+                                </h4>
+                                <Row>
+                                    {blockchains.map( (token) => {
+                                        let image = appCreationConfig['blockchains'][new String(token.ticker).toLowerCase()].image;
+                                        if(!image){return null}
+                                        return (
+                                            <Col lg={4}>
+                                                {this.blockchainBox({type : 'Blockchain', ticker : token.ticker, name : token.name, image : image})}
+                                            </Col>
+                                        )
+                                    })}
+                                </Row>
+                            </Container>
+                        </Card>
+                    </Col>                
+                </Row>
+                <Row>                            
+                    <Col md={12} xl={12} lg={12} xs={12}>
+                        <Card>
+                            <Container>   
+                                <h4>
+                                    Currency
+                                </h4>
+                                <Row>
+                                    {currencies.map( (token) => {
+                                        let image = appCreationConfig['currencies'][new String(token.ticker).toLowerCase()].image;
+                                        if(!image){return null}
+                                        return (
+                                            <Col lg={4}>
+                                                {this.currencyBox({type : 'Currency', ticker : token.ticker, address : token.address, decimals : token.decimals, image : image})}
+                                            </Col>
+                                        )
+                                    })}
+                                    
+                                </Row>
+                            </Container>
                         </Card>
                     </Col>                
                 </Row>
@@ -62,7 +132,7 @@ class WizardFormTwo extends React.Component{
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        widgets: state.widgets
+        appCreation: state.appCreation
     };
 }
 

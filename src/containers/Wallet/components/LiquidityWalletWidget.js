@@ -7,6 +7,7 @@ import { ArrowDownIcon, ArrowCollapseDownIcon,  DirectionsIcon } from 'mdi-react
 import { InformationIcon } from 'mdi-react';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
+import { ETHEREUM_NET_DEFAULT } from '../../../config/apiConfig';
 const Ava = `${process.env.PUBLIC_URL}/img/euro.png`;
 
 
@@ -45,7 +46,7 @@ class LiquidityWalletWidget extends PureComponent {
                 totalDecentralizedLiquidity :  appData.blockchain.decentralized.totalLiquidity ? appData.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
                 ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
                 platformBlockchain : data.app.getInformation('platformBlockchain') ? data.app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
-                platformAddressLink : 'https://rinkeby.etherscan.io/token/' + data.wallet.data.blockchain.tokenAddress,
+                platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + data.wallet.data.blockchain.tokenAddress,
                 tokenAddress :  `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`,
                 isIntegrated : true
             })

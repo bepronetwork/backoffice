@@ -209,7 +209,11 @@ class App{
     }
 
     isConnected(){
-        return this.params.isConnected;
+        return this.params.isValid;
+    }
+
+    isDeployed(){
+        return this.params.platformAddress;
     }
 
     hasPaybearToken(){
@@ -397,6 +401,14 @@ class App{
         }
     }
 
+    getEcosystemVariables = async () => {
+        try{
+            return await ConnectionSingleton.getEcosystemVariables();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editEdge = async ({game, edge}) => {
         try{
             return await ConnectionSingleton.editEdge({               
@@ -447,10 +459,24 @@ class App{
 
     getManagerAddress = () => this.params.address;
 
+    
     async cancelWithdrawSC({currency}){
         try{
             await this.enableMetamask(currency);
             return await this.casinoContract.cancelWithdraw();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    addBlockchainInformation = async (params) => {
+        try{
+            return await ConnectionSingleton.addBlockchainInformation({               
+                app : this.getId(),
+                params,
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
         }catch(err){
             throw err;
         }

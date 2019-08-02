@@ -36,6 +36,7 @@ class WalletContainer extends React.Component{
                     </Col>
                    
                 </Row>
+                   {/*  
                 <Row>
                     <Col lg={3}>
                         <WalletInfo app={this.props.profile.getApp()}/>
@@ -43,17 +44,18 @@ class WalletContainer extends React.Component{
                 </Row> 
                 <Row>
                     <Col lg={5}>
-                        <PaybearWidget data={this.props.profile.getApp().hasPaybearToken()}/>
+                     <PaybearWidget data={this.props.profile.getApp().hasPaybearToken()}/>
                     </Col>
-                    {/* 
+                
                         <Col lg={5}>
                             <EURWalletWidget data={this.props.profile.getApp().getSummaryData('wallet')}/>
                         </Col>
                         <Col lg={5}>
                             <ETHWalletWidget data={this.props.profile.getApp().getSummaryData('wallet')}/>
                         </Col>
-                    */}
+                 
                 </Row>
+            */}
           </Container>
         )
     }

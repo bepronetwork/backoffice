@@ -27,7 +27,7 @@ class DefaultDashboard extends React.Component{
     render = () => {
         let data = this.props.profile.hasAppStats('revenue');
         let hasData = data && !_.isEmpty(data.data);
-                
+                        
         return (
             <Container className="dashboard">   
                 <Row>

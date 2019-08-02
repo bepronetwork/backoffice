@@ -22,8 +22,8 @@ const defaultProps = {
 }
 
 const text = {
-    false : 'Address not valid',
-    true : 'You are running in your address'
+    false : 'This Address can´t make decisions in this App, Please change to the right Address',
+    true : 'You are running in your address, you can make changes :)'
 }
 
 class Topbar extends React.Component {
@@ -51,10 +51,12 @@ class Topbar extends React.Component {
         let user = !_.isEmpty(props.profile) ? props.profile : null ;
         let metamaksAddress = user ? await user.getMetamaskAddress() : defaultProps.userMetamaskAddress;
         if(user){
+            let ownerAddress = user.getApp().getInformation('ownerAddress');
+            console.log(ownerAddress)
             this.setState({...this.state, 
-                userAddress : user.getAddress() ? AddressConcat(user.getAddress()) : defaultProps.userAddress,
+                userAddress :  ownerAddress ? AddressConcat(ownerAddress) : defaultProps.userAddress,
                 userMetamaskAddress : user ? AddressConcat(metamaksAddress) : defaultProps.userMetamaskAddress,
-                isValid : user ? new String(user.getAddress()).toLowerCase() == new String(metamaksAddress).toLowerCase() :  defaultProps.isValid     
+                isValid : user ? new String(ownerAddress).toLowerCase() == new String(metamaksAddress).toLowerCase() :  defaultProps.isValid     
             })
         }
         

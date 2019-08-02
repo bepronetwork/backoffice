@@ -30,7 +30,7 @@ class TurnoverResume extends PureComponent {
     
     projectData = (props) => {
         let data = props.data;
-        if(data.wallet.data.blockchain){
+        if(data.wallet.data && data.wallet.data.blockchain){
             this.setState({...this.state, 
                 turnover : data.revenue.data ? DashboardMapperSingleton.toDateRevenue(data.revenue.data) : defaultProps.turnover,
                 ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
