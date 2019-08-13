@@ -9,7 +9,7 @@ export const API_URL_GLOBAL = process.env.REACT_APP_API_GLOBAL;
 
 export const API_URL_LOCAL = process.env.REACT_APP_API_LOCAL;
 
-export const API_URL = (IS_PRODUCTION == true) ? API_URL_GLOBAL : API_URL_LOCAL;
+export const API_URL = (IS_PRODUCTION == 'true') ? API_URL_GLOBAL : API_URL_LOCAL;
 
 export async function processResponse(response){
     try{
