@@ -3,7 +3,6 @@ import store from "../containers/App/store";
 import { setProfileInfo } from "../redux/actions/profile";
 import CasinoContract from "./CasinoContract";
 import ERC20TokenContract from "./ERC20Contract";
-import Web3 from 'web3';
 import CryptographySingleton from "../services/security/Cryptography";
 import codes from "../config/codes";
 import Numbers from "../services/numbers";
@@ -18,26 +17,34 @@ class App{
     }
 
     getSummary = async () => {
+                // grab current state
+        const state = store.getState();
+        const { periodicity } = state;
+
         try{
             let res = await Promise.all([
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'USERS',
+                    periodicity,
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'GAMES',
+                    periodicity,
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'BETS',
+                    periodicity,
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'REVENUE',
+                    periodicity,
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
@@ -268,7 +275,6 @@ class App{
                 amount,
                 transactionHash
             });
-            console.log(res);
             let {
                 message,
                 status
@@ -436,6 +442,78 @@ class App{
         }
     }
 
+    getMaxDeposit = async () => {
+        try{
+            return await this.casinoContract.getMaxDeposit();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getMaxWithdrawal = async () => {
+        try{
+            return await this.casinoContract.getMaxWithdrawal();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    isPaused = async () => {
+        try{
+            return await this.casinoContract.isPaused();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getWithdrawalTimeLimit = async () => {
+        try{
+            return await this.casinoContract.getWithdrawalTimeLimit();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    pauseContract = async () => {
+        try{
+            return await this.casinoContract.pauseContract();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    unpauseContract = async () => {
+        try{
+            return await this.casinoContract.unpauseContract();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    changeMaxDeposit = async ({amount}) => {
+        try{
+            return await this.casinoContract.changeMaxDeposit({amount});
+        }catch(err){
+            throw err;
+        }
+    }
+
+
+    changeMaxWithdrawal = async ({amount}) => {
+        try{
+            return await this.casinoContract.changeMaxWithdrawal({amount});
+        }catch(err){
+            throw err;
+        }
+    }
+
+    changeWithdrawalTimeLimit = async ({amount}) => {
+        try{
+            return await this.casinoContract.changeWithdrawalTimeLimit({amount});
+        }catch(err){
+            throw err;
+        }
+    }
   
     getSummaryData(type){
         return {
@@ -458,16 +536,6 @@ class App{
     }
 
     getManagerAddress = () => this.params.address;
-
-    
-    async cancelWithdrawSC({currency}){
-        try{
-            await this.enableMetamask(currency);
-            return await this.casinoContract.cancelWithdraw();
-        }catch(err){
-            throw err;
-        }
-    }
 
     addBlockchainInformation = async (params) => {
         try{

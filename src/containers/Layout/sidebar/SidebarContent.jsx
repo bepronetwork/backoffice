@@ -23,8 +23,13 @@ class SidebarContent extends Component {
             transactions : true,
             wallet : true,
             affiliates : true,
+            settings : true,
             developers : true
         }
+    }
+
+    componentDidMount(){
+        this.getData(this.props);
     }
 
     hideSidebar = () => {
@@ -32,10 +37,12 @@ class SidebarContent extends Component {
     };
 
     componentWillReceiveProps(props){
-        this.getData(props)
+        this.getData(props);
     }
 
     hasData = (summary) => summary && !_.isEmpty(summary.data);
+
+    hasInfo = data => data ? true : false ;
 
     getData = (props) => {
         let newState = {
@@ -44,6 +51,7 @@ class SidebarContent extends Component {
             users       : this.hasData(props.profile.hasAppStats('users')),
             stats       : this.hasData(props.profile.hasAppStats('revenue')),
             wallet      : this.hasData(props.profile.hasAppStats('wallet')),
+            settings    : this.hasInfo(props.profile.getApp().isDeployed()),
             affiliates  : this.hasData(props.profile.hasAppStats('affiliates')),
             transactions: this.hasData(props.profile.hasAppStats('transactions')),
             developers  : true
@@ -62,6 +70,7 @@ class SidebarContent extends Component {
                     <SidebarLink disabled={!this.state.stats} title="Stats" icon="chart-bars" route="/stats" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.wallet} title="Wallet" icon="store" route="/wallet" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.affiliates} title="Affiliates" icon="gift" route="/affiliates" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.settings} title="Settings" icon="cog" route="/settings" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.developers} title="Developers" icon="code" route="/developers" onClick={this.hideSidebar} />
                 </ul>
                 <ul className="sidebar__block">

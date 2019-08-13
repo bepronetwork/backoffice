@@ -6,7 +6,7 @@ import { compose } from 'lodash/fp'
 import PropTypes from 'prop-types';
 import { ApplicationIcon, DesktopMacDashboardIcon, BusinessIcon, CheckboxMultipleBlankCircleIcon, MediaNetworkIcon } from 'mdi-react';
 import TextInput from '../../../../shared/components/TextInput';
-const Back = `${process.env.PUBLIC_URL}/img/background-login.png`;
+const Back = `${process.env.PUBLIC_URL}/img/dashboard/background-login.png`;
 
 
 class WizardFormOne extends PureComponent {

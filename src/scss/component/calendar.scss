@@ -1,5 +1,10 @@
 @import '~react-big-calendar/lib/css/react-big-calendar.css';
 
+.panel-empty{
+    position: relative;
+    padding: 30px 35px 50px 30px;
+  }
+  
 .calendar {
   height: 600px;
 

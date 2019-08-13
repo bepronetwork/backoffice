@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import ReciptBox from './ReciptBox';
-const Ava = `${process.env.PUBLIC_URL}/img/ethereum.png`;
+const Ava = `${process.env.PUBLIC_URL}/img/dashboard/ethereum.png`;
 
 class AllCurrencyBox extends PureComponent {
  

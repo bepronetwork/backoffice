@@ -76,12 +76,11 @@ class Account{
                 this.saveToCache(this.params);
                 /* SET APP */
                 // If App Already Exists for this User
-                console.log(data)
                 if(data.app.id){
                     this.setApp(data.app);
-                     /* GET APP Stats */
+                    /* GET APP Stats */
                     await this.getData();
-                     // Set Timer
+                    // Set Timer
                     this.setTimer();
                 }
                 this.update()
@@ -279,14 +278,6 @@ class Account{
         }
     }
 
-    cancelWithdrawSC = async (params) => {
-        try{
-            return await this.getApp().cancelWithdrawSC(params);
-        }catch(err){
-            throw err;
-        }
-    }
-
 
     withdraw = async (params) => {
         try{
@@ -316,11 +307,9 @@ class Account{
 
     deployPlatformContract = async ({decimals, tokenAddress, currencyTicker, blockchainTicker, authorizedAddress, ownerAddress}) => {
         try{
-
-
-            
             let platform = new CasinoContract({
                 tokenAddress, 
+                ownerAddress,
                 decimals : decimals,
                 authorizedAddress
             })

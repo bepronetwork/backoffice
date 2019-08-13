@@ -9,6 +9,7 @@ import {
   profileReducer,
   messageContainerReducer,
   gameReducer,
+  periodicityReducer,
   customizerReducer,
 } from '../../redux/reducers/index';
 
@@ -22,6 +23,7 @@ const reducer = combineReducers({
     message : messageContainerReducer,
     newOrder: newOrderTableReducer,
     customizer: customizerReducer,
+    periodicity : periodicityReducer,
     profile  : profileReducer,
     appCreation : appCreationReducer
 });

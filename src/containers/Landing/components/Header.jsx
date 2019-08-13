@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TextInput from '../../../shared/components/TextInput';
 import { EmailIcon } from 'mdi-react';
-const back = `${process.env.PUBLIC_URL}/img/front.png`;
+const back = `${process.env.PUBLIC_URL}/img/landing/front.png`;
 const games = `${process.env.PUBLIC_URL}/img/widgets/games.png`;
 const stats = `${process.env.PUBLIC_URL}/img/widgets/stats.png`;
 const ggr = `${process.env.PUBLIC_URL}/img/widgets/ggr.png`;

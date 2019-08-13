@@ -6,7 +6,7 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-const Ava = `${process.env.PUBLIC_URL}/img/astronaur.png`;
+const Ava = `${process.env.PUBLIC_URL}/img/dashboard/astronaur.png`;
 
 class NoDataContainer extends PureComponent {
   static propTypes = {
@@ -51,11 +51,10 @@ class NoDataContainer extends PureComponent {
 
         let 
         hasBearerToken      =  !_.isUndefined(app.getBearerToken()),
-        isConnected         =  app.isConnected(),
         isDeployed          =  !_.isUndefined(app.isDeployed());
 
-        let progress = this.getProgress(hasBearerToken, isConnected, isDeployed)
-        this.setState({...this.state, progress, hasBearerToken, isConnected, isDeployed});
+        let progress = this.getProgress(hasBearerToken,  isDeployed)
+        this.setState({...this.state, progress, hasBearerToken, isDeployed});
     }
 
 
@@ -92,13 +91,7 @@ class NoDataContainer extends PureComponent {
                                                     Deploy your Platform
                                                 </button>
                                             </Col>
-                                            <Col lg={12}>
-                                                <button disabled={this.state.isConnected} style={{margin : 'auto', marginBottom  : 30,  maxWidth : 400}} className="btn btn-primary account__btn" > 
-                                                    Contact BetProtocol Team..
-                                                </button>
-                                            </Col>
                                         </Row>
-                                    
                                     </Col>
                                 </Row>
                             </CardBody>

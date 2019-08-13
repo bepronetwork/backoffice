@@ -36,31 +36,67 @@ renderLegend.propTypes = {
 	})).isRequired,
 };
 
-
-const VisitorsSessions  = (props) =>  {
-
-	let data = {
-		betAmount : props.data.bets.data[0].bets.amount,
-		games : DashboardMapperSingleton.toPieChart(props.data.users.data[0].games)
+const defaultProps = {
+    data : {
+        bets : [0],
+        games : []
     }
-	return (
-		<Panel
-            title={'Users´ Stats'}
-            subhead="What games are more popular?"
-		>
-            <div className="dashboard__visitors-chart">
-                <p className="dashboard__visitors-chart-title"> Total Bets <span> this week </span></p>
-                <p className="dashboard__visitors-chart-number"><AnimationNumber number={data.betAmount}/></p>
-                <ResponsiveContainer className="dashboard__chart-pie" width="100%" height={220}>
-                <PieChart className="dashboard__chart-pie-container">
-                    <Tooltip />
-                    <Pie data={data.games} dataKey="value" cy={110} innerRadius={70} outerRadius={100} />
-                    <Legend layout="vertical" verticalAlign="bottom" wrapperStyle={style} content={renderLegend} />
-                </PieChart>
-                </ResponsiveContainer>
-            </div>
-		</Panel>
-	)
+}
+
+class VisitorsSessions extends React.Component{
+
+    constructor(props){
+        super(props)
+        this.state = { ...defaultProps};
+        this.projectData(props);
+    }
+
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+
+    projectData = (props) => {
+        const { bets, users } = props.data;
+        if(bets.data[0] && users.data[0]){
+            let data = {
+                betAmount : bets.data[0].bets.amount,
+                games : DashboardMapperSingleton.toPieChart(users.data[0].games)
+            }
+            
+
+            this.setState({...this.state, 
+                data : data ? data : defaultProps.data
+            })
+        }
+      
+    }
+
+    render = () => {
+        const { data } = this.state;
+
+        return (
+            <Panel
+                title={'Users´ Stats'}
+                subhead="What games are more popular?"
+            >
+                <div className="dashboard__visitors-chart">
+                    <p className="dashboard__visitors-chart-title"> Total Bets <span> this week </span></p>
+                    <p className="dashboard__visitors-chart-number"><AnimationNumber number={data.betAmount}/></p>
+                    <ResponsiveContainer className="dashboard__chart-pie" width="100%" height={220}>
+                    <PieChart className="dashboard__chart-pie-container">
+                        <Tooltip />
+                        <Pie data={data.games} dataKey="value" cy={110} innerRadius={70} outerRadius={100} />
+                        <Legend layout="vertical" verticalAlign="bottom" wrapperStyle={style} content={renderLegend} />
+                    </PieChart>
+                    </ResponsiveContainer>
+                </div>
+            </Panel>
+        )
+        }
 };
 
 VisitorsSessions.propTypes = {

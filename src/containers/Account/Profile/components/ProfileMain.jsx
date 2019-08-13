@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardBody, Col, Button } from 'reactstrap';
 import MessageTextOutlineIcon from 'mdi-react/MessageTextOutlineIcon';
 
-const Ava = `${process.env.PUBLIC_URL}/img/12.png`;
+const Ava = `${process.env.PUBLIC_URL}/img/12`;
 
 const ProfileMain = () => (
   <Col md={12} lg={12} xl={12}>

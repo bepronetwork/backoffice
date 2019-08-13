@@ -7,6 +7,7 @@ import profileReducer from './profileReducer';
 import appCreationReducer from './appCreationReducer';
 import gameReducer from './gameReducer';
 import messageContainerReducer from './messageContainerReducer';
+import periodicityReducer from './periodicityReducer';
 
 export {
     themeReducer,
@@ -14,6 +15,7 @@ export {
     cryptoTableReducer,
     messageContainerReducer,
     gameReducer,
+    periodicityReducer,
     newOrderTableReducer,
     customizerReducer,
     profileReducer,

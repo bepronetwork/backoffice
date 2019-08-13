@@ -38,30 +38,32 @@ class BetsStatistics extends React.Component {
     }
 
     projectData = (props) => {
-        let data = props.data;
-
-        let betsData = {
-            bets : data.bets.data[0].bets,
-            graph : [
-                { value: 100-Numbers.toFloat(data.bets.data[0].bets.percentage_won*100), fill: '#894798' },
-                { value: 100-Numbers.toFloat(data.bets.data[0].bets.percentage_won*100), fill: '#eeeeee' }
-            ]
-        }
+        const { bets, wallet } = props.data;
+        if(bets.data[0] && wallet.data){
+            let betsData = {
+                bets : bets.data[0].bets,
+                graph : [
+                    { value: 100-Numbers.toFloat(bets.data[0].bets.percentage_won*100), fill: '#894798' },
+                    { value: 100-Numbers.toFloat(bets.data[0].bets.percentage_won*100), fill: '#eeeeee' }
+                ]
+            }
+        
+            let percentage = 100-Numbers.toFloat(betsData.bets.percentage_won*100);
     
-        let percentage = 100-Numbers.toFloat(betsData.bets.percentage_won*100);
-
-
-        this.setState({...this.state, 
-            betsData : betsData ? betsData : defaultProps.betsData,
-            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
-            percentage
-        })
+    
+            this.setState({...this.state, 
+                betsData : betsData ? betsData : defaultProps.betsData,
+                ticker : wallet.data.blockchain.ticker ? wallet.data.blockchain.ticker : defaultProps.ticker,
+                percentage
+            })
+        }
+      
     }
 
     render = () => {
       
         return (
-            <Panel title={'Bet´s Stats'}     subhead="last 7 days"
+            <Panel title={'Bet´s Stats'} subhead="last 7 days"
             >
                 <div className="dashboard__stat dashboard__stat--budget">
                     <div className="dashboard__stat-main">

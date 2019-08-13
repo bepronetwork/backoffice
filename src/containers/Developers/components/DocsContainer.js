@@ -4,7 +4,7 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
-const Ava = `${process.env.PUBLIC_URL}/img/astronaur.png`;
+const Ava = `${process.env.PUBLIC_URL}/img/dashboard/astronaur.png`;
 
 
 

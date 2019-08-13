@@ -4,7 +4,7 @@ import CheckIcon from 'mdi-react/CheckIcon';
 import TextInput from '../../../shared/components/TextInput';
 import { EmailIcon } from 'mdi-react';
 const back = `${process.env.PUBLIC_URL}/img/landing/back-3.png`;
-const bpro = `${process.env.PUBLIC_URL}/img/betprotocol-logo-white.png`;
+const bpro = `${process.env.PUBLIC_URL}/img/landing/betprotocol-logo-white.png`;
 
 
 class NewsLetter extends React.Component{

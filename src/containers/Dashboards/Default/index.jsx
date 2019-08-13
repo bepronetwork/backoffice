@@ -17,16 +17,42 @@ import { compose } from 'lodash/fp'
 import DataWidget from '../../DataWidget/DataWidget';
 import _ from 'lodash';
 import NoData from '../../NoData';
+import TimePicker from './components/TimePicker';
 
 class DefaultDashboard extends React.Component{
 
     constructor(props){
-        super(props)
+        super(props);
+        this.state = {
+            isDeployed : false,
+            periodicity : 'Weekly'
+        }
+    }
+
+    componentDidMount(){
+        this.projectData(this.props);
+    }
+
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+
+    projectData(props){
+
+        const { profile, periodicity } = props;
+        const app = profile.getApp();
+        let isDeployed  =  !_.isUndefined(app.isDeployed());
+
+        this.setState({...this.state, isDeployed, periodicity});
+    }
+
+    changePeriodicity = ({value}) => {
+
     }
 
     render = () => {
-        let data = this.props.profile.hasAppStats('revenue');
-        let hasData = data && !_.isEmpty(data.data);
+
+        const { isDeployed } = this.state;
                         
         return (
             <Container className="dashboard">   
@@ -56,7 +82,12 @@ class DefaultDashboard extends React.Component{
                         </DataWidget>
                     </Col>
                 </Row>
-                { hasData ? 
+                <Row>
+                    <Col md={3}>
+                        <TimePicker onChange={this.changePeriodicity}  />
+                    </Col>
+                </Row>
+                { isDeployed ? 
                     <div>
                         <Row>
                             <Col lg={12}>
@@ -113,7 +144,8 @@ class DefaultDashboard extends React.Component{
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        periodicity : state.periodicity
     };
 }
 

@@ -50,6 +50,7 @@ class LogInForm extends React.Component {
             this.setState({...this.state, isLoading : true})
             let account = new Account(this.state);
             await account.login();
+            console.log("done")
             this.props.history.push('/home')
             this.setState({...this.state, isLoading : false})
         }catch(err){

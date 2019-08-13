@@ -19,7 +19,7 @@ class GamesContainer extends PureComponent {
         var wallet = {};
 
         if(this.props.data.games.data[0]){
-            games = this.props.data.games.data[0].games;
+            games = getAllGames(this.props.data.games.data);
             wallet = this.props.data.wallet.data;
         }
         
@@ -35,6 +35,25 @@ class GamesContainer extends PureComponent {
             </Row>
         );
     }
+}
+
+
+function getAllGames(data){
+    let games = [];
+    for(var i = 0; i < data.length; i++) {
+        for(var k = 0; k < data[i].games.length; k++) {
+            let exists = false;
+            for(var j = 0; j < games.length; j++){
+                if(new String(games[j]._id).toLowerCase() == new String(data[i].games[k]._id).toLowerCase()){
+                    exists = true;
+                }     
+            }
+            if(!exists){
+                games.push(data[i].games[k])
+            }
+        }
+    }
+    return games;
 }
 
 export default GamesContainer;

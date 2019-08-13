@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import Account from '../../../../controllers/Account';
 import TextField from '@material-ui/core/TextField';
 import TextInput from '../../../../shared/components/TextInput';
+const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 
 const renderTextField = ({
@@ -56,6 +57,7 @@ class RegisterForm extends PureComponent {
         super(props);
         this.state = {
         showPassword: false,
+        isLoading : false
         };
 
         this.showPassword = this.showPassword.bind(this);
@@ -74,9 +76,11 @@ class RegisterForm extends PureComponent {
 
     register = async () => {
         try{
+            this.setState({...this.state, isLoading : true})
             let account = new Account(this.state);
             await account.register();
-            this.props.history.push('/initial')
+            this.props.history.push('/initial');
+            this.setState({...this.state, isLoading : false})
         }catch(err){
             this.props.showNotification(err.message);
         }
@@ -125,7 +129,13 @@ class RegisterForm extends PureComponent {
                 />
             </div>            
             <div className="account__btns">
-                <button   onClick={ () => this.register() }className="btn btn-primary account__btn" to="/dashboard_default">Sign Up</button>
+                <button onClick={ () => this.register() }className="btn btn-primary account__btn" to="/dashboard_default">                {
+                    !this.state.isLoading ?
+                    'Sign Up'
+                    : 
+                    <img src={loading} className={'loading_gif'}></img>
+                }
+                </button>
             </div>
         </form>
         );

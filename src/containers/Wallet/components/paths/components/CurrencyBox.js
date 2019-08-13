@@ -13,7 +13,7 @@ import ReciptBox from './ReciptBox';
 import TextInput from '../../../../../shared/components/TextInput';
 import Numbers from '../../../../../services/numbers';
 import { ETHEREUM_NET_DEFAULT } from '../../../../../config/apiConfig';
-const Ava = `${process.env.PUBLIC_URL}/img/ethereum.png`;
+const Ava = `${process.env.PUBLIC_URL}/img/dashboard/ethereum.png`;
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 

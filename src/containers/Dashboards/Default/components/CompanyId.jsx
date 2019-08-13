@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { DirectionsIcon } from 'mdi-react';
 import { ETHEREUM_NET_DEFAULT } from '../../../../config/apiConfig';
-const Ava = `${process.env.PUBLIC_URL}/img/brand.jpg`;
+const Ava = `${process.env.PUBLIC_URL}/img/dashboard/brand.jpg`;
 
 
 const defaultProps = {

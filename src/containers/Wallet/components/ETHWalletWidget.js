@@ -9,7 +9,7 @@ import {Link} from 'react-router-dom';
 import { ArrowDownIcon, ArrowCollapseDownIcon, ArrowUpDropCircleIcon } from 'mdi-react';
 import ConverterSingleton from '../../../services/converter';
 import Numbers from '../../../services/numbers';
-const Ava = `${process.env.PUBLIC_URL}/img/ethereum.png`;
+const Ava = `${process.env.PUBLIC_URL}/img/dashboard/ethereum.png`;
 
 class ETHWalletWidget extends PureComponent {
  

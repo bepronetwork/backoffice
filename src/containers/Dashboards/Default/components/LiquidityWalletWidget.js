@@ -6,7 +6,7 @@ import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 import { InformationIcon } from 'mdi-react';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-const Ava = `${process.env.PUBLIC_URL}/img/euro.png`;
+const Ava = `${process.env.PUBLIC_URL}/img/dashboard/euro.png`;
 
 
 const defaultProps = {

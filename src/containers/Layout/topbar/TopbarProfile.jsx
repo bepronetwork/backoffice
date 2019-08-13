@@ -6,13 +6,13 @@ import TopbarMenuLink from './TopbarMenuLink';
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 
-const Ava = `${process.env.PUBLIC_URL}/img/ava.png`;
+const Ava = `${process.env.PUBLIC_URL}/img/dashboard/ava.png`;
 
 class TopbarProfile extends PureComponent {
 	constructor() {
 		super();
 		this.state = {
-		collapse: false,
+		    collapse: false,
 		};
 	}
 
@@ -35,7 +35,7 @@ class TopbarProfile extends PureComponent {
 					<div className="topbar__menu">
 						<TopbarMenuLink title="My Profile" icon="user" path="/home" />
 						<TopbarMenuLink title="Inbox" icon="inbox" path="/home"  />
-						<div className="topbar__menu-divider" />
+						    <div className="topbar__menu-divider" />
 						<TopbarMenuLink title="Account Settings" icon="cog" path="/home" />
 						<TopbarMenuLink title="Log Out" icon="exit" path="/login" />
 					</div>

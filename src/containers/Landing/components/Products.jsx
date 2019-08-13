@@ -3,10 +3,10 @@ import { Col, Row, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
-const bitcoin = `${process.env.PUBLIC_URL}/img/bitcoin.png`;
-const sports = `${process.env.PUBLIC_URL}/img/sports.png`;
-const casino = `${process.env.PUBLIC_URL}/img/casino.png`;
-const prediction = `${process.env.PUBLIC_URL}/img/prediction.png`;
+const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
+const sports = `${process.env.PUBLIC_URL}/img/landing/sports_small.png`;
+const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
+const prediction = `${process.env.PUBLIC_URL}/img/landing/prediction.png`;
 
 
 class Products extends React.Component{

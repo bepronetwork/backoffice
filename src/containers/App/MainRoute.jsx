@@ -23,6 +23,7 @@ import Applications from '../Applications';
 import StatsContainer from '../Stats'
 import WalletContainer from '../Wallet';
 import AffiliatesContainer from '../Affiliates';
+import SettingsContainer from '../Settings';
 import DepositWidget from '../Wallet/components/paths/DepositWidget';
 import DefaultDashboard from '../Dashboards/Default/index';
 import CreateApp from '../Wizards/CreateApp';
@@ -118,6 +119,7 @@ class MainRoute extends React.Component {
                     <Route path={'/transactions'} component={TransactionsContainer}/>	
                     <Route path={'/stats'} component={StatsContainer}/>	
                     <Route path={'/wallet'} component={wrappedWalletRoutes}/>	
+                    <Route path={'/settings'} component={SettingsContainer}/>	
                     <Route path={'/affiliates'} component={AffiliatesContainer}/>	
                 </div>
             </div>

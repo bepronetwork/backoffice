@@ -60,7 +60,11 @@ class numbers{
     }
 
     fromBigNumberToInteger(value, decimals=18){
-        return value/ Math.pow(10, decimals)*1000000000000000000;
+        return value/10**decimals
+    }
+
+    fromDecimals(value, decimals){
+        return value/10**decimals
     }
 
     fromExponential(x) {
@@ -79,6 +83,18 @@ class numbers{
         }
         }
         return x;
+    }
+
+    fromSmartContractTimeToMinutes(time){
+        return moment().startOf('day')
+        .seconds(time)
+        .format('H:mm');
+    }
+
+    fromMinutesToSmartContracTime(time){
+        var a = time.split(':'); // split it at the colons
+        var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60; 
+        return seconds;
     }
 
 }

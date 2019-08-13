@@ -5,7 +5,7 @@ import { Col, Container, Row } from 'reactstrap';
 import { BasicNotification } from '../../../shared/components/Notification';
 import NotificationSystem from 'rc-notification';
 
-const Back = `${process.env.PUBLIC_URL}/img/background-login.png`;
+const Back = `${process.env.PUBLIC_URL}/img/dashboard/background-login.png`;
 let notification = null;
 
 const showNotification = (message) => {

@@ -44,7 +44,7 @@ class RevenueChart extends React.Component{
     render(){
 
         return(
-                <Panel naked={true} md={12} lg={12} xl={12} title={`${this.state.timeline} Summary`}>
+                <Panel naked={true} md={12} lg={12} xl={12} title={`Summary`}>
                     <ResponsiveContainer height={250} className="dashboard__area">
                         <AreaChart data={this.state.chartData} margin={{ top: 20, left: 5, bottom: 20 }} >
                         <XAxis dataKey="name" tickLine={false} />

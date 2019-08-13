@@ -10,9 +10,9 @@ import IntegrationsContainer from './components/IntegrationsContainer';
 import _ from 'lodash';
 import { fromCodesToServices } from '../../controllers/services/services';
 
-const bitcoin = `${process.env.PUBLIC_URL}/img/bitcoin.png`;
+const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
-const casino = `${process.env.PUBLIC_URL}/img/casino.png`;
+const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
 class ApplicationsContainer extends React.Component{
 
     constructor(props){

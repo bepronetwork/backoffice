@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import { ArrowDownIcon, ArrowCollapseDownIcon, ArrowUpDropCircleIcon, KeyChangeIcon, CheckBoxIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
-const paybear = `${process.env.PUBLIC_URL}/img/paybear.png`;
+const paybear = `${process.env.PUBLIC_URL}/img/dashboard/paybear.png`;
 
 class PaybearWidget extends PureComponent {
  

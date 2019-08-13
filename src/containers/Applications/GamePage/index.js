@@ -11,8 +11,8 @@ import game_images from '../components/game_images';
 import { ArrowExpandRightIcon, LockIcon, BankIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
-const edge = `${process.env.PUBLIC_URL}/img/edge.png`;
-const tableLimit = `${process.env.PUBLIC_URL}/img/tableLimit.png`;
+const edge = `${process.env.PUBLIC_URL}/img/dashboard/edge.png`;
+const tableLimit = `${process.env.PUBLIC_URL}/img/dashboard/tableLimit.png`;
 
 
 const defaultState = {
@@ -67,11 +67,11 @@ class GamePageContainer extends React.Component{
     }
 
     unlockField = ({field}) => {
-        this.state.locks[field] = false; 
+        this.setState({...this.state, locks : {...this.state.locks, [field] : false }})
     }
 
     lockField = ({field}) => {
-        this.state.locks[field] = true; 
+        this.setState({...this.state, locks : {...this.state.locks, [field] : true }})
     }
 
     confirmChanges = async ({field}) => {
@@ -85,7 +85,6 @@ class GamePageContainer extends React.Component{
             case 'tableLimit' : {
                 // Change Table Limit
                 let res = await profile.getApp().editTableLimit({game : this.state.id, tableLimit : this.state[`new_${field}`]});
-                console.log(res);
                 break;
             }
         }

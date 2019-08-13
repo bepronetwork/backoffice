@@ -1,8 +1,8 @@
 import React from 'react';
 import { Col, Row, Container } from 'reactstrap';
 import CheckIcon from 'mdi-react/CheckIcon';
-const app = `${process.env.PUBLIC_URL}/img/app.png`;
-const bpro = `${process.env.PUBLIC_URL}/img/betprotocol-logo-white.png`;
+const app = `${process.env.PUBLIC_URL}/img/landing/app.png`;
+const bpro = `${process.env.PUBLIC_URL}/img/landing/betprotocol-logo-white.png`;
 const revenue = `${process.env.PUBLIC_URL}/img/widgets/revenue.png`;
 const users = `${process.env.PUBLIC_URL}/img/widgets/users.png`;
 const deposit = `${process.env.PUBLIC_URL}/img/widgets/deposit.png`;

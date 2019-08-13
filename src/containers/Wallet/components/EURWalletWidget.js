@@ -5,7 +5,7 @@ import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import { ArrowCollapseDownIcon, BankTransferInIcon, ArrowCollapseHorizontalIcon, ArrowDecisionIcon } from 'mdi-react';
 
-const Ava = `${process.env.PUBLIC_URL}/img/euro.png`;
+const Ava = `${process.env.PUBLIC_URL}/img/dashboard/euro.png`;
 
 class EURWalletWidget extends PureComponent {
  
