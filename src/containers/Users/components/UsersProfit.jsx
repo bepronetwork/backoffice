@@ -65,7 +65,6 @@ class UsersProfit extends PureComponent {
 
 const getProfits = (users) => {
     return Object.keys(users).reduce( (acc, key) => {
-        console.log(Numbers.toFloat(users[key].profit));
         return acc+ Numbers.toFloat(users[key].profit);
     }, 0);
 }

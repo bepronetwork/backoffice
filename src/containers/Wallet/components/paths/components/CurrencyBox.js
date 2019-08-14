@@ -67,12 +67,9 @@ class CurrencyBox extends PureComponent {
                 decimals : this.state.decimals
             });
 
-            console.log(eth_res)
-
             if(eth_res.status){
                 /* Transaction was succeded */
                 await this.confirmWalletUpdate({amount, transactionHash : eth_res.transactionHash});
-                console.log("done")
             }else{
                 // TO DO : Undertand why it didn´t succed
                 throw new Error('Transaction was not succeded')

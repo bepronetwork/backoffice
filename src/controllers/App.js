@@ -529,7 +529,9 @@ class App{
         // TO DO : When User Rejects Connect Question throw err
         switch(currency) {
             case 'eth' : {
-                await ethereum.enable(); 
+                if(ethereum){
+                    await ethereum.enable(); 
+                }
                 break;
             }
         }

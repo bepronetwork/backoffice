@@ -3,7 +3,6 @@ import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
 import { ArrowExpandRightIcon, LockIcon, BankIcon } from 'mdi-react';
 
 const EditLock = (props) => {
-    console.log(props);
     return(
         <div className={`${props.locked ? 'locker-container' : null}`}>
             {props.children}

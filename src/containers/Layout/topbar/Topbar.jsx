@@ -52,10 +52,9 @@ class Topbar extends React.Component {
         let metamaksAddress = user ? await user.getMetamaskAddress() : defaultProps.userMetamaskAddress;
         if(user){
             let ownerAddress = user.getApp().getInformation('ownerAddress');
-            console.log(ownerAddress)
             this.setState({...this.state, 
                 userAddress :  ownerAddress ? AddressConcat(ownerAddress) : defaultProps.userAddress,
-                userMetamaskAddress : user ? AddressConcat(metamaksAddress) : defaultProps.userMetamaskAddress,
+                userMetamaskAddress : (user && metamaksAddress) ? AddressConcat(metamaksAddress) : defaultProps.userMetamaskAddress,
                 isValid : user ? new String(ownerAddress).toLowerCase() == new String(metamaksAddress).toLowerCase() :  defaultProps.isValid     
             })
         }

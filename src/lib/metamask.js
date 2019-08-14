@@ -4,13 +4,15 @@ async function enableMetamask(currency) {
     const { ethereum } = window;
   
     switch (currency) {
-      case "eth": {
-        await ethereum.enable();
-        break;
-      }
-      default: {
-        break;
-      }
+        case "eth": {
+            if(ethereum){
+                await ethereum.enable();
+            }
+            break;
+        }
+        default: {
+            break;
+        }
     }
 }
 

@@ -3,7 +3,6 @@ import Numbers from "../services/numbers";
 import { API_URL } from "../config/apiConfig";
 
 const URL = API_URL;
-console.log(URL, API_URL);
 
 class Connection {
 
@@ -210,7 +209,6 @@ class Connection {
 
 
     updateWallet = async ({app, amount, transactionHash, headers}) => {
-        console.log(app, amount);
         try{
             let response = await fetch( URL + `/api/app/updateWallet`, {
                 method : 'POST',

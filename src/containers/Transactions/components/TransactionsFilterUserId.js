@@ -17,7 +17,6 @@ class TransactionsFilter extends PureComponent {
     }
 
     changeFilter = (key, value) => {
-        console.log(key, value)
         this.setState({[key] : value});
     }
 
