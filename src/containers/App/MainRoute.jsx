@@ -92,8 +92,10 @@ class MainRoute extends React.Component {
     }
     
     Main = (props) => {
+        let { profile } = this.props;
         let routeHistory = this.getrouteHistoryObjects(routesStructure, props.location.pathname);
-        
+        if(!profile.hasAppStats()) { return null; }
+
         return(
             <div>
                 <Layout />
