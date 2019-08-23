@@ -8,11 +8,14 @@ async function processResponse(response){
         }
         return response.data.message
     }catch(err){
-        console.log(err)
-        await store.dispatch(setMessageNotification(new String(err.message).toString()));
-        throw err;
+        throwUIError(err.message);
     }
 }
 
 
-export { processResponse }
+async function throwUIError(err){
+    console.log(err);
+    await store.dispatch(setMessageNotification({isActive : true, message : new String(err).toString()}));
+}
+
+export { processResponse, throwUIError }

@@ -190,3 +190,74 @@
     display: block;
     position: relative;
 }
+
+.nav-link.active{
+    background-color: #894798 !important;
+}
+
+
+.modal-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  background-color: white;
+  opacity: 0.3;
+}
+
+
+
+.modal-root-relative{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+.modal-icon {
+    outline: none;
+    border: none;
+    position: relative;
+    background-color: none;
+}
+
+.modal-content {
+  position: relative;
+  width: 500px;
+  height: 450px;
+  background-color: white;
+  border-radius: 10;
+  border-radius: 0;
+  border: none;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding: 50px 40px 60px 40px;
+  text-align: center;
+  z-index: 23;
+  position: relative;
+  display: block;
+  background-color: white;
+  overflow: hidden;
+}
+
+.button-hover{
+    opacity: 1;
+
+    :hover{
+        opacity : 0.6;
+        transition: all 0.3s;
+    }
+}

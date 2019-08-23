@@ -12,6 +12,19 @@ class Connection {
      *  @param
      */
 
+    auth = async ({admin, headers}) => {
+        try{
+            let response = await fetch(URL + '/api/admins/auth', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({admin})
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     register = async ({username, password, name, email}) => {
     
         try{
@@ -33,6 +46,19 @@ class Connection {
                 method : 'POST',
                 headers : config.headers,
                 body : JSON.stringify({username, password})
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    login2FA = async ({username, password, token}) => {
+        try{
+            let response = await fetch(URL + '/api/admins/login/2fa', {
+                method : 'POST',
+                headers : config.headers,
+                body : JSON.stringify({username, password, '2fa_token' : token})
             });
             return response.json();
         }catch(err){
@@ -189,14 +215,14 @@ class Connection {
             throw err;
         }
     }
-
+    
     addServices = async ({app, services, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/services/add`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({
-                    app,
+                    app,  
                     services
                 })
             });
@@ -207,6 +233,23 @@ class Connection {
         }
     }
 
+    set2FA = async ({secret, token, admin, headers}) => { 
+        try{
+            let response = await fetch( URL + `/api/admins/2fa/set`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    admin,
+                    '2fa_secret' : secret,
+                    '2fa_token' : token
+                })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
 
     updateWallet = async ({app, amount, transactionHash, headers}) => {
         try{

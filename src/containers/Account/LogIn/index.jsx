@@ -7,6 +7,10 @@ import { Col, Container, Row } from 'reactstrap';
 import { BasicNotification } from '../../../shared/components/Notification';
 import NotificationSystem from 'rc-notification';
 import * as qs from 'query-string';
+import StepWizard from 'react-step-wizard';
+import Input2FA from '../../Inputs/Input2FA';
+import ConnectionSingleton from '../../../api/Connection';
+import Account from '../../../controllers/Account';
 
 const Back = `${process.env.PUBLIC_URL}/img/dashboard/background-login.png`;
 
@@ -25,9 +29,13 @@ const showNotification = (message) => {
 	});
 };
 
+const defaultState = {
+    SW : {}
+}
+
 class LogIn extends React.Component{
 
-	constructor(props){super(props); this.state = {}}
+	constructor(props){super(props); this.state = defaultState}
 
 	componentDidMount() {
 		NotificationSystem.newInstance({}, n => notification = n);
@@ -39,9 +47,51 @@ class LogIn extends React.Component{
 
 	showNotification = (message) => {
 		showNotification(message)
-	}
+    }
+
+    
+    changeContent = (type, item) => {
+        this.setState({[type] : item});
+    }
+    
+    setInstance = SW => this.setState({ ...this.state, SW });
+
+    goTo2FA = () => this.state.SW.nextStep();
+
+    login2FA = async ({token}) => {
+        const { username, password } = this.state;
+
+        try{
+            this.setState({...this.state, isLoading : true})
+            let account = new Account({username, password, token});
+            await account.login2FA();
+            this.props.history.push('/home')
+            this.setState({...this.state, isLoading : false})
+        }catch(err){
+            this.setState({...this.state, isLoading : false})
+            this.showNotification(err.message);
+        }
+    }
+    
+    login = async () => {
+        try{
+            this.setState({...this.state, isLoading : true})
+            let account = new Account(this.state);
+            await account.login();
+            this.props.history.push('/home')
+            this.setState({...this.state, isLoading : false})
+        }catch(err){
+            this.setState({...this.state, isLoading : false})
+            if(err.status == 37){
+                this.goTo2FA();
+            }else{
+                this.showNotification(err.message);
+            }
+        }
+    }
 
 	render = () => {
+        const { SW } = this.state;
         const parsed = qs.parse(this.props.location.search);
 		return (
 			<div className={'container__all'}>
@@ -54,7 +104,12 @@ class LogIn extends React.Component{
 							<div className="account__card">
 							<h3 className="account__title" style={{marginBottom : '20%'}}> Login
 							</h3>
-							<LogInForm query={parsed} handleSubmit={(e) => e.preventDefault()} showNotification={this.showNotification} {...this.props} onSubmit={false} />
+                                <StepWizard
+                                    instance={this.setInstance}
+                                >
+                                    <LogInForm isLoading={this.state.isLoading} login={this.login} changeContent={this.changeContent} query={parsed} SW={SW} handleSubmit={(e) => e.preventDefault()} showNotification={this.showNotification} {...this.props} onSubmit={false} />
+                                    <Input2FA  isLoading={this.state.isLoading} SW={SW} confirm={this.login2FA}/>
+                                </StepWizard>
 							</div>
 						</div>
 					</Col>

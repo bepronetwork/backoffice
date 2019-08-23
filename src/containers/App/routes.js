@@ -73,6 +73,11 @@ export default [
         component : SettingsContainer
     },
     {
+        path: "/account-settings",
+        name: 'Account Settings',
+        component : SettingsContainer
+    },
+    {
         path: "/developers",
         name: 'Developers'
     },
