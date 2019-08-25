@@ -17,7 +17,7 @@ import Layout from '../Layout';
 import { Route, Switch } from 'react-router-dom';
 import Account from '../../controllers/Account';
 import routesStructure from './routes';
-
+import _ from 'lodash';
 import UsersContainer from '../Users';
 import Applications from '../Applications';
 import StatsContainer from '../Stats'
@@ -26,7 +26,6 @@ import AffiliatesContainer from '../Affiliates';
 import SettingsContainer from '../Settings';
 import DepositWidget from '../Wallet/components/paths/DepositWidget';
 import DefaultDashboard from '../Dashboards/Default/index';
-import CreateApp from '../Wizards/CreateApp';
 import Developers from '../Developers';
 import TransactionsContainer from '../Transactions';
 import WithdrawWidget from '../Wallet/components/paths/WithdrawWidget';
@@ -41,12 +40,12 @@ class MainRoute extends React.Component {
 		};
 	}
 
-
 	asyncCalls = async () => {
         try{
             await this.loginAccount();
             this.enterWebsite();
         }catch(err){
+            console.log(err);
             this.props.history.push('/login')
         }
 	}
@@ -59,9 +58,9 @@ class MainRoute extends React.Component {
     async loginAccount(){        
         let Acc = this.props.profile;
         //If there is no Account
-        if(!Acc){ Acc = new Account() };
+        if(_.isEmpty(Acc)){ Acc = new Account() };
         try{
-            await Acc.login();
+            await Acc.auth();
         }catch(err){
             throw err;
         }
@@ -122,6 +121,7 @@ class MainRoute extends React.Component {
                     <Route path={'/stats'} component={StatsContainer}/>	
                     <Route path={'/wallet'} component={wrappedWalletRoutes}/>	
                     <Route path={'/settings'} component={SettingsContainer}/>	
+                    <Route path={'/account-settings'} component={SettingsContainer}/>	
                     <Route path={'/affiliates'} component={AffiliatesContainer}/>	
                 </div>
             </div>

@@ -94,6 +94,7 @@ class App{
 		}
     }
 
+
     getTokenAmount = async () => {
         try{
             return await this.casinoContract.getHouseTokenAmount();
@@ -257,9 +258,10 @@ class App{
                 message : data,
                 status
             } = res.data;
-            if(parseInt(status) == 200)
+            if(parseInt(status) == 200){
                 //Add Connection Bearer Token to App Object
                 this.params.paybearToken = paybearToken;
+            }
             return res;
         }catch(err){
             throw err;

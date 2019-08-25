@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 
 
 const renderTextField = ({
-    input, label, meta: { touched, error }, disabled, children, select, type, defaultValue
+    input, label, meta: { touched, error }, disabled, children, select, type, defaultValue, autoFocus
     }) => {
         return (
             <TextField
@@ -14,6 +14,7 @@ const renderTextField = ({
                 color={'#ccc'}
                 error={touched && error}
                 disabled={disabled}
+                autoFocus={autoFocus}
                 value={defaultValue}
                 defaultValue={defaultValue}
                 children={children}
@@ -77,6 +78,7 @@ class TextInput extends PureComponent {
                     name={this.props.name}
                     label={this.props.label}
                     type={this.props.type}
+                    autoFocus={this.props.autoFocus}
                     disabled={this.props.disabled}
                     defaultValue={this.props.defaultValue}
                     component={renderTextField}

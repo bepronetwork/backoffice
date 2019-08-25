@@ -2,7 +2,10 @@ import {
     SET_MESSAGE_NOTIFICATION
 } from '../actions/messageContainer';
 
-let initialState = '';
+let initialState = {
+    isActive : false,
+    message : ''
+}
 
 export default function (state = initialState, action) {
     switch (action.type) {

@@ -5,6 +5,7 @@ import TopbarMenuLink from './TopbarMenuLink';
 
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
+import Cache from '../../../services/cache';
 
 const Ava = `${process.env.PUBLIC_URL}/img/dashboard/ava.png`;
 
@@ -18,7 +19,13 @@ class TopbarProfile extends PureComponent {
 
 	toggle = () => {
 		this.setState({ collapse: !this.state.collapse });
-	};
+    };
+    
+    logout = () => {
+        console.log("logout")
+        Cache.setToCache('Auth', null);
+
+    }
 
 	render() {
 		let profile = this.props.profile;
@@ -33,11 +40,7 @@ class TopbarProfile extends PureComponent {
 				{this.state.collapse && <button className="topbar__back" onClick={this.toggle} />}
 				<Collapse isOpen={this.state.collapse} className="topbar__menu-wrap">
 					<div className="topbar__menu">
-						<TopbarMenuLink title="My Profile" icon="user" path="/home" />
-						<TopbarMenuLink title="Inbox" icon="inbox" path="/home"  />
-						    <div className="topbar__menu-divider" />
-						<TopbarMenuLink title="Account Settings" icon="cog" path="/home" />
-						<TopbarMenuLink title="Log Out" icon="exit" path="/login" />
+						<TopbarMenuLink onClick={this.logout} title="Log Out" icon="exit" path="/login" />
 					</div>
 				</Collapse>
 			</div>

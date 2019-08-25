@@ -13,7 +13,8 @@ import ScrollToTop from './ScrollToTop';
 import { config as i18nextConfig } from '../../translations';
 import Web3 from 'web3';
 import { ETHEREUM_NET_DEFAULT } from '../../config/apiConfig';
-    
+import { Modal2FA, ModalError } from '../Modals';
+
 i18next.init(i18nextConfig);
 
 class App extends Component {
@@ -96,6 +97,9 @@ class App extends Component {
                         </div>
                     }
                     <div>
+                        <Modal2FA/>
+                        <ModalError/>
+
                         <Router />
                     </div>
                     </ScrollToTop>

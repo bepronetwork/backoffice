@@ -8,6 +8,7 @@ import { enableMetamask, getERC20Contract } from "../lib/metamask";
 import { getNonce } from "../lib/number";
 import { processResponse } from "../lib/errors";
 import CasinoContract from "./CasinoContract";
+import { setAuthToCookies, getAuthFromCookies } from "./services/services";
 
 class Account{    
     constructor(params=null){
@@ -15,10 +16,35 @@ class Account{
         this.date = null;
     }
 
+    getUserInfo = () => {
+        return this.User;
+    }
+
+    getId = () => this.User.id;
+
+    getBearerToken = () => {return (this.User.bearerToken || this.User.security.bearerToken)};
+
+    auth = async () => {
+        try{
+            let auth = getAuthFromCookies();
+            if(!auth){throw null /* No Login Info */}
+            const { admin, bearerToken } = auth;
+            let response = await ConnectionSingleton.auth({
+                admin,
+                headers : authHeaders(bearerToken, admin)
+            });
+
+            console.log(response);
+
+            return await this.handleLoginResponse(response);
+        }catch(err){
+            console.log(err);
+            throw err
+        }
+    }
+    
     register = async () => {
         try{
-            
-
             let response = await ConnectionSingleton.register({
                 username        : this.params.username, 
                 name            : this.params.name,
@@ -39,70 +65,33 @@ class Account{
         }catch(err){
             throw err
         }
-        
     }
 
     login = async () => {
         try{
-
-            let cache = this.getFromCache('Authentication');
-
-            if(!this.params && (cache && cache.password)){
-                //Cache had data
-                this.params = {
-                    username :  cache.username,
-                    password : cache.password
-                }
-            }else if(this.params){
-                //
-            }else{
-                throw new Error('Login didn´t work')
-            }
-
             let response = await ConnectionSingleton.login({
                 username : this.params.username, 
                 password : this.params.password
             });
-
-            let {
-                message : data,
-                status
-            } = response.data;
-
-            if(status == 200){
-                /* SET Profile Data */
-                this.setProfileData(data);
-                /* Save Data in Cache */
-                this.saveToCache(this.params);
-                /* SET APP */
-                // If App Already Exists for this User
-                if(data.app.id){
-                    this.setApp(data.app);
-                    /* GET APP Stats */
-                    await this.getData();
-                    // Set Timer
-                    this.setTimer();
-                }
-                this.update()
-                // TO DO : Create an Initial Screen to choose between Apps or a top Dropdown for it
-                return response;
-            }else{
-                throw new Error(response.data.message)
-            }
+            return await this.handleLoginResponse(response);
         }catch(err){
             // TO DO
             throw err;
 		}
-    
     }
 
-    saveToCache = (data) => {
-        return Cache.setToCache("Authentication", data);
-
-    }
-
-    getFromCache = (type) => {
-        return Cache.getFromCache(type);
+    login2FA  = async () => {
+        try{
+            let response = await ConnectionSingleton.login2FA({
+                username : this.params.username, 
+                password : this.params.password,
+                token : this.params.token
+            });
+            return await this.handleLoginResponse(response);
+        }catch(err){
+            // TO DO
+            throw err;
+		}
     }
 
     getData = async () => {
@@ -278,6 +267,21 @@ class Account{
         }
     }
 
+    set2FA = async ({secret, token}) => {
+        try{
+            let res = await ConnectionSingleton.set2FA(
+                {   
+                    secret,
+                    token,
+                    admin : this.getId(),
+                    headers : authHeaders(this.getBearerToken(), this.getId())
+                });
+            console.log(this.getBearerToken());
+            return processResponse(res);
+        }catch(err){
+            throw err;
+        }
+    }
 
     withdraw = async (params) => {
         try{
@@ -335,6 +339,45 @@ class Account{
         }
     }
 
+
+    handleLoginResponse = async (response) => {
+        let {
+            message : data,
+            status
+        } = response.data;
+
+        if(status == 200){
+            /* SET Profile Data */
+            this.setProfileData(data);
+            setAuthToCookies({
+                admin : data.id,
+                bearerToken : data.bearerToken || data.security.bearerToken
+            });
+            /* SET APP */
+            // If App Already Exists for this User
+            if(data.app.id){
+                this.setApp(data.app);
+                /* GET APP Stats */
+                await this.getData();
+                // Set Timer
+                this.setTimer();
+            }
+            this.update()
+            // TO DO : Create an Initial Screen to choose between Apps or a top Dropdown for it
+            return response;
+        }else{
+            throw response.data;
+        }
+    }
+}
+
+
+
+function authHeaders(bearerToken, id){
+    return {
+        "authorization" : "Bearer " + bearerToken,
+        "payload" : JSON.stringify({ id : id })
+    }
 }
 
 export default Account;

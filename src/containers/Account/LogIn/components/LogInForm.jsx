@@ -20,9 +20,8 @@ class LogInForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        showPassword: false,
+            showPassword: false,
         };
-
         this.showPassword = this.showPassword.bind(this);
     }
 
@@ -41,21 +40,9 @@ class LogInForm extends React.Component {
         });
     }
 
-    changeContent = (type, item) => {
-        this.setState({[type] : item});
-    }
 
-    login = async () => {
-        try{
-            this.setState({...this.state, isLoading : true})
-            let account = new Account(this.state);
-            await account.login();
-            this.props.history.push('/home')
-            this.setState({...this.state, isLoading : false})
-        }catch(err){
-            this.setState({...this.state, isLoading : false})
-            this.props.showNotification(err.message);
-        }
+    goTo2FA = () => {
+        this.props.SW.nextStep();
     }
 
     render() {
@@ -67,10 +54,11 @@ class LogInForm extends React.Component {
                     icon={CheckboxMultipleBlankCircleIcon}
                     name="username"
                     label="Username"
+                    autoFocus={true}
                     type="text"
                     placeholder="James2345"
                     defaultValue={this.state.username}
-                    changeContent={this.changeContent}
+                    changeContent={this.props.changeContent}
                 />
                 <TextInput
                     icon={KeyVariantIcon}
@@ -79,7 +67,7 @@ class LogInForm extends React.Component {
                     type="password"
                     defaultValue={this.state.password}
                     placeholder="**********"
-                    changeContent={this.changeContent}
+                    changeContent={this.props.changeContent}
                 />
                   <div className="account__forgot-password" >
                 <a href="/">Forgot a password?</a>
@@ -87,9 +75,9 @@ class LogInForm extends React.Component {
             </div>
                  
             <div className="account__btns" style={{marginTop  :40}}>
-            <button disabled={this.state.isLoading} className="btn btn-primary account__btn" onClick={ () => this.login() } >
+            <button disabled={this.state.isLoading} className="btn btn-primary account__btn" onClick={ () => this.props.login() } >
                 {
-                    !this.state.isLoading ?
+                    !this.props.isLoading ?
                     'Log In'
                     : 
                     <img src={loading} className={'loading_gif'}></img>
