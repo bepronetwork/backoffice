@@ -3,13 +3,7 @@ import { setMessageNotification } from "../redux/actions/messageContainer";
 
 export const ETHEREUM_NET_DEFAULT = process.env.REACT_APP_ETHEREUM_NET;
 
-export const IS_PRODUCTION = process.env.REACT_APP_PRODUCTION;
-
-export const API_URL_GLOBAL = process.env.REACT_APP_API_GLOBAL;
-
-export const API_URL_LOCAL = process.env.REACT_APP_API_LOCAL;
-
-export const API_URL = (IS_PRODUCTION == 'true') ? API_URL_GLOBAL : API_URL_LOCAL;
+export const API_URL = process.env.REACT_APP_API;
 
 export async function processResponse(response){
     try{

@@ -25,7 +25,7 @@ class SettingsAccountContainer extends React.Component{
     }
 
     componentDidMount(){
-        this.projectData(this.props)
+        this.projectData(this.props);
     }
 
     componentWillReceiveProps(props){
