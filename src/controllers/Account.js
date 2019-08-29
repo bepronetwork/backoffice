@@ -33,9 +33,6 @@ class Account{
                 admin,
                 headers : authHeaders(bearerToken, admin)
             });
-
-            console.log(response);
-
             return await this.handleLoginResponse(response);
         }catch(err){
             console.log(err);
@@ -213,7 +210,7 @@ class Account{
         this.timer = setInterval(
             () => {
             this.getData();
-        }, 10000);
+            }, 30*1000);
     }
 
     getDepositReference = async (params) => {
@@ -276,7 +273,6 @@ class Account{
                     admin : this.getId(),
                     headers : authHeaders(this.getBearerToken(), this.getId())
                 });
-            console.log(this.getBearerToken());
             return processResponse(res);
         }catch(err){
             throw err;

@@ -9,6 +9,9 @@ import DataWidget from '../DataWidget/DataWidget';
 import IntegrationsContainer from './components/IntegrationsContainer';
 import _ from 'lodash';
 import { fromCodesToServices } from '../../controllers/services/services';
+import { GamesIcon, StoreIcon } from 'mdi-react';
+import TabsContainer from '../../shared/components/tabs/Tabs';
+import GameStorePageContainer from './GameStore/index.js';
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
@@ -18,13 +21,13 @@ class ApplicationsContainer extends React.Component{
     constructor(props){
         super(props)
     }
-
+   
     
 
     render = () => {
         let services = this.props.profile.getApp().getServices();
         let servicesCodes = fromCodesToServices(services);
-
+        
         return (
             <Container className="dashboard">
                 <Row>
@@ -43,12 +46,34 @@ class ApplicationsContainer extends React.Component{
                                         </Row>
                                     </CardBody>
                                 </Card>
-                                <DataWidget>
-                                    <GamesContainer  data={{
-                                        games : this.props.profile.getApp().getSummaryData('games'),
-                                        wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                    }} {...this.props}/>
-                                </DataWidget>
+                                <TabsContainer 
+                                    items={
+                                        [
+                                            {
+                                                title : 'My Games',
+                                                container : (
+                                                    <DataWidget>
+                                                        <GamesContainer  data={{
+                                                            games : this.props.profile.getApp().getSummaryData('games'),
+                                                            wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                                        }} {...this.props}/>
+                                                    </DataWidget>
+                                                ),
+                                                icon : <GamesIcon/>
+                                            },
+                                            {
+                                                title : 'Game Store',
+                                                container : (
+                                                    <GameStorePageContainer/>
+                                                    
+                                                ),
+                                                icon : <StoreIcon/>
+                                            },
+
+                                        ]
+                                    }
+                                />
+                                   
                             </div>   
                         }
                     </Col>
