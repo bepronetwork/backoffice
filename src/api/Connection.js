@@ -1,6 +1,6 @@
 import config from "./config";
 import Numbers from "../services/numbers";
-import { API_URL } from "../config/apiConfig";
+import { API_URL, processResponse } from "../config/apiConfig";
 
 const URL = API_URL;
 
@@ -344,6 +344,32 @@ class Connection {
                     app, 
                     ...params
                 })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getEcosystemGames = async () => {
+        try{
+            let response = await fetch( URL + `/api/ecosystem/games/casino`, {
+                method : 'GET',
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+
+    addGameToPlatform = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/games/add`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
             });
             
             return response.json();
