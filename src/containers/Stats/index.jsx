@@ -31,19 +31,19 @@ class StatsContainer extends React.Component{
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        <DataWidget>
+                        {/* <DataWidget>
                             <DepositsInfo/>
-                        </DataWidget>
+                        </DataWidget> */}
                     </Col>
                     <Col lg={3}>
-                        <DataWidget>
+                          {/* <DataWidget>
                             <WithdrawalsInfo/>
-                        </DataWidget>
+                        </DataWidget>*/}
                     </Col>
                     <Col lg={3}>
-                        <DataWidget>
+                        {/* <DataWidget>
                             <PlatformCostsInfo/>
-                        </DataWidget>
+                        </DataWidget> */}
                     </Col>
                    
                 </Row>
@@ -60,11 +60,11 @@ class StatsContainer extends React.Component{
                     </Col>
                 </Row>
                 <Row>
-                    <Col lg={6}>
+                     {/* <Col lg={6}>
                         <DataWidget>
                             <DepositsWidget/>
                         </DataWidget>
-                    </Col>
+                            </Col> */}
                    
                 </Row>
             </Container>

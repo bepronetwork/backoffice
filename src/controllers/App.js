@@ -554,6 +554,28 @@ class App{
         }
     }
 
+    addGameToPlatform = async ({game}) => {
+        try{
+            return await ConnectionSingleton.addGameToPlatform({   
+                params : {
+                    app : this.getId(),
+                    game
+                },     
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getEcosystemGames = async () => {
+        try{
+            return (await ConnectionSingleton.getEcosystemGames()).data.message;
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 
