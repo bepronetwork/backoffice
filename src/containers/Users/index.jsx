@@ -44,9 +44,9 @@ class UsersContainer extends React.Component{
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        <DataWidget>
+                       {/* <DataWidget>
                             <UsersInfo data={this.props.profile.getApp().getSummaryData('users')}/>
-                        </DataWidget>
+                       </DataWidget> */}
                     </Col>
                 </Row>
                 <Row>
