@@ -22,7 +22,9 @@ import FilterListIcon from 'mdi-react/FilterListIcon';
 import withdrawStatus from './codes';
 import { Button } from "reactstrap";
 import Numbers from '../../../../../services/numbers';
-
+import InformationContainer from '../../../../../shared/components/information/InformationContainer';
+import { InformationIcon } from 'mdi-react';
+import { Row, Col} from 'reactstrap';
 
 let counter = 0;
 
@@ -151,7 +153,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-    const { numSelected, classes } = props;
+    const { numSelected, classes, withdrawAmountAvailable } = props;
 
         return (
             <Toolbar
@@ -165,9 +167,26 @@ let EnhancedTableToolbar = props => {
                     {numSelected} selected
                 </Typography>
                 ) : (
-                <Typography variant="h6" id="tableTitle">
-                    Withdraws
-                </Typography>
+                    <Row>
+                        <Col md={5}>
+                            <div style={{marginTop : 5}}>
+                                <Typography variant="h6" id="tableTitle">
+                                    Withdraws
+                                </Typography>
+                            </div>
+                        </Col>
+                        
+                        <Col md={4}>
+                            <InformationContainer icon={<InformationIcon size={20}/>} title={'This is the amount you are able to withdraw currently via the Smart-Contract'} />
+                        </Col>
+                        <Col md={3}>
+                            <div style={{marginTop : 5}}>
+                                <Typography variant="h6" id="tableTitle">
+                                    {withdrawAmountAvailable}
+                                </Typography>
+                            </div>
+                        </Col>
+                    </Row>
                 )}
             </div>
             <div className={classes.spacer} />
@@ -204,6 +223,7 @@ const styles = theme => ({
 const defaultProps = {
     profit : '0',
     ticker : 'N/A',
+    withdrawAmountAvailable : 0
 }
   
 
@@ -236,11 +256,12 @@ class WithdrawTable extends React.Component {
         this.projectData(props);
     }
 
-    projectData = (props) => {
-        let { data , currency} = props;
-
+    projectData = async (props) => {
+        let { data , currency, profile} = props;
+        let withdrawAmountAvailable = await profile.getWithdrawAmountAvailableDecentralized();
         this.setState({...this.state, 
             data : fromDatabasetoTable(data),
+            withdrawAmountAvailable : withdrawAmountAvailable,
             ticker : currency
         })
     }
@@ -279,12 +300,12 @@ class WithdrawTable extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+        const { data, order, orderBy, selected, rowsPerPage, page, withdrawAmountAvailable } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
             <Paper className={classes.root}>
-                    <EnhancedTableToolbar numSelected={selected.length} />
+                    <EnhancedTableToolbar numSelected={selected.length} withdrawAmountAvailable={withdrawAmountAvailable} />
                         <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead

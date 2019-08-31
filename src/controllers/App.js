@@ -218,6 +218,8 @@ class App{
         return this.params.bearerToken;
     }
 
+    getCasinoContract = () => this.casinoContract;
+
     isConnected(){
         return this.params.isValid;
     }

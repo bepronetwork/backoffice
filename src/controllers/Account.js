@@ -9,6 +9,7 @@ import { getNonce } from "../lib/number";
 import { processResponse } from "../lib/errors";
 import CasinoContract from "./CasinoContract";
 import { setAuthToCookies, getAuthFromCookies } from "./services/services";
+import Numbers from "../services/numbers";
 
 class Account{    
     constructor(params=null){
@@ -123,7 +124,7 @@ class Account{
             await this.update();
             return res;
         }catch(err){
-            throw err;
+            throw err; 
         }
     }
 
@@ -208,6 +209,14 @@ class Account{
             () => {
             this.getData();
             }, 30*1000);
+    }
+
+    getWithdrawAmountAvailableDecentralized = async () => {
+        try{
+            return await this.getApp().getCasinoContract().getWithdrawAmountAvailableDecentralized()
+        }catch(err){
+            throw err;
+        }
     }
 
     getDepositReference = async (params) => {

@@ -60,6 +60,7 @@ class WithdrawWidget extends React.Component{
                     <Col lg={8}>
                         <div style={{marginTop : 50}}>
                             <WithdrawsTable
+                                profile={this.props.profile}
                                 disabled={this.state.disabled}
                                 withdraw={this.withdrawTokens} 
                                 currency={ticker} data={withdraws}
