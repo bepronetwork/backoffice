@@ -5,7 +5,7 @@ const abiDecoder = require('abi-decoder'); // NodeJS
 var abiDecoderERC20 = abiDecoder;
 abiDecoderERC20.addABI(ierc20.abi);
 
-const URL = `http://api${ETHEREUM_NET_DEFAULT != 'mainnet' ? ("-" + ETHEREUM_NET_DEFAULT) : ''}.etherscan.io/api`
+const URL = `https://api${ETHEREUM_NET_DEFAULT != 'mainnet' ? ("-" + ETHEREUM_NET_DEFAULT) : ''}.etherscan.io/api`
 const KEY = '6V2VS4ZGQYS9W3X626A58KSGMMXGXD5P9C';
 
 async function getPastTransactions(address){
