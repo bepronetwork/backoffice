@@ -154,6 +154,18 @@ class CasinoContract{
         }
     }
 
+
+    getWithdrawAmountAvailableDecentralized = async () => {
+        let accounts = await window.web3.eth.getAccounts();
+        try{
+            return Numbers.fromBigNumberToInteger(
+                (await self.contract.getContract().methods.withdrawals(accounts[0]).call()).amount
+                , self.decimals); 
+        }catch(err){
+            throw err;
+        }
+    }
+
     fromIntToFloatEthereum(int){
         return Math.round(int*100);
     }
