@@ -47,22 +47,6 @@ class DevelopersContainer extends React.Component{
         })
     }
 
-
-    generateBearerToken = async () => {
-        try{
-            let res = await this.props.profile.createBearerToken();
-            
-            let {
-                message,
-                status
-            } = res.data;
-            
-            if(parseInt(status) != 200){ throw new Error(message.message)}
-        }catch(err){
-            this.props.showNotification(err.message);
-        }
-    }
-
     render = () => {
         const { platformId, platformAddress, apiKey, tokenAddress, ownerAddress, authorizedAddress} = this.state;
 
@@ -76,7 +60,7 @@ class DevelopersContainer extends React.Component{
                 </Row>
                 <Row>
                     <Col lg={12}>
-                        <BearerTokenTableApiKeys generateBearerToken={this.generateBearerToken} data={apiKey}/>    
+                        <BearerTokenTableApiKeys data={apiKey}/>    
                         <Row>
                             <Col lg={4}>
                                 <TableKey type={'Platform Id'} value={platformId}/>                                  

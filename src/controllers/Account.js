@@ -33,6 +33,7 @@ class Account{
                 admin,
                 headers : authHeaders(bearerToken, admin)
             });
+            console.log(response, auth);
             return await this.handleLoginResponse(response);
         }catch(err){
             console.log(err);
@@ -70,6 +71,7 @@ class Account{
                 username : this.params.username, 
                 password : this.params.password
             });
+            console.log(response)
             return await this.handleLoginResponse(response);
         }catch(err){
             // TO DO
@@ -103,16 +105,6 @@ class Account{
     update = async () => {
         /* Add Everything to the Redux State */  
         await store.dispatch(setProfileInfo(this));
-    }
-
-    createBearerToken = async () => {
-        try{
-            let res = await this.getApp().createBearerToken();
-            await this.update();
-            return res;
-        }catch(err){
-            throw err;
-        }
     }
 
     addPaybearToken = async (paybearToken) => {
@@ -186,6 +178,7 @@ class Account{
                 ...params,
                 admin_id : this.getProfileData().id
             });
+            console.log(res);
             await this.login();
             return res; 
         }catch(err){
@@ -349,6 +342,7 @@ class Account{
         if(status == 200){
             /* SET Profile Data */
             this.setProfileData(data);
+            console.log(data)
             setAuthToCookies({
                 admin : data.id,
                 bearerToken : data.bearerToken || data.security.bearerToken

@@ -24,10 +24,6 @@ class BearerTokenTableApiKeys extends PureComponent {
 		this.setState({ pageOfItems });
     };
     
-    generateBearerToken = async () => {
-        this.props.generateBearerToken();
-    }
-
 	render() {
 		return (
 		<Col md={12} lg={12}>
@@ -36,7 +32,6 @@ class BearerTokenTableApiKeys extends PureComponent {
                     <div className="card__title">
                         <h5 className="bold-text">Bearer Token</h5>
                     </div>
-                    <button style={{margin : 'auto',  maxWidth : 200, marginBottom : 30}} className="btn btn-primary account__btn" outline onClick={() => this.generateBearerToken()} > Generate API Token </button>
                     <hr></hr>
                     <h6>
                         {this.props.data}
