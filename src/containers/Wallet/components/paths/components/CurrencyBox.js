@@ -134,26 +134,7 @@ class CurrencyBox extends PureComponent {
             throw err;
         }
     }
-    
 
-    confirmDeposit = async () => {
-        // TO DO : Change ETH to the Currency Type;
-        let data = await this.props.profile.getDepositInfo({id : this.state.id});
-        let {
-            confirmed,
-            amount,
-            timestamp,
-            block
-        } = data;
-        let usd_amount = await ConverterSingleton.fromETHtoUsd(amount);
-        this.setState({...this.state, 
-            confirmedDeposit : confirmed,
-            recipt : {
-                confirmedDeposit : confirmed, 
-                amount, timestamp, block, usd_amount
-            }
-        });
-    }
 
     changeContent = (type, item) => {
         this.setState({[type] : item});

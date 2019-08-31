@@ -3,7 +3,6 @@ const withdrawStatus = {
     'confirmed' : 'grey-box',
 }
 
-
 const withdrawStatusArray = ['Open', 'Confirmed']
 
 export default withdrawStatus;

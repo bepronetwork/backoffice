@@ -5,15 +5,65 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import CurrencyBox from './components/CurrencyBox';
+import DepositsTable from './deposit/Table';
+import _ from 'lodash';
+import { getNonce } from '../../../../lib/number';
 
+const defaultState = {
+    ticker : 'N/A',
+    deposits : []
+}
 
 class DepositWidget extends React.Component{
 
     constructor(props){
         super(props)
+        this.state = defaultState;
     }
 
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+    
+    projectData = async (props) => {
+        if(_.isEmpty(props.profile)){return null}
+        let address = props.profile.getOwnerAddress();
+        let deposits = await props.profile.getApp().getDeposits(address);
+        let ticker = props.profile.getApp().getSummaryData('wallet').data.blockchain.ticker;
+        this.setState({...this.state, 
+            deposits,
+            ticker 
+        })
+    }
+
+    confirmDeposit = async (depositObject) => {
+        var { transactionHash, amount } = depositObject;
+        try{
+            await this.props.profile.getApp().updateWallet({amount, transactionHash});
+            await this.props.profile.getData();
+            this.projectData(this.props);
+        }catch(err){
+            // TO DO : Raise Notification System
+            throw err;
+        }
+      }
+
+    disable = () => {
+        this.setState({...this.state, disabled : true});
+    }
+
+    enable = () => {
+        this.setState({...this.state, disabled : false});
+    }
+
+
     render = () => {
+
+        const { deposits, ticker } = this.state; 
         return (
             <Container className="dashboard">
                 <Col lg={12}>
@@ -22,9 +72,22 @@ class DepositWidget extends React.Component{
                         Choose the Amount of Liquidity you want to Deposit
                     </p>
                 </Col>
-                <Col lg={4}>
-                    <CurrencyBox data={this.props.profile.getApp().getSummaryData('wallet')}/>
-                </Col>
+
+                <Row>
+                    <Col lg={4}>
+                        <CurrencyBox data={this.props.profile.getApp().getSummaryData('wallet')}/>
+                    </Col>
+                    <Col lg={8}>
+                        <div style={{marginTop : 50}}>
+                            <DepositsTable
+                                disabled={this.state.disabled}
+                                confirmDeposit={this.confirmDeposit} 
+                                currency={ticker} data={deposits}
+                            />
+                        </div>
+                    </Col>
+                </Row>
+
              
             </Container>
         )

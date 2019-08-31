@@ -19,10 +19,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import FilterListIcon from 'mdi-react/FilterListIcon';
-import withdrawStatus from './codes';
+import depositStatus, { depositStatusArray } from './codes';
 import { Button } from "reactstrap";
 import Numbers from '../../../../../services/numbers';
-
+import InformationContainer from '../../../../../shared/components/information/InformationContainer';
+import { InformationIcon } from 'mdi-react';
+import { Row, Col} from 'reactstrap';
 
 let counter = 0;
 
@@ -58,7 +60,7 @@ const fromDatabasetoTable = (data) => {
             id :  data._id,
 			amount : Numbers.toFloat(data.amount),
             confirmed: data.confirmed ? 'Confirmed' : 'Open',
-            done :  data.confirmed,
+            isConfirmed :  data.isConfirmed,
             transactionHash : data.transactionHash,
             creation_date : new Date(data.creation_timestamp).toDateString(),
             address: data.address,
@@ -80,8 +82,8 @@ const rows = [
         numeric: false
     },
     {
-        id: 'withdraw',
-        label: 'Withdraw',
+        id: 'deposit',
+        label: 'Deposit',
         numeric: false
     },
     {
@@ -165,9 +167,18 @@ let EnhancedTableToolbar = props => {
                     {numSelected} selected
                 </Typography>
                 ) : (
-                <Typography variant="h6" id="tableTitle">
-                    Withdraws
-                </Typography>
+                    <Row>
+                        <Col md={5}>
+                            <div style={{marginTop : 5}}>
+                                <Typography variant="h6" id="tableTitle">
+                                    Deposits
+                                </Typography>
+                            </div>
+                        </Col>
+                        <Col md={5}>
+                            <InformationContainer icon={<InformationIcon size={20}/>} title={'Whenever a Deposit does not work, please re-send the confirmation by confirming on the below not confirmed transactions'} />
+                        </Col>
+                    </Row>
                 )}
             </div>
             <div className={classes.spacer} />
@@ -212,7 +223,7 @@ const StyledTableCell = withStyles(theme => ({
   
 }))(TableCell);
 
-class WithdrawTable extends React.Component {
+class DepositsTable extends React.Component {
     
     constructor(props){
         super(props)
@@ -260,12 +271,10 @@ class WithdrawTable extends React.Component {
     handleSelectAllClick = event => {
         if (event.target.checked) {
         this.setState(state => ({ selected: state.data.map(n => n.id) }));
-        return;
+            return;
         }
         this.setState({ selected: [] });
     };
-
-  
 
     handleChangePage = (event, page) => {
         this.setState({ page });
@@ -277,6 +286,12 @@ class WithdrawTable extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+    confirmDeposit = async e => {
+        this.setState({...this.state, isLoading : true});
+        await this.props.confirmDeposit(e);
+        this.setState({...this.state, isLoading : false});
+
+    }
     render() {
         const { classes } = this.props;
         const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
@@ -312,23 +327,23 @@ class WithdrawTable extends React.Component {
                                 >
                                     <StyledTableCell align="center">{n.amount} {this.props.currency}</StyledTableCell>
                                     <StyledTableCell style={{width : 50}} align="center">
-                                        <p styleName={withdrawStatus[n.confirmed.toLowerCase()]}>
-                                            {n.confirmed}
+                                        <p styleName={depositStatus[!n.isConfirmed ? 'not-confirmed' : 'confirmed']}>
+                                            {!n.isConfirmed ? depositStatusArray[0] : depositStatusArray[1]}
                                         </p>
                                     </StyledTableCell>
                                   
                                     <StyledTableCell align="left">
                                         {
-                                            !n.done
+                                            !n.isConfirmed
                                             ?
                                             <Button
                                                 name="deposit"
                                                 theme="primary"
-                                                disabled={this.props.disabled}
+                                                disabled={this.state.isLoading}
                                                 variant="small-body"
-                                                onClick={ () => this.props.withdraw(n)}
+                                                onClick={ () => this.confirmDeposit(n)}
                                             >
-                                                <Typography> <strong>Withdraw</strong></Typography>
+                                                <Typography> <strong>{!this.state.isLoading ? 'Confirm Deposit' : 'Confirming'}</strong></Typography>
                                             </Button>
                                          : 'Done'}
                                      </StyledTableCell>
@@ -367,8 +382,8 @@ class WithdrawTable extends React.Component {
     }
 }
 
-WithdrawTable.propTypes = {
+DepositsTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(WithdrawTable);
+export default withStyles(styles)(DepositsTable);

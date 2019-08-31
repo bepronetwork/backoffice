@@ -156,6 +156,10 @@ class Account{
         return this.App.getManagerAddress();
     }
 
+    getOwnerAddress = () => {
+        return this.App.getOwnerAddress();
+    }
+
     hasAppStats = (type) => {
         try{
             if(!this.hasApp()){throw new Error('There is no App Attributed')}
