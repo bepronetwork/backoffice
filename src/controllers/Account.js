@@ -342,7 +342,6 @@ class Account{
         if(status == 200){
             /* SET Profile Data */
             this.setProfileData(data);
-            console.log(data)
             setAuthToCookies({
                 admin : data.id,
                 bearerToken : data.bearerToken || data.security.bearerToken
