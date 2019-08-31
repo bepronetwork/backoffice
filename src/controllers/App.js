@@ -18,9 +18,11 @@ class App{
     }
 
     getSummary = async () => {
-                // grab current state
+        // grab current state
         const state = store.getState();
         const { periodicity } = state;
+
+        console.log(this.params.bearerToken);
 
         try{
             let res = await Promise.all([
@@ -73,7 +75,6 @@ class App{
                 app : res[5].data.message ? res[5].data.message : null,
                 transactions :  res[6].data.message ? res[6].data.message[0] : null
             } 
-
             this.params = serverApiInfo.app;
 
             this.casinoContract = new CasinoContract({
@@ -227,24 +228,6 @@ class App{
 
     hasPaybearToken(){
         return this.params.paybearToken;
-    }
-
-    async createBearerToken(){
-        try{
-            let res = await ConnectionSingleton.createBearerToken({
-                app : this.getId()
-            });
-
-            let {
-                message : data
-            } = res.data;
-
-            //Add Connection Bearer Token to App Object
-            this.params.bearerToken = data.bearerToken;
-            return res;
-        }catch(err){
-            throw err;
-		}
     }
 
     async addPaybearToken(paybearToken){

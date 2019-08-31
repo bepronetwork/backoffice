@@ -33,7 +33,7 @@ export default class WizardForm extends PureComponent {
     };
   }
 
-  componentDidMount() {
+    componentDidMount() {
     NotificationSystem.newInstance({}, n => notification = n);
     }
 
