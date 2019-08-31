@@ -94,7 +94,7 @@ class Connection {
 
     getApp =  async ({app, headers}) => {
         try{
-            let response = await fetch(URL+ '/api/app/get', {
+            let response = await fetch(URL+ '/api/app/get/auth', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({app})

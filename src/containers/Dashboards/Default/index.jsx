@@ -53,6 +53,7 @@ class DefaultDashboard extends React.Component{
     render = () => {
 
         const { isDeployed } = this.state;
+        const { periodicity } = this.props;
                         
         return (
             <Container className="dashboard">   
@@ -92,7 +93,7 @@ class DefaultDashboard extends React.Component{
                         <Row>
                             <Col lg={12}>
                                 <DataWidget>
-                                    <RevenueChart data={{
+                                    <RevenueChart periodicity={periodicity} data={{
                                         revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet'),
                                         }} 

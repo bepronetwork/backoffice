@@ -8,6 +8,7 @@ import codes from "../config/codes";
 import Numbers from "../services/numbers";
 import { getNonce } from "../lib/number";
 import { getMetamaskAddress } from "../lib/metamask";
+import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 
 class App{    
     constructor(params){
@@ -294,6 +295,24 @@ class App{
     }
 
     getWithdraws = () => this.params.withdraws || [];
+    getDeposits = async (address) => {
+        let depositsApp = this.params.deposits || [];
+        let allTxsDeposits = await this.getUnconfirmedBlockchainDeposits(address);
+        return (await Promise.all(allTxsDeposits.map( async tx => {
+            var isConfirmed = false, deposit = null;
+            for(var i = 0; i < depositsApp.length; i++){
+                if(new String(depositsApp[i].transactionHash).toLowerCase().trim() == new String(tx.transactionHash).toLowerCase().trim()){
+                    isConfirmed = true;
+                    deposit = depositsApp[i];
+                }
+            }
+            if(isConfirmed){
+                return {...deposit, isConfirmed}
+            }else{
+                return {...tx, isConfirmed}
+            }
+        }))).filter(el => el != null)
+    }
 
     requestWithdraw = async ({tokenAmount}) => {
 
@@ -540,6 +559,8 @@ class App{
     }
 
     getManagerAddress = () => this.params.address;
+    
+    getOwnerAddress = () => {console.log(this.params); return this.params.ownerAddress;}
 
     addBlockchainInformation = async (params) => {
         try{
@@ -548,6 +569,36 @@ class App{
                 params,
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getUnconfirmedBlockchainDeposits = async (address) => {
+        try{            
+            var platformAddress =  this.getInformation('platformAddress');
+            var platformTokenAddress =  this.getInformation('platformTokenAddress');
+            var allTxs = (await getPastTransactions(address)).result;         
+            let unconfirmedDepositTxs = (await Promise.all(allTxs.map( async tx => {
+                let res_transaction = await window.web3.eth.getTransaction(tx.hash);
+                let transactionData = getTransactionDataERC20(res_transaction);
+                if(!transactionData){return null}
+                return {
+                    amount: Numbers.fromDecimals(transactionData.tokenAmount, this.params.decimals),
+                    to : tx.to,
+                    tokensTransferedTo : transactionData.tokensTransferedTo,
+                    creation_timestamp: tx.timestamp,
+                    transactionHash: tx.hash
+                }
+            }))).filter(el => el != null).filter( tx => {
+                return (
+                    new String(tx.to).toLowerCase().trim() == new String(platformTokenAddress).toLowerCase().trim()
+                    && new String(tx.tokensTransferedTo).toLowerCase().trim() == new String(platformAddress).toLowerCase().trim()
+                    )
+            })
+            return unconfirmedDepositTxs;
+            // TO DO : Finalize
 
         }catch(err){
             throw err;
