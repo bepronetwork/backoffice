@@ -196,7 +196,7 @@ class WizardFormThree extends React.Component{
                 </div>
                 <ButtonToolbar style={{margin : 'auto'}} className="form__button-toolbar wizard__toolbar">
                     <Button style={{margin : 'auto'}} color="secondary" type="button" className="previous" onClick={ () => this.props.previousPage()}>Back</Button>
-                    <Button style={{margin : 'auto'}} color="primary" type="submit" className="next"  onClick={ () => deployApp()}> 
+                    <Button disabled={isLoading} style={{margin : 'auto'}} color="primary" type="submit" className="next"  onClick={ () => deployApp()}> 
                         { !isLoading ? 'Create Application' : <img src={loading} className={'loading_gif'}></img> } 
                     </Button>
                 </ButtonToolbar>

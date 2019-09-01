@@ -22,8 +22,6 @@ class App{
         const state = store.getState();
         const { periodicity } = state;
 
-        console.log(this.params.bearerToken);
-
         try{
             let res = await Promise.all([
                 ConnectionSingleton.getSummary({

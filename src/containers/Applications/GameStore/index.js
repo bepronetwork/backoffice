@@ -55,7 +55,8 @@ class GameStorePageContainer extends React.Component{
     addGame = async game => {
         const { profile } = this.props;
         await profile.getApp().addGameToPlatform({game : game._id});
-        this.projectData(this.props)
+        await profile.getData();
+        await this.projectData(this.props)
     }
 
     render = () => {
