@@ -163,7 +163,7 @@ class WizardForm extends PureComponent {
             state = 'choooseServices';
             deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig})
             await this.sendServices({services});
-
+            await profile.getData();
             this.setState({...this.state, isLoading : false});
         }catch(err){
             console.log(err)
