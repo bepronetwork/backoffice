@@ -13,7 +13,8 @@ const defaultProps = {
     playBalance : 'N/A',
     totalLiquidity : 'N/A',
     ticker : 'N/A',
-    totalDecentralizedLiquidity : 'N/A'
+    totalDecentralizedLiquidity : 'N/A',
+    bankroll : 'N/A'
 }
 
 class LiquidityWalletWidget extends PureComponent {
@@ -39,6 +40,7 @@ class LiquidityWalletWidget extends PureComponent {
         if(data.blockchain){
             this.setState({...this.state, 
                 totalLiquidity :  data.playBalance ? data.playBalance : defaultProps.totalLiquidity,
+                bankroll : data.blockchain.decentralized.houseBalance ? data.blockchain.decentralized.houseBalance : defaultProps.bankroll,
                 totalDecentralizedLiquidity :  data.blockchain.decentralized.totalLiquidity ? data.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
                 playBalance : data.playBalance ? data.playBalance : defaultProps.playBalance,
                 ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
@@ -72,6 +74,7 @@ class LiquidityWalletWidget extends PureComponent {
                                                     <InformationIcon size={20}/>
                                                 </IconButton>
                                             </Tooltip>
+                                            <span><AnimationNumber number={this.state.bankroll}/></span> 
                                         </p>
                                     </p>
                                 </div>
