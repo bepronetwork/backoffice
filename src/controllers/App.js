@@ -278,6 +278,7 @@ class App{
     }
 
     getWithdraws = () => this.params.withdraws || [];
+    
     getDeposits = async (address) => {
         let depositsApp = this.params.deposits || [];
         let allTxsDeposits = await this.getUnconfirmedBlockchainDeposits(address);
