@@ -5,17 +5,16 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import _ from 'lodash';
-import SettingsBox from '../components/SettingsBox';
-import { ArrowExpandDownIcon, EmergencyExitIcon, OpenInAppIcon } from 'mdi-react';
-const deposit = `${process.env.PUBLIC_URL}/img/dashboard/deposit.png`;
+import InformationContainer from '../../../shared/components/information/InformationContainer';
+import { ArrowExpandDownIcon, EmergencyExitIcon, OpenInAppIcon, InformationIcon } from 'mdi-react';
 const withdrawal = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
-const time = `${process.env.PUBLIC_URL}/img/dashboard/stopwatch.png`;
 const emergency = `${process.env.PUBLIC_URL}/img/dashboard/siren.png`;
 
 
 const defaultState = {
     isPaused : false,
     locks : {},
+    totalAmount : 0,
     currencyTicker : 'N/A',
     locks : {
        
@@ -44,10 +43,11 @@ class SettingsRiskContainer extends React.Component{
     projectData = async (props) => {
         let currencyTicker = props.profile.getApp().getCurrencyTicker();
         let isPaused = await props.profile.getApp().isPaused(); 
-
+        let totalAmount = await props.profile.getApp().totalDecentralizedLiquidity(); 
         this.setState({...this.state, 
             currencyTicker,
             isPaused,
+            totalAmount
         })
     }
 
@@ -81,6 +81,17 @@ class SettingsRiskContainer extends React.Component{
         return;
     }
 
+    withdrawAmount = async () => {
+        var { profile } = this.props;
+        const { totalAmount } = this.state;
+        this.setState({...this.state, isLoading : {...this.state.isLoading}})
+        await profile.getApp().withdrawAmount({amount : totalAmount});
+        this.setState({...this.state, isLoading : {...this.state.isLoading}});
+        this.projectData(this.props);
+        return;
+    }
+
+
     render = () => {
 
         return (
@@ -111,6 +122,36 @@ class SettingsRiskContainer extends React.Component{
                                                 </Button>
                                             </div>        
                                         }
+                                    </Col>
+                                </Row>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                    <Col md={4}>
+                        <Card>
+                             <CardBody>
+                                <Row>
+                                    <Col md={4}>
+                                        <img className='application__game__image' src={withdrawal}/>
+                                    </Col>
+                                    <Col md={8}>
+                                        <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}> Withdraw to Vault </h3>
+                                        <Row>
+                                            <Col md={9}>
+                                                <h5  style={{marginTop : 25}} className=""> {this.state.totalAmount ? `(${this.state.currencyTicker})` : null } </h5>
+                                                <h5 style={{fontSize : 10, marginTop : 5}}> Withdraw To Vault</h5>
+                                            </Col>
+                                            <Col md={3}>
+                                                <InformationContainer title={'This function is used once the system is paused only and to secure all the funds to be withdrawn by you'} icon={<InformationIcon size={20}/>}/> 
+                                            </Col>
+                                        </Row>
+                                        <hr></hr>
+                                        <Button disabled={this.state.isLoading.isWithdrawingAll || !this.state.isPaused} onClick={() => this.withdrawAmount()} className="icon" outline>
+                                            <p>
+                                                <EmergencyExitIcon className="deposit-icon"/> 
+                                                    {!this.state.isLoading.isPaused ? 'Withdraw All Amount' : '...is Withdrawing'}
+                                            </p>
+                                        </Button>
                                     </Col>
                                 </Row>
                             </CardBody>

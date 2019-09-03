@@ -330,6 +330,23 @@ class App{
         }
     }
 
+    totalDecentralizedLiquidity = async () => {
+        return await this.casinoContract.getSmartContractLiquidity();
+    }
+
+    withdrawAmount = async ({amount}) => {
+        let metamaskAddress = await getMetamaskAddress();
+        try{
+            var res_with = await this.casinoContract.withdrawApp({
+                address : metamaskAddress,
+                amount : amount
+            });
+            return res_with;
+        }catch(err){
+            throw err;
+        }
+    }
+
     finalizeWithdraw = async ({ amount, nonce, withdraw_id }) => {
         try {
             let metamaskAddress = await getMetamaskAddress();
@@ -473,6 +490,7 @@ class App{
 
     getWithdrawalTimeLimit = async () => {
         try{
+            if(!this.casinoContract){return null}
             return await this.casinoContract.getWithdrawalTimeLimit();
         }catch(err){
             throw err;
