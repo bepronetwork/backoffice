@@ -34,7 +34,6 @@ class Account{
                 admin,
                 headers : authHeaders(bearerToken, admin)
             });
-            console.log(response, auth);
             return await this.handleLoginResponse(response);
         }catch(err){
             console.log(err);
@@ -351,10 +350,12 @@ class Account{
         if(status == 200){
             /* SET Profile Data */
             this.setProfileData(data);
+
             setAuthToCookies({
                 admin : data.id,
                 bearerToken : data.bearerToken || data.security.bearerToken
             });
+
             /* SET APP */
             // If App Already Exists for this User
             if(data.app.id){

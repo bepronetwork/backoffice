@@ -1,6 +1,6 @@
 import config from "./config";
 import Numbers from "../services/numbers";
-import { API_URL, processResponse } from "../config/apiConfig";
+import { API_URL, API_URL_WITHDRAW, processResponse } from "../config/apiConfig";
 
 const URL = API_URL;
 
@@ -259,7 +259,7 @@ class Connection {
 
     requestWithdraw = async ({app, address, signature, newBalance, tokenAmount, nonce, headers}) => {
         try{
-            let response = await fetch( URL + `/api/app/requestWithdraw`, {
+            let response = await fetch( API_URL_WITHDRAW + `/api/app/requestWithdraw`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({
