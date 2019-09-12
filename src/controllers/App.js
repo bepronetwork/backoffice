@@ -74,7 +74,6 @@ class App{
                 transactions :  res[6].data.message ? res[6].data.message[0] : null
             } 
             this.params = serverApiInfo.app;
-
             this.casinoContract = new CasinoContract({
                 contractAddress : this.getInformation('platformAddress'),
                 tokenAddress : this.getInformation('platformTokenAddress'),
