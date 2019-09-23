@@ -16,7 +16,6 @@ class GameInfo extends PureComponent {
         };
     }
 
-
     goToGamePage = async () => {
         let game = this.props.game;
         await store.dispatch(setGameView(game));
@@ -26,7 +25,8 @@ class GameInfo extends PureComponent {
     render() {
         let game = this.props.game;
         let ticker = this.props.wallet.blockchain.ticker;
-
+        let game_image = game_images[new String(game.name).toLowerCase().replace(/ /g,"_")];
+        const image = game_image ? game_image : game_images.default;
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <button className='clean_button' onClick={ () => this.goToGamePage()}>
@@ -43,7 +43,7 @@ class GameInfo extends PureComponent {
                                     </div>
                                 </Col>
                                 <Col lg={4} >  
-                                    <img className='application__game__image' src={game_images[new String(game.name).toLowerCase().replace(/ /g,"_")]}/>
+                                    <img className='application__game__image' src={image}/>
                                 </Col>
                             </Row>
                         

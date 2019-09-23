@@ -33,7 +33,7 @@ class GameStorePageContainer extends React.Component{
     projectData = async (props) => {
         let { profile } = props;
         let ecosystemGames = await profile.getApp().getEcosystemGames();
-        let appGames = (await profile.getApp().getGames()).data.message;
+        let appGames = (profile.getApp().getSummaryData('gamesInfo')).data.data.message;
 
         ecosystemGames = ecosystemGames.map( ecoGame => {
             let exists = false;
@@ -55,7 +55,7 @@ class GameStorePageContainer extends React.Component{
     addGame = async game => {
         const { profile } = this.props;
         await profile.getApp().addGameToPlatform({game : game._id});
-        await profile.getData();
+        await profile.setGameDataAsync();
         await this.projectData(this.props)
     }
 

@@ -271,7 +271,6 @@ class BetsTable extends React.Component {
 
     projectData = (props) => {
         let data = props.data;
-
         this.setState({...this.state, 
             data : fromDatabasetoTable(data.users.data),
             ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,

@@ -16,7 +16,9 @@ class TimePicker extends React.Component{
     }
 
     change = async (value) => {
+        const { onChange } = this.props;
         await store.dispatch(setDataPeriodicity(value));
+        if(onChange){onChange({value})}    
     }
 
     render = () => {
