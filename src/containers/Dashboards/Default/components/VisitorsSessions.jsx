@@ -61,10 +61,14 @@ class VisitorsSessions extends React.Component{
 
     projectData = (props) => {
         const { bets, users } = props.data;
+
         if(bets.data[0] && users.data[0]){
+            let lastMonthUserBets = users.data.find( data => (data.date.month != null && data.date.year != null))
+            let amount = lastMonthUserBets.games.reduce( (acc, game) => acc+game.betAmount, 0);
+
             let data = {
-                betAmount : bets.data[0].bets.amount,
-                games : DashboardMapperSingleton.toPieChart(users.data[0].games)
+                betAmount : amount,
+                games : DashboardMapperSingleton.toPieChart(lastMonthUserBets.games)
             }
             
 
@@ -84,7 +88,7 @@ class VisitorsSessions extends React.Component{
                 subhead="What games are more popular?"
             >
                 <div className="dashboard__visitors-chart">
-                    <p className="dashboard__visitors-chart-title"> Total Bets <span> this week </span></p>
+                    <p className="dashboard__visitors-chart-title"> Total Bets <span> last month </span></p>
                     <p className="dashboard__visitors-chart-number"><AnimationNumber number={data.betAmount}/></p>
                     <ResponsiveContainer className="dashboard__chart-pie" width="100%" height={220}>
                     <PieChart className="dashboard__chart-pie-container">

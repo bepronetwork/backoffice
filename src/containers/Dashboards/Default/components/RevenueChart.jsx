@@ -36,7 +36,7 @@ class RevenueChart extends React.Component{
     }
 
     projectData = (props) => {
-        let { data , periodicity} = props;
+        let { data , periodicity } = props;
 
         this.setState({...this.state, 
             chartData : data.revenue.data ? DashboardMapperSingleton.toRevenueChart(data.revenue.data) : defaultProps.chartData,

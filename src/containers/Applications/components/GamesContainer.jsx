@@ -17,9 +17,9 @@ class GamesContainer extends PureComponent {
     render() {
         let games = [];
         var wallet = {};
-
         if(this.props.data.games.data[0]){
-            games = getAllGames(this.props.data.games.data);
+            let gamesInfo = this.props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
+            games = getAllGames(this.props.data.games.data, gamesInfo);
             wallet = this.props.data.wallet.data;
         }
         
@@ -38,7 +38,7 @@ class GamesContainer extends PureComponent {
 }
 
 
-function getAllGames(data){
+function getAllGames(data, gamesInfo){
     let games = [];
     for(var i = 0; i < data.length; i++) {
         for(var k = 0; k < data[i].games.length; k++) {
@@ -49,10 +49,16 @@ function getAllGames(data){
                 }     
             }
             if(!exists){
-                games.push(data[i].games[k])
+                let gameAdditionalInfo = gamesInfo.map( item => {
+                    if(new String(item._id).toLowerCase() == new String(data[i].games[k]._id).toLowerCase()){
+                        return item;
+                    }
+                }).filter(el => el != null)[0];
+                games.push({...data[i].games[k], ...gameAdditionalInfo})
             }
         }
     }
+
     return games;
 }
 

@@ -38,12 +38,11 @@ class GamePageContainer extends React.Component{
     }
 
     componentDidMount(){
-        this.projectData(this.props)
+        this.projectData(this.props);
     }
 
     componentWillReceiveProps(props){
-        let reduxGame = props.game;
-        this.updateGameView({game : reduxGame});
+        this.projectData(props);
     }
     
     projectData = (props) => {
@@ -56,8 +55,8 @@ class GamePageContainer extends React.Component{
             name,
             profit : Numbers.toFloat(profit),
             id : _id,
-            betsAmount : Numbers.toFloat(betsAmount),
-            turnover : Numbers.toFloat(betAmount), 
+            turnover : Numbers.toFloat(betsAmount),
+            betAmount : Numbers.toFloat(betAmount), 
             fees : Numbers.toFloat(fees)
         })
     }
@@ -79,33 +78,29 @@ class GamePageContainer extends React.Component{
         switch(field){
             case 'edge' : {
                 // Change Edge
-                await profile.getApp().editEdge({game : this.state.id, edge : this.state[`new_${field}`]});
+                let res = await profile.getApp().editEdge({game : this.state.id, edge : this.state[`new_${field}`]});
+                const { edge } = res.data.message;
+                this.setState({...this.state, edge });
                 break;
             };
             case 'tableLimit' : {
                 // Change Table Limit
                 let res = await profile.getApp().editTableLimit({game : this.state.id, tableLimit : this.state[`new_${field}`]});
+                const { tableLimit } = res.data.message;
+                this.setState({...this.state, tableLimit });
                 break;
             }
         }
-        this.state.locks[field] = true; 
-        let reduxGame = this.props.game;
-        this.updateGameView({game : reduxGame});
+
+        this.lockField({field});
+        profile.setGameDataAsync();
     }
 
-    updateGameView = async ({game}) => {
-        let reduxGame = game;
-        let res = await this.props.profile.getApp().getGames();
-        let games = res.data.message;
-        game = games.map( item => {
-            if(item._id == reduxGame._id){
-                return item;
-            }
-        }).filter(el => el != null)[0];
-        this.projectData({ game : {...reduxGame, edge : game.edge, tableLimit : game.tableLimit}});
-    }
+
 
     render = () => {
+        let game_image = game_images[new String(this.state.name).toLowerCase().replace(/ /g,"_")];
+        const image = game_image ? game_image : game_images.default;
 
         return (
             <Container className="dashboard">
@@ -115,7 +110,7 @@ class GamePageContainer extends React.Component{
                             <CardBody>
                                 <Row>
                                     <Col lg={4}>
-                                        <img className='application__game__image' src={game_images[new String(this.state.name).toLowerCase().replace(/ /g,"_")]}/>
+                                        <img className='application__game__image' src={image}/>
                                     </Col>
                                     <Col lg={8}>
                                         <h5 className="">Game Name</h5>
@@ -134,7 +129,7 @@ class GamePageContainer extends React.Component{
                                     <Col md={4}>
                                         <h5 className="">Bets Amount</h5>
                                         <p className="dashboard__visitors-chart-number-second">
-                                            <AnimationNumber number={this.state.betsAmount}/> 
+                                            <AnimationNumber number={this.state.betAmount}/> 
                                         </p>
                                     </Col>
                                     <Col md={4}>

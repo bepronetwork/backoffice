@@ -93,6 +93,11 @@ class Account{
 		}
     }
 
+    setGameDataAsync = async () => {
+        await this.getApp().setGamesAsync();
+        await this.update();
+    }
+
     getData = async () => {
         await this.getAppStatistics();
         await this.update();

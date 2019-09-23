@@ -46,8 +46,9 @@ class DefaultDashboard extends React.Component{
         this.setState({...this.state, isDeployed, periodicity});
     }
 
-    changePeriodicity = ({value}) => {
-
+    changePeriodicity = async ({value}) => {
+        const { profile } = this.props;
+        await profile.getData();
     }
 
     render = () => {
@@ -68,7 +69,7 @@ class DefaultDashboard extends React.Component{
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <ProfitResume data={{
+                            <ProfitResume periodicity={periodicity} data={{
                                 revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                 wallet : this.props.profile.getApp().getSummaryData('wallet'),
                                 }} />
@@ -76,7 +77,7 @@ class DefaultDashboard extends React.Component{
                     </Col> 
                     <Col lg={3}>
                         <DataWidget>
-                            <TurnoverResume data={{
+                            <TurnoverResume periodicity={periodicity} data={{
                                 revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                 wallet : this.props.profile.getApp().getSummaryData('wallet'),
                             }} />

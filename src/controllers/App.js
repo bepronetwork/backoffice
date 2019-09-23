@@ -21,7 +21,6 @@ class App{
         // grab current state
         const state = store.getState();
         const { periodicity } = state;
-
         try{
             let res = await Promise.all([
                 ConnectionSingleton.getSummary({
@@ -62,7 +61,9 @@ class App{
                     filters : [],
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
+                this.getGamesAsync()
             ]);
+
 
             let serverApiInfo = {
                 users : res[0].data.message ? res[0].data.message : null,
@@ -71,7 +72,8 @@ class App{
                 revenue : res[3].data.message ? res[3].data.message : null,
                 wallet : res[4].data.message ? res[4].data.message : null,        
                 app : res[5].data.message ? res[5].data.message : null,
-                transactions :  res[6].data.message ? res[6].data.message[0] : null
+                transactions :  res[6].data.message ? res[6].data.message[0] : null,
+                gamesInfo : res[7]
             } 
             this.params = serverApiInfo.app;
             this.casinoContract = new CasinoContract({
@@ -129,14 +131,10 @@ class App{
             throw err;
         }
     }
-    getDepositInfo = async ({id}) => {
-        // TO DO : Change App to the Entity Type coming from Login
+
+    setGamesAsync = async () => {
         try{
-            return await ConnectionSingleton.getDepositInfo(
-                {   
-                    id, 
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
-                });
+            this.params.gamesInfo = await this.getGamesAsync();
         }catch(err){
             throw err;
         }
@@ -415,7 +413,7 @@ class App{
         }
     }
 
-    getGames = async () => {
+    getGamesAsync = async () => {
         try{
             /* Cancel Withdraw Response */
             return await ConnectionSingleton.getGames({               
