@@ -134,7 +134,7 @@ class App{
 
     setGamesAsync = async () => {
         try{
-            this.params.gamesInfo = await this.getGamesAsync();
+            this.data.summary.gamesInfo = await this.getGamesAsync();
         }catch(err){
             throw err;
         }
