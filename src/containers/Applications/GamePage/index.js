@@ -44,10 +44,17 @@ class GamePageContainer extends React.Component{
     componentWillReceiveProps(props){
         this.projectData(props);
     }
+
+    getUpdatedGame({props, game}){
+        const gamesInfo = props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
+        return {...game, ...gamesInfo.find( g => g._id == game._id)};
+    }
     
     projectData = (props) => {
-        let { edge, name, profit, _id, betsAmount, betAmount, fees, tableLimit } = props.game;
-        let currencyTicker = this.props.profile.getApp().getCurrencyTicker();
+        let game = this.getUpdatedGame({props, game : props.game});
+        if(!game){return null}
+        let { edge, name, profit, _id, betsAmount, betAmount, fees, tableLimit } = game;
+        let currencyTicker = props.profile.getApp().getCurrencyTicker();
         this.setState({...this.state, 
             edge,
             tableLimit,
@@ -78,22 +85,18 @@ class GamePageContainer extends React.Component{
         switch(field){
             case 'edge' : {
                 // Change Edge
-                let res = await profile.getApp().editEdge({game : this.state.id, edge : this.state[`new_${field}`]});
-                const { edge } = res.data.message;
-                this.setState({...this.state, edge });
+                await profile.getApp().editEdge({game : this.state.id, edge : this.state[`new_${field}`]});
                 break;
             };
             case 'tableLimit' : {
                 // Change Table Limit
                 let res = await profile.getApp().editTableLimit({game : this.state.id, tableLimit : this.state[`new_${field}`]});
-                const { tableLimit } = res.data.message;
-                this.setState({...this.state, tableLimit });
                 break;
             }
         }
-
+        await profile.setGameDataAsync();
+        this.projectData(this.props);
         this.lockField({field});
-        profile.setGameDataAsync();
     }
 
 
@@ -238,20 +241,13 @@ const EditLock = (props) => {
    
 
 function mapStateToProps(state){
-    
     return {
         profile: state.profile,
         game : state.game
     };
 }
 
-GamePageContainer.propTypes = {
-    t: PropTypes.func.isRequired
-};
 
 
-export default compose(
-    translate('common'),
-    connect(mapStateToProps)
-)(GamePageContainer);
+export default connect(mapStateToProps)(GamePageContainer);
 

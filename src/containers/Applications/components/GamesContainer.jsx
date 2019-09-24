@@ -1,9 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
-import { Card, CardBody, Col, Row } from 'reactstrap';
-import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
+import {  Col, Row } from 'reactstrap';
 import GameInfo from './GameInfo';
-import Numbers from '../../../services/numbers';
+import { connect } from "react-redux";
 
 class GamesContainer extends PureComponent {
  
@@ -11,17 +10,33 @@ class GamesContainer extends PureComponent {
         super();
         this.state = {
             activeIndex: 0,
+            games : [],
+            wallet : {}
         };
     }
 
-    render() {
-        let games = [];
-        var wallet = {};
-        if(this.props.data.games.data[0]){
-            let gamesInfo = this.props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
-            games = getAllGames(this.props.data.games.data, gamesInfo);
-            wallet = this.props.data.wallet.data;
+    componentDidMount(){
+        this.projectData(this.props);
+    }
+
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+
+    async projectData(props){
+        if(props.data.games.data[0]){
+            const gamesInfo = props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
+            const games = getAllGames(props.data.games.data, gamesInfo);
+            const wallet = props.data.wallet.data;
+            this.setState({...this.state, 
+                wallet,
+                games
+            })
         }
+    }
+
+    render() {
+       const { wallet, games } = this.state;
         
         return (
             <Row md={12} xl={12} lg={12} xs={12}>
@@ -62,4 +77,11 @@ function getAllGames(data, gamesInfo){
     return games;
 }
 
-export default GamesContainer;
+function mapStateToProps(state){
+    return {
+        profile: state.profile
+    };
+}
+
+export default connect(mapStateToProps)(GamesContainer);
+

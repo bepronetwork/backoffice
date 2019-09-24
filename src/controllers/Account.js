@@ -15,6 +15,7 @@ class Account{
     constructor(params=null){
         this.params = params;
         this.date = null;
+        this.versionControl = 0;
     }
 
     getUserInfo = () => {
@@ -71,7 +72,6 @@ class Account{
                 username : this.params.username, 
                 password : this.params.password
             });
-            console.log(response)
             return await this.handleLoginResponse(response);
         }catch(err){
             // TO DO
@@ -109,6 +109,7 @@ class Account{
 
     update = async () => {
         /* Add Everything to the Redux State */  
+        this.versionControl = this.versionControl + 1;
         await store.dispatch(setProfileInfo(this));
     }
 
@@ -183,7 +184,6 @@ class Account{
                 ...params,
                 admin_id : this.getProfileData().id
             });
-            console.log(res);
             await this.login();
             return res; 
         }catch(err){
@@ -212,7 +212,7 @@ class Account{
         this.timer = setInterval(
             () => {
             this.getData();
-            }, 30*1000);
+        }, 30*1000);
     }
 
     getWithdrawAmountAvailableDecentralized = async () => {
