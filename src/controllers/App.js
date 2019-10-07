@@ -71,10 +71,12 @@ class App{
                 bets : res[2].data.message ? res[2].data.message : null,
                 revenue : res[3].data.message ? res[3].data.message : null,
                 wallet : res[4].data.message ? res[4].data.message : null,        
+                affiliates : res[5].data.message ? res[5].data.message.affiliateSetup : null,
                 app : res[5].data.message ? res[5].data.message : null,
                 transactions :  res[6].data.message ? res[6].data.message[0] : null,
                 gamesInfo : res[7]
             } 
+
             this.params = serverApiInfo.app;
             this.casinoContract = new CasinoContract({
                 contractAddress : this.getInformation('platformAddress'),
@@ -183,6 +185,21 @@ class App{
                 amount
             })
 
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async editAffiliateStructure({structures}){
+        try{           
+            return await ConnectionSingleton.editAffiliateStructure({
+                params : {
+                    app : this.getId(),
+                    structures, 
+                    affiliateTotalCut : structures.reduce( (acc, s) => acc+parseFloat(s.percentageOnLoss), 0)
+                },
+                headers : authHeaders(this.getBearerToken(), this.getId())
+            })
         }catch(err){
             throw err;
         }
