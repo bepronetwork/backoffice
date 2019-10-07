@@ -89,7 +89,7 @@
     "react-bootstrap": "^1.0.0-beta.11",
     "react-chartjs-2": "^2.7.4",
     "react-code-input": "^3.8.1",
-    "react-color": "^2.14.1",
+    "react-color": "^2.17.3",
     "react-data-grid": "^3.0.10",
     "react-datepicker": "^1.6.0",
     "react-dev-utils": "^6.0.3",
