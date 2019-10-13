@@ -106,6 +106,13 @@ class App{
         }
     }
 
+    updateAppInfoAsync = async () => {
+        this.params = (await ConnectionSingleton.getApp({
+            app : this.params.id,
+            headers : authHeaders(this.params.bearerToken, this.params.id)
+        })).data.message;
+    }
+
     getDepositReference = async ({currency}) => {
         // TO DO : Change App to the Entity Type coming from Login
         try{
@@ -220,6 +227,10 @@ class App{
 
     getId(){
         return this.params.id;
+    }
+
+    getCustomization(){
+        return this.params.customization;
     }
 
     getInformation(key){
@@ -412,6 +423,29 @@ class App{
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
 
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editTopBarCustomization  = async ({textColor, backgroundColor, text, isActive}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editTopBarCustomization({   
+                params : {
+                    app : this.getId(),
+                    textColor,
+                    backgroundColor,
+                    text,
+                    isActive
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
         }catch(err){
             throw err;
         }

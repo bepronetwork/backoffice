@@ -367,8 +367,20 @@ class Connection {
 
     editAffiliateStructure = async ({params, headers}) => {
         try{
-            console.log(params)
             let response = await fetch( URL + `/api/app/affiliate/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editTopBarCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/topBar`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
