@@ -62,7 +62,7 @@ class GameStorePageContainer extends React.Component{
     render = () => {
         const { ecosystemGames } = this.state;
         return (
-            <Container className="dashboard">
+            <div>
                 <Row>
                     {ecosystemGames.map( game => {
                         return (
@@ -76,7 +76,7 @@ class GameStorePageContainer extends React.Component{
                         )
                     })}
                 </Row>
-            </Container>
+            </div>
         )
     }
 } 
