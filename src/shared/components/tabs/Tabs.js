@@ -25,7 +25,7 @@ class TabsContainer extends React.Component{
         const { items} = this.props;
 
         return (
-            <Container className="dashboard">
+            <div>
                 <Tab.Container id="left-tabs-example" defaultActiveKey="item-0">
                     <Row>
                         <Col sm={2}>
@@ -51,7 +51,6 @@ class TabsContainer extends React.Component{
                         <Col sm={10}>
                             <Tab.Content>
                                 {items.map( (item, index) => {
-
                                     return (
                                         <Tab.Pane eventKey={`item-${index}`}>
                                             {item.container}
@@ -63,7 +62,7 @@ class TabsContainer extends React.Component{
                         </Col>
                     </Row>
                 </Tab.Container>
-          </Container>
+          </div>
         )
     }
 

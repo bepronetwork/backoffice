@@ -488,3 +488,14 @@ button:focus, button:active {
 .locker-container{
     opacity: 0.8;
 }
+
+.carousel-trash{
+    position: absolute;
+    top: -3%;
+    right: 20%;
+    z-index : 10;
+    background-color: white;
+    border-radius : 50px;
+    padding : 10px;
+    border : none;
+}
