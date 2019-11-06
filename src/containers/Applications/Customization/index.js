@@ -1,19 +1,30 @@
 import React, { Component } from 'react'
 import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
-import AnnouncementTabSettings from './components/AnnouncementTabSettings';
+import { AnnouncementTabSettings, BannersSettings } from './components';
+import TabsContainer from '../../../shared/components/tabs/Tabs';
+import { LayersOutlineIcon, AnnouncementIcon } from 'mdi-react';
 
-export default class CustmoizationContainer extends Component {
+export default class CustomizationContainer extends Component {
     render() {
         return (
-            <Container className="dashboard">
-            <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Customization Settings </p>
-            <hr></hr>
-            <Row>
-                <Col lg={12}>
-                    <AnnouncementTabSettings />
-                </Col>
-            </Row>
-      </Container>
+            <div>
+                <TabsContainer 
+                    items={
+                        [
+                            {
+                                title : 'Announc. Tab',
+                                container :  <AnnouncementTabSettings />,
+                                icon : <AnnouncementIcon/>
+                            },
+                            {
+                                title : 'Banners',
+                                container : <BannersSettings/>,
+                                icon : <LayersOutlineIcon/>
+                            },
+                        ]
+                    }
+                />
+            </div>
         )
     }
 }

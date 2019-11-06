@@ -65,7 +65,6 @@ class AnnouncementTabSettings extends Component {
 
     render() {
         const { isLoading, locked, isActive, textColor, backgroundColor, text } = this.state; 
-        console.log(this.state)
         return (
             <Card>
                 <CardBody>
@@ -77,53 +76,38 @@ class AnnouncementTabSettings extends Component {
                                 lockField={this.lockField} 
                                 confirmChanges={this.confirmChanges} 
                                 type={'announcementTab'} 
-                                locked={locked}>
-                                <Row>
-                                    <Col lg={3}>
-                                        <h3>Announcement Tab</h3>
-                                    </Col>
-                                    <Col lg={9}>
-                                        <BooleanInput
-                                            checked={isActive} 
-                                            onChange={this.onChange}
-                                            disabled={locked}
-                                            type={'isActive'}
-                                            id={'check-active-101'}
-                                        />
-                                    </Col>
-                                </Row>
-                            <hr></hr>
-                                <Row>
-                                    <Col lg={6}>
-                                        <TextInput
-                                            label={'Announcement Text'}
-                                            name={'text'}
-                                            type={'text'} 
-                                            value={text}
-                                            defaultValue={text}
-                                            disabled={locked}
-                                            changeContent={(type, value) => this.onChange({type, value})}
-                                        />
-                                    </Col>
-                                    <Col lg={3}>
-                                        <ColorPickerInput 
-                                            label={'Text Color'}
-                                            name={'textColor'}
-                                            color={textColor}
-                                            disabled={locked}
-                                            onChange={this.onChange}
-                                        />
-                                    </Col>
-                                    <Col lg={3}>
-                                        <ColorPickerInput 
-                                            label={'Background Color'}
-                                            name={'backgroundColor'}
-                                            color={backgroundColor}
-                                            disabled={locked}
-                                            onChange={this.onChange}
-                                        />
-                                    </Col>
-                                </Row>
+                                locked={locked}
+                            >
+                                <TextInput
+                                    label={'Announcement Text'}
+                                    name={'text'}
+                                    type={'text'} 
+                                    value={text}
+                                    defaultValue={text}
+                                    disabled={locked}
+                                    changeContent={(type, value) => this.onChange({type, value})}
+                                />
+                                <ColorPickerInput 
+                                    label={'Text Color'}
+                                    name={'textColor'}
+                                    color={textColor}
+                                    disabled={locked}
+                                    onChange={this.onChange}
+                                />
+                                <ColorPickerInput 
+                                    label={'Background Color'}
+                                    name={'backgroundColor'}
+                                    color={backgroundColor}
+                                    disabled={locked}
+                                    onChange={this.onChange}
+                                />
+                                <BooleanInput
+                                    checked={isActive} 
+                                    onChange={this.onChange}
+                                    disabled={locked}
+                                    type={'isActive'}
+                                    id={'check-active-101'}
+                                />
                             </EditLock>
                         </Col>
                     </Row>

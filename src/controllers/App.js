@@ -428,7 +428,7 @@ class App{
         }
     }
 
-    editTopBarCustomization  = async ({textColor, backgroundColor, text, isActive}) => {
+    editTopBarCustomization = async ({textColor, backgroundColor, text, isActive}) => {
         try{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editTopBarCustomization({   
@@ -438,6 +438,27 @@ class App{
                     backgroundColor,
                     text,
                     isActive
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editBannersCustomization = async ({banners, autoDisplay}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editBannersCustomization({   
+                params : {
+                    app : this.getId(),
+                    banners,
+                    autoDisplay
                 },         
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
