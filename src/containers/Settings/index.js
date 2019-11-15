@@ -6,9 +6,9 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import _ from 'lodash';
 import SettingsBox from './components/SettingsBox';
-import { ArrowExpandDownIcon, EmergencyExitIcon, OpenInAppIcon, SettingsIcon, AccountIcon, FinanceIcon, ExitToAppIcon } from 'mdi-react';
+import { AccountIcon, FinanceIcon, ExitToAppIcon, AccessibilityIcon, UpdateIcon} from 'mdi-react';
 import { Tab, Nav, Sonnet } from 'react-bootstrap';
-import { SettingsRiskContainer , SettingsAccountContainer, SettingsTransactionContainer } from './tabs';
+import { SettingsRiskContainer , SettingsAccountContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates } from './tabs';
 import TabsContainer from '../../shared/components/tabs/Tabs.js';
 
 const defaultState = {
@@ -53,11 +53,20 @@ class SettingsContainer extends React.Component{
 
                             },
                             {
-                                title : 'Risk Mgmt',
+                                title : 'Risk Control',
                                 container : <SettingsRiskContainer/>,
                                 icon : <ExitToAppIcon size={20}/>
                             },
-                    
+                            {
+                                title : 'Address Control',
+                                container : <AddressManagementContainer/>,
+                                icon : <AccessibilityIcon size={20}/>
+                            },
+                            {
+                                title : 'Platform updates',
+                                container : <PlatformUpdates/>,
+                                icon : <UpdateIcon size={20}/>
+                            }
                         ]
                     }
                 />

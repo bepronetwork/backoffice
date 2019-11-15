@@ -5,6 +5,7 @@ import TopbarSidebarButton from './TopbarSidebarButton';
 import TopbarProfile from './TopbarProfile';
 import TopbarMail from './TopbarMail';
 import TopbarNotification from './TopbarNotification';
+import TopBarWithdrawNotice from './TopBarWithdrawNotice';
 import TopbarSearch from './TopbarSearch';
 import TopbarLanguage from './TopbarLanguage';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -74,6 +75,7 @@ class Topbar extends React.Component {
                     />
                 </div>
                 <div className="topbar__right">
+                    <TopBarWithdrawNotice/>
                     <TopbarNotification />
                     <div className='address-box'> 
                         <h5>

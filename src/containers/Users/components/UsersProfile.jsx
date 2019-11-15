@@ -1,10 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col } from 'reactstrap';
-import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
-import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
-import Numbers from '../../../services/numbers';
 
 class UsersProfile extends PureComponent {
  
@@ -24,6 +21,7 @@ class UsersProfile extends PureComponent {
     render() {
         
         let users = Object.keys(this.props.data.data).length;
+
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
@@ -34,7 +32,7 @@ class UsersProfile extends PureComponent {
                             }><AnimationNumber  number={users}/></p>
                         </div>
                         <div className="dashboard__visitors-chart">
-                            <p className="dashboard__visitors-chart-title"> Active Users <span> this week </span></p>
+                            <p className="dashboard__visitors-chart-title"> Registerd Users <span> All </span></p>
                         </div>
                     </CardBody>
                 </Card>

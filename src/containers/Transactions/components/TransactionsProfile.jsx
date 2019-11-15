@@ -22,8 +22,7 @@ class UsersProfile extends PureComponent {
     };
 
     render() {
-        let transactions = this.props.data.data.amount;
-        let depositAmount = this.props.data.data.totalDeposited;
+        let withdraws = this.props.data.data;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -32,10 +31,10 @@ class UsersProfile extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : '#646777'}
-                            }><AnimationNumber  number={transactions}/></p>
+                            }><AnimationNumber  number={withdraws.length}/></p>
                         </div>
                         <div className="dashboard__visitors-chart">
-                            <p className="dashboard__visitors-chart-title"> Transactions <span> this week </span></p>
+                            <p className="dashboard__visitors-chart-title"> Total Withdraws <span> All </span></p>
                         </div>
                     </CardBody>
                 </Card>

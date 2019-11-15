@@ -40,7 +40,7 @@ class CasinoContract{
     }
 
 
-    async authorize({addr=self.authorized}){
+    async authorizeAccountToManage({addr=self.ownerAddress}){
         try{
             let accounts = await window.web3.eth.getAccounts();
             return new Promise ( (resolve, reject) => {
@@ -58,6 +58,46 @@ class CasinoContract{
             console.log(err);
         }   
     }
+
+    async unauthorizeAccountToManage({addr}){
+        try{
+            let accounts = await window.web3.eth.getAccounts();
+            return new Promise ( (resolve, reject) => {
+                self.contract.getContract().methods.unauthorizeAccount(
+                    addr                 
+                ).send({from : accounts[0]})
+                .on('transactionHash', (hash) => {
+                })
+                .on('confirmation', (confirmations, receipt) => {
+                    resolve(receipt)
+                })
+                .on('error', () => {reject("Transaction Error")})
+            })          
+        }catch(err){
+            console.log(err);
+        }   
+    }
+
+    async authorizeCroupier({addr=self.authorized}){
+        try{
+            let accounts = await window.web3.eth.getAccounts();
+            return new Promise ( (resolve, reject) => {
+                self.contract.getContract().methods.authorizeCroupier(
+                    addr                 
+                ).send({from : accounts[0]})
+                .on('transactionHash', (hash) => {
+                })
+                .on('confirmation', (confirmations, receipt) => {
+                    resolve(receipt)
+                })
+                .on('error', () => {reject("Transaction Error")})
+            })          
+        }catch(err){
+            console.log(err);
+        }   
+    }
+
+
 
 
     __assert(){
@@ -125,6 +165,48 @@ class CasinoContract{
         })
     }
 
+    async setUserWithdrawal({address, amount}){
+        try{
+            let accounts = await window.web3.eth.getAccounts();
+            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
+            return new Promise ( (resolve, reject) => {
+                self.contract.getContract().methods.setUserWithdrawal(
+                    address,
+                    amountWithDecimals
+                ).send({from : accounts[0]})
+                .on('transactionHash', (hash) => {
+                })
+                .on('confirmation', (confirmations, receipt) => {
+                    resolve(receipt)
+                })
+                .on('error', () => {reject("Transaction Error")})
+            })
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async setUserWithdrawalBatch({addresses, amounts}){
+        try{
+            let accounts = await window.web3.eth.getAccounts();
+            let amountsWithDecimals = amounts.map( a => Numbers.toSmartContractDecimals(a, self.decimals))
+            return new Promise ( (resolve, reject) => {
+                self.contract.getContract().methods.setUserWithdrawalBatch(
+                    addresses,
+                    amountsWithDecimals
+                ).send({from : accounts[0]})
+                .on('transactionHash', (hash) => {
+                })
+                .on('confirmation', (confirmations, receipt) => {
+                    resolve(receipt)
+                })
+                .on('error', () => {reject("Transaction Error")})
+            })
+        }catch(err){
+            throw err;
+        }
+    }
+
     async withdrawApp({address, amount}){
         try{
             let accounts = await window.web3.eth.getAccounts();
@@ -133,6 +215,25 @@ class CasinoContract{
                 self.contract.getContract().methods.ownerWithdrawalTokens(
                     address,
                     amountWithDecimals
+                ).send({from : accounts[0]})
+                .on('transactionHash', (hash) => {
+                })
+                .on('confirmation', (confirmations, receipt) => {
+                    resolve(receipt)
+                })
+                .on('error', () => {reject("Transaction Error")})
+            })
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async updateContract({newContractAddress}){
+        try{
+            let accounts = await window.web3.eth.getAccounts();
+            return new Promise ( (resolve, reject) => {
+                self.contract.getContract().methods.updateToNewContract(
+                    newContractAddress
                 ).send({from : accounts[0]})
                 .on('transactionHash', (hash) => {
                 })

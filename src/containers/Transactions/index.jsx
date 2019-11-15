@@ -6,16 +6,37 @@ import EnhancedTable from './components/EnhancedTable';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import TransactionsProfile from './components/TransactionsProfile';
-import TransactionsResumeEntries from './components/TransactionsResumeEntries';
 import DataWidget from '../DataWidget/DataWidget';
-import TransactionsDeposits from './components/TransactionsDeposits';
-import TransactionsFilterUserId from './components/TransactionsFilterUserId';
+import TransactionsOpen from './components/TransactionsOpen';
 
 
 class TransactionsContainer extends React.Component{
 
     constructor(props){
         super(props)
+    }
+
+    allowWithdraw = async (withdraw) => {
+        const { profile } = this.props;
+
+        /** Do Withdraw to User */
+         await profile.getApp().approveWithdraw(withdraw);
+
+        /** Update Info */
+        await profile.getApp().getWithdrawsAsync({});
+        await profile.update();
+    }
+
+    allowWithdrawAll = async (withdraw) => {
+        const { profile } = this.props;
+        let withdraws = this.props.profile.getApp().getSummaryData('withdraws').data;
+        let withdrawsInQueue = withdraws.filter( w => w.status == 'Queue');
+        /** Do Withdraw to User */
+        await profile.getApp().approveWithdrawsBatch(withdrawsInQueue);
+
+        /** Update Info */
+        await profile.getApp().getWithdrawsAsync({});
+        await profile.update();
     }
 
 
@@ -25,12 +46,12 @@ class TransactionsContainer extends React.Component{
                 <Row>
                     <Col lg={3}>
                         <DataWidget>
-                            <TransactionsProfile data={this.props.profile.getApp().getSummaryData('transactions')}/>
+                            <TransactionsProfile data={this.props.profile.getApp().getSummaryData('withdraws')}/>
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <TransactionsDeposits data={this.props.profile.getApp().getSummaryData('transactions')}/>
+                            <TransactionsOpen allowWithdrawAll={this.allowWithdrawAll} data={this.props.profile.getApp().getSummaryData('withdraws')}/>
                         </DataWidget>
                     </Col>
                    {/* <Col lg={6}>         
@@ -43,8 +64,14 @@ class TransactionsContainer extends React.Component{
                 </Row>
                 <Row>
                     <Col lg={12}>
-                        <DataWidget>
-                            <EnhancedTable data={this.props.profile.getApp().getSummaryData('transactions')}/>
+                        <DataWidget> 
+                            <EnhancedTable
+                                allowWithdraw={this.allowWithdraw}
+                                data={{
+                                    withdraws : this.props.profile.getApp().getSummaryData('withdraws'),
+                                    wallet : this.props.profile.getApp().getSummaryData('wallet')
+                                }}
+                            />
                         </DataWidget>
                     </Col>
                 </Row>

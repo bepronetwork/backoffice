@@ -174,3 +174,41 @@ blockquote {
 .text-center{
     text-align: center;
 }
+
+.text-small{
+    font-size: 12px;
+}
+
+.text-normal{
+    color: #eabdf2;
+    text-align: center;
+    border-radius: 5px;
+    padding : 2px;
+}
+
+.text-affiliate{
+    color: $color-accent;
+    text-align: center;
+    border-radius: 5px;
+    padding : 2px;
+}
+
+.background-green{
+    background-color: #63c965;
+    text-align: center;
+    border-radius: 5px;
+    padding : 2px;
+}
+
+.background-grey{
+    background-color: #a2a2a2;
+    text-align: center;
+    color : white;
+    border-radius: 5px;
+    padding : 2px;
+}
+
+
+.text-grey{
+    color : #a2a2a2 !important;
+}

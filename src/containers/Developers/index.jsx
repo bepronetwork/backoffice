@@ -13,7 +13,7 @@ const defaultProps = {
     platformId : 'N/A',
     tokenAddress : 'N/A',
     apiKey : 'N/A',
-    authorizedAddress : 'N/A',
+    croupierAddress : 'N/A',
     ownerAddress : 'N/A'
 }
 
@@ -41,14 +41,14 @@ class DevelopersContainer extends React.Component{
             platformAddress : app.getInformation('platformAddress') ? app.getInformation('platformAddress') : defaultProps.platformAddress,
             platformId  : app.getId(),
             ownerAddress :  app.getInformation('ownerAddress') ? app.getInformation('ownerAddress') : defaultProps.ownerAddress,
-            authorizedAddress :  app.getInformation('authorizedAddress') ? app.getInformation('authorizedAddress') : defaultProps.authorizedAddress,
+            croupierAddress :  app.getInformation('croupierAddress') ? app.getInformation('croupierAddress') : defaultProps.croupierAddress,
             tokenAddress :  app.getInformation('platformTokenAddress') ? app.getInformation('platformTokenAddress') : defaultProps.tokenAddress,
             apiKey : app.getBearerToken()
         })
     }
 
     render = () => {
-        const { platformId, platformAddress, apiKey, tokenAddress, ownerAddress, authorizedAddress} = this.state;
+        const { platformId, platformAddress, apiKey, tokenAddress, ownerAddress, croupierAddress} = this.state;
 
         return (
             
@@ -74,7 +74,7 @@ class DevelopersContainer extends React.Component{
                         </Row>
                         <Row>
                             <Col lg={6}>
-                                <TableKey type={'Croupier Authorized Address'} value={authorizedAddress}/>  
+                                <TableKey type={'Croupier Authorized Address'} value={croupierAddress}/>  
                             </Col>
                             <Col lg={6}>
                                 <TableKey type={'Owner Authorized Address'} value={ownerAddress}/>  

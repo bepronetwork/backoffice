@@ -121,11 +121,11 @@ class EditableTable extends React.Component{
                                     await this.onRowUpdate(newData, oldData);
                                     resolve();
                             }),
-                            /* onRowDelete: newData =>
+                            onRowDelete: newData =>
                                 new Promise(async resolve => {
                                     await this.onRowDelete(newData);
                                     resolve();
-                            }),*/
+                            }),
                         }}
                     />
                 </CardBody>

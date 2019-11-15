@@ -32,7 +32,7 @@ class DepositWidget extends React.Component{
     projectData = async (props) => {
         if(_.isEmpty(props.profile)){return null}
         let address = props.profile.getOwnerAddress();
-        let deposits = await props.profile.getApp().getDeposits(address);
+        let deposits = props.profile.getApp().getDeposits();
         let ticker = props.profile.getApp().getSummaryData('wallet').data.blockchain.ticker;
         this.setState({...this.state, 
             deposits,
