@@ -74,7 +74,6 @@ class CurrencyBox extends PureComponent {
                 // TO DO : Undertand why it didn´t succed
                 throw new Error('Transaction was not succeded')
             }
-
             this.setState({...this.state, isLoading : false});
             return true;
             // TO DO : Finalize Work
@@ -128,7 +127,10 @@ class CurrencyBox extends PureComponent {
 
     confirmWalletUpdate = async ({amount, transactionHash}) => {
         try{
-            return await this.props.profile.getApp().updateWallet({amount, transactionHash});
+            let res = await this.props.profile.getApp().updateWallet({amount, transactionHash});
+            await this.props.profile.getApp().getSummary();
+            await this.props.profile.update();
+            return res;
         }catch(err){
             // TO DO : Raise Notification System
             throw err;

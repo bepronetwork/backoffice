@@ -297,7 +297,26 @@ class Account{
         }
     }
 
-    authorizeAddressForCroupier = async ({authorizedAddress, platformParams}) => {
+    authorizeAddress = async ({address=this.getAddress(), platformParams}) => {
+        try{    
+            var platform;
+            if(!this.platform){
+                platform = this.platform;
+            }else{
+                platform = new CasinoContract(platformParams)
+            }
+
+            platform.__assert();
+            // Auth Address to Manage
+            await platform.authorizeAccountToManage({addr : address});
+            
+            return true;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    authorizeCroupier = async ({address, platformParams}) => {
         try{    
             var platform;
             if(!this.platform){
@@ -308,8 +327,10 @@ class Account{
 
             platform.__assert();
 
-            return await platform.authorize(authorizedAddress);
-
+            // Auth Croupier
+            await platform.authorizeCroupier({addr : address});
+            
+            return true;
         }catch(err){
             throw err;
         }
@@ -329,7 +350,8 @@ class Account{
             let params = {
                 platformAddress : platform.getAddress(),
                 decimals : decimals,
-                authorizedAddress,
+                authorizedAddresses : [ownerAddress],
+                croupierAddress : authorizedAddress,
                 address  : ownerAddress,
                 currencyTicker : currencyTicker,
                 platformTokenAddress : tokenAddress,

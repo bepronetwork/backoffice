@@ -48,12 +48,12 @@ class SidebarContent extends Component {
         let newState = {
             home        : true,
             application : true,
-            users       : this.hasData(props.profile.hasAppStats('users')),
+            users       : this.hasData(props.profile.hasAppStats('usersInfoSummary')),
             stats       : this.hasData(props.profile.hasAppStats('revenue')),
             wallet      : this.hasData(props.profile.hasAppStats('wallet')),
             settings    : this.hasInfo(props.profile.getApp().isDeployed()),
             affiliates  : this.hasData(props.profile.hasAppStats('affiliates')),
-            transactions: this.hasData(props.profile.hasAppStats('transactions')),
+            transactions: this.hasData(props.profile.hasAppStats('withdraws')),
             developers  : true
         }
         this.setState({...this.state, ...newState})

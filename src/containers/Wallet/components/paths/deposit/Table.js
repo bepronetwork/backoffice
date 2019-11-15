@@ -25,6 +25,7 @@ import Numbers from '../../../../../services/numbers';
 import InformationContainer from '../../../../../shared/components/information/InformationContainer';
 import { InformationIcon } from 'mdi-react';
 import { Row, Col} from 'reactstrap';
+const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 let counter = 0;
 
@@ -60,7 +61,7 @@ const fromDatabasetoTable = (data) => {
             id :  data._id,
 			amount : Numbers.toFloat(data.amount),
             confirmed: data.confirmed ? 'Confirmed' : 'Open',
-            isConfirmed :  data.isConfirmed,
+            isConfirmed :  data.confirmed || data.transactionHash,
             transactionHash : data.transactionHash,
             creation_date : new Date(data.creation_timestamp).toDateString(),
             address: data.address,
@@ -72,18 +73,13 @@ const fromDatabasetoTable = (data) => {
 
 const rows = [
     {
-        id: 'amount',
-        label: 'Amount',
-        numeric: true
-    },
-    {
-        id: 'confirmed',
-        label: 'Status',
+        id: 'id',
+        label: 'Id',
         numeric: false
     },
     {
-        id: 'deposit',
-        label: 'Deposit',
+        id: 'amount',
+        label: 'Amount',
         numeric: false
     },
     {
@@ -94,6 +90,11 @@ const rows = [
     {
         id: 'creation_date',
         label: 'Creation Date',
+        numeric: false
+    },   
+    {
+        id: 'confirmed',
+        label: 'Status',
         numeric: false
     }
 ];
@@ -233,6 +234,7 @@ class DepositsTable extends React.Component {
             selected: [],
             data: props.data ? fromDatabasetoTable(props.data) : [],
             page: 0,
+            isLoading : {},
             rowsPerPage: 5,
             ...defaultProps
         };
@@ -286,12 +288,18 @@ class DepositsTable extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-    confirmDeposit = async e => {
-        this.setState({...this.state, isLoading : true});
-        await this.props.confirmDeposit(e);
-        this.setState({...this.state, isLoading : false});
+    confirmDeposit = async depositObject => {
+        this.setState({...this.state, isLoading : {
+            ...this.state.isLoading, [depositObject.id] : true
+        }})
 
+        await this.props.confirmDeposit(depositObject);
+
+        this.setState({...this.state, isLoading : {
+            ...this.state.isLoading, [depositObject.id] : true
+        }})
     }
+
     render() {
         const { classes } = this.props;
         const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
@@ -325,32 +333,48 @@ class DepositsTable extends React.Component {
                                     key={n.id}
                                     selected={isSelected}
                                 >
-                                    <StyledTableCell align="center">{n.amount} {this.props.currency}</StyledTableCell>
-                                    <StyledTableCell style={{width : 50}} align="center">
-                                        <p styleName={depositStatus[!n.isConfirmed ? 'not-confirmed' : 'confirmed']}>
-                                            {!n.isConfirmed ? depositStatusArray[0] : depositStatusArray[1]}
+                                    <StyledTableCell align="left"> 
+                                        <p className='text-small'>
+                                            {n.id}
                                         </p>
                                     </StyledTableCell>
-                                  
+                                    <StyledTableCell align="left"> 
+                                        <p className='text-small'>
+                                            {n.amount} {this.props.currency}
+                                        </p>
+                                    </StyledTableCell>
+                                    <StyledTableCell style={{width : 120}} align="left">
+                                        <p className='text-small'>
+                                            {
+                                                n.transactionHash ?
+                                                n.transactionHash
+                                                : 'None'
+                                            }
+                                        </p>
+                                    </StyledTableCell>
+                                    <StyledTableCell align="left">
+                                        <p className='text-small'>{n.creation_date}</p>
+                                    </StyledTableCell>
+
                                     <StyledTableCell align="left">
                                         {
                                             !n.isConfirmed
                                             ?
-                                            <Button
-                                                name="deposit"
-                                                theme="primary"
-                                                disabled={this.state.isLoading}
-                                                variant="small-body"
+                                            <button
+                                                className={`clean_button button-normal button-hover ${this.state.isLoading[n.id] ? 'background-grey' : ''}`} 
+                                                disabled={this.props.disabled}
                                                 onClick={ () => this.confirmDeposit(n)}
                                             >
-                                                <Typography> <strong>{!this.state.isLoading ? 'Confirm Deposit' : 'Confirming'}</strong></Typography>
-                                            </Button>
-                                         : 'Done'}
+                                                {
+                                                !this.state.isLoading[n.id] ? 
+                                                    <p className='text-small text-white'>Confirm Deposit</p>
+                                                : <img src={loading} style={{width : 20, height : 20}}/>
+                                            }
+                                            </button>
+                                        : 
+                                            <p className='text-small text-green'>Done</p>
+                                        }
                                      </StyledTableCell>
-                                     <StyledTableCell style={{width : 50}} align="center">
-                                            {n.transactionHash}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="left">{n.creation_date}</StyledTableCell>
                                 </TableRow>
                             );
                         })}

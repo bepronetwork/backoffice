@@ -6,12 +6,12 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import UsersProfile from './components/UsersProfile';
 import UsersProfit from './components/UsersProfit';
-import UsersInfo from './components/UsersInfo';
+import UsersInfoFilter from './components/UsersInfoFilter';
 import UsersResumeEntries from './components/UsersResumeEntries';
 import VectorMap from './components/VectorMap';
 import DataWidget from '../DataWidget/DataWidget';
 import BetsTable from './components/BetsTable';
-
+import UsersTable from './components/UsersTable';
 
 class UsersContainer extends React.Component{
 
@@ -26,12 +26,12 @@ class UsersContainer extends React.Component{
                 <Row>
                     <Col lg={3}>
                         <DataWidget>
-                            <UsersResumeEntries/>
+                            <UsersResumeEntries data={this.props.profile.getApp().getSummaryData('usersInfoSummary')}/>
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <UsersProfile data={this.props.profile.getApp().getSummaryData('users')}/>
+                            <UsersProfile data={this.props.profile.getApp().getSummaryData('usersInfoSummary')}/>
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
@@ -43,20 +43,21 @@ class UsersContainer extends React.Component{
                             }}/>
                         </DataWidget>
                     </Col>
-                    <Col lg={3}>
-                       {/* <DataWidget>
-                            <UsersInfo data={this.props.profile.getApp().getSummaryData('users')}/>
-                       </DataWidget> */}
-                    </Col>
+                   {/* 
+                        <Col lg={3}>
+                            <UsersInfoFilter/>
+                        </Col>
+                    */}
                 </Row>
                 <Row>
                     <Col lg={12}>
                         <DataWidget>
-                            <BetsTable
-                                data={{
-                                    users : this.props.profile.getApp().getSummaryData('users'),
+                            <UsersTable data={{
+                                    users : this.props.profile.getApp().getSummaryData('usersInfoSummary'),
+                                    usersOtherInfo : this.props.profile.getApp().getSummaryData('users'),
                                     wallet : this.props.profile.getApp().getSummaryData('wallet')
-                                }}/>
+                                }}
+                            />
                         </DataWidget>
                     </Col>
                 </Row>

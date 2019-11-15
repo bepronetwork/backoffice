@@ -17,6 +17,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { FilterListIcon } from 'mdi-react';
+import moment from 'moment';
+const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 let counter = 0;
 
@@ -48,69 +50,49 @@ function getSorting(order, orderBy) {
 
 const fromDatabasetoTable = (data) => {
 	return data.map( (key) => {
-        let status = key.confirmed ? 'Confirmed' : 'Processing';
 		return {
-            id :  key._id,
-            amount: key.amount,
-            currency: key.currency,
-            name : key.user.full_name,
-            usd_amount :  key.usd_amount,
-			email: key.user.email,
-			nationality: key.user.nationality,
-			external_id: key.user.external_id,
-			status : status 
+            _id :  key._id,
+            user : key.user,
+            address: key.address,
+            status :  key.status,
+			amount: key.amount,
+			creation_timestamp: moment(new Date(key.creation_timestamp)).format('lll'),
+			isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal'
 		}
 	})
 }
 
 const rows = [
     {
-        id: 'id',
+        id: '_id',
         label: 'Id',
         numeric: false
     },
     {
-        id: 'usd_amount',
-        label: 'USD',
-        sortable: true,
+        id: 'user',
+        label: 'User',
         numeric: true
+    },
+    {
+        id: 'creation_timestamp',
+        label: 'Created At',
+        numeric: false 
+    },
+    {
+        id: 'isAffiliate',
+        label: 'Type',
+        numeric: false 
     },
     {
         id: 'amount',
         label: 'Amount',
-        sortable: true,
         numeric: true
-    },
-    {
-        id: 'currency',
-        label: 'Currency',
-        numeric: true
-    },
-    {
-        id: 'name',
-        label: 'User Name',
-        numeric: false
-    },
-    {
-        id: 'email',
-        label: 'Email',
-        numeric: false 
-    },
-    {
-        id: 'nationality',
-        label: 'Nationality',
-        numeric: false 
-    },
-    {
-        id: 'external_id',
-        label: 'External Id',
-        numeric: false 
     },
     {
         id: 'status',
         label: 'Status',
         numeric: true
-    }
+    },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -124,18 +106,12 @@ class EnhancedTableHead extends React.Component {
         return (
             <TableHead>
                 <TableRow>
-                <TableCell padding="checkbox">
-                    <Checkbox
-                    indeterminate={numSelected > 0 && numSelected < rowCount}
-                    checked={numSelected === rowCount}
-                    onChange={onSelectAllClick}
-                    />
-                </TableCell>
                 {rows.map(
                     row => (
                     <TableCell
                         key={row.id}
-                        align={row.numeric ? 'right' : 'left'}
+                        rowSpan={2} 
+                        align={'left'}
                         padding={row.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === row.id ? order : false}
                     >
@@ -256,19 +232,36 @@ const styles = theme => ({
 });
 
 class EnhancedTable extends React.Component {
-    
     constructor(props){
         super(props)
         this.state = {
             order: 'asc',
             orderBy: 'id',
             selected: [],
-            data: fromDatabasetoTable(props.data.data.deposits),
+            data: fromDatabasetoTable(props.data.withdraws.data),
             page: 0,
-            rowsPerPage: 5,
+            isLoading : {},
+            ticker : 'N/A',
+            rowsPerPage: 5
         };
     }
 
+
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+
+    projectData = (props) => {
+        let data = props.data;
+        this.setState({...this.state, 
+            data : fromDatabasetoTable(data.withdraws.data),
+            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : 'N/A',
+        })
+    }
     handleRequestSort = (event, property) => {
         const orderBy = property;
         let order = 'desc';
@@ -309,6 +302,18 @@ class EnhancedTable extends React.Component {
         this.setState({ selected: newSelected });
     };
 
+    allowWithdraw = async (withdrawObject) => {
+        this.setState({...this.state, isLoading : {
+            ...this.state.isLoading, [withdrawObject._id] : true
+        }})
+
+        await this.props.allowWithdraw(withdrawObject);
+
+        this.setState({...this.state, isLoading : {
+            ...this.state.isLoading, [withdrawObject._id] : false
+        }})
+    }
+
     handleChangePage = (event, page) => {
         this.setState({ page });
     };
@@ -321,7 +326,7 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page, ticker } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
@@ -354,18 +359,26 @@ class EnhancedTable extends React.Component {
                             key={n.id}
                             selected={isSelected}
                         >
-                        <TableCell padding="checkbox">
-                            <Checkbox checked={isSelected} />
-                        </TableCell> 
-                            <TableCell align="left">{n.id}</TableCell>
-                            <TableCell align="center">$ {n.usd_amount ? n.usd_amount : 'N/A' }</TableCell>
-                            <TableCell align="center">{n.amount ? n.amount : 'N/A'}</TableCell>
-                            <TableCell align="center">{n.currency}</TableCell>
-                            <TableCell align="left">{n.name}</TableCell>
-                            <TableCell align="left">{n.email}</TableCell>
-                            <TableCell align="left">{n.nationality}</TableCell>
-                            <TableCell align="left">{n.external_id}</TableCell>
-                            <TableCell align="center">{n.status}</TableCell>
+                            <TableCell align="left"> <p className='text-small'>{n._id}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
+                            <TableCell align="left">
+                                <p className={`text-small text-${n.isAffiliate.toLowerCase()}`}>{n.isAffiliate}</p>
+                            </TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.amount} {ticker}</p></TableCell>
+                            <TableCell align="left">
+                                {n.status == 'Queue'
+                                    ?
+                                        <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover ${this.state.isLoading[n._id] ? 'background-grey' : ''}`} onClick={ () => this.allowWithdraw(n)}> 
+                                            {
+                                                !this.state.isLoading[n._id] ? 
+                                                    <p className='text-small text-white'>{n.status}</p>
+                                                : <img src={loading} style={{width : 20, height : 20}}/>
+                                            }
+                                        </button>
+                                    :  <p className='text-small background-green text-white'>{n.status}</p>
+                                }
+                            </TableCell>
                         </TableRow>
                     );
                     })}

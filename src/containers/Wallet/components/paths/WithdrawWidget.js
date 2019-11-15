@@ -23,6 +23,8 @@ class WithdrawWidget extends React.Component{
             this.setState({...this.state, disabled : true});
             /* Create Withdraw */
             await this.props.profile.finalizeWithdraw({amount : Numbers.toFloat(amount), nonce, withdraw_id : id });
+            await this.props.profile.getApp().updateAppInfoAsync();
+            await this.profile.update();
             /* Update User Balance */
             this.setState({...this.state, disabled : false});
         }catch(err){
