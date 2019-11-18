@@ -43,6 +43,14 @@ const DEPLOYMENT_CONFIG = {
         isSet : false,
         message : 'Smart-Contract Deployment being done...'
     },
+    authorizeAddress  : {
+        isSet : false,
+        message : 'Authorize Address to Control the App'
+    },
+    authorizeCroupier  : {
+        isSet : false,
+        message : 'Authorize Address to Monitor the Owner'
+    },
     choooseServices : {
         isSet : false,
         message : 'Alowing your Services..'
@@ -157,12 +165,25 @@ class WizardForm extends PureComponent {
                 blockchainTicker : blockchain.ticker
             }
 
-            await profile.deployPlatformContract(params);
-            
-            /* 2 - Update Service on the Platform */
+            let platform = await profile.deployPlatformContract(params);
+
+            params.contractAddress = platform.getAddress();
+            /* 2 - Authorize Address of Owner */
+            state = 'authorizeAddress';
+            deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig});
+            await profile.authorizeAddress({address : params.ownerAddress, platformParams : params});
+
+            /* 3 - Authorize Croupiers on the Platform */
+            state = 'authorizeCroupier';
+            deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig});
+            await profile.authorizeCroupier({address : authorizedAddress, platformParams : params});
+
+            /* 4 - Update Service on the Platform */
             state = 'choooseServices';
             deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig})
             await this.sendServices({services});
+
+            /* Update all */
             await profile.getData();
             this.setState({...this.state, isLoading : false});
         }catch(err){

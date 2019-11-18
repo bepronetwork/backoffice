@@ -62,7 +62,13 @@ class AffiliatesContainer extends React.Component{
 
     render = () => {
         const { affiliateStructures, percentageOnLossTotal } = this.state;
-
+        const lastRowLevelActive = affiliateStructures.reduce( (acc, i) => {
+            if(i.isActive){
+                return i.level;
+            }else{
+                return acc;
+            }
+        }, 0)
         return (
             <Container className="dashboard">
                 <Row>
@@ -91,10 +97,9 @@ class AffiliatesContainer extends React.Component{
                                         return <Switch color="primary" checked={rowData.isActive} value={`checkedActive-${rowData.level}`} inputProps={{ 'aria-label': 'primary checkbox' }} />
                                     },
                                     editComponent: props => {
-                                        console.log(props)
                                         const { rowData, onChange } = props;
                                         return (
-                                            <Switch disabled={rowData.level < affiliateStructures.length} color="primary" checked={rowData.isActive} onChange={e => onChange( !rowData.isActive ? 1 : 0)} value={`checkedActive-${rowData.level}`} inputProps={{ 'aria-label': 'primary checkbox' }} />
+                                            <Switch disabled={rowData.level > (lastRowLevelActive + 1)} color="primary" checked={rowData.isActive} onChange={e => onChange( !rowData.isActive ? 1 : 0)} value={`checkedActive-${rowData.level}`} inputProps={{ 'aria-label': 'primary checkbox' }} />
                                         )
                                     }}
                                 ]}

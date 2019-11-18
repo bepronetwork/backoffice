@@ -95,7 +95,7 @@ class SettingsRiskContainer extends React.Component{
     render = () => {
 
         return (
-            <Container className="dashboard">               
+            <div>               
                 <p className="dashboard__visitors-chart-title text-left text-red" style={{fontSize : 18, marginBottom : 10}}> Risk Management </p>
                 <hr></hr>
                 <Row>
@@ -127,7 +127,7 @@ class SettingsRiskContainer extends React.Component{
                             </CardBody>
                         </Card>
                     </Col>
-                    <Col md={4}>
+                    <Col md={6}>
                         <Card>
                              <CardBody>
                                 <Row>
@@ -158,7 +158,7 @@ class SettingsRiskContainer extends React.Component{
                         </Card>
                     </Col>
                 </Row>
-          </Container>
+          </div>
         )
     }
 

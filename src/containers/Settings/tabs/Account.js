@@ -65,7 +65,7 @@ class SettingsAccountContainer extends React.Component{
         } = this.state;
 
         return (
-            <Container className="dashboard">               
+            <div>               
                 <p className="dashboard__visitors-chart-title text-left text-red" style={{fontSize : 18, marginBottom : 10}}> My Account </p>
                 <hr></hr>
                 <Container>
@@ -111,7 +111,7 @@ class SettingsAccountContainer extends React.Component{
                         </Col>
                     </Row>
                 </Container>
-          </Container>
+          </div>
         )
     }
 

@@ -103,7 +103,7 @@ class SettingsTransactionContainer extends React.Component{
     render = () => {
 
         return (
-            <Container className="dashboard">
+            <div>
                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Overall Settings </p>
                 <hr></hr>
                 <Row>
@@ -163,7 +163,7 @@ class SettingsTransactionContainer extends React.Component{
                         />
                     </Col>
                 </Row>
-          </Container>
+          </div>
         )
     }
 

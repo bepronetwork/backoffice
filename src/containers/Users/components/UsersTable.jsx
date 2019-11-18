@@ -18,14 +18,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
-import FilterListIcon from 'mdi-react/FilterListIcon';
-import withdrawStatus from './codes';
-import { Button } from "reactstrap";
-import Numbers from '../../../../../services/numbers';
-import InformationContainer from '../../../../../shared/components/information/InformationContainer';
-import { InformationIcon } from 'mdi-react';
-import { Row, Col} from 'reactstrap';
-const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
+import { FilterListIcon } from 'mdi-react';
+import Numbers from '../../../services/numbers';
 
 let counter = 0;
 
@@ -55,46 +49,58 @@ function getSorting(order, orderBy) {
 }
 
 
-const fromDatabasetoTable = (data) => {
-	return data.map( (data) => {
+const fromDatabasetoTable = (data, otherInfo) => {
+	return data.map( (key) => {
+        var d;
+        if(otherInfo){
+            d = otherInfo.find( f => f._id == key._id);
+        }
         return {
-            id :  data._id,
-			amount : Numbers.toFloat(data.amount),
-            confirmed: data.confirmed ? 'Confirmed' : 'Open',
-            done :  data.confirmed,
-            transactionHash : data.transactionHash,
-            creation_date : new Date(data.creation_timestamp).toDateString(),
-            address: data.address,
-            nonce : data.nonce
+            _id :  key._id,
+			username : key.username,
+			wallet: Numbers.formatNumber(key.wallet.playBalance),
+			bets: Numbers.formatNumber(key.bets.length),
+            email: key.email,
+            turnoverAmount: d ? Numbers.formatNumber(d.betAmount) : 0,
+            profit: d ? Numbers.formatNumber(d.profit) : 0
 		}
 	})
 }
 
-
 const rows = [
     {
-        id: 'id',
+        id: '_id',
         label: 'Id',
         numeric: false
     },
     {
-        id: 'amount',
-        label: 'Amount',
+        id: 'username',
+        label: 'Username',
         numeric: false
     },
     {
-        id: 'transactionHash',
-        label: 'Tx Hash',
+        id: 'email',
+        label: 'Email',
         numeric: false
     },
     {
-        id: 'creation_date',
-        label: 'Creation Date',
+        id: 'wallet',
+        label: 'Balance',
         numeric: false
     },
     {
-        id: 'withdraw',
-        label: 'Status',
+        id: 'bets',
+        label: 'Bets',
+        numeric: false
+    },
+    {
+        id: 'turnoverAmount',
+        label: 'Turnover',
+        numeric: false
+    },
+    {
+        id: 'profit',
+        label: 'Profit',
         numeric: false
     },
 ];
@@ -112,7 +118,7 @@ class EnhancedTableHead extends React.Component {
                 <TableRow>
                 {rows.map(
                     row => (
-                    <StyledTableCell
+                    <TableCell
                         key={row.id}
                         align={row.numeric ? 'right' : 'left'}
                         padding={row.disablePadding ? 'none' : 'default'}
@@ -131,7 +137,7 @@ class EnhancedTableHead extends React.Component {
                             {row.label}
                         </TableSortLabel>
                         </Tooltip>
-                    </StyledTableCell>
+                    </TableCell>
                     ),
                     this,
                 )}
@@ -151,89 +157,96 @@ EnhancedTableHead.propTypes = {
 };
 
 const toolbarStyles = theme => ({
+    root: {
+        paddingRight: theme.spacing.unit,
+    },
+    highlight:
+        theme.palette.type === 'light'
+        ? {
+            color: theme.palette.secondary.main,
+            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+            }
+        : {
+            color: theme.palette.text.primary,
+            backgroundColor: theme.palette.secondary.dark,
+            },
+    spacer: {
+        flex: '1 1 100%',
+    },
+    actions: {
+        color: theme.palette.text.secondary,
+    },
+    title: {
+        flex: '0 0 auto',
+    },
 });
 
 let EnhancedTableToolbar = props => {
-    const { numSelected, classes, withdrawAmountAvailable } = props;
+  const { numSelected, classes } = props;
 
-        return (
-            <Toolbar
-            className={classNames(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-            >
-            <div className={classes.title}>
-                {numSelected > 0 ? (
-                <Typography color="inherit" variant="subtitle1">
-                    {numSelected} selected
-                </Typography>
-                ) : (
-                    <Row>
-                        <Col md={5}>
-                            <div style={{marginTop : 5}}>
-                                <Typography variant="h6" id="tableTitle">
-                                    Withdraws
-                                </Typography>
-                            </div>
-                        </Col>
-                        
-                        <Col md={4}>
-                            <InformationContainer icon={<InformationIcon size={20}/>} title={'This is the amount you are able to withdraw currently via the Smart-Contract'} />
-                        </Col>
-                        <Col md={3}>
-                            <div style={{marginTop : 5}}>
-                                <Typography variant="h6" id="tableTitle">
-                                    {withdrawAmountAvailable}
-                                </Typography>
-                            </div>
-                        </Col>
-                    </Row>
-                )}
-            </div>
-            <div className={classes.spacer} />
-            <div className={classes.actions}>
-              
-            </div>
-            </Toolbar>
-        );
+    return (
+        <Toolbar
+        className={classNames(classes.root, {
+            [classes.highlight]: numSelected > 0,
+        })}
+        >
+        <div className={classes.title}>
+            {numSelected > 0 ? (
+            <Typography color="inherit" variant="subtitle1">
+                {numSelected} selected
+            </Typography>
+            ) : (
+            <Typography variant="h6" id="tableTitle">
+                Users
+            </Typography>
+            )}
+        </div>
+        <div className={classes.spacer} />
+        <div className={classes.actions}>
+            {numSelected > 0 ? (
+            <Tooltip title="Delete">
+                <IconButton aria-label="Delete">
+                </IconButton>
+            </Tooltip>
+            ) : (
+            <Tooltip title="Filter list">
+                <IconButton aria-label="Filter list">
+                <FilterListIcon />
+                </IconButton>
+            </Tooltip>
+            )}
+        </div>
+        </Toolbar>
+    );
 };
 
 EnhancedTableToolbar.propTypes = {
-    classes: PropTypes.object.isRequired,
-    numSelected: PropTypes.number.isRequired,
+  classes: PropTypes.object.isRequired,
+  numSelected: PropTypes.number.isRequired,
 };
 
 EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
-    root: {
-    },
-    head : {
-
-    },
-    body: {
-    },
-    table: {
-      
-    },
-    tableWrapper: {
-        overflowX: 'auto',
-    },
+  root: {
+    width: '100%',
+    marginTop: theme.spacing.unit * 3,
+  },
+  table: {
+    minWidth: 1020,
+  },
+  tableWrapper: {
+    overflowX: 'auto',
+  },
 });
 
 const defaultProps = {
     profit : '0',
     ticker : 'N/A',
-    withdrawAmountAvailable : 0
 }
-  
 
 
-const StyledTableCell = withStyles(theme => ({
-  
-}))(TableCell);
-
-class WithdrawTable extends React.Component {
+class UsersTable extends React.Component {
     
     constructor(props){
         super(props)
@@ -241,9 +254,8 @@ class WithdrawTable extends React.Component {
             order: 'asc',
             orderBy: 'id',
             selected: [],
-            data: props.data ? fromDatabasetoTable(props.data) : [],
+            data: fromDatabasetoTable(props.data.users.data, props.data.usersOtherInfo.data),
             page: 0,
-            isLoading : {},
             rowsPerPage: 5,
             ...defaultProps
         };
@@ -254,17 +266,11 @@ class WithdrawTable extends React.Component {
         this.projectData(this.props)
     }
 
-    componentWillReceiveProps(props){
-        this.projectData(props);
-    }
-
-    projectData = async (props) => {
-        let { data , currency, profile} = props;
-        let withdrawAmountAvailable = await profile.getWithdrawAmountAvailableDecentralized();
+    projectData = (props) => {
+        let data = props.data;
         this.setState({...this.state, 
-            data : fromDatabasetoTable(data),
-            withdrawAmountAvailable : withdrawAmountAvailable,
-            ticker : currency
+            data : fromDatabasetoTable(data.users.data, data.usersOtherInfo.data),
+            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
         })
     }
 
@@ -288,7 +294,26 @@ class WithdrawTable extends React.Component {
         this.setState({ selected: [] });
     };
 
-  
+    handleClick = (event, id) => {
+        const { selected } = this.state;
+        const selectedIndex = selected.indexOf(id);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+        newSelected = newSelected.concat(selected, id);
+        } else if (selectedIndex === 0) {
+        newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+        newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+        newSelected = newSelected.concat(
+            selected.slice(0, selectedIndex),
+            selected.slice(selectedIndex + 1),
+        );
+        }
+
+        this.setState({ selected: newSelected });
+    };
 
     handleChangePage = (event, page) => {
         this.setState({ page });
@@ -300,26 +325,14 @@ class WithdrawTable extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-    withdraw = async (withdrawObject) => {
-        this.setState({...this.state, isLoading : {
-            ...this.state.isLoading, [withdrawObject.id] : true
-        }})
-
-        await this.props.withdraw(withdrawObject);
-
-        this.setState({...this.state, isLoading : {
-            ...this.state.isLoading, [withdrawObject.id] : false
-        }})
-    }
-
     render() {
         const { classes } = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page, withdrawAmountAvailable } = this.state;
+        const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
             <Paper className={classes.root}>
-                    <EnhancedTableToolbar numSelected={selected.length} withdrawAmountAvailable={withdrawAmountAvailable} />
+                    <EnhancedTableToolbar numSelected={selected.length} />
                         <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead
@@ -330,7 +343,7 @@ class WithdrawTable extends React.Component {
                             onRequestSort={this.handleRequestSort}
                             rowCount={data.length}
                         />
-                    <TableBody style={{color : 'white'}}>
+                    <TableBody>
                         {stableSort(data, getSorting(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map(n => {
@@ -338,55 +351,49 @@ class WithdrawTable extends React.Component {
                             return (
                                 <TableRow
                                     hover
+                                    onClick={event => this.handleClick(event, n.id)}
                                     role="checkbox"
-                                    style={{padding : 0, color : 'white'}}
+                                    style={{padding : 0}}
                                     aria-checked={isSelected}
                                     tabIndex={-1}
                                     key={n.id}
                                     selected={isSelected}
                                 >
-                                     <StyledTableCell style={{width : 120}} align="left">
-                                        <p className='text-small'> 
-                                            {n.id} 
-                                        </p>
-                                    </StyledTableCell>
-                                    <StyledTableCell style={{width : 60}} align="left">
-                                        <p className='text-small'> 
-                                            {n.amount} {this.props.currency}
-                                        </p>
-                                    </StyledTableCell>
-                                   
-                                    <StyledTableCell style={{width : 120}} align="left">
+                                    <TableCell align="left">
                                         <p className='text-small'>
-                                            {
-                                                n.transactionHash ?
-                                                n.transactioHash
-                                                : 'None'
-                                            }
+                                            {n._id}
                                         </p>
-                                    </StyledTableCell>
-                                    <StyledTableCell align="left">
-                                        <p className='text-small'>{n.creation_date}</p>
-                                    </StyledTableCell>
-                                    <StyledTableCell align="left">
-                                        {
-                                            !n.done
-                                            ?
-                                            <button
-                                                className={`clean_button button-normal button-hover ${this.state.isLoading[n.id] ? 'background-grey' : ''}`} 
-                                                disabled={this.props.disabled}
-                                                onClick={ () => this.withdraw(n)}
-                                            >
-                                                {
-                                                !this.state.isLoading[n.id] ? 
-                                                    <p className='text-small text-white'>Withdraw</p>
-                                                : <img src={loading} style={{width : 20, height : 20}}/>
-                                            }
-                                            </button>
-                                        : 
-                                            <p className='text-small text-green'>Done</p>
-                                        }
-                                    </StyledTableCell>
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        <p className='text-small'>
+                                            {n.username}
+                                        </p>
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        <p className='text-small'>
+                                            {n.email}
+                                        </p>
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        <p className='text-small'>
+                                            {n.wallet} <span className='text-small text-grey' >{this.state.ticker}</span>
+                                        </p>
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        <p className='text-small background-grey text-white'>
+                                            {n.bets} 
+                                        </p>
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        <p className='text-small'>
+                                            {n.turnoverAmount} <span className='text-small text-grey' >{this.state.ticker}</span>
+                                        </p>
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        <p className='text-small'>
+                                            {n.profit}<span className='text-small text-grey' >{this.state.ticker}</span>
+                                        </p>
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}
@@ -418,8 +425,8 @@ class WithdrawTable extends React.Component {
     }
 }
 
-WithdrawTable.propTypes = {
+UsersTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(WithdrawTable);
+export default withStyles(styles)(UsersTable);

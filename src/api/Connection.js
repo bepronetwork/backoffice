@@ -273,13 +273,29 @@ class Connection {
         }
     }
 
-    finalizeWithdraw = async ({app, address, signature, newBalance, tokenAmount, nonce, transactionHash, headers, withdraw_id}) => {
+    finalizeUserWithdraw = async ({app, user, transactionHash, withdraw_id, headers}) => {
         try{
-            let response = await fetch( URL + `/api/app/finalizeWithdraw`, {
+            let response = await fetch( API_URL_WITHDRAW + `/api/users/finalizeWithdraw`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({
-                    app, address, signature, newBalance, tokenAmount, nonce, transactionHash, withdraw_id
+                    app, user, transactionHash, withdraw_id
+                })
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    finalizeWithdraw = async ({app, withdraw_id, transactionHash, headers}) => {
+        try{
+            let response = await fetch( API_URL_WITHDRAW + `/api/app/finalizeWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({
+                    app, transactionHash, withdraw_id
                 })
             });
             
@@ -394,6 +410,32 @@ class Connection {
     editBannersCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/banners`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getAppUsers = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/users`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getWithdraws = async ({params, headers}) => {
+        try{
+            let response = await fetch( API_URL_WITHDRAW + `/api/app/users/withdraws`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

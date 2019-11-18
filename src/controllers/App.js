@@ -13,7 +13,9 @@ import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 class App{    
     constructor(params){
         this.params = params;
-        this.data = {};
+        this.data = {
+            summary : {}
+        };
         this.casinoContract = null;
     }
 
@@ -61,7 +63,9 @@ class App{
                     filters : [],
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
-                this.getGamesAsync()
+                this.getGamesAsync(),
+                this.getUsersAsync({size : 1000}),
+                this.getWithdrawsAsync({size : 1000})
             ]);
 
 
@@ -74,7 +78,9 @@ class App{
                 affiliates : res[5].data.message ? res[5].data.message.affiliateSetup : null,
                 app : res[5].data.message ? res[5].data.message : null,
                 transactions :  res[6].data.message ? res[6].data.message[0] : null,
-                gamesInfo : res[7]
+                gamesInfo : res[7],
+                usersInfoSummary : res[8],
+                withdraws : res[9]
             } 
 
             this.params = serverApiInfo.app;
@@ -105,6 +111,8 @@ class App{
             throw 'N/A';
         }
     }
+
+    getDecimals = () => this.params.decimals;
 
     updateAppInfoAsync = async () => {
         this.params = (await ConnectionSingleton.getApp({
@@ -197,6 +205,19 @@ class App{
         }
     }
 
+    async updateContract({newContractAddress}){
+        try{
+            let res = await this.casinoContract.getBankRoll();
+            await this.enableMetamask();
+            return await this.casinoContract.updateContract({
+                newContractAddress
+            })
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     async editAffiliateStructure({structures}){
         try{           
             return await ConnectionSingleton.editAffiliateStructure({
@@ -215,6 +236,10 @@ class App{
 
     getName(){
         return this.params.name;
+    }
+
+    getCroupier(){
+        return this.params.croupier;
     }
 
     getDescription(){
@@ -302,9 +327,13 @@ class App{
 		}
     }
 
+    getParams = () => this.params;
+
     getWithdraws = () => this.params.withdraws || [];
-    
-    getDeposits = async (address) => {
+
+    getDeposits = () => this.params.deposits || [];
+
+    getDexDepositsAsync = async (address) => {
         let depositsApp = this.params.deposits || [];
         let allTxsDeposits = await this.getUnconfirmedBlockchainDeposits(address);
         return (await Promise.all(allTxsDeposits.map( async tx => {
@@ -324,26 +353,19 @@ class App{
     }
 
     requestWithdraw = async ({tokenAmount}) => {
-
         try{
             let metamaskAddress = await getMetamaskAddress();
+            
             let params = {
                 address : metamaskAddress, 
-                newBalance :  Numbers.toFloat(this.getSummaryData('wallet').data.playBalance), 
-                winBalance :  Numbers.toFloat(this.getSummaryData('wallet').data.playBalance), 
                 nonce : getNonce(), 
-                decimals : this.params.decimals,
-                category : codes.Withdraw
+                decimals : this.params.decimals
             }
-
-            // Get Signature
-            let { signature } = await CryptographySingleton.getUserSignature(params);
 
             /* Get Request Withdraw Response */
             var res_with = await ConnectionSingleton.requestWithdraw({
                 ...params,
                 tokenAmount,
-                signature,
                 app : this.getId(),
                 headers : authHeaders(this.params.bearerToken, this.params.id),
             });
@@ -352,6 +374,39 @@ class App{
 
         }catch(err){
             throw err;
+        }
+    }
+
+    getUsersAsync = async ({size=1000, offset=0}) => {
+        try{
+            /* Get App Users  */
+            this.data.summary.usersInfoSummary = (await ConnectionSingleton.getAppUsers({
+                params : {
+                    size,
+                    offset,
+                    app : this.getId()
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id),
+            })).data.message;
+            return this.data.summary.usersInfoSummary;
+        }catch(err){
+            throw err;   
+        }
+    }
+
+    getWithdrawsAsync = async ({size=1000, offset=0}) => {
+        try{
+            this.data.summary.withdraws = (await ConnectionSingleton.getWithdraws({
+                params : {
+                    size,
+                    offset,
+                    app : this.getId()
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id),
+            })).data.message;
+            return this.data.summary.withdraws;
+        }catch(err){
+            throw err;   
         }
     }
 
@@ -372,20 +427,61 @@ class App{
         }
     }
 
+    approveWithdraw = async ({amount, address, user, _id}) => {
+        try{
+            var res_with = await this.casinoContract.setUserWithdrawal({
+                address : address,
+                amount : amount
+            });
+
+            let res = await ConnectionSingleton.finalizeUserWithdraw({
+                user, app : this.getId(), transactionHash : res_with.transactionHash, withdraw_id : _id,
+                headers : authHeaders(this.params.bearerToken, this.getId())
+            })
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    approveWithdrawsBatch = async (items) => {
+        try{
+            var addresses = items.map( i => i.address);     
+            var amounts = items.map( i => i.amount); 
+
+            var res_with = await this.casinoContract.setUserWithdrawalBatch({
+                addresses : addresses,
+                amounts : amounts
+            });
+
+            let users_array = [];
+
+            for(var i = 0; i < items.length; i++){
+                if(users_array.findIndex(u => items[i].user == u));
+                /* TO DO */
+                let item = items[i];
+                let res = await ConnectionSingleton.finalizeUserWithdraw({
+                    user : item.user, app : this.getId(), transactionHash : res_with.transactionHash, withdraw_id : item._id,
+                    headers : authHeaders(this.params.bearerToken, this.getId())
+                });
+                console.log(res);
+            }
+            return true;
+        }catch(err){
+            throw err;
+        }
+    }
+
     finalizeWithdraw = async ({ amount, nonce, withdraw_id }) => {
         try {
             let metamaskAddress = await getMetamaskAddress();
+
             let params = {
                 address : metamaskAddress, 
-                newBalance :  Numbers.toFloat(this.getSummaryData('wallet').data.playBalance), 
-                winBalance :  Numbers.toFloat(this.getSummaryData('wallet').data.playBalance), 
                 nonce : getNonce(), 
-                decimals : this.params.decimals,
-                category : codes.Withdraw,
+                decimals : this.params.decimals
             }
-
-            // Get Signature
-            let { signature } = await CryptographySingleton.getUserSignature(params);
 
             /* Run Withdraw Function */
             const resEthereum = await this.casinoContract.withdrawApp({
@@ -398,14 +494,12 @@ class App{
             let res_fin = await ConnectionSingleton.finalizeWithdraw({
                 ...params,
                 tokenAmount : amount,
-                signature,
                 withdraw_id,
                 app : this.getId(),
                 transactionHash : resEthereum.transactionHash,
                 app : this.getId(),
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
-
             return res_fin;
 
         } catch (err) {
@@ -614,9 +708,9 @@ class App{
         }
     }
 
-    getCurrencyTicker = () => this.getSummaryData('wallet').data.blockchain.ticker;
+    getCurrencyTicker = () => this.getSummaryData('wallet').data.approveWithdrawsBatchticker;
 
-    async enableMetamask(currency){
+    async enableMetamask(currency='eth'){
         let ethereum = window.ethereum;
         // TO DO : When User Rejects Connect Question throw err
         switch(currency) {
@@ -629,6 +723,8 @@ class App{
         }
     }
 
+    getVersion = () => this.params.version;
+    
     getManagerAddress = () => this.params.address;
     
     getOwnerAddress = () => {console.log(this.params); return this.params.ownerAddress;}
@@ -697,6 +793,28 @@ class App{
         }catch(err){
             throw err;
         }
+    }
+
+    authorizeAddress = async ({address}) => {
+        /* Authorize Decentralized Way */
+        await this.casinoContract.authorizeAccountToManage({addr : address});
+        /* Send info to Server */
+        let res = await this.addBlockchainInformation({
+            authorizedAddresses : this.getInformation('authorizedAddresses').concat([address])
+        })
+        return res;
+    }
+
+    unauthorizeAddress = async ({address}) => {
+        /* Authorize Decentralized Way */
+        await this.casinoContract.unauthorizeAccountToManage({addr : address});
+        /* Send info to Server */
+        let authorizedAddresses = this.getInformation('authorizedAddresses');
+        authorizedAddresses = authorizedAddresses.filter(e => e !== address)
+        let res = await this.addBlockchainInformation({
+            authorizedAddresses 
+        })
+        return res;
     }
 }
 

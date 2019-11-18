@@ -1,16 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Card, CardBody, Col } from 'reactstrap';
+import { Card, CardBody, Col, Row } from 'reactstrap';
 import { AreaChart, Tooltip, Area, ResponsiveContainer } from 'recharts';
 import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import PropTypes from 'prop-types';
-
-const data = [{ name: 'Mon', btc: 7 },
-  { name: 'Tue', btc: 2 },
-  { name: 'Wed', btc: 5 },
-  { name: 'Thu', btc: 2 },
-  { name: 'Fri', btc: 1 },
-  { name: 'Sat', btc: 3 },
-  { name: 'Sun', btc: 1 }];
+import moment from 'moment';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active) {
@@ -37,47 +30,91 @@ CustomTooltip.defaultProps = {
 };
 
 export default class UsersResumeEntries extends PureComponent {
-  constructor() {
-    super();
-    this.state = {
-      activeIndex: 0,
-    };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            activeIndex: 0,
+            users : [],
+            data : [{
+                name : moment(new Date()).format('L'),
+                btc : 0
+            }]
+        };
+    }
 
-  render() {
-    const { activeIndex } = this.state;
-    const activeItem = data[activeIndex];
+    componentDidMount(){
+        this.projectData(this.props);
+    }
 
-    return (
-      <Col md={12} xl={12} lg={12} xs={12}>
-        <Card>
-          <CardBody className="dashboard__card-widget">
-            <div className="card__title">
-              <h5 className="bold-text">Daily Active Users</h5>
-              <h5 className="subhead">This Week</h5>
-            </div>
-            <div className="dashboard__total dashboard__total--area">
-              <TrendingUpIcon className="dashboard__trend-icon" />
-              <p className="dashboard__total-stat">
-                2.3%
-              </p>
-              <ResponsiveContainer height={70} className="dashboard__chart-container">
-                <AreaChart data={data} margin={{ top: 0, left: 20, bottom: 0 }}>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area
-                    name="BTC"
-                    type="monotone"
-                    dataKey="btc"
-                    fill="purple"
-                    stroke="purple"
-                    fillOpacity={0.2}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardBody>
-        </Card>
-      </Col>
-    );
-  }
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+
+    projectData = async (props) => {
+        if(!props.data){return null}
+        let users = props.data.data;
+        var registeredByDay = [];
+        for(var i = 0; i < users.length; i++){
+            let day = moment(new Date(users[i].register_timestamp)).format('L');
+            let index = registeredByDay.findIndex( (d) => d.name == day)
+            if( index > -1){
+                //exists
+                registeredByDay[index].btc += 1;
+            }else{
+                // does not eist
+                registeredByDay.push({
+                    btc : 1,
+                    name : day
+                })
+            }
+        }
+        this.setState({data : registeredByDay, users : props.data.data})
+    }
+
+    render() {
+        const { activeIndex, data, users } = this.state;
+
+        return (
+            <Col md={12} xl={12} lg={12} xs={12}>
+                <Card>
+                <CardBody className="dashboard__card-widget">
+                    <Row>
+                        <Col md={6}>
+                            <div className="card__title">
+                                <h5 className="bold-text">Users Registered</h5>
+                                <h5 className="subhead">Last Days</h5>
+                            </div>
+                            
+                        </Col>
+                        <Col md={6}>
+                            <ResponsiveContainer height={70} className="dashboard__chart-container">
+                                <AreaChart data={data} margin={{ top: 10, left: 20, bottom: 10 }}>
+                                <Tooltip content={<CustomTooltip />} />
+                                <Area
+                                    name="Users"
+                                    type="monotone"
+                                    dataKey="btc"
+                                    fill="purple"
+                                    stroke="purple"
+                                    fillOpacity={0.2}
+                                />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </Col>
+                    </Row>
+                    <div>
+                        <Row>
+                            <Col md={2}>
+                                <TrendingUpIcon className="dashboard__trend-icon" />
+                            </Col>
+                            <Col md={10}>
+                                <p className="dashboard__visitors-chart-title"> {data[data.length-1].btc/users.length*100}%  <span> { data[data.length-1].name} </span></p>
+                            </Col>
+                        </Row>
+                    </div>
+                </CardBody>
+                </Card>
+            </Col>
+        );
+    }
 }
