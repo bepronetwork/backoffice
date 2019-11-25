@@ -178,7 +178,14 @@ blockquote {
 .text-small{
     font-size: 12px;
 }
+.text-x-small{
+    font-size: 10px;
+}
 
+.pink-text{
+    color: $color-accent !important;
+
+}
 .text-normal{
     color: #eabdf2;
     text-align: center;
@@ -192,6 +199,29 @@ blockquote {
     border-radius: 5px;
     padding : 2px;
 }
+
+.circle-green{
+    background-color: #63c965;
+    text-align: center;
+    width: 15px;
+    height: 15px;
+    margin : auto;
+    display: block;
+    position: relative;
+    border-radius: 5px;
+}
+
+.circle-red{
+    background-color: #e6536e;
+    text-align: center;
+    width: 15px;
+    height: 15px;
+    margin : auto;
+    display: block;
+    position: relative;
+    border-radius: 5px;
+}
+
 
 .background-green{
     background-color: #63c965;
@@ -211,4 +241,26 @@ blockquote {
 
 .text-grey{
     color : #a2a2a2 !important;
+}
+
+
+.user-page-top{
+    max-width: 400px;
+}
+
+.user-avatar{
+    width: 100px;
+    margin : auto;
+    border-radius : 100px;
+    position: relative;
+    height: 100px;
+}
+
+
+.avatar-image-small{
+    width: 30px;
+    height: 30px;
+    margin: auto;
+    position: relative;
+    display: blocK;
 }

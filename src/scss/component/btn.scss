@@ -511,8 +511,6 @@ button:focus, button:active {
 }
 
 .button-hover{
-
-    
     :hover {
         opacity : 0.4;
         transition: all 0.4s;
@@ -533,4 +531,22 @@ button:focus, button:active {
     position: absolute;
     right: 0;
     top: 0;
+}
+
+.edit-button{
+    background-color: #ede6f2;
+    padding: 5px;
+    height: min-content;
+    border-radius: 40px;
+    position: absolute;
+    display: block;
+    border : none;
+    font-size: 12px;
+    left: 140px;
+    top: -10px;
+}
+
+.small-icon{
+    width: 15px;
+    height: 15px;
 }

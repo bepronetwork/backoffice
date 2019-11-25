@@ -9,11 +9,15 @@ import gameReducer from './gameReducer';
 import messageContainerReducer from './messageContainerReducer';
 import periodicityReducer from './periodicityReducer';
 import set2FAReducer from './set2FAReducer';
+import userViewReducer from './userViewReducer';
+import modalReducer from './modalReducer';
 
 export {
     themeReducer,
     sidebarReducer,
+    modalReducer,
     set2FAReducer,
+    userViewReducer,
     cryptoTableReducer,
     messageContainerReducer,
     gameReducer,
