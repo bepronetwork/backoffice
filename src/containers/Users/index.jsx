@@ -6,17 +6,25 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import UsersProfile from './components/UsersProfile';
 import UsersProfit from './components/UsersProfit';
-import UsersInfoFilter from './components/UsersInfoFilter';
 import UsersResumeEntries from './components/UsersResumeEntries';
 import VectorMap from './components/VectorMap';
 import DataWidget from '../DataWidget/DataWidget';
-import BetsTable from './components/BetsTable';
 import UsersTable from './components/UsersTable';
+import store from '../App/store';
+import { setUserView } from '../../redux/actions/userView';
 
 class UsersContainer extends React.Component{
 
     constructor(props){
         super(props)
+    }
+
+
+    goToUserPage = async ({user}) => {
+        /* Set User to Redux */
+        await store.dispatch(setUserView(user));
+        /* Go To User Page */
+        this.props.history.push('/users/user');
     }
 
 
@@ -52,7 +60,9 @@ class UsersContainer extends React.Component{
                 <Row>
                     <Col lg={12}>
                         <DataWidget>
-                            <UsersTable data={{
+                            <UsersTable 
+                                goToUserPage={this.goToUserPage}
+                                data={{
                                     users : this.props.profile.getApp().getSummaryData('usersInfoSummary'),
                                     usersOtherInfo : this.props.profile.getApp().getSummaryData('users'),
                                     wallet : this.props.profile.getApp().getSummaryData('wallet')

@@ -233,6 +233,21 @@ class App{
         }
     }
 
+    async setCustomAffiliateStructureToUser({user, affiliatePercentage}){
+        try{           
+            return await ConnectionSingleton.setCustomAffiliateStructureToUser({
+                params : {
+                    app : this.getId(),
+                    user,
+                    affiliatePercentage
+                },
+                headers : authHeaders(this.getBearerToken(), this.getId())
+            })
+        }catch(err){
+            throw err;
+        }
+    }
+
 
     getName(){
         return this.params.name;
@@ -375,6 +390,16 @@ class App{
         }catch(err){
             throw err;
         }
+    }
+
+    getUserAsync = async ({user}) => {
+        return (await ConnectionSingleton.getUser({
+            params : {
+                user,
+                app : this.getId()
+            },
+            headers : authHeaders(this.params.bearerToken, this.params.id),
+        })).data.message;
     }
 
     getUsersAsync = async ({size=1000, offset=0}) => {
@@ -708,7 +733,7 @@ class App{
         }
     }
 
-    getCurrencyTicker = () => this.getSummaryData('wallet').data.approveWithdrawsBatchticker;
+    getCurrencyTicker = () => this.getSummaryData('wallet').data.blockchain.ticker;
 
     async enableMetamask(currency='eth'){
         let ethereum = window.ethereum;

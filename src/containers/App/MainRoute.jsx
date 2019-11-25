@@ -30,6 +30,7 @@ import Developers from '../Developers';
 import TransactionsContainer from '../Transactions';
 import WithdrawWidget from '../Wallet/components/paths/WithdrawWidget';
 import GamePage from '../Applications/GamePage';
+import UserPage from '../Users/UserPage';
 
 class MainRoute extends React.Component {
 	constructor() {
@@ -114,7 +115,7 @@ class MainRoute extends React.Component {
                         }
                     })}
                     <Route path={'/home'} component={DefaultDashboard}/>	
-                    <Route path={'/users'} component={UsersContainer}/>	
+                    <Route path={'/users'} component={wrappedUserRoutes}/>	
                     <Route path={'/application'} component={wrappedApplicationRoutes}/>	
                     <Route path={'/developers'} component={Developers}/>	
                     <Route path={'/transactions'} component={TransactionsContainer}/>	
@@ -159,6 +160,16 @@ const wrappedWalletRoutes = (props) => {
 			<Route exact path="/wallet" component={WalletContainer} />
 			<Route path="/wallet/deposit" component={DepositWidget} />
             <Route path="/wallet/withdraw" component={WithdrawWidget} />
+		</div>
+	)
+}
+
+
+const wrappedUserRoutes = (props) => {
+	return(
+		<div>
+			<Route exact path="/users" component={UsersContainer} />
+			<Route path="/users/user" component={UserPage} />
 		</div>
 	)
 }

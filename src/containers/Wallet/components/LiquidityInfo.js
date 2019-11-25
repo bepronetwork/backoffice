@@ -10,42 +10,42 @@ const Ava = `${process.env.PUBLIC_URL}/img/brand.jpg`;
 
 
 class LiquidityInfo extends PureComponent {
-  static propTypes = {
-    t: PropTypes.func.isRequired,
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeIndex: 0,
+    static propTypes = {
+        t: PropTypes.func.isRequired,
     };
-  }
 
-  handleClick = (index) => {
-    this.setState({
-      activeIndex: index,
-    });
-  };
+    constructor(props) {
+        super(props);
+        this.state = {
+        activeIndex: 0,
+        };
+    }
 
-  render() {
-    const { activeIndex } = this.state;
-    const app = this.props.app;
-    
-    return (
-		<Col md={12} lg={12} xl={12} >
-			<Card>
-                <Row>
-                    <Col lg={6}>
-                        <h4 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>Application</h4>
-                        <p className="">
-                            Current Liquidity
-                        </p>
-                    </Col>
-                </Row>
-			</Card>
-		</Col>
-    );
-  }
+    handleClick = (index) => {
+        this.setState({
+        activeIndex: index,
+        });
+    };
+
+    render() {
+        const { activeIndex } = this.state;
+        const app = this.props.app;
+        
+        return (
+            <Col md={12} lg={12} xl={12} >
+                <Card>
+                    <Row>
+                        <Col lg={6}>
+                            <h4 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>Application</h4>
+                            <p className="">
+                                Current Liquidity
+                            </p>
+                        </Col>
+                    </Row>
+                </Card>
+            </Col>
+        );
+    }
 }
 
 export default translate('common')(LiquidityInfo);

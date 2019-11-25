@@ -109,7 +109,7 @@ class Account{
 
     update = async () => {
         /* Add Everything to the Redux State */  
-        this.versionControl = this.versionControl + 1;
+        this.versionControl += 1;
         await store.dispatch(setProfileInfo(this));
     }
 
