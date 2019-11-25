@@ -49,7 +49,7 @@ class UsersProfit extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : this.state.profit >= 0 ? '#76d076' : '#646777'}
-                            }><AnimationNumber  number={this.state.profit}/> <span> {this.state.ticker}</span></p>
+                            }><AnimationNumber  number={Numbers.toFloat(this.state.profit)}/> <span> {this.state.ticker}</span></p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Users Profits <span> {this.state.timeline} </span></p>
@@ -65,7 +65,7 @@ class UsersProfit extends PureComponent {
 
 const getProfits = (users) => {
     return Object.keys(users).reduce( (acc, key) => {
-        return acc+ Numbers.toFloat(users[key].profit);
+        return acc + parseFloat(users[key].profit);
     }, 0);
 }
 

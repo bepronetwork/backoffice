@@ -8,6 +8,7 @@ import SettingsContainer from '../Settings';
 import DepositWidget from '../Wallet/components/paths/DepositWidget';
 import WithdrawWidget from '../Wallet/components/paths/WithdrawWidget';
 import GamePage from '../Applications/GamePage';
+import UserPage from '../Users/UserPage';
 
 export default [
     {
@@ -22,7 +23,14 @@ export default [
     {
         path: "/users",
         name: 'Users',
-        component : UsersContainer
+        component : UsersContainer,
+        children : [
+            {
+                path : "/user",
+                name : 'User View',
+                component : UserPage
+            }
+        ]
     },
     {
         path: "/application",

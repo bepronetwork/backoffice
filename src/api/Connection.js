@@ -394,6 +394,20 @@ class Connection {
         }
     }
 
+    setCustomAffiliateStructureToUser = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/affiliate/custom/add`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
     editTopBarCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/topBar`, {
@@ -423,6 +437,19 @@ class Connection {
     getAppUsers = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/users`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getUser = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/user/get`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

@@ -57,17 +57,23 @@ const fromDatabasetoTable = (data, otherInfo) => {
         }
         return {
             _id :  key._id,
+            full_info : {...d, ...key}, 
 			username : key.username,
-			wallet: Numbers.formatNumber(key.wallet.playBalance),
-			bets: Numbers.formatNumber(key.bets.length),
+			wallet: Numbers.toFloat(key.wallet.playBalance),
+			bets: Numbers.toFloat(key.bets.length),
             email: key.email,
-            turnoverAmount: d ? Numbers.formatNumber(d.betAmount) : 0,
-            profit: d ? Numbers.formatNumber(d.profit) : 0
+            turnoverAmount: d ? Numbers.toFloat(d.betAmount) : 0,
+            profit: d ? Numbers.toFloat(d.profit) : 0
 		}
 	})
 }
 
 const rows = [
+    {
+        id: 'avatar',
+        label: 'Avatar',
+        position: 'center'
+    },
     {
         id: '_id',
         label: 'Id',
@@ -120,7 +126,7 @@ class EnhancedTableHead extends React.Component {
                     row => (
                     <TableCell
                         key={row.id}
-                        align={row.numeric ? 'right' : 'left'}
+                        align={row.position ? row.position : 'left'}
                         padding={row.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === row.id ? order : false}
                     >
@@ -360,6 +366,9 @@ class UsersTable extends React.Component {
                                     selected={isSelected}
                                 >
                                     <TableCell align="left">
+                                        <img src={`https://avatars.dicebear.com/v2/avataaars/${n._id}.svg`} className={'avatar-image-small'}/>
+                                    </TableCell>
+                                    <TableCell align="left">
                                         <p className='text-small'>
                                             {n._id}
                                         </p>
@@ -391,9 +400,15 @@ class UsersTable extends React.Component {
                                     </TableCell>
                                     <TableCell align="left">
                                         <p className='text-small'>
-                                            {n.profit}<span className='text-small text-grey' >{this.state.ticker}</span>
+                                            {n.profit} <span className='text-small text-grey' >{this.state.ticker}</span>
                                         </p>
                                     </TableCell>
+                                    <TableCell align="left">
+                                        <button className={`clean_button button-normal button-hover`} onClick={ () => this.props.goToUserPage({user : n.full_info})}> 
+                                            <p className='text-small text-white'>See More</p>
+                                        </button>
+                                    </TableCell>
+                                    
                                 </TableRow>
                             );
                         })}
