@@ -228,6 +228,25 @@ class CasinoContract{
         }
     }
 
+    async changeCasinoToken({address}){
+        try{
+            let accounts = await window.web3.eth.getAccounts();
+            return new Promise ( (resolve, reject) => {
+                self.contract.getContract().methods.changeSingleTokenContract(
+                    address
+                ).send({from : accounts[0]})
+                .on('transactionHash', (hash) => {
+                })
+                .on('confirmation', (confirmations, receipt) => {
+                    resolve(receipt)
+                })
+                .on('error', () => {reject("Transaction Error")})
+            })
+        }catch(err){
+            throw err;
+        }
+    }
+
     async updateContract({newContractAddress}){
         try{
             let accounts = await window.web3.eth.getAccounts();

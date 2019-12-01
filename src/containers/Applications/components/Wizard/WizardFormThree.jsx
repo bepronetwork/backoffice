@@ -123,11 +123,9 @@ class WizardFormThree extends React.Component{
                                 </h4>
                                 <Row>
                                     {currencies.map( (token) => {
-                                        let image = appCreationConfig['currencies'][new String(token.ticker).toLowerCase()].image;
-                                        if(!image){return null}
                                         return (
                                             <Col lg={4}>
-                                                {this.currencyBox({type : 'Currency', ticker : token.ticker, address : token.address, decimals : token.decimals, image : image})}
+                                                {this.currencyBox({type : 'Currency', ticker : token.ticker, address : token.address, decimals : token.decimals, image : token.image})}
                                             </Col>
                                         )
                                     })}
