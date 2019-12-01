@@ -652,6 +652,26 @@ class App{
         }
     }
 
+    changeTokenAddress = async ({token}) => {
+        try{
+            /* Update Contract */
+            await this.casinoContract.changeCasinoToken({
+                address : token.address
+            });
+
+            /* Update API */
+            let params = {
+                decimals : token.decimals,
+                currencyTicker : token.ticker,
+                platformTokenAddress : token.address,
+            }
+            
+            await this.addBlockchainInformation(params);
+        }catch(err){
+            throw err;
+        }
+    }
+
     getMaxDeposit = async () => {
         try{
             return await this.casinoContract.getMaxDeposit();
