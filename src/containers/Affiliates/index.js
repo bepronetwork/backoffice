@@ -86,32 +86,32 @@ class AffiliatesContainer extends React.Component{
                 <Row>
                     <Col md={5}>
                         <EditableTable
-                                title={'Affiliate Structure'}
-                                onChange={this.onChange}
-                                compareField={'level'}
-                                columns={[
-                                    { title: 'Level', field: 'level', type : 'numeric', initialEditValue : affiliateStructures.length + 1, editable : 'never'},
-                                    { title: 'Affiliate Fee (%) ', field: 'percentageOnLoss', type : 'numeric', render : rowData => { return `${rowData.percentageOnLoss}%`} },
-                                    { title: 'Active', field: 'isActive', lookup : { 1 : 'Yes' , 0 : 'No'}, initialEditValue : 1, 
-                                    render : rowData => {
-                                        return <Switch color="primary" checked={rowData.isActive} value={`checkedActive-${rowData.level}`} inputProps={{ 'aria-label': 'primary checkbox' }} />
-                                    },
-                                    editComponent: props => {
-                                        const { rowData, onChange } = props;
-                                        return (
-                                            <Switch disabled={rowData.level > (lastRowLevelActive + 1)} color="primary" checked={rowData.isActive} onChange={e => onChange( !rowData.isActive ? 1 : 0)} value={`checkedActive-${rowData.level}`} inputProps={{ 'aria-label': 'primary checkbox' }} />
-                                        )
-                                    }}
-                                ]}
-                                rawData={affiliateStructures}
-                                data={affiliateStructures.map( v => {
-                                    return {
-                                        level: v.level, 
-                                        percentageOnLoss: `${v.percentageOnLoss*100}`,
-                                        isActive : v.isActive ? 1 : 0
-                                    }
-                                })}
-                            />
+                            title={'Affiliate Structure'}
+                            onChange={this.onChange}
+                            compareField={'level'}
+                            columns={[
+                                { title: 'Level', field: 'level', type : 'numeric', initialEditValue : affiliateStructures.length + 1, editable : 'never'},
+                                { title: 'Affiliate Fee (%) ', field: 'percentageOnLoss', type : 'numeric', render : rowData => { return `${rowData.percentageOnLoss}%`} },
+                                { title: 'Active', field: 'isActive', lookup : { 1 : 'Yes' , 0 : 'No'}, initialEditValue : 1, 
+                                render : rowData => {
+                                    return <Switch color="primary" checked={rowData.isActive} value={`checkedActive-${rowData.level}`} inputProps={{ 'aria-label': 'primary checkbox' }} />
+                                },
+                                editComponent: props => {
+                                    const { rowData, onChange } = props;
+                                    return (
+                                        <Switch disabled={rowData.level > (lastRowLevelActive + 1)} color="primary" checked={rowData.isActive} onChange={e => onChange( !rowData.isActive ? 1 : 0)} value={`checkedActive-${rowData.level}`} inputProps={{ 'aria-label': 'primary checkbox' }} />
+                                    )
+                                }}
+                            ]}
+                            rawData={affiliateStructures}
+                            data={affiliateStructures.map( v => {
+                                return {
+                                    level: v.level, 
+                                    percentageOnLoss: `${v.percentageOnLoss*100}`,
+                                    isActive : v.isActive ? 1 : 0
+                                }
+                            })}
+                        />
                     </Col>
                 </Row>
             </Container>

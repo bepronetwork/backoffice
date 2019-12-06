@@ -591,6 +591,67 @@ class App{
         }
     }
 
+    editLogoCustomization = async ({logo}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editLogoCustomization({   
+                params : {
+                    app : this.getId(),
+                    logo
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editColorsCustomization = async ({colors}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editColorsCustomization({   
+                params : {
+                    app : this.getId(),
+                    colors
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editFooterCustomization = async ({communityLinks, supportLinks}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editFooterCustomization({   
+                params : {
+                    app : this.getId(),
+                    communityLinks,
+                    supportLinks
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     cancelWithdraw = async () => {
         try{
             /* Cancel Withdraw Response */
@@ -670,7 +731,7 @@ class App{
         }catch(err){
             throw err;
         }
-    }
+    } 
 
     getMaxDeposit = async () => {
         try{

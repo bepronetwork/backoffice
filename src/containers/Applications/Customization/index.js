@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
-import { AnnouncementTabSettings, BannersSettings } from './components';
+import { AnnouncementTab, Banners, Logo, Footer, Colors } from './components';
 import TabsContainer from '../../../shared/components/tabs/Tabs';
-import { LayersOutlineIcon, AnnouncementIcon } from 'mdi-react';
+import { LayersOutlineIcon, AnnouncementIcon, BrandingWatermarkIcon, ColorizeIcon, PageLayoutFooterIcon } from 'mdi-react';
 
 export default class CustomizationContainer extends Component {
     render() {
@@ -13,14 +12,30 @@ export default class CustomizationContainer extends Component {
                         [
                             {
                                 title : 'Announc. Tab',
-                                container :  <AnnouncementTabSettings />,
+                                container :  <AnnouncementTab />,
                                 icon : <AnnouncementIcon/>
                             },
                             {
+                                title : 'Logo',
+                                container : <Logo/>,
+                                icon : <BrandingWatermarkIcon/>
+                            },
+                            {
                                 title : 'Banners',
-                                container : <BannersSettings/>,
+                                container : <Banners/>,
                                 icon : <LayersOutlineIcon/>
                             },
+                            {
+                                title : 'Colors',
+                                container : <Colors/>,
+                                icon : <ColorizeIcon/>
+                            },
+                            {
+                                title : 'Footer',
+                                container : <Footer/>,
+                                icon : <PageLayoutFooterIcon/>
+                            },
+                         
                         ]
                     }
                 />

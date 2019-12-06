@@ -20,7 +20,7 @@ const defaultState = {
     isLoading: false
 }
 
-class BannersSettings extends Component {
+class Banners extends Component {
     constructor(props){
         super(props);
         this.state = defaultState;
@@ -159,4 +159,4 @@ function mapStateToProps(state){
   };
 }
 
-export default connect(mapStateToProps)(BannersSettings);
+export default connect(mapStateToProps)(Banners);

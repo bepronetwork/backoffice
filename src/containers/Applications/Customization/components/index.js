@@ -1,8 +1,13 @@
-import BannersSettings  from './BannersSettings';
-import AnnouncementTabSettings from './AnnouncementTabSettings';
-
+import Banners  from './Banners';
+import AnnouncementTab from './AnnouncementTab';
+import Logo from './Logo';
+import Footer from './Footer';
+import Colors from './Colors';
 
 export { 
-    BannersSettings,
-    AnnouncementTabSettings
+    Banners,
+    AnnouncementTab,
+    Footer,
+    Colors,
+    Logo
 }

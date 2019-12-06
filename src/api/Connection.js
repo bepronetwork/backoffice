@@ -434,6 +434,45 @@ class Connection {
         }
     }
 
+    editLogoCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/logo`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editColorsCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/colors`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editFooterCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/footer`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getAppUsers = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/users`, {
