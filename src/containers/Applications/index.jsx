@@ -13,10 +13,12 @@ import { GamesIcon, StoreIcon, SettingsIcon } from 'mdi-react';
 import TabsContainer from '../../shared/components/tabs/Tabs';
 import GameStorePageContainer from './GameStore/index.js';
 import CustomizationContainer from './Customization/index.js';
+import HostingLink from './components/HostingLink';
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
 const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
+
 class ApplicationsContainer extends React.Component{
 
     constructor(props){
@@ -28,7 +30,7 @@ class ApplicationsContainer extends React.Component{
     render = () => {
         let services = this.props.profile.getApp().getServices();
         let servicesCodes = fromCodesToServices(services);
-        
+    
         return (
             <Container className="dashboard">
                 <Row>
@@ -37,16 +39,18 @@ class ApplicationsContainer extends React.Component{
                           ?  <IntegrationsContainer/>
                         :   
                             <div>
-                                <Card>
-                                    <div> <h5 className={`widget__use__big`} style={{top : -20}}> Integrations </h5></div> 
-                                    <CardBody className="dashboard__card-widget">  
+                                <Row>
+                                    <Col md={9}>
                                         <Row>
                                             {servicesCodes.map( (key) => {
                                                 return widgets[key] ? widgets[key]() : null;
                                             })}
                                         </Row>
-                                    </CardBody>
-                                </Card>
+                                    </Col>
+                                    <Col md={3}>
+                                        <HostingLink/>
+                                    </Col>
+                                </Row>
                                 <TabsContainer 
                                     items={
                                         [
@@ -98,32 +102,14 @@ const widgets = {
         return (
             <Col md={3}>
                 <Card>
-                    <div className='landing__product__widget__small'>
+                    <button className='button-hover box-small landing__product__widget__small' style={{marginLeft : 0}}>
                         <div className='description'>
-                            <h4> Casino </h4>
-                            <p> A Casino Application from Layout, Engines & Games </p>
+                            <h5 style={{margin : 0}}> Casino</h5>
                         </div>
-                        <h2 style={{marginTop : 30}}> 0,5% <h5>Per Transaction</h5></h2>
-                        <img className='image_widget' src={casino}></img>
-                    </div>
+                        <img className='image_widget'src={casino}></img>
+                    </button>
                 </Card>
             </Col>        
-        )
-    },
-    crypto : () => {
-        return (
-            <Col md={3}>
-                <Card>    
-                    <div className='landing__product__widget__small'>
-                        <div className='description'>
-                            <h4> CryptoCurrency</h4>
-                            <p> Accept Multiple CryptoCurrencies for your Platform </p>
-                        </div>
-                        <h2 style={{marginTop : 30}}> 0,5% <h5>Per Transaction</h5></h2>
-                        <img className='image_widget' src={bitcoin}></img>
-                    </div>
-                </Card>
-            </Col>       
         )
     }
 } 

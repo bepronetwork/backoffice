@@ -511,6 +511,7 @@ button:focus, button:active {
 }
 
 .button-hover{
+    border : none;
     :hover {
         opacity : 0.4;
         transition: all 0.4s;
