@@ -33,6 +33,7 @@ class GameStorePageContainer extends React.Component{
     projectData = async (props) => {
         let { profile } = props;
         let ecosystemGames = await profile.getApp().getEcosystemGames();
+        if(!(profile.getApp().getSummaryData('gamesInfo').data)){return null}
         let appGames = (profile.getApp().getSummaryData('gamesInfo')).data.data.message;
 
         ecosystemGames = ecosystemGames.map( ecoGame => {

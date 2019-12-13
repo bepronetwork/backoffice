@@ -39,7 +39,9 @@ class TabsContainer extends React.Component{
                                                         {item.icon}
                                                     </Col>
                                                     <Col sm={9}>
-                                                        {item.title}
+                                                        <div style={{marginTop : 3}}>
+                                                            {item.title}
+                                                        </div>
                                                     </Col>
                                                 </Row>
                                             </Nav.Link>

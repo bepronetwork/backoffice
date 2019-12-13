@@ -16,7 +16,7 @@ const defaultState = {
     isLoading: false
 }
 
-class AnnouncementTabSettings extends Component {
+class AnnouncementTab extends Component {
     constructor(props){
         super(props);
         this.state = defaultState;
@@ -123,4 +123,4 @@ function mapStateToProps(state){
   };
 }
 
-export default connect(mapStateToProps)(AnnouncementTabSettings);
+export default connect(mapStateToProps)(AnnouncementTab);

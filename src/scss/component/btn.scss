@@ -511,6 +511,7 @@ button:focus, button:active {
 }
 
 .button-hover{
+    border : none;
     :hover {
         opacity : 0.4;
         transition: all 0.4s;
@@ -549,4 +550,8 @@ button:focus, button:active {
 .small-icon{
     width: 15px;
     height: 15px;
+}
+
+.nav-item{
+    height: 38px !important;
 }

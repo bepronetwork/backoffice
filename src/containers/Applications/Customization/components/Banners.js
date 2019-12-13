@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
-import TextInput from '../../../../shared/components/TextInput';
-import BooleanInput from '../../../../shared/components/BooleanInput';
-import ColorPickerInput from '../../../../shared/components/color_picker_input/ColorPickerInput';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
 import AliceCarousel from 'react-alice-carousel'
@@ -20,7 +17,7 @@ const defaultState = {
     isLoading: false
 }
 
-class BannersSettings extends Component {
+class Banners extends Component {
     constructor(props){
         super(props);
         this.state = defaultState;
@@ -159,4 +156,4 @@ function mapStateToProps(state){
   };
 }
 
-export default connect(mapStateToProps)(BannersSettings);
+export default connect(mapStateToProps)(Banners);
