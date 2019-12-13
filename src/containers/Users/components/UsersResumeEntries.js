@@ -4,6 +4,7 @@ import { AreaChart, Tooltip, Area, ResponsiveContainer } from 'recharts';
 import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import Numbers from '../../../services/numbers';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active) {
@@ -108,7 +109,7 @@ export default class UsersResumeEntries extends PureComponent {
                                 <TrendingUpIcon className="dashboard__trend-icon" />
                             </Col>
                             <Col md={10}>
-                                <p className="dashboard__visitors-chart-title"> {data[data.length-1].btc/users.length*100}%  <span> { data[data.length-1].name} </span></p>
+                                <p className="dashboard__visitors-chart-title"> {Numbers.toFloat(data[data.length-1].btc/users.length*100)}%  <span> { data[data.length-1].name} </span></p>
                             </Col>
                         </Row>
                     </div>
