@@ -55,6 +55,10 @@ const DEPLOYMENT_CONFIG = {
         isSet : false,
         message : 'Alowing your Services..'
     },
+    deployingApplication : {
+        isSet : false,
+        message : 'Deploying and Hosting your App..'
+    },
 }
 
 const defaultProps = {
@@ -109,6 +113,21 @@ class WizardForm extends PureComponent {
         try{
 
             let res = await this.props.profile.addServices(services);
+            let{
+                status,
+                message
+            } = res.data;
+
+            if(status != 200){throw res.data}
+        }catch(err){
+            // TO DO : Show notification Error
+        }
+    }
+
+    deployAndHostApplication = async () => {
+        try{
+
+            let res = await this.props.profile.getApp().deployAndHostApplication();
             let{
                 status,
                 message
@@ -182,6 +201,12 @@ class WizardForm extends PureComponent {
             state = 'choooseServices';
             deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig})
             await this.sendServices({services});
+
+            
+            /* 5 - Deploying and Hosting Application */
+            state = 'deployingApplication';
+            deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig})
+            await this.deployAndHostApplication();
 
             /* Update all */
             await profile.getData();

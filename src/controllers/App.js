@@ -265,6 +265,10 @@ class App{
         return this.params.services;
     }
 
+    getAppLink(){
+        return this.params.web_url;
+    }
+
     getId(){
         return this.params.id;
     }
@@ -598,6 +602,25 @@ class App{
                 params : {
                     app : this.getId(),
                     logo
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    deployAndHostApplication  = async () => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.deployAndHostApplication({   
+                params : {
+                    app : this.getId()
                 },         
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });

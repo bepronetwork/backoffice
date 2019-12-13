@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
-import TextInput from '../../../../shared/components/TextInput';
-import BooleanInput from '../../../../shared/components/BooleanInput';
-import ColorPickerInput from '../../../../shared/components/color_picker_input/ColorPickerInput';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
 import AliceCarousel from 'react-alice-carousel'

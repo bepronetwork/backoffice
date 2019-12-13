@@ -75,28 +75,34 @@ class Colors extends Component {
         const { isLoading, locked, colors } = this.state; 
 
         return (
-            <Card>
-                <CardBody>
-                    <EditLock 
-                        isLoading={isLoading} 
-                        unlockField={this.unlockField} 
-                        lockField={this.lockField} 
-                        confirmChanges={this.confirmChanges} 
-                        type={'color'} 
-                        locked={locked}
-                    >
-                        <Row>
-                            {colors.map ( c => { 
-                                return (
-                                    <Col md={4}>
-                                        {this.renderColor({type : c.type, hex : c.hex, locked})}
-                                    </Col>
-                                )
-                            })}
-                        </Row>
-                    </EditLock>
-                </CardBody>
-            </Card>
+            <>
+                <Card>
+                    <h5> Note : Change of Colors will require a rebuild of the app, so expect a 5-20 min delay for the changes to take effect</h5>
+                </Card>
+                <Card>
+                    <CardBody>
+                        <EditLock 
+                            isLoading={isLoading} 
+                            unlockField={this.unlockField} 
+                            lockField={this.lockField} 
+                            confirmChanges={this.confirmChanges} 
+                            type={'color'} 
+                            locked={locked}
+                        >
+                            <Row>
+                                {colors.map ( c => { 
+                                    return (
+                                        <Col md={4}>
+                                            {this.renderColor({type : c.type, hex : c.hex, locked})}
+                                        </Col>
+                                    )
+                                })}
+                            </Row>
+                        </EditLock>
+                    </CardBody>
+                </Card>
+            </>
+            
             )
         }
 }

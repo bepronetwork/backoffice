@@ -80,7 +80,7 @@ class WizardFormOne extends PureComponent {
                                                 <h2 style={{marginTop : 30}}> +</h2>
                                             </Col>
                                             <Col sd={5}>
-                                                <h2 style={{marginTop : 30}}> 5% <h5>In GGR</h5></h2>
+                                                <h2 style={{marginTop : 30}}> 0,5% <h5>In Volume</h5></h2>
                                             </Col>
                                         </Row>
                                         <img className="landing_2_back" style={{left : '0%',  bottom : '-20%',width : '200%'}} src={back_2} />
