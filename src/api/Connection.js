@@ -79,12 +79,12 @@ class Connection {
         }
     }
     
-    getSummary = async ({app, type, headers}) => {
+    getSummary = async ({app, type, periodicity, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/summary', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({app, type})
+                body : JSON.stringify({app, type, periodicity})
             });
             return response.json();
         }catch(err){

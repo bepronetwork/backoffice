@@ -28,25 +28,25 @@ class App{
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'USERS',
-                    periodicity,
+                    periodicity : periodicity,
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'GAMES',
-                    periodicity,
+                    periodicity : periodicity,
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'BETS',
-                    periodicity,
+                    periodicity : periodicity,
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
                     app : this.params.id,
                     type : 'REVENUE',
-                    periodicity,
+                    periodicity : periodicity,
                     headers : authHeaders(this.params.bearerToken, this.params.id)
                 }),
                 ConnectionSingleton.getSummary({
