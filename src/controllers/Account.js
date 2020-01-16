@@ -185,6 +185,9 @@ class Account{
                 admin_id : this.getProfileData().id
             });
             await this.login();
+            res = await this.getApp().deployApp();
+            await this.getApp().addServices([101, 201]);
+            await this.login();
             return res; 
         }catch(err){
             throw err;
@@ -213,14 +216,6 @@ class Account{
             () => {
             this.getData();
         }, 30*1000);
-    }
-
-    getWithdrawAmountAvailableDecentralized = async () => {
-        try{
-            return await this.getApp().getCasinoContract().getWithdrawAmountAvailableDecentralized()
-        }catch(err){
-            throw err;
-        }
     }
 
     getDepositReference = async (params) => {
@@ -359,8 +354,6 @@ class Account{
             }
             
             this.platform = platform;
-            await this.getApp().addBlockchainInformation(params);
-
             return platform;
         }catch(err){
             throw err;

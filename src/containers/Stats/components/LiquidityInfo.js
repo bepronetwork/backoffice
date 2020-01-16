@@ -24,9 +24,11 @@ class LiquidityInfo extends PureComponent {
 
     projectData = (props) => {
         let data = props.data.data;
+        const {currency} = props;
+
         this.setState({...this.state, 
             totalLiquidity : data.playBalance ? data.playBalance : defaultProps.playBalance,
-            ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
+            ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
         })
     }
 

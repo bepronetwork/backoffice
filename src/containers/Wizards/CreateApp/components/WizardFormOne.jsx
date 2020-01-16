@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { ApplicationIcon, DesktopMacDashboardIcon, BusinessIcon, CheckboxMultipleBlankCircleIcon, MediaNetworkIcon } from 'mdi-react';
 import TextInput from '../../../../shared/components/TextInput';
 const Back = `${process.env.PUBLIC_URL}/img/dashboard/background-login.png`;
+const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 
 class WizardFormOne extends PureComponent {
@@ -31,7 +32,7 @@ class WizardFormOne extends PureComponent {
     
     createApp = async () => {
         try{
-            
+            this.setState({isLoading : true});
             let res = await this.props.profile.createApp({
                 ...this.state,
                 name : this.state.name,
@@ -83,7 +84,9 @@ class WizardFormOne extends PureComponent {
                             </div>
                     
                             <div className="account__btns">
-                                <button style={{maxWidth : 350, marginTop  :30}}  onClick={() => this.createApp()} c className="btn btn-primary account__btn">Create</button>
+                                <button disabled={this.state.isLoading} style={{maxWidth : 350, marginTop  :30}}  onClick={() => this.createApp()} c className="btn btn-primary account__btn">
+                                    {this.state.isLoading ? <img src={loading} style={{width : 20}}/> : 'Register App'}
+                                </button>
                             </div>
                           
                         </form>

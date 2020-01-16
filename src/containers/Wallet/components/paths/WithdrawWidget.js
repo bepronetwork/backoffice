@@ -7,24 +7,54 @@ import { compose } from 'lodash/fp'
 import WithdrawBox from './components/WithdrawBox';
 import Numbers from '../../../../services/numbers';
 import WithdrawsTable from './withdraw/Table';
+import _ from 'lodash';
 
 class WithdrawWidget extends React.Component{
 
     constructor(props){
         super(props)
         this.state = {
-            disabled : false
+            disabled : false,
+            withdraws : [],
+            ticker : 'N/A'
         }
     }
 
+    componentDidMount(){
+        this.projectData(this.props)
+    }
+
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+    
+    projectData = async (props) => {
+        if(_.isEmpty(props.profile)){return null}
+        const { wallet } = props;
+        const { currency } = wallet;
+        
+        if(_.isEmpty(wallet)){return null}
+
+        let withdraws = props.profile.getApp().getWithdraws({currency});
+        let ticker = wallet.currency.ticker;
+
+        this.setState({...this.state, 
+            withdraws,
+            ticker 
+        })
+    }
+
     withdrawTokens = async (withdrawObject) => {
-        var { nonce, id, amount } = withdrawObject;
+        var { id, amount } = withdrawObject;
+        const { wallet } = this.props;
+        const { currency } = wallet;
+
         try{
             this.setState({...this.state, disabled : true});
             /* Create Withdraw */
-            await this.props.profile.finalizeWithdraw({amount : Numbers.toFloat(amount), nonce, withdraw_id : id });
+            await this.props.profile.finalizeWithdraw({amount : parseFloat(amount), withdraw_id : id, currency, bank_address : wallet.bank_address });
             await this.props.profile.getApp().updateAppInfoAsync();
-            await this.profile.update();
+            await this.props.profile.update();
             /* Update User Balance */
             this.setState({...this.state, disabled : false});
         }catch(err){
@@ -43,8 +73,8 @@ class WithdrawWidget extends React.Component{
     }
 
     render = () => {
-        let withdraws = this.props.profile.getApp().getWithdraws();
-        let ticker = this.props.profile.getApp().getSummaryData('wallet').data.blockchain.ticker;
+        const { ticker, withdraws } = this.state;
+
         return (
             <Container className="dashboard">
                 <Col lg={12}>
@@ -80,7 +110,8 @@ class WithdrawWidget extends React.Component{
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        wallet : state.wallet
     };
 }
 

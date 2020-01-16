@@ -36,11 +36,11 @@ class RevenueChart extends React.Component{
     }
 
     projectData = (props) => {
-        let { data , periodicity } = props;
+        let { data , periodicity, currency } = props;
 
         this.setState({...this.state, 
             chartData : data.revenue.data ? DashboardMapperSingleton.toRevenueChart(data.revenue.data) : defaultProps.chartData,
-            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
+            ticker : currency.ticker ? currency.ticker : defaultProps.timeline,
             timeline : periodicity ? periodicity : defaultProps.timeline
         })
     }

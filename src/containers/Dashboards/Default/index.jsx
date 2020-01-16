@@ -25,7 +25,8 @@ class DefaultDashboard extends React.Component{
         super(props);
         this.state = {
             isDeployed : false,
-            periodicity : 'Weekly'
+            periodicity : 'Weekly',
+            currency : {}
         }
     }
 
@@ -39,7 +40,7 @@ class DefaultDashboard extends React.Component{
 
     projectData(props){
 
-        const { profile, periodicity } = props;
+        const { profile, periodicity, currency } = props;
         const app = profile.getApp();
         let isDeployed  =  !_.isUndefined(app.isDeployed());
 
@@ -54,22 +55,24 @@ class DefaultDashboard extends React.Component{
     render = () => {
 
         const { isDeployed } = this.state;
-        const { periodicity } = this.props;
+        const { periodicity, currency } = this.props;
                         
         return (
             <Container className="dashboard">   
                 <Row>
                     <Col lg={3}>
-                        <CompanyId app={this.props.profile.getApp()}/>
+                        <CompanyId currency={currency} app={this.props.profile.getApp()}  data={{
+                            wallet : this.props.profile.getApp().getSummaryData('wallet')
+                        }} />
                     </Col>  
                     <Col lg={3}>
                         <DataWidget>
-                            <LiquidityWalletWidget data={this.props.profile.getApp().getSummaryData('wallet')} />
+                            <LiquidityWalletWidget currency={currency} data={this.props.profile.getApp().getSummaryData('wallet')} />
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <ProfitResume periodicity={periodicity} data={{
+                            <ProfitResume currency={currency} periodicity={periodicity} data={{
                                 revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                 wallet : this.props.profile.getApp().getSummaryData('wallet'),
                                 }} />
@@ -77,7 +80,7 @@ class DefaultDashboard extends React.Component{
                     </Col> 
                     <Col lg={3}>
                         <DataWidget>
-                            <TurnoverResume periodicity={periodicity} data={{
+                            <TurnoverResume currency={currency} periodicity={periodicity} data={{
                                 revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                 wallet : this.props.profile.getApp().getSummaryData('wallet'),
                             }} />
@@ -86,7 +89,7 @@ class DefaultDashboard extends React.Component{
                 </Row>
                 <Row>
                     <Col md={3}>
-                        <TimePicker onChange={this.changePeriodicity}  />
+                        <TimePicker currency={currency} onChange={this.changePeriodicity}  />
                     </Col>
                 </Row>
                 { isDeployed ? 
@@ -94,10 +97,10 @@ class DefaultDashboard extends React.Component{
                         <Row>
                             <Col lg={12}>
                                 <DataWidget>
-                                    <RevenueChart periodicity={periodicity} data={{
+                                    <RevenueChart currency={currency} currency={currency} periodicity={periodicity} data={{
                                         revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                        }} 
+                                    }} 
                                     />
                                 </DataWidget>
                             </Col>    
@@ -105,7 +108,7 @@ class DefaultDashboard extends React.Component{
                         <Row>
                             <Col md={4}>
                                 <DataWidget>
-                                    <BetsStatistics data={{
+                                    <BetsStatistics currency={currency} data={{
                                         bets : this.props.profile.getApp().getSummaryData('bets'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet')
                                         }}/>
@@ -113,7 +116,7 @@ class DefaultDashboard extends React.Component{
                             </Col>
                             <Col md={4}>
                                 <DataWidget>
-                                    <VisitorsSessions data={{
+                                    <VisitorsSessions currency={currency} data={{
                                         users : this.props.profile.getApp().getSummaryData('games'),
                                         bets : this.props.profile.getApp().getSummaryData('bets'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet')
@@ -122,7 +125,7 @@ class DefaultDashboard extends React.Component{
                             </Col>
                             <Col md={4}>
                                 <DataWidget>
-                                    <BounceRateArea />
+                                    <BounceRateArea currency={currency} />
                                 </DataWidget>
                             </Col>
                         </Row>
@@ -147,7 +150,8 @@ class DefaultDashboard extends React.Component{
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        periodicity : state.periodicity
+        periodicity : state.periodicity,
+        currency : state.currency
     };
 }
 

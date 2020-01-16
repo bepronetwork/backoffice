@@ -1,8 +1,9 @@
 class Account{
 
-    constructor(web3, account){
+    constructor(web3, account, address){
         this.web3 = web3;
         this.account = account;
+        this.address = address;
     }
 
 
@@ -12,7 +13,7 @@ class Account{
     }
 
     getAddress(){
-        return this.account.address;
+        return this.account ? this.account.address : this.address;
     }
 
     getPrivateKey(){

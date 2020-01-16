@@ -75,20 +75,15 @@ class NoDataContainer extends PureComponent {
                                     </Col>
                                     <Col lg={8}>
                                             <h4 style={{marginTop : 20, marginBottom : 40}} className={"dashboard__total-stat"}>
-                                                {parseInt(this.state.progress)}% Progress Until Starting your Betting Application!
+                                                {/*parseInt(this.state.progress)}%*/} One Last Step to get your platform running
                                             </h4>
                                             <div className="progress-wrap">
                                                 <Progress value={this.state.progress} style={{width : 100}} />
                                             </div>                                        
                                         <Row>
                                             <Col lg={12}>
-                                                <button disabled={this.state.hasBearerToken} style={{margin : 'auto', marginBottom  : 30,  maxWidth : 400}} className="btn btn-primary account__btn" onClick={() => this.goToDeveloperTools()} > 
-                                                    Create an API Token for Secure Integration
-                                                </button>
-                                            </Col>
-                                            <Col lg={12}>
                                                 <button disabled={this.state.isDeployed} style={{margin : 'auto', marginBottom  : 30,  maxWidth : 400}} className="btn btn-primary account__btn" onClick={() => this.goToApplication()} > 
-                                                    Deploy your Platform
+                                                    Add Games & Customize your platform!
                                                 </button>
                                             </Col>
                                         </Row>

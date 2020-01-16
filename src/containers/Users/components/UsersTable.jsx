@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
+import { connect } from "react-redux";
+import { compose } from 'lodash/fp';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -19,7 +21,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { FilterListIcon } from 'mdi-react';
-import Numbers from '../../../services/numbers';
+import { compareIDS } from '../../../lib/string';
 
 let counter = 0;
 
@@ -49,21 +51,27 @@ function getSorting(order, orderBy) {
 }
 
 
-const fromDatabasetoTable = (data, otherInfo) => {
+const fromDatabasetoTable = (data, otherInfo, currency) => {
+
 	return data.map( (key) => {
         var d;
         if(otherInfo){
             d = otherInfo.find( f => f._id == key._id);
         }
+        console.log("a", d);
+        console.log("key", key);
+        console.log("curre", currency._id);
+        const wallet = key.wallet.find(w => compareIDS(w.currrency, currency._id));
+        console.log(wallet)
         return {
             _id :  key._id,
             full_info : {...d, ...key}, 
 			username : key.username,
-			wallet: Numbers.toFloat(key.wallet.playBalance),
-			bets: Numbers.toFloat(key.bets.length),
+			wallet: wallet ? parseFloat(wallet.playBalance) : 0,
+			bets: parseFloat(key.bets.length),
             email: key.email,
-            turnoverAmount: d ? Numbers.toFloat(d.betAmount) : 0,
-            profit: d ? Numbers.toFloat(d.profit) : 0
+            turnoverAmount: d ? parseFloat(d.betAmount) : 0,
+            profit: d ? parseFloat(d.profit) : 0
 		}
 	})
 }
@@ -260,7 +268,7 @@ class UsersTable extends React.Component {
             order: 'asc',
             orderBy: 'id',
             selected: [],
-            data: fromDatabasetoTable(props.data.users.data, props.data.usersOtherInfo.data),
+            data: [],
             page: 0,
             rowsPerPage: 5,
             ...defaultProps
@@ -272,11 +280,16 @@ class UsersTable extends React.Component {
         this.projectData(this.props)
     }
 
+    componentWillReceiveProps(props){
+        this.projectData(props)
+    }
+
     projectData = (props) => {
         let data = props.data;
+        const { currency } = props;
         this.setState({...this.state, 
-            data : fromDatabasetoTable(data.users.data, data.usersOtherInfo.data),
-            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
+            data : fromDatabasetoTable(data.users.data, data.usersOtherInfo.data, currency),
+            ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
         })
     }
 
@@ -440,8 +453,20 @@ class UsersTable extends React.Component {
     }
 }
 
+
+
+
+function mapStateToProps(state){
+    return {
+        profile: state.profile,
+        currency : state.currency
+    };
+}
+
 UsersTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UsersTable);
+export default compose(withStyles(styles), connect(mapStateToProps))(UsersTable);
+
+

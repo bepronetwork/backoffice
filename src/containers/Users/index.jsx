@@ -84,21 +84,11 @@ class UsersContainer extends React.Component{
 
 }
 
-
-
 function mapStateToProps(state){
     return {
         profile: state.profile
     };
 }
 
-UsersContainer.propTypes = {
-    t: PropTypes.func.isRequired
-};
-
-
-export default compose(
-    translate('common'),
-    connect(mapStateToProps)
-)(UsersContainer);
+export default connect(mapStateToProps)(UsersContainer);
 

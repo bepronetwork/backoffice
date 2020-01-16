@@ -1,7 +1,7 @@
 import UsersContainer from '../Users';
 import Applications from '../Applications';
 import StatsContainer from '../Stats'
-import WalletContainer from '../Wallet';
+import { WalletContainer } from '../Wallet';
 import DefaultDashboard from '../Dashboards/Default';
 import AffiliatesContainer from '../Affiliates';
 import SettingsContainer from '../Settings';

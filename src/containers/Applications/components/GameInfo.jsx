@@ -6,6 +6,7 @@ import Numbers from '../../../services/numbers';
 import game_images from './game_images';
 import store from '../../App/store';
 import { setGameView } from '../../../redux/actions/game';
+import { connect } from "react-redux";
 
 class GameInfo extends PureComponent {
  
@@ -23,8 +24,9 @@ class GameInfo extends PureComponent {
     }
 
     render() {
+        const { currency } = this.props;
         let game = this.props.game;
-        let ticker = this.props.wallet.blockchain.ticker;
+        let ticker = currency.ticker;
         let game_image = game_images[new String(game.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
         return (
@@ -83,4 +85,12 @@ class GameInfo extends PureComponent {
     }
 }
 
-export default GameInfo;
+function mapStateToProps(state){
+    return {
+        profile: state.profile,
+        currency : state.currency
+    };
+}
+
+export default connect(mapStateToProps)(GameInfo);
+

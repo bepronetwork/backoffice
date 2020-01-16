@@ -50,7 +50,7 @@ class SidebarContent extends Component {
             application : true,
             users       : this.hasData(props.profile.hasAppStats('usersInfoSummary')),
             stats       : this.hasData(props.profile.hasAppStats('revenue')),
-            wallet      : this.hasData(props.profile.hasAppStats('wallet')),
+            wallet      : true,
             settings    : this.hasInfo(props.profile.getApp().isDeployed()),
             affiliates  : this.hasData(props.profile.hasAppStats('affiliates')),
             transactions: this.hasData(props.profile.hasAppStats('withdraws')),
