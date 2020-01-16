@@ -5,15 +5,17 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { DirectionsIcon } from 'mdi-react';
 import { ETHEREUM_NET_DEFAULT } from '../../../../config/apiConfig';
+import { emptyObject } from '../../../../lib/misc';
+import { compareIDS } from '../../../../lib/string';
 const Ava = `${process.env.PUBLIC_URL}/img/dashboard/brand.jpg`;
 
 
 const defaultProps = {
     platformAddress : 'N/A',
-    platformBlockchain : 'N/A',
     platformName : 'N/A',
     platformId : 'N/A',
     platformDescription : 'N/A',
+    ticker : 'N/A',
     platformAddressLink : 'N/A'
 }
 
@@ -26,7 +28,6 @@ class CompanyId extends PureComponent {
     constructor(props) {
         super(props);
         this.state = { ...defaultProps};
-
         this.projectData(props);
     }
 
@@ -40,16 +41,22 @@ class CompanyId extends PureComponent {
     
     projectData = (props) => {
         let app = props.app;
+        
+        const { currency } = props;
+        if(emptyObject(currency)){return null};
+
+        if(!props.data.wallet.data.wallet){return null}
+        let wallets = props.data.wallet.data.wallet;
+        const wallet = wallets.find( w => compareIDS(w.currency, currency._id));
+        const bank_address = wallet ? wallet.bank_address : null;
 
         this.setState({...this.state, 
-            platformAddress : app.getInformation('platformAddress') ? 
-            `${app.getInformation('platformAddress').substring(0, 6)}...${app.getInformation('platformAddress').substring(app.getInformation('platformAddress').length - 2)}` : 
-            defaultProps.platformAddress,
+            platformAddress : bank_address ? `${bank_address.substring(0, 6)}...${bank_address.substring(bank_address.length - 2)}` : defaultProps.platformAddress,
             platformId  : app.getId(),
-            platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
+            ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
             platformName : app.getName() ? app.getName() : defaultProps.platformName,
             platformDescription  :app.getDescription() ? app.getDescription() : defaultProps.platformDescription,
-            platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/address/` + app.getInformation('platformAddress'),
+            platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/address/` + bank_address,
         })
     }
 
@@ -67,7 +74,7 @@ class CompanyId extends PureComponent {
                         </Col>
                         <Col lg={6}>
                             <h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.platformName}</h5>
-                            <p className="" style={{marginTop : 10}} >{new String(this.state.platformBlockchain).toUpperCase()}</p>
+                            <p className="" style={{marginTop : 10}} >{new String(this.state.ticker).toUpperCase()}</p>
                             <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
                                 <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.platformAddress}</p>
                             </a>

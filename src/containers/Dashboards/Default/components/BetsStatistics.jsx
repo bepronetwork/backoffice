@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import Panel from '../../../../shared/components/Panel';
 import Numbers from '../../../../services/numbers';
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
-
-
+import { connect } from "react-redux";
 
 const defaultProps = {
     betsData : {
@@ -39,7 +38,9 @@ class BetsStatistics extends React.Component {
 
     projectData = (props) => {
         const { bets, wallet } = props.data;
-        if(bets.data[0] && wallet.data){
+        const { currency } = props;
+
+        if(bets.data[0]){
             let betsData = {
                 bets : bets.data[0].bets,
                 graph : [
@@ -53,7 +54,7 @@ class BetsStatistics extends React.Component {
     
             this.setState({...this.state, 
                 betsData : betsData ? betsData : defaultProps.betsData,
-                ticker : wallet.data.blockchain.ticker ? wallet.data.blockchain.ticker : defaultProps.ticker,
+                ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
                 percentage
             })
         }
@@ -94,8 +95,12 @@ class BetsStatistics extends React.Component {
     }
 } 
  
-BetsStatistics.propTypes = {
-  t: PropTypes.func.isRequired,
-};
+function mapStateToProps(state){
+    return {
+        profile: state.profile,
+        currency : state.currency
+    };
+}
 
-export default translate('common')(BetsStatistics);
+export default connect(mapStateToProps)(BetsStatistics);
+

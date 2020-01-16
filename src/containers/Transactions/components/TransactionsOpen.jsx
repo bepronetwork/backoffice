@@ -48,16 +48,7 @@ class TransactionsOpen extends PureComponent {
                                     }><AnimationNumber decimals number={openWithdraws}/></p>
                                 </div>
                               
-                            </Col>
-                            <Col md={8}>
-                                <button disabled={disabled} className={` button-normal  ${disabled  ? 'background-grey' : 'button-hover clean_button'}`} onClick={ () => this.allowWithdrawAll()}> 
-                                    {
-                                        !this.state.isLoading ? 
-                                            <p className='text-small text-white'> Withdraw All Queued</p>
-                                        : <img src={loading} style={{width : 20, height : 20}}/>
-                                    }
-                                </button>
-                            </Col>
+                            </Col>                         
                         </Row>
                        
                         <div className="dashboard__visitors-chart">

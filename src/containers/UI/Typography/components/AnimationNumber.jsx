@@ -2,7 +2,7 @@ import React from 'react';
 import AnimatedNumber from 'react-animated-number';
 import Numbers from '../../../../services/numbers';
 
-const AnimationNumber = ({number, decimals}) => {
+const AnimationNumber = ({number, decimals=6}) => {
     return (
     <AnimatedNumber 
         style={{
@@ -16,7 +16,7 @@ const AnimationNumber = ({number, decimals}) => {
         duration={300}
         value={number}
         component="text"
-        formatValue={n => decimals ? Numbers.toFloat(n) : Numbers.formatNumber(n)}/>
+        formatValue={n => decimals ? parseFloat(parseFloat(n).toFixed(decimals)) : Numbers.formatNumber(n)}/>
 
 )};
 

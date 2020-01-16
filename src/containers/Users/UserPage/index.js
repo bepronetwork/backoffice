@@ -20,16 +20,14 @@ class UserPage extends React.Component{
     }
 
     componentWillReceiveProps(props){
-        console.log("update")
         this.projectData(props);
     }
 
     projectData = async (props) => {
-        const { user, profile } = props;
+        const { user, profile, currency } = props;
         if(!user || _.isEmpty(user)){return null}
-        const currencyTicker = profile.getApp().getCurrencyTicker();
+        const currencyTicker = currency.ticker;
         const userInfo = await profile.getApp().getUserAsync({user : user._id});
-        console.log(userInfo)
         this.setState({...this.state, 
             currencyTicker,
             user : {
@@ -113,25 +111,25 @@ class UserPage extends React.Component{
                     <Col md={8}>
                         <Row>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Gaming Wallet', data : Numbers.toFloat(playBalance), span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Gaming Wallet', data : parseFloat(playBalance), span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'TurnOver', data :  Numbers.toFloat(betAmount), span : currencyTicker})}
+                                {this.renderDataTitle({title : 'TurnOver', data :  parseFloat(betAmount), span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Win Amount', data :  Numbers.toFloat(winAmount), span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Win Amount', data :  parseFloat(winAmount), span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Profit', data :  Numbers.toFloat(profit), span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Profit', data :  parseFloat(profit), span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Withdraws', data :  Numbers.toFloat(withdraws.length)})}
+                                {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length)})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Deposits', data :  Numbers.toFloat(deposits.length)})}
+                                {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length)})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  Numbers.toFloat(affiliate.wallet.playBalance), span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  parseFloat(affiliate.wallet.playBalance), span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length})}
@@ -171,7 +169,8 @@ class UserPage extends React.Component{
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        user : state.userView
+        user : state.userView,
+        currency : state.currency
     };
 }
 

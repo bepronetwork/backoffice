@@ -14,6 +14,8 @@ import {
   periodicityReducer,
   modalReducer,
   customizerReducer,
+  walletReducer,
+  currencyReducer
 } from '../../redux/reducers/index';
 
 
@@ -22,6 +24,7 @@ const reducer = combineReducers({
     theme: themeReducer,
     sidebar: sidebarReducer,
     cryptoTable: cryptoTableReducer,
+    wallet : walletReducer,
     game : gameReducer,
     userView : userViewReducer,
     message : messageContainerReducer,
@@ -29,6 +32,7 @@ const reducer = combineReducers({
     set2FA : set2FAReducer,
     modal : modalReducer,
     customizer: customizerReducer,
+    currency : currencyReducer,
     periodicity : periodicityReducer,
     profile  : profileReducer,
     appCreation : appCreationReducer

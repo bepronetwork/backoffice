@@ -23,6 +23,7 @@ const defaultProps = {
     ticker : 'N/A',
     platformAddress : 'N/A',
     houseLiquidity : 0,
+    image : 'N/A',
     amount : 100,
     platformBlockchain : 'N/A'
 }
@@ -36,18 +37,6 @@ class CurrencyBox extends PureComponent {
         super(props);
         this.state = { ...defaultProps};
         this.projectData(props);
-
-        this.deposit_buttons = {
-            ethereum : (amount, platformAddress, tokenAddress) => {
-                return (
-                    <Button onClick={() => this.createTokenTransfer({
-                        currency : 'eth', 
-                        amount, 
-                        platformAddress, 
-                        tokenAddress })}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Metamask </p></Button>
-                )
-            }
-        }
     }
 
     componentDidMount(){
@@ -55,21 +44,22 @@ class CurrencyBox extends PureComponent {
     }
 
 
-    createTokenTransfer = async  ({currency, amount, platformAddress, tokenAddress}) => {
+    createTokenTransfer = async  ({amount}) => {
         try{
-            this.setState({...this.state, isLoading : true})
-            // TO DO : Create generateTokenTransfer Function in App via this infocmation
-            let eth_res = await this.props.profile.getApp().generateTokenTransfer({
-                currency, 
-                amount : Numbers.toFloat(amount), 
-                platformAddress, 
-                tokenAddress,
-                decimals : this.state.decimals
+            const { wallet } = this.props;
+            this.setState({...this.state, isLoading : true});
+
+            let contract = await this.props.profile.getApp().getContract({
+                currency : wallet.currency, 
+                bank_address : wallet.bank_address
             });
 
+            let eth_res = await contract.sendTokensToCasinoContract({
+                amount : parseFloat(amount)
+            });
             if(eth_res.status){
                 /* Transaction was succeded */
-                await this.confirmWalletUpdate({amount, transactionHash : eth_res.transactionHash});
+                await this.confirmWalletUpdate({amount : parseFloat(amount), transactionHash : eth_res.transactionHash, currency : wallet.currency});
             }else{
                 // TO DO : Undertand why it didn´t succed
                 throw new Error('Transaction was not succeded')
@@ -88,20 +78,18 @@ class CurrencyBox extends PureComponent {
 
     projectData = (props) => {
 
-        let data = props.profile.getApp().getSummaryData('wallet').data;
-        let app = props.profile.getApp();
-        let tokenAddress = data.blockchain.tokenAddress;
-        let platformAddress = app.getInformation('platformAddress');
+        let { wallet } = props;
+        const currency = wallet.currency;
+        let tokenAddress = wallet.currency.address;
+        let platformAddress = wallet.bank_address;
 
         this.setState({...this.state, 
-            referenceAddress : '0x',
-            generatedReference : false,
-            decimals : data.blockchain.decimals,
-            houseLiquidity :  data.playBalance ? Numbers.toFloat(data.playBalance) : defaultProps.houseLiquidity,
-            ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
+            decimals : wallet.currency.decimals,
+            image : currency.image,
+            playBalance :  wallet.playBalance ? wallet.playBalance : defaultProps.houseLiquidity,
+            ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
             platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
-            platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
-            platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + data.blockchain.tokenAddress,
+            platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + tokenAddress,
             tokenAddress :  tokenAddress,
             tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
 
@@ -125,9 +113,9 @@ class CurrencyBox extends PureComponent {
     }
 
 
-    confirmWalletUpdate = async ({amount, transactionHash}) => {
+    confirmWalletUpdate = async ({amount, transactionHash, currency}) => {
         try{
-            let res = await this.props.profile.getApp().updateWallet({amount, transactionHash});
+            let res = await this.props.profile.getApp().updateWallet({amount, transactionHash, currency_id : currency._id});
             await this.props.profile.getApp().getSummary();
             await this.props.profile.update();
             return res;
@@ -143,6 +131,7 @@ class CurrencyBox extends PureComponent {
     }
 
     render() {        
+        const { image } = this.state;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -150,13 +139,13 @@ class CurrencyBox extends PureComponent {
                     <CardBody className="dashboard__card-widget" >
                         <div  className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title" style={{fontSize : 20, textAlign : 'center'}}> 
-                                House Liquidity <span style={{fontSize : 20}}> {this.state.houseLiquidity}</span> {this.state.ticker}
+                                House Liquidity <span style={{fontSize : 20}}> {this.state.playBalance}</span> {this.state.ticker}
                             </p>
                             <hr></hr>
                         </div>
                         <Row>
                             <Col lg={3}>
-                                <img style={{borderRadius : 0}} className="company-logo-card" src={Ava} alt="avatar" />
+                                <img style={{borderRadius : 0}} className="company-logo-card" src={image} alt="avatar" />
                             </Col>
                             <Col lg={9}>
                                 <div className="dashboard__visitors-chart">
@@ -191,12 +180,12 @@ class CurrencyBox extends PureComponent {
                             <div className='container' style={{textAlign : 'center'}}>
                                 {!this.state.confirmedDeposit ?
                                     <Col lg={12} style={{margin : '10px auto', textAlign : 'center'}} >
-                                        <QRCodeContainer value={this.state.platformBlockchain}/>
+                                        <QRCodeContainer value={this.state.platformAddress}/>
                                         <AddressBox value={this.state.platformAddress}/>
                                         <hr></hr>
                                         {!this.state.isLoading 
                                             ?   
-                                                this.deposit_buttons.ethereum(this.state.amount, this.state.platformAddress, this.state.tokenAddress)
+                                                <Button onClick={() => this.createTokenTransfer({ amount : this.state.amount})}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Metamask </p></Button>
                                             :   
                                                 <Button disabled={true} outline className="primary" >
                                                     <p><TickCircleIcon className="deposit-icon"/> Waiting for Deposit...</p>
@@ -219,7 +208,8 @@ class CurrencyBox extends PureComponent {
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        wallet : state.wallet
     };
 }
 

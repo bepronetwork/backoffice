@@ -7,22 +7,9 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import ReciptBox from './ReciptBox';
 import TextInput from '../../../../../shared/components/TextInput';
-import Numbers from '../../../../../services/numbers';
 import { ETHEREUM_NET_DEFAULT } from '../../../../../config/apiConfig';
-const Ava = `${process.env.PUBLIC_URL}/img/dashboard/ethereum.png`;
 const loading = `${process.env.PUBLIC_URL}/img/loading-dots.gif`;
 
-
-
-const defaultProps = {
-    playBalance : 'N/A',
-    ticker : 'N/A',
-    platformAddress : 'N/A',
-    liquidity : 0,
-    houseLiquidity : 0,
-    amount : 100,
-    platformBlockchain : 'N/A'
-}
 
 const withdrawMessage = {
     '1' : {
@@ -38,22 +25,12 @@ class WithdrawBox extends PureComponent {
 
     constructor(props){
         super(props);
-        this.state = { ...defaultProps};
-        this.projectData(props);
-
-        this.deposit_buttons = {
-            ethereum : (amount, platformAddress, tokenAddress) => {
-                return (
-                    <Button 
-                        disabled={this.props.disabled}
-                        onClick={() => this.createTokenWithdraw({
-                        currency : 'eth', 
-                        amount, 
-                        platformAddress, 
-                        tokenAddress })}  outline className="primary" ><p><TickCircleIcon className="deposit-icon"/> Metamask </p></Button>
-                )
-            }
-        }
+        this.state = {
+            ticker : 'N/A',
+            platformAddress : 'N/A',
+            playBalance : 0,
+            amount : 100
+        };
     }
 
     componentDidMount(){
@@ -64,13 +41,34 @@ class WithdrawBox extends PureComponent {
         this.projectData(props)
     }
 
+    projectData = (props) => {
+        let { wallet } = props;
+        const currency = wallet.currency;
+        let tokenAddress = wallet.currency.address;
+        let platformAddress = wallet.bank_address;
+
+        this.setState({...this.state, 
+            state : 1,
+            image : currency.image,
+            playBalance :  wallet.playBalance ? wallet.playBalance : this.state.houseLiquidity,
+            ticker : currency.ticker ? currency.ticker : this.state.ticker,
+            platformAddress : platformAddress ? platformAddress : this.state.platformAddress,
+            platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + tokenAddress,
+            tokenAddress :  tokenAddress,
+            tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
+
+        })
+    }
 
     createTokenWithdraw = async  ({amount}) => {
         try{
+            const { wallet } = this.props;
+            const { currency } = wallet;
+
             this.props.disable();
             this.setState({...this.state, isLoading : true, state : 1});
             /* 3 -  Request Withdraw Platform */
-            await this.props.profile.requestWithdraw({tokenAmount : Numbers.toFloat(amount)});
+            await this.props.profile.requestWithdraw({tokenAmount : parseFloat(amount), currency});
             this.setState({...this.state, isLoading : false, state : 5});
             this.props.enable();
             return true;
@@ -82,46 +80,12 @@ class WithdrawBox extends PureComponent {
         }
     }
 
-
-    projectData = (props) => {
-        let data = props.profile.getApp().getSummaryData('wallet').data;
-        let app = props.profile.getApp();
-        let tokenAddress = data.blockchain.tokenAddress;
-        let platformAddress = app.getInformation('platformAddress');
-
-        this.setState({...this.state, 
-            referenceAddress : '0x',
-            state : 1,
-            generatedReference : false,
-            decimals : data.blockchain.decimals,
-            houseBlockchainBalance :  data.blockchain.houseBalance,
-            houseLiquidity :  data.playBalance ? Numbers.toFloat(data.playBalance) : defaultProps.houseLiquidity,
-            ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
-            platformAddress : platformAddress ? platformAddress : defaultProps.platformAddress,
-            platformBlockchain : app.getInformation('platformBlockchain') ? app.getInformation('platformBlockchain') : defaultProps.platformBlockchain,
-            platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + data.blockchain.tokenAddress,
-            tokenAddress :  tokenAddress,
-            tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
-
-        })
-    }
-
-
-    confirmWalletUpdate = async (amount) => {
-        try{
-            return await this.props.profile.getApp().updateWallet(amount);
-        }catch(err){
-            // TO DO : Raise Notification System
-            throw err;
-        }
-    }
-    
-
     changeContent = (type, item) => {
         this.setState({[type] : item});
     }
 
     render() {        
+        const { amount, image } = this.state;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -129,13 +93,13 @@ class WithdrawBox extends PureComponent {
                 <CardBody className="dashboard__card-widget" >
                         <div  className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title" style={{fontSize : 20, textAlign : 'center'}}> 
-                                House Liquidity <span style={{fontSize : 20}}> {this.state.houseLiquidity}</span> {this.state.ticker}
+                                House Liquidity <span style={{fontSize : 20}}> {this.state.playBalance}</span> {this.state.ticker}
                             </p>
                             <hr></hr>
                         </div>
                         <Row>
                             <Col lg={3}>
-                                <img style={{borderRadius : 0}} className="company-logo-card" src={Ava} alt="avatar" />
+                            <img style={{borderRadius : 0}} className="company-logo-card" src={image} alt="avatar" />
                             </Col>
                             <Col lg={9}>
                                 <div className="dashboard__visitors-chart">
@@ -147,7 +111,7 @@ class WithdrawBox extends PureComponent {
                                                 label="Amount"
                                                 type="number"
                                                 placeholder="100"
-                                                defaultValue={this.state.amount}
+                                                defaultValue={amount}
                                                 changeContent={this.changeContent}
                                             />
                                         </Col>
@@ -172,7 +136,13 @@ class WithdrawBox extends PureComponent {
                                     <Col lg={12} style={{margin : '10px auto', textAlign : 'center'}} >
                                         {!this.state.isLoading 
                                             ?   
-                                                this.deposit_buttons.ethereum(this.state.amount, this.state.platformAddress, this.state.tokenAddress)
+                                                <Button 
+                                                disabled={this.props.disabled}
+                                                onClick={() => this.createTokenWithdraw({amount})}  
+                                                outline 
+                                                className="primary" ><p>
+                                                    <TickCircleIcon className="deposit-icon"/> Metamask </p>
+                                                </Button>
                                             :   
                                                 <div>
                                                     <Row>
@@ -217,7 +187,8 @@ class WithdrawBox extends PureComponent {
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        wallet : state.wallet
     };
 }
 

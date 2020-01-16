@@ -21,7 +21,6 @@ import _ from 'lodash';
 import UsersContainer from '../Users';
 import Applications from '../Applications';
 import StatsContainer from '../Stats'
-import WalletContainer from '../Wallet';
 import AffiliatesContainer from '../Affiliates';
 import SettingsContainer from '../Settings';
 import DepositWidget from '../Wallet/components/paths/DepositWidget';
@@ -31,6 +30,7 @@ import TransactionsContainer from '../Transactions';
 import WithdrawWidget from '../Wallet/components/paths/WithdrawWidget';
 import GamePage from '../Applications/GamePage';
 import UserPage from '../Users/UserPage';
+import { WalletContainer } from '../Wallet';
 
 class MainRoute extends React.Component {
 	constructor() {

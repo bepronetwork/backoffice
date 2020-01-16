@@ -31,9 +31,13 @@ class DepositWidget extends React.Component{
     
     projectData = async (props) => {
         if(_.isEmpty(props.profile)){return null}
-        let address = props.profile.getOwnerAddress();
-        let deposits = props.profile.getApp().getDeposits();
-        let ticker = props.profile.getApp().getSummaryData('wallet').data.blockchain.ticker;
+        const { wallet } = props;
+        const { currency } = wallet;
+        if(_.isEmpty(wallet)){return null}
+
+        let deposits = props.profile.getApp().getDeposits({currency});
+        let ticker = wallet.currency.ticker;
+
         this.setState({...this.state, 
             deposits,
             ticker 
@@ -41,9 +45,11 @@ class DepositWidget extends React.Component{
     }
 
     confirmDeposit = async (depositObject) => {
+        const { currency } = this.props.wallet;
+
         var { transactionHash, amount } = depositObject;
         try{
-            await this.props.profile.getApp().updateWallet({amount, transactionHash});
+            await this.props.profile.getApp().updateWallet({amount, transactionHash, currency_id : currency._id});
             await this.props.profile.getData();
             this.projectData(this.props);
         }catch(err){
@@ -62,8 +68,9 @@ class DepositWidget extends React.Component{
 
 
     render = () => {
-
+        const { wallet, currency } = this.props;
         const { deposits, ticker } = this.state; 
+
         return (
             <Container className="dashboard">
                 <Col lg={12}>
@@ -72,10 +79,9 @@ class DepositWidget extends React.Component{
                         Choose the Amount of Liquidity you want to Deposit
                     </p>
                 </Col>
-
                 <Row>
                     <Col lg={4}>
-                        <CurrencyBox data={this.props.profile.getApp().getSummaryData('wallet')}/>
+                        <CurrencyBox data={wallet}/>
                     </Col>
                     <Col lg={8}>
                         <div style={{marginTop : 50}}>
@@ -99,7 +105,8 @@ class DepositWidget extends React.Component{
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        wallet : state.wallet
     };
 }
 

@@ -11,12 +11,16 @@ import periodicityReducer from './periodicityReducer';
 import set2FAReducer from './set2FAReducer';
 import userViewReducer from './userViewReducer';
 import modalReducer from './modalReducer';
+import currencyReducer from './currencyReducer';
+import walletReducer from './walletReducer';
 
 export {
     themeReducer,
     sidebarReducer,
+    currencyReducer,
     modalReducer,
     set2FAReducer,
+    walletReducer,
     userViewReducer,
     cryptoTableReducer,
     messageContainerReducer,

@@ -41,6 +41,7 @@ class SettingsContainer extends React.Component{
                 <TabsContainer 
                     items={
                         [
+                            /*
                             {
                                 title : 'Account',
                                 container : <SettingsAccountContainer/>,
@@ -71,6 +72,7 @@ class SettingsContainer extends React.Component{
                                 container : <TokenManager/>,
                                 icon : <CurrencySignIcon size={20}/>
                             }
+                            */
                         ]
                     }
                 />

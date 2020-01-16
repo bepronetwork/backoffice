@@ -59,7 +59,7 @@ const fromDatabasetoTable = (data) => {
 	return data.map( (data) => {
         return {
             id :  data._id,
-			amount : Numbers.toFloat(data.amount),
+			amount : parseFloat(data.amount),
             confirmed: data.confirmed ? 'Confirmed' : 'Open',
             done :  data.confirmed,
             transactionHash : data.transactionHash,
@@ -154,7 +154,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-    const { numSelected, classes, withdrawAmountAvailable } = props;
+    const { numSelected, classes } = props;
 
         return (
             <Toolbar
@@ -173,17 +173,6 @@ let EnhancedTableToolbar = props => {
                             <div style={{marginTop : 5}}>
                                 <Typography variant="h6" id="tableTitle">
                                     Withdraws
-                                </Typography>
-                            </div>
-                        </Col>
-                        
-                        <Col md={4}>
-                            <InformationContainer icon={<InformationIcon size={20}/>} title={'This is the amount you are able to withdraw currently via the Smart-Contract'} />
-                        </Col>
-                        <Col md={3}>
-                            <div style={{marginTop : 5}}>
-                                <Typography variant="h6" id="tableTitle">
-                                    {withdrawAmountAvailable}
                                 </Typography>
                             </div>
                         </Col>
@@ -223,8 +212,7 @@ const styles = theme => ({
 
 const defaultProps = {
     profit : '0',
-    ticker : 'N/A',
-    withdrawAmountAvailable : 0
+    ticker : 'N/A'
 }
   
 
@@ -260,10 +248,8 @@ class WithdrawTable extends React.Component {
 
     projectData = async (props) => {
         let { data , currency, profile} = props;
-        let withdrawAmountAvailable = await profile.getWithdrawAmountAvailableDecentralized();
         this.setState({...this.state, 
             data : fromDatabasetoTable(data),
-            withdrawAmountAvailable : withdrawAmountAvailable,
             ticker : currency
         })
     }
@@ -314,12 +300,12 @@ class WithdrawTable extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page, withdrawAmountAvailable } = this.state;
+        const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
             <Paper className={classes.root}>
-                    <EnhancedTableToolbar numSelected={selected.length} withdrawAmountAvailable={withdrawAmountAvailable} />
+                    <EnhancedTableToolbar numSelected={selected.length}/>
                         <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead
@@ -360,7 +346,7 @@ class WithdrawTable extends React.Component {
                                         <p className='text-small'>
                                             {
                                                 n.transactionHash ?
-                                                n.transactioHash
+                                                n.transactionHash
                                                 : 'None'
                                             }
                                         </p>

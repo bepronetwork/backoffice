@@ -78,13 +78,26 @@ class Connection {
             throw err;
         }
     }
+
+    deployApp = async ({params, headers}) => {
+        try{
+            let response = await fetch(URL + '/api/app/deploy', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
     
-    getSummary = async ({app, type, headers}) => {
+    getSummary = async ({params, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/summary', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({app, type})
+                body : JSON.stringify(params)
             });
             return response.json();
         }catch(err){
@@ -187,22 +200,6 @@ class Connection {
         }
     }
 
-    addPaybearToken = async ({app, paybearToken, headers}) => {
-        try{
-            let response = await fetch(URL+ `/api/app/paybearsecretkey/add`, {
-                method : 'POST',
-                headers : addHeaders(config, headers),
-                body : JSON.stringify({
-                    app,
-                    paybearApiSecretKey : paybearToken
-                })
-            });
-            return response.json();
-        }catch(err){
-            throw err;
-        }
-    }
-    
     addServices = async ({app, services, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/services/add`, {
@@ -238,16 +235,12 @@ class Connection {
         }
     }
 
-    updateWallet = async ({app, amount, transactionHash, headers}) => {
+    updateWallet = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/updateWallet`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({
-                    app,
-                    transactionHash,
-                    amount : Numbers.toFloat(amount)
-                })
+                body : JSON.stringify(params)
             });
             
             return response.json();
@@ -257,14 +250,12 @@ class Connection {
         }
     }
 
-    requestWithdraw = async ({app, address, signature, newBalance, tokenAmount, nonce, headers}) => {
+    requestWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( API_URL_WITHDRAW + `/api/app/requestWithdraw`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({
-                    app, address, signature, newBalance, tokenAmount, nonce
-                })
+                body : JSON.stringify(params)
             });
             
             return response.json();
@@ -273,14 +264,12 @@ class Connection {
         }
     }
 
-    finalizeUserWithdraw = async ({app, user, transactionHash, withdraw_id, headers}) => {
+    finalizeUserWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( API_URL_WITHDRAW + `/api/users/finalizeWithdraw`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({
-                    app, user, transactionHash, withdraw_id
-                })
+                body : JSON.stringify(params)
             });
             
             return response.json();
@@ -289,14 +278,12 @@ class Connection {
         }
     }
 
-    finalizeWithdraw = async ({app, withdraw_id, transactionHash, headers}) => {
+    finalizeWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( API_URL_WITHDRAW + `/api/app/finalizeWithdraw`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({
-                    app, transactionHash, withdraw_id
-                })
+                body : JSON.stringify(params)
             });
             
             return response.json();
@@ -305,14 +292,12 @@ class Connection {
         }
     }
   
-    getGames = async ({app, headers}) => {
+    getGames = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/games/getAll`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({
-                    app
-                })
+                body : JSON.stringify(params)
             });
             
             return response.json();
@@ -329,23 +314,6 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({
                     app, 
-                })
-            });
-            
-            return response.json();
-        }catch(err){
-            throw err;
-        }
-    }
-
-    addBlockchainInformation = async ({app, params, headers}) => {
-        try{
-            let response = await fetch( URL + `/api/app/addBlockchainInformation`, {
-                method : 'POST',
-                headers : addHeaders(config, headers),
-                body : JSON.stringify({
-                    app, 
-                    ...params
                 })
             });
             
@@ -447,9 +415,9 @@ class Connection {
         }
     }
 
-    deployAndHostApplication = async ({params, headers}) => {
+    addCurrencyWallet = async ({params, headers}) => {
         try{
-            let response = await fetch( URL + `/api/app/deploy`, {
+            let response = await fetch( URL + `/api/app/wallet/currency/add`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

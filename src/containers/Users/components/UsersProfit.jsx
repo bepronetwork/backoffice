@@ -3,8 +3,7 @@ import React, { PureComponent } from 'react';
 import { Card, CardBody, Col } from 'reactstrap';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import Numbers from '../../../services/numbers';
-
-
+import { connect } from "react-redux";
 
 const defaultProps = {
     profit : '0',
@@ -31,10 +30,11 @@ class UsersProfit extends PureComponent {
     
     projectData = (props) => {
         let data = props.data;
+        const { currency }  = props;
 
         this.setState({...this.state, 
             profit : data.users.data ? getProfits(data.users.data) : defaultProps.turnover,
-            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
+            ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
             timeline : data.revenue.data ? defaultProps.timeline : defaultProps.timeline
         })
     }
@@ -49,7 +49,7 @@ class UsersProfit extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : this.state.profit >= 0 ? '#76d076' : '#646777'}
-                            }><AnimationNumber  number={Numbers.toFloat(this.state.profit)}/> <span> {this.state.ticker}</span></p>
+                            }><AnimationNumber decimals={6}  number={parseFloat(this.state.profit)}/> <span> {this.state.ticker}</span></p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Users Profits <span> {this.state.timeline} </span></p>
@@ -69,4 +69,12 @@ const getProfits = (users) => {
     }, 0);
 }
 
-export default UsersProfit;
+function mapStateToProps(state){
+    return {
+        profile: state.profile,
+        currency : state.currency
+    };
+}
+
+export default connect(mapStateToProps)(UsersProfit);
+
