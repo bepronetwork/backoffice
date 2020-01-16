@@ -18,42 +18,51 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { FilterListIcon } from 'mdi-react';
 import moment from 'moment';
+import { connect } from "react-redux";
+import { compose } from 'lodash/fp';
+
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 let counter = 0;
 
 
 function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+    return 0;
 }
 
 function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+        const order = cmp(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+    });
+    return stabilizedThis.map(el => el[0]);
 }
 
 function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+    return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
 
 
-const fromDatabasetoTable = (data) => {
+const fromDatabasetoTable = (data, { currencies=[] }) => {
+
 	return data.map( (key) => {
+
+        const currency = currencies.find(c => new String(c._id).toString() == new String(key.currency).toString());
+
 		return {
             _id :  key._id,
             user : key.user,
+            currency : currency, 
             address: key.address,
+            ticker : currency ? currency.ticker : '',
             status :  key.status,
 			amount: key.amount,
 			creation_timestamp: moment(new Date(key.creation_timestamp)).format('lll'),
@@ -238,10 +247,9 @@ class EnhancedTable extends React.Component {
             order: 'asc',
             orderBy: 'id',
             selected: [],
-            data: fromDatabasetoTable(props.data.withdraws.data),
+            data: fromDatabasetoTable(props.data.withdraws.data, {currencies : []}),
             page: 0,
             isLoading : {},
-            ticker : 'N/A',
             rowsPerPage: 5
         };
     }
@@ -255,13 +263,15 @@ class EnhancedTable extends React.Component {
         this.projectData(props);
     }
 
-    projectData = (props) => {
+    projectData = async (props) => {
         let data = props.data;
+        let app = props.profile.getApp();
+        const { currencies } = (await app.getEcosystemVariables()).data.message;
         this.setState({...this.state, 
-            data : fromDatabasetoTable(data.withdraws.data),
-            ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : 'N/A',
-        })
+            data : fromDatabasetoTable(data.withdraws.data, { currencies })
+       })
     }
+
     handleRequestSort = (event, property) => {
         const orderBy = property;
         let order = 'desc';
@@ -326,7 +336,7 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page, ticker } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
@@ -365,7 +375,7 @@ class EnhancedTable extends React.Component {
                             <TableCell align="left">
                                 <p className={`text-small text-${n.isAffiliate.toLowerCase()}`}>{n.isAffiliate}</p>
                             </TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.amount} {ticker}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.amount} {n.ticker}</p></TableCell>
                             <TableCell align="left">
                                 {n.status == 'Queue'
                                     ?
@@ -410,8 +420,18 @@ class EnhancedTable extends React.Component {
   }
 }
 
+function mapStateToProps(state){
+    return {
+        profile: state.profile
+    };
+}
+
 EnhancedTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(EnhancedTable);
+export default compose(
+    withStyles(styles),
+    connect(mapStateToProps)
+)(EnhancedTable);
+

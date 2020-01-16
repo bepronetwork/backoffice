@@ -6,15 +6,15 @@ import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 import { InformationIcon } from 'mdi-react';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
+import { compareIDS } from '../../../../lib/string';
+import { emptyObject } from '../../../../lib/misc';
 const Ava = `${process.env.PUBLIC_URL}/img/dashboard/euro.png`;
 
 
 const defaultProps = {
     playBalance : 'N/A',
-    totalLiquidity : 'N/A',
     ticker : 'N/A',
-    totalDecentralizedLiquidity : 'N/A',
-    bankroll : 'N/A'
+    decimals : 6
 }
 
 class LiquidityWalletWidget extends PureComponent {
@@ -35,17 +35,17 @@ class LiquidityWalletWidget extends PureComponent {
     }
     
     projectData = (props) => {
-        let data = props.data.data;
+        const { currency } = props;
+        if(emptyObject(currency)){return null};
 
-        if(data.blockchain){
-            this.setState({...this.state, 
-                totalLiquidity :  data.playBalance ? data.playBalance : defaultProps.totalLiquidity,
-                bankroll : data.blockchain.decentralized.houseBalance ? data.blockchain.decentralized.houseBalance : defaultProps.bankroll,
-                totalDecentralizedLiquidity :  data.blockchain.decentralized.totalLiquidity ? data.blockchain.decentralized.totalLiquidity : defaultProps.totalDecentralizedLiquidity,
-                playBalance : data.playBalance ? data.playBalance : defaultProps.playBalance,
-                ticker : data.blockchain.ticker ? data.blockchain.ticker : defaultProps.ticker,
-            })
-        }
+        let wallets = props.data.data.wallet;
+        const wallet = wallets.find( w => compareIDS(w.currency, currency._id));
+        this.setState({...this.state, 
+            playBalance : wallet.playBalance ? wallet.playBalance : defaultProps.playBalance,
+            decimals : currency.decimals,
+            ticker : currency.ticker ? currency.ticker : defaultProps.ticker
+        })
+    
     }
 
 
@@ -62,20 +62,9 @@ class LiquidityWalletWidget extends PureComponent {
                             </Col>
                             <Col lg={8}>
                                 <div className="dashboard__visitors-chart">
-                                    <p className="dashboard__visitors-chart-number-second" style={
-                                        {color : '#646777'}
-                                    }>
-                                        <AnimationNumber number={this.state.totalLiquidity}/> 
+                                    <p className="dashboard__visitors-chart-number-second" style={{color : '#646777'}}>
+                                        <AnimationNumber decimals={6} number={this.state.playBalance}/> 
                                         <span> {this.state.ticker}</span>
-                                        <p className='small-text-info'>
-                                            <AnimationNumber number={this.state.totalDecentralizedLiquidity}/> 
-                                            <Tooltip title="Liquidity in Smart-Contract">
-                                                <IconButton aria-label="Liquidity in Smart-Contract">
-                                                    <InformationIcon size={20}/>
-                                                </IconButton>
-                                            </Tooltip>
-                                            <span><AnimationNumber number={this.state.bankroll}/></span> 
-                                        </p>
                                     </p>
                                 </div>
                                 <div className="dashboard__visitors-chart">

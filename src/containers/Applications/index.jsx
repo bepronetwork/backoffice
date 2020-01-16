@@ -35,60 +35,54 @@ class ApplicationsContainer extends React.Component{
             <Container className="dashboard">
                 <Row>
                     <Col lg={12}>
-                        {_.isEmpty(services)
-                          ?  <IntegrationsContainer/>
-                        :   
-                            <div>
-                                <Row>
-                                    <Col md={9}>
-                                        <Row>
-                                            {servicesCodes.map( (key) => {
-                                                return widgets[key] ? widgets[key]() : null;
-                                            })}
-                                        </Row>
-                                    </Col>
-                                    <Col md={3}>
-                                        <HostingLink/>
-                                    </Col>
-                                </Row>
-                                <TabsContainer 
-                                    items={
-                                        [
-                                            {
-                                                title : 'My Games',
-                                                container : (
-                                                    <DataWidget>
-                                                        <GamesContainer  data={{
-                                                            games : this.props.profile.getApp().getSummaryData('games'),
-                                                            wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                                        }} {...this.props}/>
-                                                    </DataWidget>
-                                                ),
-                                                icon : <GamesIcon/>
-                                            },
-                                            {
-                                                title : 'Game Store',
-                                                container : (
-                                                    <GameStorePageContainer/>
-                                                    
-                                                ),
-                                                icon : <StoreIcon/>
-                                            },
-                                            {
-                                                title : 'Customization ',
-                                                container : (
-                                                    <CustomizationContainer/>
-                                                    
-                                                ),
-                                                icon : <SettingsIcon/>
-                                            },
+                        <div>
+                            <Row>
+                                <Col md={8}>
+                                    <Row>
+                                        {servicesCodes.map( (key) => {
+                                            return widgets[key] ? widgets[key]() : null;
+                                        })}
+                                    </Row>
+                                </Col>
+                                <Col md={4}>
+                                    <HostingLink/>
+                                </Col>
+                            </Row>
+                            <TabsContainer 
+                                items={
+                                    [
+                                        {
+                                            title : 'My Games',
+                                            container : (
+                                                <GamesContainer  data={{
+                                                    games : this.props.profile.getApp().getSummaryData('games'),
+                                                    wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                                }} {...this.props}/>
+                                            ),
+                                            icon : <GamesIcon/>
+                                        },
+                                        {
+                                            title : 'Game Store',
+                                            container : (
+                                                <GameStorePageContainer/>
+                                                
+                                            ),
+                                            icon : <StoreIcon/>
+                                        },
+                                        {
+                                            title : 'Customization ',
+                                            container : (
+                                                <CustomizationContainer/>
+                                                
+                                            ),
+                                            icon : <SettingsIcon/>
+                                        },
 
-                                        ]
-                                    }
-                                />
-                                   
-                            </div>   
-                        }
+                                    ]
+                                }
+                            />
+                                
+                        </div>   
                     </Col>
                 </Row>
           </Container>

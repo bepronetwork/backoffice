@@ -18,27 +18,14 @@ class TransactionsContainer extends React.Component{
 
     allowWithdraw = async (withdraw) => {
         const { profile } = this.props;
-
+        const wallet = this.props.profile.getApp().getWallet({currency_id : withdraw.currency._id});
         /** Do Withdraw to User */
-         await profile.getApp().approveWithdraw(withdraw);
+        await profile.getApp().approveWithdraw({...withdraw, currency : wallet.currency, bank_address : wallet.bank_address});
 
         /** Update Info */
         await profile.getApp().getWithdrawsAsync({});
         await profile.update();
     }
-
-    allowWithdrawAll = async (withdraw) => {
-        const { profile } = this.props;
-        let withdraws = this.props.profile.getApp().getSummaryData('withdraws').data;
-        let withdrawsInQueue = withdraws.filter( w => w.status == 'Queue');
-        /** Do Withdraw to User */
-        await profile.getApp().approveWithdrawsBatch(withdrawsInQueue);
-
-        /** Update Info */
-        await profile.getApp().getWithdrawsAsync({});
-        await profile.update();
-    }
-
 
     render = () => {
         return (
@@ -51,7 +38,7 @@ class TransactionsContainer extends React.Component{
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <TransactionsOpen allowWithdrawAll={this.allowWithdrawAll} data={this.props.profile.getApp().getSummaryData('withdraws')}/>
+                            <TransactionsOpen data={this.props.profile.getApp().getSummaryData('withdraws')}/>
                         </DataWidget>
                     </Col>
                    {/* <Col lg={6}>         

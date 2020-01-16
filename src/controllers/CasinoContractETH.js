@@ -1,33 +1,26 @@
 import {
-    casino
+    casinoETH
 } from "./interfaces";
 
 import Contract from "../models/Contract";
-import ERC20TokenContract from "./ERC20Contract";
 import { fromBigNumberToInteger } from "./services/services";
 import Numbers from "../services/numbers";
+import Account from "../models/Account";
 
 let self;
 
-class CasinoContract{
-    constructor({contractAddress, tokenAddress, decimals, authorizedAddress, ownerAddress, croupierAddress}){
+class CasinoContractETH{
+    constructor({contractAddress,   authorizedAddress, ownerAddress, croupierAddress}){
         self = {
             contract : 
             new Contract({
                 web3 : window.web3,
-                contract : casino, 
-                address : contractAddress,
-                tokenAddress : tokenAddress
+                contract : casinoETH, 
+                address : contractAddress
             }),
-            erc20TokenContract : tokenAddress ? new ERC20TokenContract({
-                web3 : global.web3,
-                contractAddress : tokenAddress
-            }) : null,
-            decimals,
+            croupierAddress,
             authorizedAddress,
-            ownerAddress,
-            contractAddress,
-            croupierAddress
+            ownerAddress
         }
     }
 
@@ -105,7 +98,7 @@ class CasinoContract{
 
     __assert(){
         self.contract.use(
-            casino,
+            casinoETH,
             self.contractAddress);
     }
 
@@ -117,20 +110,21 @@ class CasinoContract{
     sendTokensToCasinoContract = async ({amount}) => {
         try{
             let accounts = await window.web3.eth.getAccounts();
-            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
 
             return new Promise ( (resolve, reject) => {
-                self.erc20TokenContract.getContract().methods.transfer(
-                    self.contractAddress,
-                    amountWithDecimals
-                ).send({from : accounts[0]})
-                .on('transactionHash', (hash) => {
+                window.web3.eth.sendTransaction(
+                    {
+                        from: accounts[0],
+                        to: this.getAddress(),
+                        value:  window.web3.eth.utils.toWei(new String(amount).toString())
+                    }
+                ).on('transactionHash', (hash) => {
                 })
                 .on('confirmation', (confirmations, receipt) => {
                     resolve(receipt)
                 })
                 .on('error', () => {reject("Transaction Error")})
-            })          
+            });
         }catch(err){
             console.log(err);
         }   
@@ -142,9 +136,7 @@ class CasinoContract{
 
     async getApprovedWithdrawAmount(address){
         try{
-            return Numbers.fromBigNumberToInteger(
-                (await self.contract.getContract().methods.withdrawals(address).call()).amount
-                )
+            return this.fromWei((await self.contract.getContract().methods.withdrawals(address).call()).amount)
         }catch(err){
             throw err;
         }
@@ -152,7 +144,7 @@ class CasinoContract{
 
 
     async withdrawTokens({amount, decimals}){
-        let amountWithDecimals = Numbers.toSmartContractDecimals(amount, decimals);
+        let amountWithDecimals = this.toWei(amount);
         let accounts = await window.web3.eth.getAccounts();
 
         return new Promise ( (resolve, reject) => {
@@ -171,7 +163,7 @@ class CasinoContract{
     async setUserWithdrawal({address, amount}){
         try{
             let accounts = await window.web3.eth.getAccounts();
-            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
+            let amountWithDecimals = this.toWei(amount);
             return new Promise ( (resolve, reject) => {
                 self.contract.getContract().methods.setUserWithdrawal(
                     address,
@@ -192,8 +184,7 @@ class CasinoContract{
     async setUserWithdrawalBatch({addresses, amounts}){
         try{
             let accounts = await window.web3.eth.getAccounts();
-            let amountsWithDecimals = amounts.map( a => Numbers.toSmartContractDecimals(a, self.decimals))
-            console.log(amountsWithDecimals)
+            let amountsWithDecimals = amounts.map( a => this.toWei(a))
             return new Promise ( (resolve, reject) => {
                 self.contract.getContract().methods.setUserWithdrawalBatch(
                     addresses,
@@ -211,10 +202,14 @@ class CasinoContract{
         }
     }
 
+    toWei = (amount) => {
+        return window.web3.utils.toWei(new String(amount).toString());
+    }
+
     async withdrawApp({amount}){
         try{
             let accounts = await window.web3.eth.getAccounts();
-            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
+            let amountWithDecimals = this.toWei(amount);
             return new Promise ( (resolve, reject) => {
                 self.contract.getContract().methods.ownerWithdrawalTokens(
                     accounts[0],
@@ -272,7 +267,7 @@ class CasinoContract{
 
     async getBankRoll(){
         try{
-            return Numbers.fromBigNumberToInteger(await self.contract.getContract().methods.bankroll().call(), self.decimals); 
+            return this.fromWei(await self.contract.getContract().methods.bankroll().call()); 
         }catch(err){
             throw err;
         }
@@ -294,7 +289,7 @@ class CasinoContract{
 
     async getAllPlayersTokenAmount(){
         try{
-            return Numbers.fromDecimals(await self.contract.getContract().methods.totalPlayerBalance().call(), self.decimals);
+            return this.fromWei(await self.contract.getContract().methods.totalPlayerBalance().call());
         }catch(err){
             return 'N/A';
         }
@@ -302,7 +297,7 @@ class CasinoContract{
 
     async getSmartContractLiquidity(){
         try{
-            return Numbers.fromDecimals(await self.erc20TokenContract.getTokenAmount(this.getAddress()), self.decimals);
+            return this.fromWei(await self.erc20TokenContract.getTokenAmount(this.getAddress()));
         }catch(err){
             return 'N/A';
         }
@@ -310,7 +305,7 @@ class CasinoContract{
 
     async getMaxDeposit(){
         try{
-            return Numbers.fromDecimals(await self.contract.getContract().methods.maxDeposit().call(), self.decimals);
+            return this.fromWei(await self.contract.getContract().methods.maxDeposit().call());
         }catch(err){
             return 'N/A';
         }
@@ -318,7 +313,7 @@ class CasinoContract{
 
     async getMaxWithdrawal(){
         try{
-            return Numbers.fromDecimals(await self.contract.getContract().methods.maxWithdrawal().call(), self.decimals);
+            return this.fromWei(await self.contract.getContract().methods.maxWithdrawal().call());
         }catch(err){
             return 'N/A';
         }
@@ -374,7 +369,7 @@ class CasinoContract{
     async changeMaxDeposit({amount}){
         try{
             let accounts = await window.web3.eth.getAccounts();
-            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
+            let amountWithDecimals = this.toWei(amount);
             return new Promise ( (resolve, reject) => {
                 self.contract.getContract().methods.changeMaxDeposit(
                     amountWithDecimals
@@ -395,7 +390,7 @@ class CasinoContract{
     async changeMaxWithdrawal({amount}){
         try{
             let accounts = await window.web3.eth.getAccounts();
-            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
+            let amountWithDecimals = this.toWei(amount);
             return new Promise ( (resolve, reject) => {
                 self.contract.getContract().methods.changeMaxWithdrawal(
                     amountWithDecimals
@@ -441,7 +436,6 @@ class CasinoContract{
         let accounts = await window.web3.eth.getAccounts();
 
         let params = [
-            self.erc20TokenContract.getAddress(),   // Token Contract
             self.authorizedAddress,                 // Authorized Address
             self.ownerAddress                       // Owner Address
         ];
@@ -464,4 +458,4 @@ class CasinoContract{
 
 
 
-export default CasinoContract;
+export default CasinoContractETH;

@@ -21,13 +21,15 @@ class StatsContainer extends React.Component{
 
 
     render = () => {
+        const { currency } = this.props;
+
         return (
             <Container className="dashboard">
                 <Row>
                   
                     <Col lg={3}>
                         <DataWidget>
-                            <LiquidityInfo data={this.props.profile.getApp().getSummaryData('wallet')}/>
+                            <LiquidityInfo currency={currency} data={this.props.profile.getApp().getSummaryData('wallet')}/>
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
@@ -51,6 +53,7 @@ class StatsContainer extends React.Component{
                     <Col lg={12}>
                         <DataWidget>
                             <RevenueChart  
+                                currency={currency}
                                 data={{
                                     revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                     wallet : this.props.profile.getApp().getSummaryData('wallet'),
@@ -77,7 +80,8 @@ class StatsContainer extends React.Component{
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        currency : state.currency
     };
 }
 

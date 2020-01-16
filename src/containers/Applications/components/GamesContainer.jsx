@@ -3,13 +3,14 @@ import React, { PureComponent } from 'react';
 import {  Col, Row } from 'reactstrap';
 import GameInfo from './GameInfo';
 import { connect } from "react-redux";
+const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
 class GamesContainer extends PureComponent {
  
     constructor() {
         super();
         this.state = {
-            activeIndex: 0,
+            activeIndex : 0,
             games : [],
             wallet : {}
         };
@@ -24,7 +25,8 @@ class GamesContainer extends PureComponent {
     }
 
     async projectData(props){
-        if(props.data.games.data[0]){
+        console.log(props.data);
+        if(props.data.games.data && props.data.games.data[0]){
             const gamesInfo = props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
             const games = getAllGames(props.data.games.data, gamesInfo);
             const wallet = props.data.wallet.data;
@@ -39,15 +41,21 @@ class GamesContainer extends PureComponent {
        const { wallet, games } = this.state;
         
         return (
-            <Row md={12} xl={12} lg={12} xs={12}>
-                {Object.keys(games).map( key => {
-                    return (
-                    <Col lg={4}>
-                        <GameInfo game={games[key]} wallet={wallet} {...this.props}/>
-                    </Col>
-                    )
-                })}
-            </Row>
+            (games.length > 0) ? 
+                <Row md={12} xl={12} lg={12} xs={12}>
+                    {Object.keys(games).map( key => {
+                        return (
+                        <Col lg={4}>
+                            <GameInfo game={games[key]} wallet={wallet} {...this.props}/>
+                        </Col>
+                        )
+                    })}
+                </Row>
+            : 
+            <div>
+                <h4>You have no Games and/or Currencies enabled currently</h4>
+                <img src={image} style={{width :'30%', marginTop : 20}}/>
+            </div>
         );
     }
 }

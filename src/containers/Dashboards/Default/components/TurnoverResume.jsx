@@ -30,15 +30,14 @@ class TurnoverResume extends PureComponent {
     
     projectData = (props) => {
         let data = props.data;
-        let periodicity = props.periodicity;
+        let { periodicity, currency } = props;
 
-        if(data.wallet.data && data.wallet.data.blockchain){
-            this.setState({...this.state, 
-                turnover : data.revenue.data ? DashboardMapperSingleton.toDateRevenue(data.revenue.data) : defaultProps.turnover,
-                ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
-                timeline : periodicity ? periodicity : defaultProps.timeline
-            })
-        }
+        this.setState({...this.state, 
+            turnover : data.revenue.data ? DashboardMapperSingleton.toDateRevenue(data.revenue.data) : defaultProps.turnover,
+            ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
+            timeline : periodicity ? periodicity : defaultProps.timeline
+        })
+        
     }
 
 
@@ -50,7 +49,7 @@ class TurnoverResume extends PureComponent {
                 <CardBody className="dashboard__card-widget">
                     <div className="dashboard__visitors-chart">
                         <p className="dashboard__visitors-chart-number-second">
-                        <AnimationNumber number={this.state.turnover}/> <span> {this.state.ticker} </span> </p>
+                        <AnimationNumber decimals={6} number={this.state.turnover}/> <span> {this.state.ticker} </span> </p>
                     </div>
                     <div className="dashboard__visitors-chart">
                         <p className="dashboard__visitors-chart-title"> Turnover <span> {this.state.timeline} </span></p>

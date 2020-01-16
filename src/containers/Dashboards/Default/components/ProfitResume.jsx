@@ -5,6 +5,7 @@ import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
 import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 import DashboardMapperSingleton from '../../../../services/mappers/Dashboard';
+import { emptyObject } from '../../../../lib/misc';
 
 const defaultProps = {
     profit : '0',
@@ -31,16 +32,15 @@ class ProfitResume extends PureComponent {
 
     projectData = (props) => {
         let data = props.data;
-        let periodicity = props.periodicity;
-        
-        if(data.wallet.data && data.wallet.data.blockchain){
-            this.setState({...this.state, 
-                profit : data.revenue.data ? DashboardMapperSingleton.toDateProfit(data.revenue.data) : defaultProps.profit,
-                ticker : data.wallet.data.blockchain.ticker ? data.wallet.data.blockchain.ticker : defaultProps.ticker,
-                timeline : periodicity ? periodicity : defaultProps.timeline
-            })
-        }
-       
+        let { periodicity, currency }  = props;
+
+        if(emptyObject(currency)){return null};
+
+        this.setState({...this.state, 
+            profit : data.revenue.data ? DashboardMapperSingleton.toDateProfit(data.revenue.data) : defaultProps.profit,
+            timeline : periodicity ? periodicity : defaultProps.timeline,
+            ticker : currency.ticker ? currency.ticker : defaultProps.ticker
+        })
     }
 
 
@@ -53,7 +53,7 @@ class ProfitResume extends PureComponent {
                     <div className="dashboard__visitors-chart">
                         <p className="dashboard__visitors-chart-number-second" style={
                             {color : this.state.profit >= 0 ? '#76d076' : '#646777'}
-                        }><AnimationNumber  number={this.state.profit}/> 
+                        }><AnimationNumber decimals={6} number={this.state.profit}/> 
                         <span style={ {color : this.state.profit >= 0 ? '#76d076' : '#646777'}}> {this.state.ticker}</span> </p>
                     </div>
                     <div className="dashboard__visitors-chart">

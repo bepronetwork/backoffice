@@ -25,12 +25,12 @@ class HostingLink extends React.Component{
     
         return (
             <Card>
-                <div className='landing__product__widget__small' style={{height : 60}}>
+                <div className='landing__product__widget__small' style={{height : 60, width : 270}}>
                     <Row>
-                        <Col sd={9}>
+                        <Col sd={10}>
                             <h6> {new String(link).substr(0, 15)}... </h6>
                         </Col>
-                        <Col sd={3}>
+                        <Col sd={2}>
                             <a className={'button-hover'} href={link} target={'__blank'} >
                                 Open App
                             </a>
