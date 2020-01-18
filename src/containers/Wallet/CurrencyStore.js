@@ -70,7 +70,7 @@ class CurrencyStore extends React.Component{
                     <Row>
                         {ecosystemCurrencies.map( c => {
                             return (
-                                <Col md={3}>
+                                <Col md={3} style={{marginBottom : 30}}>
                                     <CurrencyStoreContainer onClick={this.addCurrency} currency={c} isAdded={c.isAdded}/>
                                 </Col>
                             )
