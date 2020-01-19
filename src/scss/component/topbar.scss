@@ -264,6 +264,17 @@
     }
   }
 
+  &.topbar__collapse--periodicity {
+    min-width: 80px;
+    display: block;
+
+    & > button {
+      padding: 0 4px;
+      width: 100%;
+      text-transform: uppercase;
+    }
+  }
+
   @media screen and (min-width: 568px) {
     display: block;
   }
@@ -284,6 +295,12 @@
 
   &.topbar__collapse-content--language {
     max-width: 70px;
+    padding: 10px 0;
+    width: 100%;
+  }
+
+  &.topbar__collapse-content--periodicity {
+    max-width: 80px;
     padding: 10px 0;
     width: 100%;
   }
@@ -326,6 +343,45 @@
 
   &:not(:last-child) {
     margin-right: 5px;
+  }
+
+  img {
+    height: 11px;
+    width: 16px;
+    margin-right: 4px;
+  }
+}
+
+.topbar__periodicity-btn {
+  padding: 4px 15px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13px;
+  line-height: 16px;
+  transition: 0.3s;
+  text-transform: uppercase;
+
+  &:hover {
+    color: $color-accent;
+  }
+}
+
+.topbar__periodicity-btn-title {
+  display: flex;
+  font-size: 11px;
+  align-items: center;
+  margin: auto 0;
+
+  @include themify($themes) {
+    color: themed('colorText');
+  }
+
+  &:not(:last-child) {
+    margin-right: 5px;
+    margin-left: 10px;
   }
 
   img {

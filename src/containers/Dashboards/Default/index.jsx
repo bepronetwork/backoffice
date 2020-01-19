@@ -47,11 +47,6 @@ class DefaultDashboard extends React.Component{
         this.setState({...this.state, isDeployed, periodicity});
     }
 
-    changePeriodicity = async ({value}) => {
-        const { profile } = this.props;
-        await profile.getData();
-    }
-
     render = () => {
 
         const { isDeployed } = this.state;
@@ -85,11 +80,6 @@ class DefaultDashboard extends React.Component{
                                 wallet : this.props.profile.getApp().getSummaryData('wallet'),
                             }} />
                         </DataWidget>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md={3}>
-                        <TimePicker currency={currency} onChange={this.changePeriodicity}  />
                     </Col>
                 </Row>
                 { isDeployed ? 

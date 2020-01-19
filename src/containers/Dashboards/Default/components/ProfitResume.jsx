@@ -6,10 +6,11 @@ import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 import DashboardMapperSingleton from '../../../../services/mappers/Dashboard';
 import { emptyObject } from '../../../../lib/misc';
+import _ from 'lodash';
 
 const defaultProps = {
-    profit : '0',
-    ticker : 'N/A',
+    profit : '',
+    ticker : 'No Currency Chosen',
     timeline  : 'this week'
 }
 
@@ -46,6 +47,7 @@ class ProfitResume extends PureComponent {
 
   
     render() {
+        const { currency } = this.props;
         return (
         <Col md={12} xl={12} lg={12} xs={12}>
             <Card>
@@ -53,8 +55,12 @@ class ProfitResume extends PureComponent {
                     <div className="dashboard__visitors-chart">
                         <p className="dashboard__visitors-chart-number-second" style={
                             {color : this.state.profit >= 0 ? '#76d076' : '#646777'}
-                        }><AnimationNumber decimals={6} number={this.state.profit}/> 
-                        <span style={ {color : this.state.profit >= 0 ? '#76d076' : '#646777'}}> {this.state.ticker}</span> </p>
+                        }>
+                        {!_.isEmpty(currency) ?
+                            <AnimationNumber decimals={6} number={this.state.profit}/> 
+                            : null
+                        }
+                        <span style={ {color : this.state.profit >= 0 && !_.isEmpty(currency) ? '#76d076' : '#646777'}}> {this.state.ticker}</span> </p>
                     </div>
                     <div className="dashboard__visitors-chart">
                         <p className="dashboard__visitors-chart-title"> Profit <span> {this.state.timeline}</span></p>
