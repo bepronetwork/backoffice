@@ -22,6 +22,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { FilterListIcon } from 'mdi-react';
 import { compareIDS } from '../../../lib/string';
+import _ from 'lodash';
 
 let counter = 0;
 
@@ -256,7 +257,7 @@ const styles = theme => ({
 
 const defaultProps = {
     profit : '0',
-    ticker : 'N/A',
+    ticker : 'No Currency Chosen',
 }
 
 
@@ -345,7 +346,7 @@ class UsersTable extends React.Component {
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
-        const { classes } = this.props;
+        const { classes, currency } = this.props;
         const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
@@ -398,7 +399,8 @@ class UsersTable extends React.Component {
                                     </TableCell>
                                     <TableCell align="left">
                                         <p className='text-small'>
-                                            {n.wallet} <span className='text-small text-grey' >{this.state.ticker}</span>
+                                            {!_.isEmpty(currency) ? n.wallet : null }
+                                            <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
                                         </p>
                                     </TableCell>
                                     <TableCell align="left">
@@ -408,12 +410,14 @@ class UsersTable extends React.Component {
                                     </TableCell>
                                     <TableCell align="left">
                                         <p className='text-small'>
-                                            {n.turnoverAmount} <span className='text-small text-grey' >{this.state.ticker}</span>
+                                            {!_.isEmpty(currency) ? n.turnoverAmount : null }
+                                            <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
                                         </p>
                                     </TableCell>
                                     <TableCell align="left">
                                         <p className='text-small'>
-                                            {n.profit} <span className='text-small text-grey' >{this.state.ticker}</span>
+                                            {!_.isEmpty(currency) ? n.profit : null }
+                                            <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
                                         </p>
                                     </TableCell>
                                     <TableCell align="left">
