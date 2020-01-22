@@ -56,28 +56,42 @@ class TopBarCurrencyView extends React.Component {
 
     render() {
         const { currencies } = this.state;
+        let hasCurrency = false;
         return (
             <div className="topbar__collapse topbar__collapse--language">
                 <button className="topbar__btn" onClick={this.toggle}>
+                    {currencies.length > 0
+                    ?
+                        hasCurrency = true
+                    :
+                        <span class="topbar__currency-btn-title" style={{height : 20}}>
+                            <p style={{marginTop : -3}}>No currencies installed</p>
+                        </span>
+                    }
                     {this.state.mainButtonContent}
                     <DownIcon className="topbar__icon" />
                 </button>
-                <Collapse
-                    isOpen={this.state.collapse}
-                    className="topbar__collapse-content topbar__collapse-content--language"
-                >
-                    {currencies.map( c => {
-                        return (
-                            <button
-                                className="topbar__language-btn"
-                                type="button"
-                                onClick={() => this.changeCurrency({currency : c})}
-                            >
-                                {renderCurrency({currency : c})}
-                            </button>
-                        )
-                    })}
-                </Collapse>
+                {hasCurrency
+                ?
+                    <Collapse
+                        isOpen={this.state.collapse}
+                        className="topbar__collapse-content topbar__collapse-content--language"
+                    >
+                        {currencies.map( c => {
+                            return (
+                                <button
+                                    className="topbar__language-btn"
+                                    type="button"
+                                    onClick={() => this.changeCurrency({currency : c})}
+                                >
+                                    {renderCurrency({currency : c})}
+                                </button>
+                            )
+                        })}
+                    </Collapse>
+                :
+                    null
+                }
             </div>
         );
     }
