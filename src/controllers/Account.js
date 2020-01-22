@@ -1,6 +1,7 @@
 import ConnectionSingleton from "../api/Connection";
 import store from "../containers/App/store";
 import { setProfileInfo } from "../redux/actions/profile";
+import { setCurrencyView } from '../redux/actions/currencyReducer';
 import App from "./App";
 import Cache from "../services/cache";
 import Security from "./Security";
@@ -385,6 +386,13 @@ class Account{
                 // Set Timer
                 this.setTimer();
             }
+
+            /* SET CURRENCY */
+            if(data.app.wallet && data.app.wallet.length > 0 && data.app.wallet[0].currency) {
+                const currency = data.app.wallet[0].currency;
+                await store.dispatch(setCurrencyView(currency));
+            }
+
             this.update()
             // TO DO : Create an Initial Screen to choose between Apps or a top Dropdown for it
             return response;

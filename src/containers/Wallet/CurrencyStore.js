@@ -1,6 +1,8 @@
 import React from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import { connect } from "react-redux";
+import store from '../App/store';
+import { setCurrencyView } from '../../redux/actions/currencyReducer';
 import AnimationNumber from '../UI/Typography/components/AnimationNumber';
 import { Tooltip, IconButton } from '@material-ui/core';
 import { InformationIcon } from 'mdi-react';
@@ -28,6 +30,7 @@ class CurrencyStore extends React.Component{
     addCurrency = async currency => {
         const { profile } = this.props;
         await profile.getApp().addCurrency({currency : currency});
+        await store.dispatch(setCurrencyView(currency));
         await profile.getApp().getSummary();
         await profile.update();
         await this.projectData(this.props)
@@ -88,7 +91,8 @@ class CurrencyStore extends React.Component{
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        currency : state.currency
     };
 }
 
