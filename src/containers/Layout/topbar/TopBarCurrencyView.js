@@ -56,12 +56,13 @@ class TopBarCurrencyView extends React.Component {
 
     render() {
         const { currencies } = this.state;
+        let hasCurrency = false;
         return (
             <div className="topbar__collapse topbar__collapse--language">
                 <button className="topbar__btn" onClick={this.toggle}>
                     {currencies.length > 0
                     ?
-                        null
+                        hasCurrency = true
                     :
                         <span class="topbar__currency-btn-title" style={{height : 20}}>
                             <p style={{marginTop : -3}}>No currencies installed</p>
@@ -70,7 +71,7 @@ class TopBarCurrencyView extends React.Component {
                     {this.state.mainButtonContent}
                     <DownIcon className="topbar__icon" />
                 </button>
-                {currencies.length > 0
+                {hasCurrency
                 ?
                     <Collapse
                         isOpen={this.state.collapse}
