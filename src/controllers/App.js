@@ -308,6 +308,10 @@ class App{
         return this.params.customization;
     }
 
+    getChatIntegration(){
+        return this.params.integrations.chat;
+    }
+
     getInformation(key){
         return this.params[key];
     }
@@ -576,6 +580,30 @@ class App{
                     backgroundColor,
                     text,
                     isActive
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editIntegration = async ({isActive, integration_id, publicKey, privateKey, integration_type}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editIntegration({   
+                params : {
+                    app : this.getId(),
+                    isActive,
+                    integration_id,
+                    publicKey,
+                    privateKey,
+                    integration_type
                 },         
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
