@@ -42,8 +42,6 @@ class ChatTab extends Component {
     }
 
     onChange = ({name, value}) => {
-        console.log(name)
-        console.log(value)
         this.setState({...this.state, [name] : value })
     }
 
