@@ -80,7 +80,7 @@ class ChatTab extends Component {
                                 <div>
                                     <img style={{width : 70}} src={stream}></img>
                                     <p className="text-small text-left" style={{marginTop : 0}}><a href="https://getstream.io">https://getstream.io</a></p>
-                                    <p className="text-left secondary-text"> Add your API Key to integrate </p>
+                                    <p className="text-left secondary-text" style={{marginTop: 40, marginBottom: 40}}> Add your API Key to integrate </p>
                                 </div>
 
                                 <TextInput
