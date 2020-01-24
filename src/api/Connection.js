@@ -389,6 +389,19 @@ class Connection {
         }
     }
 
+    editIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/integrations/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editBannersCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/banners`, {
