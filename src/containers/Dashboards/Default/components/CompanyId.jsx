@@ -43,7 +43,7 @@ class CompanyId extends PureComponent {
         let app = props.app;
         
         const { currency } = props;
-        const platformName = app.getName() ? app.getName() : defaultProps.platformName;
+        this.setState( { platformName : app.getName() ? app.getName() : defaultProps.platformName } );
 
         if(emptyObject(currency)){return null};
 
@@ -56,7 +56,6 @@ class CompanyId extends PureComponent {
             platformAddress : bank_address ? `${bank_address.substring(0, 6)}...${bank_address.substring(bank_address.length - 2)}` : defaultProps.platformAddress,
             platformId  : app.getId(),
             ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
-            platformName : platformName,
             platformDescription  :app.getDescription() ? app.getDescription() : defaultProps.platformDescription,
             platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/address/` + bank_address,
         })
