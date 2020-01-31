@@ -783,6 +783,31 @@ class App{
         }
     }
 
+    addCurrencyWallet = async ({currency}) => {
+        try{    
+            // Deploy Contract 
+            let contract = await this.getContract({currency});
+            await contract.__init__();
+                   
+            // Send info to server
+            let res = await ConnectionSingleton.addCurrencyWallet({          
+                params : {
+                    app : this.getId(),
+                    bank_address : contract.getAddress(),
+                    currency_id : currency._id
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+            console.log(res);
+
+            await setCurrencyView(currency)
+            return res;
+        }catch(err){
+            console.log("err", err)
+            throw err;
+        }
+    }
+
     getEcosystemVariables = async () => {
         try{
             return await ConnectionSingleton.getEcosystemVariables();

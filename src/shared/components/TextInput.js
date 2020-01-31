@@ -19,7 +19,6 @@ const renderTextField = ({
                 defaultValue={defaultValue}
                 children={children}
                 type={type}
-                classes={{ label: 'text__input-name' } }
                 select={select}
                 onChange={(e) => {
                     e.preventDefault();

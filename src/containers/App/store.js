@@ -15,7 +15,8 @@ import {
   modalReducer,
   customizerReducer,
   walletReducer,
-  currencyReducer
+  currencyReducer,
+  addCurrencyWalletReducer
 } from '../../redux/reducers/index';
 
 
@@ -35,7 +36,8 @@ const reducer = combineReducers({
     currency : currencyReducer,
     periodicity : periodicityReducer,
     profile  : profileReducer,
-    appCreation : appCreationReducer
+    appCreation : appCreationReducer,
+    addCurrencyWallet : addCurrencyWalletReducer
 });
 const store = createStore(reducer);
 
