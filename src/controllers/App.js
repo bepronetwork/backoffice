@@ -805,6 +805,56 @@ class App{
         }
     }
 
+    changeMaxDeposit = async ({amount, wallet_id}) => {
+        try{
+            let res = await ConnectionSingleton.changeMaxDeposit({
+                params : {
+                    app : this.getId(),
+                    amount,
+                    wallet_id : wallet_id
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+            let {
+                status
+            } = res.data;
+
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
+            }
+        }catch(err){
+            console.log(err);
+            throw err;
+		}
+    }
+
+    changeMaxWithdraw = async ({amount, wallet_id}) => {
+        try{
+            let res = await ConnectionSingleton.changeMaxWithdraw({
+                params : {
+                    app : this.getId(),
+                    amount,
+                    wallet_id : wallet_id
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+            let {
+                status
+            } = res.data;
+
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
+            }
+        }catch(err){
+            console.log(err);
+            throw err;
+		}
+    }
+
     withdraw = async ({amount, currency}) => {
         try{
             let accounts = await window.web3.eth.getAccounts();
@@ -883,23 +933,6 @@ class App{
     unpauseContract = async () => {
         try{
             return await this.casinoContract.unpauseContract();
-        }catch(err){
-            throw err;
-        }
-    }
-
-    changeMaxDeposit = async ({amount}) => {
-        try{
-            return await this.casinoContract.changeMaxDeposit({amount});
-        }catch(err){
-            throw err;
-        }
-    }
-
-
-    changeMaxWithdrawal = async ({amount}) => {
-        try{
-            return await this.casinoContract.changeMaxWithdrawal({amount});
         }catch(err){
             throw err;
         }

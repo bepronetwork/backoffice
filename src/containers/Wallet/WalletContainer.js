@@ -40,11 +40,11 @@ class WalletContainer extends React.Component{
                                             {wallets && wallets.length > 0 ? 
                                                 wallets.map( w => {
                                                     return (
-                                                        <Col md={6}>
+                                                        <Col md={4}>
                                                             <LiquidityWalletWidget data={{
                                                                 wallet : w,
                                                                 app : this.props.profile.getApp()
-                                                            }}/>
+                                                            }} {...this.props}/>
                                                         </Col>
                                                     )
                                                 })
