@@ -783,17 +783,14 @@ class App{
         }
     }
 
-    addCurrencyWallet = async ({currency}) => {
+    addCurrencyWallet = async ({currency, passphrase}) => {
         try{    
-            // Deploy Contract 
-            let contract = await this.getContract({currency});
-            await contract.__init__();
-                   
+
             // Send info to server
             let res = await ConnectionSingleton.addCurrencyWallet({          
                 params : {
                     app : this.getId(),
-                    bank_address : contract.getAddress(),
+                    passphrase : passphrase,
                     currency_id : currency._id
                 },
                 headers : authHeaders(this.params.bearerToken, this.params.id)

@@ -9,8 +9,7 @@ import { addCurrencyWallet } from '../../redux/actions/addCurrencyWallet';
 import TextInput from '../../shared/components/TextInput';
 import NotificationSystem from 'rc-notification';
 import { BasicNotification } from '../../shared/components/Notification';
-import { print } from 'react-html2pdf';
-import KeysDocument from '../Wallet/KeysDocument';
+import jsPDF from 'jspdf';
 import TermsConditions from '../Wallet/TermsConditions';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
@@ -20,8 +19,7 @@ const defaultState = {
     setWalletEnable : false,
     enableClose : false,
     passhrase : null,
-    pubkey : null,
-    privkey : null,
+    keyResponse : null,
     isLoading : false
 }
 
@@ -66,8 +64,7 @@ class ModalAddCurrencyWallet extends React.Component{
                 setWalletEnable : false,
                 enableClose : false,
                 passhrase : null,
-                pubkey : null,
-                privkey : null,
+                keyResponse : null,
                 isLoading : false
             });
         }
@@ -76,6 +73,36 @@ class ModalAddCurrencyWallet extends React.Component{
     onChangeText = ({name, value}) => {
         this.setState({...this.state, [name] : value })
     }
+    
+    generatePDF = () => {
+        const { currency } = this.props;
+        const { keyResponse } = this.state;
+
+        const pageWidth = 8.5, lineHeight = 1.2, margin = 0.5, maxLineWidth = pageWidth - margin * 2, ptsPerInch = 72, oneLineHeight = (12 * lineHeight) / ptsPerInch;
+        var doc = new jsPDF({unit: "in", lineHeight: lineHeight});
+
+        //doc.addImage("https://storage.googleapis.com/betprotocol-tokens/eth.png", "JPEG", 15, 40, 180, 180);
+        doc.setFontSize(36);
+        doc.text(currency.ticker, margin, margin + 2 * oneLineHeight);
+
+        const title = "Keep my backup key secure with trusted partner (Coincover)";
+        const titleLines = doc.setFontSize(12).splitTextToSize(title, maxLineWidth);
+        doc.text(titleLines, margin, margin + 6 * oneLineHeight);
+
+        const info = "Create a backup key with our trusted partner to ensure you NEVER lose access to the funds in your wallet. It is automatically set by default (https://www.coincover.com)."
+        const infoLines = doc.setFontSize(12).splitTextToSize(info, maxLineWidth);
+        doc.text(infoLines, margin, margin + 8 * oneLineHeight);
+
+        doc.setLineWidth(0.01);
+        doc.line(margin, 2.5, 7.6, 2.5);
+
+        const json = keyResponse;
+        const jsonLines = doc.setFontSize(12).splitTextToSize(json, maxLineWidth);
+        doc.text(jsonLines, margin, margin + 12 * oneLineHeight);
+
+        doc.save(currency.ticker+'-key.pdf');
+    }
+
 
     handleChange = async ({key, value}) => {
         const { currency } = this.props;
@@ -89,7 +116,7 @@ class ModalAddCurrencyWallet extends React.Component{
                     if (_.isEmpty(passphrase)) { showNotification("Passphrase is required"); break; }
 
                     this.setState({isLoading : true});
-                    let res = await profile.getApp().addCurrencyWallet({currency : currency});
+                    let res = await profile.getApp().addCurrencyWallet({currency : currency, passphrase});
                     let { status } = res.data;
 
                     if(status != 200){ 
@@ -98,8 +125,7 @@ class ModalAddCurrencyWallet extends React.Component{
                         break; 
                     }
 
-                    let pubkey = "98u98u";
-                    let privkey = "98urg8uwge8";
+                    let keyResponse = JSON.stringify(res.data.message.keys.user, null, 4);
 
                     await profile.getApp().getSummary();
                     await profile.update();
@@ -108,15 +134,15 @@ class ModalAddCurrencyWallet extends React.Component{
                         accepted : value,
                         setWallet : (value) ? setWallet : false,
                         setWalletEnable : value,
-                        pubkey,
-                        privkey,
+                        keyResponse,
                         isLoading: false
                     });
                 }
             };
             break;
             case 'setWallet' : {
-                print(currency.ticker + '-key', 'jsx-template');
+
+                this.generatePDF();
 
                 this.setState({
                     setWallet : value,
@@ -129,7 +155,7 @@ class ModalAddCurrencyWallet extends React.Component{
 
     render = () => {
         const { isActive } = this.props.addCurrencyWallet;
-        const { accepted, setWallet, setWalletEnable, enableClose, pubkey, privkey, isLoading } = this.state;
+        const { accepted, setWallet, setWalletEnable, enableClose, keyResponse, isLoading } = this.state;
         const { currency } = this.props;
 
         if(!isActive){return null};
@@ -175,7 +201,6 @@ class ModalAddCurrencyWallet extends React.Component{
                         </Button>
                     </div>
                 </Container>
-                <KeysDocument pubkey={pubkey} privkey={privkey} currency={currency}/>
             </ModalContainer>
         )
     }
