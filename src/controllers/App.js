@@ -783,6 +783,28 @@ class App{
         }
     }
 
+    addCurrencyWallet = async ({currency, passphrase}) => {
+        try{    
+
+            // Send info to server
+            let res = await ConnectionSingleton.addCurrencyWallet({          
+                params : {
+                    app : this.getId(),
+                    passphrase : passphrase,
+                    currency_id : currency._id
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+            console.log(res);
+
+            await setCurrencyView(currency)
+            return res;
+        }catch(err){
+            console.log("err", err)
+            throw err;
+        }
+    }
+
     getEcosystemVariables = async () => {
         try{
             return await ConnectionSingleton.getEcosystemVariables();
