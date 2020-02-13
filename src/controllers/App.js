@@ -98,7 +98,7 @@ class App{
                 affiliates : res[5].data.message ? res[5].data.message.affiliateSetup : null,
                 app : res[5].data.message ? res[5].data.message : null,
                 walletSimple : res[5].data.message ? res[5].data.message.wallet : null,
-                transactions :  res[6].data ? res[6].data.message[0] : null,
+                transactions :  (res[6].data && res[6].data.message) ? res[6].data.message[0] : null,
                 gamesInfo : res[7],
                 usersInfoSummary : res[8],
                 withdraws : res[9]
