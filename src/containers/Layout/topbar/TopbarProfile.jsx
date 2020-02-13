@@ -6,6 +6,8 @@ import TopbarMenuLink from './TopbarMenuLink';
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 import Cache from '../../../services/cache';
+import store from '../../App/store';
+import { addCurrencyWallet } from '../../../redux/actions/addCurrencyWallet';
 
 const Ava = `${process.env.PUBLIC_URL}/img/dashboard/ava.png`;
 
@@ -22,7 +24,8 @@ class TopbarProfile extends PureComponent {
     };
     
     logout = () => {
-        console.log("logout")
+		console.log("logout");
+		store.dispatch(addCurrencyWallet({isActive : false, success: false}));
         Cache.setToCache('Auth', null);
 
     }
@@ -50,7 +53,8 @@ class TopbarProfile extends PureComponent {
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+		profile: state.profile,
+		addCurrencyWallet : state.addCurrencyWallet
     };
 }
 

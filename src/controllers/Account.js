@@ -3,14 +3,8 @@ import store from "../containers/App/store";
 import { setProfileInfo } from "../redux/actions/profile";
 import { setCurrencyView } from '../redux/actions/currencyReducer';
 import App from "./App";
-import Cache from "../services/cache";
-import Security from "./Security";
-import { enableMetamask, getERC20Contract } from "../lib/metamask";
-import { getNonce } from "../lib/number";
 import { processResponse } from "../lib/errors";
-import CasinoContract from "./CasinoContract";
 import { setAuthToCookies, getAuthFromCookies } from "./services/services";
-import Numbers from "../services/numbers";
 
 class Account{    
     constructor(params=null){
@@ -142,13 +136,6 @@ class Account{
         }catch(err){
             throw err;
         }
-    }
-
-    getMetamaskAddress = async () => {
-        /* Enable Metamask Auth */
-        await enableMetamask("eth");
-        let accounts = await window.web3.eth.getAccounts();
-        return accounts[0];
     }
 
     getAddress = () => {
@@ -292,75 +279,6 @@ class Account{
             throw err;
         }
     }
-
-    authorizeAddress = async ({address=this.getAddress(), platformParams}) => {
-        try{    
-            var platform;
-            if(!this.platform){
-                platform = this.platform;
-            }else{
-                platform = new CasinoContract(platformParams)
-            }
-
-            platform.__assert();
-            // Auth Address to Manage
-            await platform.authorizeAccountToManage({addr : address});
-            
-            return true;
-        }catch(err){
-            throw err;
-        }
-    }
-
-    authorizeCroupier = async ({address, platformParams}) => {
-        try{    
-            var platform;
-            if(!this.platform){
-                platform = this.platform;
-            }else{
-                platform = new CasinoContract(platformParams)
-            }
-
-            platform.__assert();
-
-            // Auth Croupier
-            await platform.authorizeCroupier({addr : address});
-            
-            return true;
-        }catch(err){
-            throw err;
-        }
-    }
-
-    deployPlatformContract = async ({decimals, tokenAddress, currencyTicker, blockchainTicker, authorizedAddress, ownerAddress}) => {
-        try{
-            let platform = new CasinoContract({
-                tokenAddress, 
-                ownerAddress,
-                decimals : decimals,
-                authorizedAddress
-            })
-
-            await platform.__init__();
-            
-            let params = {
-                platformAddress : platform.getAddress(),
-                decimals : decimals,
-                authorizedAddresses : [ownerAddress],
-                croupierAddress : authorizedAddress,
-                address  : ownerAddress,
-                currencyTicker : currencyTicker,
-                platformTokenAddress : tokenAddress,
-                platformBlockchain : blockchainTicker
-            }
-            
-            this.platform = platform;
-            return platform;
-        }catch(err){
-            throw err;
-        }
-    }
-
 
     handleLoginResponse = async (response) => {
         let {

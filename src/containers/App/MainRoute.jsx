@@ -102,7 +102,7 @@ class MainRoute extends React.Component {
                     {routeHistory.map( (routePath, i) => {
                         let last = (i == routeHistory.length - 1);
                         if(i == 0){
-                            return <p className={`container__routing__info ${last ? 'routing__current' : null}`}> {routePath.name}</p>
+                            return <p className={`container__routing__info ${last ? 'routing__current' : null}`} key={i}> {routePath.name}</p>
                         }else{
                             return (
                                 <div className={''}>

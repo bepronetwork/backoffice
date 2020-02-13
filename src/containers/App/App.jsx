@@ -13,7 +13,7 @@ import ScrollToTop from './ScrollToTop';
 import { config as i18nextConfig } from '../../translations';
 import Web3 from 'web3';
 import { ETHEREUM_NET_DEFAULT } from '../../config/apiConfig';
-import { Modal2FA, ModalError, AbstractModal } from '../Modals';
+import { Modal2FA, ModalError, AbstractModal, ModalAddCurrencyWallet } from '../Modals';
 
 i18next.init(i18nextConfig);
 
@@ -97,6 +97,7 @@ class App extends Component {
                         </div>
                     }
                     <div>
+                        <ModalAddCurrencyWallet/>
                         <Modal2FA/>
                         <ModalError/>
                         <AbstractModal/>

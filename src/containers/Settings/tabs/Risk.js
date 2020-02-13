@@ -85,7 +85,7 @@ class SettingsRiskContainer extends React.Component{
         var { profile } = this.props;
         const { totalAmount } = this.state;
         this.setState({...this.state, isLoading : {...this.state.isLoading}})
-        await profile.getApp().withdrawAmount({amount : totalAmount});
+        //await profile.getApp().withdrawAmount({amount : totalAmount});
         this.setState({...this.state, isLoading : {...this.state.isLoading}});
         this.projectData(this.props);
         return;
