@@ -638,6 +638,56 @@ class App{
             throw err;
         }
     }
+
+    changeMaxDeposit = async ({amount, wallet_id}) => {
+        try{
+            let res = await ConnectionSingleton.changeMaxDeposit({
+                params : {
+                    app : this.getId(),
+                    amount,
+                    wallet_id : wallet_id
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+            let {
+                status
+            } = res.data;
+
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
+            }
+        }catch(err){
+            console.log(err);
+            throw err;
+		}
+    }
+
+    changeMaxWithdraw = async ({amount, wallet_id}) => {
+        try{
+            let res = await ConnectionSingleton.changeMaxWithdraw({
+                params : {
+                    app : this.getId(),
+                    amount,
+                    wallet_id : wallet_id
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+            let {
+                status
+            } = res.data;
+
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
+            }
+        }catch(err){
+            console.log(err);
+            throw err;
+		}
+    }
   
     getSummaryData(type){
         return {
