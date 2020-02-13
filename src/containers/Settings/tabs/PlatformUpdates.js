@@ -134,15 +134,10 @@ class PlatformUpdates extends React.Component{
             tokenAddress : profile.getApp().getInformation('platformTokenAddress'), 
             decimals : profile.getApp().getDecimals(), 
             authorizedAddress : res.addresses[0].address,
-            ownerAddress : await profile.getMetamaskAddress(),
             currencyTicker : profile.getApp().getCurrencyTicker(), 
             blockchainTicker : profile.getApp().getInformation('platformBlockchain')
         }
 
-        let appVersion = profile.getApp().getVersion();
-        let updatedContract = appVersion ? (appVersion >= 1) : false;
-
-        let platform;
         let state = 'pauseContract';
         /* 1 - Pause Contract */
     
@@ -152,14 +147,11 @@ class PlatformUpdates extends React.Component{
         /* 2 - Move Funds to Owner Address */
         state = 'withdrawAllFunds';
         deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig});
-        await profile.getApp().withdrawAmount({amount : totalAmount});
+        //await profile.getApp().withdrawAmount({amount : totalAmount});
 
         /* 3 - Deploy Contract */
         state = 'deployContract';
         deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig});
-        platform = await profile.deployPlatformContract(params);
-
-        params.contractAddress = platform.getAddress();
 
         /* 4 - Authorize Address of Owner */
         state = 'authorizeAddress';
@@ -178,14 +170,6 @@ class PlatformUpdates extends React.Component{
         /* 7 - Move Funds to New Contract */
         state = 'moveFundsToNewContract';
         deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig});
-        await profile.getApp().generateTokenTransfer({
-            currency : params.currencyTicker,
-            amount : Numbers.toFloat(totalAmount), 
-            platformAddress : params.contractAddress, 
-            tokenAddress : params.tokenAddress,
-            decimals : params.decimals
-        });
-    
 
         /* Add Max Deposit */
 

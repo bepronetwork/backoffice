@@ -4,10 +4,10 @@ import { Card, CardBody, Col, Row , Button} from 'reactstrap';
 import {  BarcodeIcon, TickCircleIcon, DirectionsIcon } from 'mdi-react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import { compose } from 'lodash/fp'
-import ReciptBox from './ReciptBox';
+import { compose } from 'lodash/fp';
 import TextInput from '../../../../../shared/components/TextInput';
 import { ETHEREUM_NET_DEFAULT } from '../../../../../config/apiConfig';
+import _ from 'lodash';
 const loading = `${process.env.PUBLIC_URL}/img/loading-dots.gif`;
 
 
@@ -27,9 +27,11 @@ class WithdrawBox extends PureComponent {
         super(props);
         this.state = {
             ticker : 'N/A',
-            platformAddress : 'N/A',
+            tokenAddress : 'N/A',
             playBalance : 0,
-            amount : 100
+            amount : 100,
+            toAddress : '',
+            disabled : true
         };
     }
 
@@ -44,31 +46,30 @@ class WithdrawBox extends PureComponent {
     projectData = (props) => {
         let { wallet } = props;
         const currency = wallet.currency;
-        let tokenAddress = wallet.currency.address;
-        let platformAddress = wallet.bank_address;
+        let tokenAddress = wallet.bank_address;
 
         this.setState({...this.state, 
             state : 1,
             image : currency.image,
             playBalance :  wallet.playBalance ? wallet.playBalance : this.state.houseLiquidity,
             ticker : currency.ticker ? currency.ticker : this.state.ticker,
-            platformAddress : platformAddress ? platformAddress : this.state.platformAddress,
-            platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + tokenAddress,
-            tokenAddress :  tokenAddress,
+            tokenAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + tokenAddress,
+            tokenAddress,
             tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
 
         })
     }
 
-    createTokenWithdraw = async  ({amount}) => {
+    createTokenWithdraw = async  () => {
         try{
+            const { amount, toAddress } = this.state;
             const { wallet } = this.props;
             const { currency } = wallet;
 
             this.props.disable();
             this.setState({...this.state, isLoading : true, state : 1});
             /* 3 -  Request Withdraw Platform */
-            await this.props.profile.requestWithdraw({tokenAmount : parseFloat(amount), currency});
+            await this.props.profile.requestWithdraw({tokenAmount : parseFloat(amount), currency, toAddress});
             this.setState({...this.state, isLoading : false, state : 5});
             this.props.enable();
             return true;
@@ -82,10 +83,16 @@ class WithdrawBox extends PureComponent {
 
     changeContent = (type, item) => {
         this.setState({[type] : item});
+
+        let toAddress = (type == 'toAddress') ? item : this.state.toAddress;
+        let amount = (type == 'amount') ? item : this.state.amount;
+
+        this.setState({disabled : amount && toAddress ? false : true});
     }
 
     render() {        
-        const { amount, image } = this.state;
+        const { amount, toAddress, image, disabled, isLoading, playBalance,
+                ticker, tokenAddressLink, tokenAddressTrimmed, state} = this.state;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -93,7 +100,7 @@ class WithdrawBox extends PureComponent {
                 <CardBody className="dashboard__card-widget" >
                         <div  className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title" style={{fontSize : 20, textAlign : 'center'}}> 
-                                House Liquidity <span style={{fontSize : 20}}> {this.state.playBalance}</span> {this.state.ticker}
+                                House Liquidity <span style={{fontSize : 20}}> {playBalance}</span> {ticker}
                             </p>
                             <hr></hr>
                         </div>
@@ -119,63 +126,70 @@ class WithdrawBox extends PureComponent {
                                             <p className="dashboard__visitors-chart-number-second" style={
                                                 {color : '#646777'}
                                             }>
-                                            {this.state.ticker}
+                                            {ticker}
                                             </p>
                                         </Col>
                                     </Row>   
+                                    <Row>
+                                        <Col lg={12}>
+                                            <TextInput
+                                                name="toAddress"
+                                                label="Address"
+                                                type="text"
+                                                placeholder="Add address to withdraw"
+                                                defaultValue={toAddress}
+                                                changeContent={this.changeContent}
+                                            />
+                                        </Col>
+                                    </Row> 
                                 </div>
-                                <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
+                                <a target={'__blank'} className='ethereum-address-a' href={tokenAddressLink}>
                                     <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />
-                                        {this.state.tokenAddressTrimmed}
+                                        {tokenAddressTrimmed}
                                     </p>
                                 </a>
                               
                             </Col>
                             <div className='container' style={{textAlign : 'center'}}>
-                                {!this.state.confirmedDeposit ?
-                                    <Col lg={12} style={{margin : '10px auto', textAlign : 'center'}} >
-                                        {!this.state.isLoading 
-                                            ?   
-                                                <Button 
-                                                disabled={this.props.disabled}
-                                                onClick={() => this.createTokenWithdraw({amount})}  
-                                                outline 
-                                                className="primary" ><p>
-                                                    <TickCircleIcon className="deposit-icon"/> Metamask </p>
-                                                </Button>
-                                            :   
-                                                <div>
-                                                    <Row>
-                                                        <Col lg={5}>
-                                                            <Button disabled={true} outline className="primary" >
-                                                                <p>
-                                                                    <TickCircleIcon className="deposit-icon"/> 
-                                                                    {this.state.state} 
-                                                                </p>
-                                                            </Button>
-                                                        </Col>
-                                                        <Col lg={2}>
-                                                            <img className={'loading-dots'} src={loading}></img>
-                                                        </Col>
-                                                        <Col lg={5}>
-                                                            <Button disabled={this.state.state != 5} className="secondary" >
-                                                                <p>
-                                                                    Done
-                                                                </p>
-                                                            </Button>
-                                                        </Col>
-                                                    </Row>
-                                                    <p> 
-                                                        {withdrawMessage[this.state.state].message}
-                                                    </p>
-                                                </div>
-                                        }
-                                        
-                                    </Col>
-                                :   
-                                    <ReciptBox isLoading={this.state.isLoading} recipt={this.state.recipt}/>
-                                }
-
+                                <Col lg={12} style={{margin : '10px auto', textAlign : 'center'}} >
+                                    {!isLoading 
+                                        ?   
+                                            <Button 
+                                            disabled={this.props.disabled || disabled}
+                                            onClick={() => this.createTokenWithdraw()}  
+                                            outline 
+                                            className="primary" ><p>
+                                                <TickCircleIcon className="deposit-icon"/> Submit </p>
+                                            </Button>
+                                        :   
+                                            <div>
+                                                <Row>
+                                                    <Col lg={5}>
+                                                        <Button disabled={true} outline className="primary" >
+                                                            <p>
+                                                                <TickCircleIcon className="deposit-icon"/> 
+                                                                {state} 
+                                                            </p>
+                                                        </Button>
+                                                    </Col>
+                                                    <Col lg={2}>
+                                                        <img className={'loading-dots'} src={loading}></img>
+                                                    </Col>
+                                                    <Col lg={5}>
+                                                        <Button disabled={state != 5} className="secondary" >
+                                                            <p>
+                                                                Done
+                                                            </p>
+                                                        </Button>
+                                                    </Col>
+                                                </Row>
+                                                <p> 
+                                                    {withdrawMessage[state].message}
+                                                </p>
+                                            </div>
+                                    }
+                                    
+                                </Col>
                             </div>
                         </Row>
                     </CardBody>

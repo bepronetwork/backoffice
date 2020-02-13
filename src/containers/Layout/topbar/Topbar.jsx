@@ -19,7 +19,6 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
 
 const defaultProps = {
-    metamaksAddress : 'N/A',
     userAddress : 'N/A',
     isValid : false
 }
@@ -52,13 +51,10 @@ class Topbar extends React.Component {
     
     projectData = async (props) => {
         let user = !_.isEmpty(props.profile) ? props.profile : null ;
-        let metamaksAddress = user ? await user.getMetamaskAddress() : defaultProps.userMetamaskAddress;
         if(user){
             let ownerAddress = user.getApp().getInformation('ownerAddress');
             this.setState({...this.state, 
-                userAddress :  ownerAddress ? AddressConcat(ownerAddress) : defaultProps.userAddress,
-                userMetamaskAddress : (user && metamaksAddress) ? AddressConcat(metamaksAddress) : defaultProps.userMetamaskAddress,
-                isValid : user ? new String(ownerAddress).toLowerCase() == new String(metamaksAddress).toLowerCase() :  defaultProps.isValid     
+                userAddress :  ownerAddress ? AddressConcat(ownerAddress) : defaultProps.userAddress   
             })
         }
         
@@ -81,20 +77,6 @@ class Topbar extends React.Component {
                     <TopBarCurrencyView/>
                     <TopBarWithdrawNotice/>
                     <TopbarNotification />
-                    <div className='address-box'> 
-                        <h5>
-                            <Tooltip title={text[this.state.isValid]}>
-                                <IconButton aria-label={text[this.state.isValid]}>
-                                    {this.state.isValid ? 
-                                        <CheckCircleIcon styleName={'icon-green'} size={20}/>
-                                        :
-                                        <AlertCircleIcon styleName={'icon-red'}  size={20}/>
-                                    }
-                                </IconButton>
-                            </Tooltip>
-                            {this.state.userMetamaskAddress}
-                        </h5>
-                    </div>
                     <TopbarProfile />
                     <TopbarLanguage />
                 </div>

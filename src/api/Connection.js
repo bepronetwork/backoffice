@@ -250,6 +250,36 @@ class Connection {
         }
     }
 
+    changeMaxDeposit = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/deposit/max/set`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            console.log(err);
+            throw err;
+        }
+    }
+
+    changeMaxWithdraw = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/withdraw/max/set`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            console.log(err);
+            throw err;
+        }
+    }
+
     requestWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( API_URL_WITHDRAW + `/api/app/requestWithdraw`, {

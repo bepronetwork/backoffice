@@ -64,7 +64,7 @@ class TopBarCurrencyView extends React.Component {
                     ?
                         hasCurrency = true
                     :
-                        <span class="topbar__currency-btn-title" style={{height : 20}}>
+                        <span className="topbar__currency-btn-title" style={{height : 20}}>
                             <p style={{marginTop : -3}}>No currencies installed</p>
                         </span>
                     }
@@ -83,6 +83,7 @@ class TopBarCurrencyView extends React.Component {
                                     className="topbar__language-btn"
                                     type="button"
                                     onClick={() => this.changeCurrency({currency : c})}
+                                    key={c.id}
                                 >
                                     {renderCurrency({currency : c})}
                                 </button>

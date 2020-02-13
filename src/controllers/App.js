@@ -1,16 +1,10 @@
 import ConnectionSingleton from "../api/Connection";
 import store from "../containers/App/store";
-import { setProfileInfo } from "../redux/actions/profile";
-import CasinoContract from "./CasinoContract";
-import ERC20TokenContract from "./ERC20Contract";
-import CryptographySingleton from "../services/security/Cryptography";
-import codes from "../config/codes";
 import Numbers from "../services/numbers";
 import { getNonce } from "../lib/number";
-import { getMetamaskAddress } from "../lib/metamask";
 import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
-import CasinoContractETH from "./CasinoContractETH";
+import _ from 'lodash';
 
 class App{    
     constructor(params){
@@ -18,7 +12,6 @@ class App{
         this.data = {
             summary : {}
         };
-        this.casinoContract = null;
     }
 
     getSummary = async () => {
@@ -28,7 +21,7 @@ class App{
 
         try{
             let res = await Promise.all([
-                ConnectionSingleton.getSummary({
+                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
                         app : this.params.id,
                         type : 'USERS',
@@ -36,8 +29,8 @@ class App{
                         currency : currency._id,
                     },
                     headers : authHeaders(this.params.bearerToken, this.params.id)
-                }),
-                ConnectionSingleton.getSummary({
+                }) : currency,
+                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
                         app : this.params.id,
                         type : 'GAMES',
@@ -45,8 +38,8 @@ class App{
                         currency : currency._id,
                     },
                     headers : authHeaders(this.params.bearerToken, this.params.id)
-                }),
-                ConnectionSingleton.getSummary({
+                }) : currency,
+                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
                         app : this.params.id,
                         type : 'BETS',
@@ -54,8 +47,8 @@ class App{
                         currency : currency._id,
                     },
                     headers : authHeaders(this.params.bearerToken, this.params.id)
-                }),
-                ConnectionSingleton.getSummary({
+                }) : currency,
+                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
                         app : this.params.id,
                         type : 'REVENUE',
@@ -63,8 +56,8 @@ class App{
                         currency : currency._id,
                     },
                     headers : authHeaders(this.params.bearerToken, this.params.id)
-                }),
-                ConnectionSingleton.getSummary({
+                }) : currency,
+                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
                         app : this.params.id,
                         type : 'WALLET',
@@ -72,7 +65,7 @@ class App{
                         currency : currency._id,
                     },
                     headers : authHeaders(this.params.bearerToken, this.params.id)
-                }),
+                }) : currency,
                 ConnectionSingleton.getApp({
                     app : this.params.id,
                     headers : authHeaders(this.params.bearerToken, this.params.id)
@@ -116,15 +109,6 @@ class App{
         }catch(err){
             throw err;
 		}
-    }
-
-
-    getTokenAmount = async () => {
-        try{
-            return await this.casinoContract.getHouseTokenAmount();
-        }catch(err){
-            throw 'N/A';
-        }
     }
 
     updateAppInfoAsync = async () => {
@@ -197,56 +181,6 @@ class App{
         }catch(err){
             throw err;
 		}
-    }
-
-    async generateTokenTransfer({currency, decimals, amount, platformAddress, tokenAddress}){
-        try{
-
-
-            
-            await this.enableMetamask(currency);
-            let erc20Contract = new ERC20TokenContract({
-                web3 : window.web3,
-                contractAddress : tokenAddress
-            });
-
-            let res = await erc20Contract.sendTokens({
-                decimals,
-                to : platformAddress,
-                amount
-            })
-            return res;
-
-        }catch(err){
-            throw err;
-        }
-    }
-
-    async createTokenWithdraw({currency, decimals, amount}){
-        try{
-            let res = await this.casinoContract.getBankRoll();
-            await this.enableMetamask(currency);
-            return await this.casinoContract.withdrawTokens({
-                decimals,
-                amount
-            })
-
-        }catch(err){
-            throw err;
-        }
-    }
-
-    async updateContract({newContractAddress}){
-        try{
-            let res = await this.casinoContract.getBankRoll();
-            await this.enableMetamask();
-            return await this.casinoContract.updateContract({
-                newContractAddress
-            })
-
-        }catch(err){
-            throw err;
-        }
     }
 
     async editAffiliateStructure({structures}){
@@ -324,8 +258,6 @@ class App{
         return this.params.wallet.find( w => new String(w.currency._id).toString() == new String(currency_id).toString());
     }
 
-    getCasinoContract = () => this.casinoContract;
-
     isConnected(){
         return this.params.isValid;
     }
@@ -390,14 +322,12 @@ class App{
         }))).filter(el => el != null)
     }
 
-    requestWithdraw = async ({tokenAmount, currency}) => {
-        try{
-            let metamaskAddress = await getMetamaskAddress();
-            
+    requestWithdraw = async ({tokenAmount, currency, toAddress}) => {
+        try{         
             /* Get Request Withdraw Response */
             var res_with = await ConnectionSingleton.requestWithdraw({
                 params : {
-                    address : metamaskAddress, 
+                    address : toAddress, 
                     nonce : getNonce(), 
                     currency : currency._id,
                     tokenAmount,
@@ -456,36 +386,12 @@ class App{
         }
     }
 
-    totalDecentralizedLiquidity = async () => {
-        return await this.casinoContract.getSmartContractLiquidity();
-    }
-
-    withdrawAmount = async ({amount}) => {
-        let metamaskAddress = await getMetamaskAddress();
+    approveWithdraw = async ({user, _id, currency}) => {
         try{
-            var res_with = await this.casinoContract.withdrawApp({
-                address : metamaskAddress,
-                amount : amount
-            });
-            return res_with;
-        }catch(err){
-            throw err;
-        }
-    }
-
-    approveWithdraw = async ({amount, address, user, _id, currency, bank_address}) => {
-        try{
-
-            let contract = await this.getContract({currency, bank_address});
-            console.log(amount)
-            var res_with = await contract.setUserWithdrawal({
-                address : address,
-                amount : amount
-            });
 
             let res = await ConnectionSingleton.finalizeUserWithdraw({
                 params : {
-                    user, app : this.getId(), transactionHash : res_with.transactionHash, withdraw_id : _id, currency : currency._id
+                    user, app : this.getId(), transactionHash : null, withdraw_id : _id, currency : currency._id
                 },
                 headers : authHeaders(this.params.bearerToken, this.getId())
             })
@@ -498,13 +404,6 @@ class App{
 
     approveWithdrawsBatch = async (items) => {
         try{
-            var addresses = items.map( i => i.address);     
-            var amounts = items.map( i => i.amount); 
-
-            var res_with = await this.casinoContract.setUserWithdrawalBatch({
-                addresses : addresses,
-                amounts : amounts
-            });
 
             let users_array = [];
 
@@ -513,7 +412,7 @@ class App{
                 /* TO DO */
                 let item = items[i];
                 let res = await ConnectionSingleton.finalizeUserWithdraw({
-                    user : item.user, app : this.getId(), transactionHash : res_with.transactionHash, withdraw_id : item._id,
+                    user : item.user, app : this.getId(), transactionHash : null, withdraw_id : item._id,
                     headers : authHeaders(this.params.bearerToken, this.getId())
                 });
                 console.log(res);
@@ -523,38 +422,6 @@ class App{
             throw err;
         }
     }
-
-    finalizeWithdraw = async ({ amount, withdraw_id, currency, bank_address }) => {
-        try {
-            let metamaskAddress = await getMetamaskAddress();
-            let contract = await this.getContract({currency, bank_address});
-            console.log(currency);
-
-            /* Run Withdraw Function */
-            const resEthereum = await contract.withdrawApp({
-                address : metamaskAddress,
-                amount
-            });
-
-            /* Get Finalize Withdraw Response */
-            let res_fin = await ConnectionSingleton.finalizeWithdraw({
-                params : {
-                    nonce : getNonce(),
-                    tokenAmount : amount,
-                    withdraw_id,
-                    currency : currency._id,
-                    transactionHash : resEthereum.transactionHash,
-                    app : this.getId()
-                },
-                headers : authHeaders(this.params.bearerToken, this.params.id)
-            });
-            return res_fin;
-
-        } catch (err) {
-            console.log(err);
-            throw err;
-        }
-    };
 
     editTableLimit = async ({game, tableLimit}) => {
         try{
@@ -727,61 +594,6 @@ class App{
             throw err;
         }
     }
-    
-    getContract = async ({currency, bank_address}) => {
-
-        let metamaskAddress = await getMetamaskAddress();
-        let croupierAddress = await this.getEcosystemCroupier();
-
-        switch(new String(currency.ticker).toLowerCase()){
-            case 'eth' : {
-                return new CasinoContractETH({
-                    ownerAddress  : metamaskAddress,
-                    decimals : currency.decimals,
-                    contractAddress : bank_address,
-                    authorizedAddress : metamaskAddress,
-                    croupierAddress 
-                })
-            };
-            default : {
-                return new CasinoContract({
-                    tokenAddress : currency.address, 
-                    ownerAddress  : metamaskAddress,
-                    contractAddress : bank_address,
-                    decimals : currency.decimals,
-                    authorizedAddress : metamaskAddress,
-                    croupierAddress 
-                })
-            }
-        }
-      
-
-    }
-
-    addCurrency = async ({currency}) => {
-        try{
-            // Deploy Contract 
-            let contract = await this.getContract({currency});
-            await contract.__init__();
-            
-            // Send info to server
-            let res = await ConnectionSingleton.addCurrencyWallet({          
-                params : {
-                    app : this.getId(),
-                    bank_address : contract.getAddress(),
-                    currency_id : currency._id
-                },
-                headers : authHeaders(this.params.bearerToken, this.params.id)
-            });
-            console.log(res);
-
-            await setCurrencyView(currency)
-            return res;
-        }catch(err){
-            console.log("err", err)
-            throw err;
-        }
-    }
 
     addCurrencyWallet = async ({currency, passphrase}) => {
         try{    
@@ -827,112 +639,54 @@ class App{
         }
     }
 
-    withdraw = async ({amount, currency}) => {
+    changeMaxDeposit = async ({amount, wallet_id}) => {
         try{
-            let accounts = await window.web3.eth.getAccounts();
-            let contract = await this.getContract({currency});
-
-            return await contract.withdrawApp({
-                receiverAddress : accounts[0],
-                amount 
-            })
-
-        }catch(err){
-            throw err;
-        }
-    }
-
-    changeTokenAddress = async ({token}) => {
-        try{
-            /* Update Contract */
-            await this.casinoContract.changeCasinoToken({
-                address : token.address
+            let res = await ConnectionSingleton.changeMaxDeposit({
+                params : {
+                    app : this.getId(),
+                    amount,
+                    wallet_id : wallet_id
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id)
             });
+            let {
+                status
+            } = res.data;
 
-            /* Update API */
-            let params = {
-                decimals : token.decimals,
-                currencyTicker : token.ticker,
-                platformTokenAddress : token.address,
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
             }
-            
         }catch(err){
+            console.log(err);
             throw err;
-        }
-    } 
-
-    getMaxDeposit = async () => {
-        try{
-            return await this.casinoContract.getMaxDeposit();
-        }catch(err){
-            throw err;
-        }
+		}
     }
 
-    getMaxWithdrawal = async () => {
+    changeMaxWithdraw = async ({amount, wallet_id}) => {
         try{
-            return await this.casinoContract.getMaxWithdrawal();
-        }catch(err){
-            throw err;
-        }
-    }
+            let res = await ConnectionSingleton.changeMaxWithdraw({
+                params : {
+                    app : this.getId(),
+                    amount,
+                    wallet_id : wallet_id
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+            let {
+                status
+            } = res.data;
 
-    isPaused = async () => {
-        try{
-            return await this.casinoContract.isPaused();
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
+            }
         }catch(err){
+            console.log(err);
             throw err;
-        }
-    }
-
-    getWithdrawalTimeLimit = async () => {
-        try{
-            if(!this.casinoContract){return null}
-            return await this.casinoContract.getWithdrawalTimeLimit();
-        }catch(err){
-            throw err;
-        }
-    }
-
-    pauseContract = async () => {
-        try{
-            return await this.casinoContract.pauseContract();
-        }catch(err){
-            throw err;
-        }
-    }
-
-    unpauseContract = async () => {
-        try{
-            return await this.casinoContract.unpauseContract();
-        }catch(err){
-            throw err;
-        }
-    }
-
-    changeMaxDeposit = async ({amount}) => {
-        try{
-            return await this.casinoContract.changeMaxDeposit({amount});
-        }catch(err){
-            throw err;
-        }
-    }
-
-
-    changeMaxWithdrawal = async ({amount}) => {
-        try{
-            return await this.casinoContract.changeMaxWithdrawal({amount});
-        }catch(err){
-            throw err;
-        }
-    }
-
-    changeWithdrawalTimeLimit = async ({amount}) => {
-        try{
-            return await this.casinoContract.changeWithdrawalTimeLimit({amount});
-        }catch(err){
-            throw err;
-        }
+		}
     }
   
     getSummaryData(type){
@@ -946,19 +700,6 @@ class App{
         const state = store.getState();
         const { currency } = state;
         return currency.ticker ? currency.ticker : 'N/A';
-    }
-
-    async enableMetamask(currency='eth'){
-        let ethereum = window.ethereum;
-        // TO DO : When User Rejects Connect Question throw err
-        switch(currency) {
-            case 'eth' : {
-                if(ethereum){
-                    await ethereum.enable(); 
-                }
-                break;
-            }
-        }
     }
 
     getVersion = () => this.params.version;
@@ -1036,19 +777,6 @@ class App{
         }
     }
 
-    authorizeAddress = async ({address}) => {
-        /* Authorize Decentralized Way */
-        return await this.casinoContract.authorizeAccountToManage({addr : address});
-    }
-
-    unauthorizeAddress = async ({address}) => {
-        /* Authorize Decentralized Way */
-        let res = await this.casinoContract.unauthorizeAccountToManage({addr : address});
-        /* Send info to Server */
-        let authorizedAddresses = this.getInformation('authorizedAddresses');
-        authorizedAddresses = authorizedAddresses.filter(e => e !== address)
-        return res;
-    }
 }
 
 
