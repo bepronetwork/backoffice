@@ -65,7 +65,6 @@ const defaultProps = {
     page: 1,
     blockchains : [],
     currencies : [],
-    userMetamaskAddress : '0x',
     authorizedAddress : '0x',
     progress : 0,
     deploymentConfig : DEPLOYMENT_CONFIG,
@@ -167,8 +166,7 @@ class WizardForm extends PureComponent {
             const { profile, appCreation } = this.props;
             this.setState({...this.state, isLoading : true});
             var { authorizedAddress, deploymentConfig } = this.state;
-            let user = !_.isEmpty(profile) ? profile : null ;
-            let metamaskAddress = user ? await user.getMetamaskAddress() : defaultProps.userMetamaskAddress;        
+            let user = !_.isEmpty(profile) ? profile : null ;       
 
             const { services, blockchain, currency } = appCreation;
             /* 1 - Deploy the Smart-Contract */
@@ -179,14 +177,10 @@ class WizardForm extends PureComponent {
                 tokenAddress : currency.address, 
                 decimals : currency.decimals,
                 authorizedAddress,
-                ownerAddress : metamaskAddress,
                 currencyTicker : currency.ticker, 
                 blockchainTicker : blockchain.ticker
             }
 
-            let platform = await profile.deployPlatformContract(params);
-
-            params.contractAddress = platform.getAddress();
             /* 2 - Authorize Address of Owner */
             state = 'authorizeAddress';
             deploymentConfig = this.getUpdateStateForProgress({state, deploymentConfig});

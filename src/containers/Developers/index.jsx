@@ -9,12 +9,8 @@ import BearerTokenTableApiKeys from './components/BearerTokenTableApiKeys';
 import TableKey from './components/TableKey';
 
 const defaultProps = {
-    platformAddress : 'N/A',
     platformId : 'N/A',
-    tokenAddress : 'N/A',
-    apiKey : 'N/A',
-    croupierAddress : 'N/A',
-    ownerAddress : 'N/A'
+    apiKey : 'N/A'
 }
 
 class DevelopersContainer extends React.Component{
@@ -38,17 +34,13 @@ class DevelopersContainer extends React.Component{
         let app = profile.getApp();
         
         this.setState({...this.state, 
-            platformAddress : app.getInformation('platformAddress') ? app.getInformation('platformAddress') : defaultProps.platformAddress,
             platformId  : app.getId(),
-            ownerAddress :  app.getInformation('ownerAddress') ? app.getInformation('ownerAddress') : defaultProps.ownerAddress,
-            croupierAddress :  app.getInformation('croupierAddress') ? app.getInformation('croupierAddress') : defaultProps.croupierAddress,
-            tokenAddress :  app.getInformation('platformTokenAddress') ? app.getInformation('platformTokenAddress') : defaultProps.tokenAddress,
             apiKey : app.getBearerToken()
         })
     }
 
     render = () => {
-        const { platformId, platformAddress, apiKey, tokenAddress, ownerAddress, croupierAddress} = this.state;
+        const { platformId, apiKey} = this.state;
 
         return (
             
@@ -65,20 +57,7 @@ class DevelopersContainer extends React.Component{
                             <Col lg={4}>
                                 <TableKey type={'Platform Id'} value={platformId}/>                                  
                             </Col>  
-                            <Col lg={4}>
-                                <TableKey type={'Platform Address'} value={platformAddress}/>  
-                            </Col>
-                            <Col lg={4}>
-                                <TableKey type={'Token Address'} value={tokenAddress}/>  
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col lg={6}>
-                                <TableKey type={'Croupier Authorized Address'} value={croupierAddress}/>  
-                            </Col>
-                            <Col lg={6}>
-                                <TableKey type={'Owner Authorized Address'} value={ownerAddress}/>  
-                            </Col>
+
                         </Row>
                     </Col>
                 </Row>

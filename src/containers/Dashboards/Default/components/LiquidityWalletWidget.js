@@ -12,7 +12,7 @@ const Ava = `${process.env.PUBLIC_URL}/img/dashboard/euro.png`;
 
 
 const defaultProps = {
-    playBalance : 'N/A',
+    playBalance : 0,
     ticker : 'N/A',
     decimals : 6
 }
@@ -22,13 +22,11 @@ class LiquidityWalletWidget extends PureComponent {
     constructor(props){
         super(props);
         this.state = { ...defaultProps};
-        this.projectData(props);
     }
 
     componentDidMount(){
         this.projectData(this.props)
     }
-
 
     componentWillReceiveProps(props){
         this.projectData(props);
@@ -47,8 +45,6 @@ class LiquidityWalletWidget extends PureComponent {
         })
     
     }
-
-
 
     render() {        
         
