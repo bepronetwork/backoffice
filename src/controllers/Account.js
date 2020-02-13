@@ -361,6 +361,21 @@ class Account{
         }
     }
 
+    addAdmin = async ({email}) => {
+        try{
+            console.log(this.getUserInfo());
+            let res = await ConnectionSingleton.addAdmin({
+                params : {
+                    email, app : this.getApp().getId(), admin: this.getUserInfo().id
+                },
+                headers : authHeaders(this.getUserInfo().security.bearerToken, this.getId())
+            })
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
 
     handleLoginResponse = async (response) => {
         let {
