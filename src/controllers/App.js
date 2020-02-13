@@ -94,7 +94,7 @@ class App{
                 games : res[1].data ? res[1].data.message : [],
                 bets : res[2].data ? res[2].data.message : [],
                 revenue : res[3].data ? res[3].data.message : [],
-                wallet : res[4].data ? res[4].data.message[0] : [],        
+                wallet : (res[4].data && res[4].data.message) ? res[4].data.message[0] : [],        
                 affiliates : res[5].data.message ? res[5].data.message.affiliateSetup : null,
                 app : res[5].data.message ? res[5].data.message : null,
                 walletSimple : res[5].data.message ? res[5].data.message.wallet : null,
