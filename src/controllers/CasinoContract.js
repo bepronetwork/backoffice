@@ -251,25 +251,6 @@ class CasinoContract{
         }
     }
 
-    async updateContract({newContractAddress}){
-        try{
-            let accounts = await window.web3.eth.getAccounts();
-            return new Promise ( (resolve, reject) => {
-                self.contract.getContract().methods.updateToNewContract(
-                    newContractAddress
-                ).send({from : accounts[0]})
-                .on('transactionHash', (hash) => {
-                })
-                .on('confirmation', (confirmations, receipt) => {
-                    resolve(receipt)
-                })
-                .on('error', () => {reject("Transaction Error")})
-            })
-        }catch(err){
-            throw err;
-        }
-    }
-
     async getBankRoll(){
         try{
             return Numbers.fromBigNumberToInteger(await self.contract.getContract().methods.bankroll().call(), self.decimals); 

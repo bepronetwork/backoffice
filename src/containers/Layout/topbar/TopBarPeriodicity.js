@@ -67,6 +67,7 @@ class TopBarPeriodicity extends React.Component {
                                 className="topbar__periodicity-btn"
                                 type="button"
                                 onClick={() => this.changePeriodicity({periodicity : p})}
+                                key={p}
                             >
                                 {renderPeriodicity({periodicity : p})}
                             </button>

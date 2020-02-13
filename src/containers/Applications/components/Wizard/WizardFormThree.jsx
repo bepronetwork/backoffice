@@ -13,7 +13,6 @@ import appCreationConfig from '../../../../config/appCreation';
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 const defaultProps = {
-    metamaskAddress : 'N/A',
     progress : 0
 }
 
@@ -29,13 +28,6 @@ class WizardFormThree extends React.Component{
     }
     
     projectData = async (props) => {
-        let user = !_.isEmpty(props.profile) ? props.profile : null ;
-        let metamaskAddress = user ? await user.getMetamaskAddress() : defaultProps.userMetamaskAddress;        
-        if(user){
-            this.setState({...this.state, 
-                userMetamaskAddress : user ? metamaskAddress : defaultProps.userMetamaskAddress,
-            })
-        }
     }
 
 
@@ -92,7 +84,6 @@ class WizardFormThree extends React.Component{
             <div style={{width : '80%'}}>
                 <div className="dashboard__visitors-chart" >
                     <h3 className="dashboard__visitors-chart-title" style={{marginTop : 30, textAlign : 'center'}}> Complete </h3>
-                    <h5  style={{marginTop : 30, marginBottom : 20, textAlign : 'center'}}> A metamask prompt will appear to create and deploy your smart-contract </h5>
                 </div>
                 <Row>                            
                     <Col md={6}>
@@ -135,31 +126,8 @@ class WizardFormThree extends React.Component{
                         </Card>
                     </Col>                
                 </Row>
-                <Row>                            
-                    <Col md={6}>
-                        <Card>
-                            <Container>   
-                                <h4>
-                                    App Management Address
-                                </h4>
-                                <Row>
-                                    <Col lg={4}>
-                                        <Card>
-                                            <div className='landing__product__widget__small'>
-                                                <div className='description'>
-                                                    <h5> {this.state.userMetamaskAddress} </h5>
-                                                    <p> This Address will have all control of the platform </p>
-                                                </div>
-                                            </div>
-                                        <h6> To change the Address use Metamask or your Extension Installed </h6>
-                                        </Card>
-                                    </Col>
-                                </Row>
-                                
-                            </Container>
-                        </Card>
-                    </Col>         
-                    <Col md={6}>
+                <Row>                                    
+                    <Col md={12}>
                         <Card>
                             <Container>   
                                 <h4>

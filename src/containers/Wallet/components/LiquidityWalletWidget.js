@@ -51,8 +51,8 @@ class LiquidityWalletWidget extends PureComponent {
                 totalLiquidity :  wallet.playBalance ? wallet.playBalance : defaultProps.totalLiquidity,
                 ticker : wallet.currency.ticker ? wallet.currency.ticker : defaultProps.ticker,
                 platformBlockchain : wallet.currency.name ? wallet.currency.name: defaultProps.platformBlockchain,
-                platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + wallet.currency.address,
-                tokenAddress :  `${wallet.currency.address.substring(0, 6)}...${wallet.currency.address.substring(wallet.currency.address.length - 2)}`,
+                platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + wallet.bank_address,
+                tokenAddress :  `${wallet.bank_address.substring(0, 6)}...${wallet.bank_address.substring(wallet.bank_address.length - 2)}`,
                 isIntegrated : true,
                 image : wallet.currency.image
             })

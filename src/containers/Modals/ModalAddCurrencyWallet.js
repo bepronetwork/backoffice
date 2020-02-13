@@ -115,13 +115,13 @@ class ModalAddCurrencyWallet extends React.Component{
 
                     if (_.isEmpty(passphrase)) { showNotification("Passphrase is required"); break; }
 
-                    this.setState({isLoading : true});
+                    this.setState({isLoading : true, setWalletEnable : true});
                     let res = await profile.getApp().addCurrencyWallet({currency : currency, passphrase});
                     let { status } = res.data;
 
                     if(status != 200){ 
                         showNotification(res.data); 
-                        this.setState({isLoading : false});
+                        this.setState({isLoading : false, enableClose : true});
                         break; 
                     }
 
@@ -133,7 +133,6 @@ class ModalAddCurrencyWallet extends React.Component{
                     this.setState({
                         accepted : value,
                         setWallet : (value) ? setWallet : false,
-                        setWalletEnable : value,
                         keyResponse,
                         isLoading: false
                     });
@@ -155,8 +154,7 @@ class ModalAddCurrencyWallet extends React.Component{
 
     render = () => {
         const { isActive } = this.props.addCurrencyWallet;
-        const { accepted, setWallet, setWalletEnable, enableClose, keyResponse, isLoading } = this.state;
-        const { currency } = this.props;
+        const { accepted, setWallet, setWalletEnable, enableClose, isLoading } = this.state;
 
         if(!isActive){return null};
 

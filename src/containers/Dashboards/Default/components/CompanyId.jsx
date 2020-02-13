@@ -28,7 +28,6 @@ class CompanyId extends PureComponent {
     constructor(props) {
         super(props);
         this.state = { ...defaultProps};
-        this.projectData(props);
     }
 
     componentDidMount(){
@@ -39,11 +38,9 @@ class CompanyId extends PureComponent {
         this.projectData(props);
     }
     
-    projectData = (props) => {
+    projectData = async (props) => {
         let app = props.app;
-        
         const { currency } = props;
-        this.setState( { platformName : app.getName() ? app.getName() : defaultProps.platformName } );
 
         if(emptyObject(currency)){return null};
 
@@ -63,6 +60,11 @@ class CompanyId extends PureComponent {
 
 
     render() {
+        let { app } = this.props;
+        let { platformName } = this.state;
+        const { ticker, platformAddressLink, platformAddress } = this.state;
+
+        platformName =  app.getName() ? app.getName() : platformName;
 
         return (
             <Col md={12} lg={12} xl={12} >
@@ -74,10 +76,10 @@ class CompanyId extends PureComponent {
                             </CardBody>
                         </Col>
                         <Col lg={6}>
-                            <h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.platformName}</h5>
-                            <p className="" style={{marginTop : 10}} >{new String(this.state.ticker).toUpperCase()}</p>
-                            <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
-                                <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.platformAddress}</p>
+                            <h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{platformName}</h5>
+                            <p className="" style={{marginTop : 10}} >{new String(ticker).toUpperCase()}</p>
+                            <a target={'__blank'} className='ethereum-address-a' href={platformAddressLink}>
+                                <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{platformAddress}</p>
                             </a>
                         </Col>
                     </Row>

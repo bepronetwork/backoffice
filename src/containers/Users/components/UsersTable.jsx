@@ -59,11 +59,8 @@ const fromDatabasetoTable = (data, otherInfo, currency) => {
         if(otherInfo){
             d = otherInfo.find( f => f._id == key._id);
         }
-        console.log("a", d);
-        console.log("key", key);
-        console.log("curre", currency._id);
         const wallet = key.wallet.find(w => compareIDS(w.currrency, currency._id));
-        console.log(wallet)
+
         return {
             _id :  key._id,
             full_info : {...d, ...key}, 
