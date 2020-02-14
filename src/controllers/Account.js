@@ -37,14 +37,18 @@ class Account{
         }
     }
     
-    register = async () => {
+    register = async (token = null) => {
         try{
-            let response = await ConnectionSingleton.register({
+            let data = {
                 username        : this.params.username, 
                 name            : this.params.name,
                 password        : this.params.password,
-                email           : this.params.email
-            });
+                email           : this.params.email,
+            };
+            if(token !== null) {
+                data['bearerToken'] = token;
+            }
+            let response = await ConnectionSingleton.register(data);
 
             let {
                 message,
@@ -106,6 +110,36 @@ class Account{
         /* Add Everything to the Redux State */  
         this.versionControl += 1;
         await store.dispatch(setProfileInfo(this));
+    }
+
+    addAdmin = async ({email}) => {
+        try{
+            console.log(this.getUserInfo());
+            let res = await ConnectionSingleton.addAdmin({
+                params : {
+                    email, app : this.getApp().getId(), admin: this.getUserInfo().id
+                },
+                headers : authHeaders(this.getUserInfo().security.bearerToken, this.getId())
+            })
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getAdminByApp = async () => {
+        try{
+            let res = await ConnectionSingleton.getAdminByApp({
+                params : {
+                    app : this.getApp().getId(), admin: this.getUserInfo().id
+                },
+                headers : authHeaders(this.getUserInfo().security.bearerToken, this.getId())
+            })
+            return res.data.message;
+        }catch(err){
+            throw err;
+        }
     }
 
     addPaybearToken = async (paybearToken) => {

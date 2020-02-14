@@ -25,13 +25,17 @@ class Connection {
         }
     }
 
-    register = async ({username, password, name, email}) => {
+    register = async ({username, password, name, email, bearerToken}) => {
     
         try{
+            let data = {username, password, name, email};
+            if(bearerToken != null){
+                data['bearerToken'] = bearerToken;
+            }
             let response = await fetch(URL + '/api/admins/register', {
                 method : 'POST',
                 headers : config.headers,
-                body : JSON.stringify({username, password, name, email})
+                body : JSON.stringify(data)
             });
 
             return response.json();
@@ -536,7 +540,31 @@ class Connection {
         }
     }
 
+    addAdmin = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/admins/add`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
 
+    getAdminByApp = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/admin/app/get`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 function addHeaders(config, newHeaders){
