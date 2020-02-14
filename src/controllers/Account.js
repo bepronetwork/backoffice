@@ -128,6 +128,20 @@ class Account{
         }
     }
 
+    getAdminByApp = async () => {
+        try{
+            let res = await ConnectionSingleton.getAdminByApp({
+                params : {
+                    app : this.getApp().getId(), admin: this.getUserInfo().id
+                },
+                headers : authHeaders(this.getUserInfo().security.bearerToken, this.getId())
+            })
+            return res.data.message;
+        }catch(err){
+            throw err;
+        }
+    }
+
     addPaybearToken = async (paybearToken) => {
         try{
             let res = await this.getApp().addPaybearToken(paybearToken);

@@ -16,14 +16,18 @@ class AddAdminContainer extends React.Component{
     componentWillReceiveProps(props){
         this.projectData(props);
     }
-    projectData = (props) => {
-        this.setState({...this.state, authorizedAddAdmin : [] });
+    projectData = async (props) => {
+        let { profile } = props;
+        this.setState({...this.state, authorizedAddAdmin :  await profile.getAdminByApp() });
     }
     onChange = async (new_data) => {
-        let data = new_data.filter(n => n.isNew === true)[0];
         const { profile } = this.props;
-        let res = await profile.addAdmin({email: data.email });
-        console.log(res);
+        let data = new_data.filter(n => n.isNew === true)[0];
+        if(data) {
+            let res = await profile.addAdmin({email: data.email });
+        } else {
+            console.log(new_data);
+        }
     }
     render = () => {
         const { authorizedAddAdmin } = this.state;
