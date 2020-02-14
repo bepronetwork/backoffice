@@ -61,6 +61,8 @@ class RegisterForm extends PureComponent {
         };
 
         this.showPassword = this.showPassword.bind(this);
+        this.token = (document.location.href.split("=")[1]!==undefined) ? document.location.href.split("=")[1] : null;
+        console.log(this.token);
     }
 
     showPassword(e) {
@@ -78,8 +80,12 @@ class RegisterForm extends PureComponent {
         try{
             this.setState({...this.state, isLoading : true})
             let account = new Account(this.state);
-            await account.register();
-            this.props.history.push('/initial');
+            await account.register(this.token);
+            if(!this.token) {
+                this.props.history.push('/initial');
+            } else {
+                this.props.history.push('/login');
+            }
             this.setState({...this.state, isLoading : false})
         }catch(err){
             this.props.showNotification(err.message);

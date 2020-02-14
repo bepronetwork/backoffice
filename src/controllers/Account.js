@@ -37,14 +37,18 @@ class Account{
         }
     }
     
-    register = async () => {
+    register = async (token = null) => {
         try{
-            let response = await ConnectionSingleton.register({
+            let data = {
                 username        : this.params.username, 
                 name            : this.params.name,
                 password        : this.params.password,
-                email           : this.params.email
-            });
+                email           : this.params.email,
+            };
+            if(token !== null) {
+                data['bearerToken'] = token;
+            }
+            let response = await ConnectionSingleton.register(data);
 
             let {
                 message,

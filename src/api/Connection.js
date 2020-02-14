@@ -25,13 +25,17 @@ class Connection {
         }
     }
 
-    register = async ({username, password, name, email}) => {
+    register = async ({username, password, name, email, bearerToken}) => {
     
         try{
+            let data = {username, password, name, email};
+            if(bearerToken != null){
+                data['bearerToken'] = bearerToken;
+            }
             let response = await fetch(URL + '/api/admins/register', {
                 method : 'POST',
                 headers : config.headers,
-                body : JSON.stringify({username, password, name, email})
+                body : JSON.stringify(data)
             });
 
             return response.json();
