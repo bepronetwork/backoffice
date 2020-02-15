@@ -29,13 +29,8 @@ class CurrencyStore extends React.Component{
     }
 
     addCurrency = async currency => {
-        const { profile } = this.props;
         await store.dispatch(setCurrencyView(currency));
         await store.dispatch(addCurrencyWallet({isActive : true}));
-        //await profile.getApp().addCurrencyWallet({currency : currency});
-        //await profile.getApp().getSummary();
-        //await profile.update();
-        //await this.projectData(this.props)
     }
     
     projectData = async (props) => {

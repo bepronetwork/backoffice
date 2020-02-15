@@ -38,6 +38,9 @@ class LiquidityWalletWidget extends PureComponent {
 
         let wallets = props.data.data.wallet;
         const wallet = wallets.find( w => compareIDS(w.currency, currency._id));
+
+        if(emptyObject(wallet)){return null};
+
         this.setState({...this.state, 
             playBalance : wallet.playBalance ? wallet.playBalance : defaultProps.playBalance,
             decimals : currency.decimals,
