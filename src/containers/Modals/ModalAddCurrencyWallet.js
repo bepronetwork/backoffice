@@ -6,11 +6,13 @@ import ModalContainer from './ModalContainer';
 import store from '../App/store';
 import Switch from '@material-ui/core/Switch';
 import { addCurrencyWallet } from '../../redux/actions/addCurrencyWallet';
+import { setCurrencyView } from '../../redux/actions/currencyReducer';
 import TextInput from '../../shared/components/TextInput';
 import NotificationSystem from 'rc-notification';
 import { BasicNotification } from '../../shared/components/Notification';
 import jsPDF from 'jspdf';
 import TermsConditions from '../Wallet/TermsConditions';
+import { emptyObject } from '../../lib/misc';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 const defaultState = {
@@ -54,9 +56,15 @@ class ModalAddCurrencyWallet extends React.Component{
 
     async closeModal(success=false){
         const { setWalletEnable, enableClose } = this.state;
+        const { currency, profile } = this.props;
 
         if ((!enableClose && !setWalletEnable) || enableClose) {
             await store.dispatch(addCurrencyWallet({isActive : false, success}));
+
+            const wallet = profile.getApp().getWallet({currency_id : currency._id});
+            if(emptyObject(wallet)){
+                await store.dispatch(setCurrencyView({}));
+            };
 
             this.setState({
                 accepted : false,
@@ -108,49 +116,54 @@ class ModalAddCurrencyWallet extends React.Component{
         const { currency } = this.props;
         const { setWallet, passphrase } = this.state;
 
-        switch(key) {
-            case 'accepted' : {
-                if (value) {
-                    const { profile } = this.props;
+        try {
+            switch(key) {
+                case 'accepted' : {
+                    if (value) {
+                        const { profile } = this.props;
 
-                    if (_.isEmpty(passphrase)) { showNotification("Passphrase is required"); break; }
+                        if (_.isEmpty(passphrase)) { showNotification("Passphrase is required"); break; }
 
-                    this.setState({isLoading : true, setWalletEnable : true});
-                    let res = await profile.getApp().addCurrencyWallet({currency : currency, passphrase});
-                    let { status } = res.data;
+                        this.setState({isLoading : true, setWalletEnable : true});
+                        let res = await profile.getApp().addCurrencyWallet({currency : currency, passphrase});
+                        let { status } = res.data;
 
-                    if(status != 200){ 
-                        showNotification(res.data); 
-                        this.setState({isLoading : false, enableClose : true});
-                        break; 
+                        if(status != 200){ 
+                            showNotification(res.data); 
+                            this.setState({isLoading : false, enableClose : true});
+                            break; 
+                        }
+
+                        let keyResponse = JSON.stringify(res.data.message.keys.user, null, 4);
+
+                        await profile.getApp().getSummary();
+                        await profile.update();
+
+                        this.setState({
+                            accepted : value,
+                            setWallet : (value) ? setWallet : false,
+                            keyResponse,
+                            isLoading: false
+                        });
                     }
+                };
+                break;
+                case 'setWallet' : {
 
-                    let keyResponse = JSON.stringify(res.data.message.keys.user, null, 4);
-
-                    await profile.getApp().getSummary();
-                    await profile.update();
+                    this.generatePDF();
 
                     this.setState({
-                        accepted : value,
-                        setWallet : (value) ? setWallet : false,
-                        keyResponse,
-                        isLoading: false
-                    });
-                }
-            };
-            break;
-            case 'setWallet' : {
-
-                this.generatePDF();
-
-                this.setState({
-                    setWallet : value,
-                    enableClose : value
-                })
-            };
-            break;
+                        setWallet : value,
+                        enableClose : value
+                    })
+                };
+                break;
+            }
+        }catch (err){
+            console.log(err)
+            await store.dispatch(setCurrencyView({}));
         }
-      };
+    };
 
     render = () => {
         const { isActive } = this.props.addCurrencyWallet;
