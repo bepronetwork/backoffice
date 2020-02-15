@@ -256,7 +256,8 @@ class Connection {
 
     changeMaxDeposit = async ({params, headers}) => {
         try{
-            let response = await fetch( URL + `/api/app/deposit/max/set`, {
+            params.amount = parseFloat(params.amount)
+            let response = await fetch( URL + `/api/deposit/max/set`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -271,7 +272,8 @@ class Connection {
 
     changeMaxWithdraw = async ({params, headers}) => {
         try{
-            let response = await fetch( URL + `/api/app/withdraw/max/set`, {
+            params.amount = parseFloat(params.amount)
+            let response = await fetch( API_URL_WITHDRAW + `/api/withdraw/max/set`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
