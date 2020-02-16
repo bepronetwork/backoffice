@@ -47,7 +47,7 @@ class SettingsContainer extends React.Component{
                                 icon : <AccountIcon size={20}/>
                             },
                             {
-                                title : 'Add Admin',
+                                title : 'Admins',
                                 container : <AddAdminContainer/>,
                                 icon : <AccessibilityIcon size={20}/>
                             }

@@ -86,7 +86,7 @@
     "prop-types": "^15.6.2",
     "qrcode": "^1.4.1",
     "qrcode.react": "^0.9.3",
-    "query-string": "^6.4.0",
+    "query-string": "^6.11.0",
     "randomstring": "^1.1.5",
     "rc-notification": "^3.2.0",
     "rc-slider": "^8.6.3",
