@@ -36,23 +36,23 @@ class AddAdminContainer extends React.Component{
         const { authorizedAddAdmin } = this.state;
         return (
             <div>
-                <h4> Manage here more Users Admins </h4>
+                <h4> Application Admins </h4>
                 {/* <p className='text-grey'> Authorized Addresses have the ability to allow user withdraws, not to withdraw the bankroller money, that is only for the ownerAddress </p> */}
                 <hr></hr>
                 <Row>
                     <Col lg={12}>
                         <EditableTable
-                            title={'Add Email'}
+                            title={''}
                             onChange={this.onChange}
                             compareField={'email'}
                             columns={[
-                                { title: 'Email', field: 'email'}, { title: 'Status', field: 'status'}
+                                { title: 'Email', field: 'email'}, { title: 'Status', field: 'status', editable : 'never'}
                             ]}
                             rawData={authorizedAddAdmin}
                             data={authorizedAddAdmin.map( v => {
                                 return {
                                     email: v.email,
-                                    status: ((v.registered === true) ? 'Registrado' : 'Pendente')
+                                    status: ((v.registered === true) ? 'Registered' : 'Pending')
                                 }
                             })}
                             enableUpdate={false}

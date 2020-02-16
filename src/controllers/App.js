@@ -343,6 +343,26 @@ class App{
         }
     }
 
+    finalizeWithdraw = async ({withdraw_id, currency}) => {
+        try{         
+            /* Get Request Withdraw Response */
+            var res_with = await ConnectionSingleton.finalizeWithdraw({
+                params : {
+                    withdraw_id, 
+                    nonce : getNonce(), 
+                    currency : currency._id,
+                    app : this.getId()
+                },
+                headers : authHeaders(this.params.bearerToken, this.params.id),
+            });
+    
+            return res_with;
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     getUserAsync = async ({user}) => {
         return (await ConnectionSingleton.getUser({
             params : {

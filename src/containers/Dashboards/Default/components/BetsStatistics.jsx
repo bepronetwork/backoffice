@@ -62,14 +62,13 @@ class BetsStatistics extends React.Component {
     }
 
     render = () => {
-      
         return (
             <Panel title={'Bet´s Stats'} subhead="last 7 days"
             >
                 <div className="dashboard__stat dashboard__stat--budget">
                     <div className="dashboard__stat-main">
                         <p className="dashboard__stat-main-title">Won Bets</p>
-                        <p className="dashboard__stat-main-number"><AnimationNumber decimals={true} number={this.state.percentage}/> %</p>
+                        <p className="dashboard__stat-main-number"><AnimationNumber number={this.state.percentage}/> %</p>
                         <hr />
                     </div>
                     <div className="dashboard__stat-chart">
@@ -80,11 +79,11 @@ class BetsStatistics extends React.Component {
                     </div>
                     <div className="dashboard__stat-data">
                         <div>
-                        <p className="dashboard__stat-data-number"><AnimationNumber decimals={true} number={this.state.betsData.bets.avg_bet}/> {this.state.ticker}</p>
+                        <p className="dashboard__stat-data-number"><AnimationNumber number={this.state.betsData.bets.avg_bet}/> {this.state.ticker}</p>
                         <p style={{ color: '#ff4861' }}> Average User Bet </p>
                         </div>
                         <div>
-                        <p className="dashboard__stat-data-number"> <AnimationNumber decimals={true} number={this.state.betsData.bets.avg_bet_return}/> {this.state.ticker}</p>
+                        <p className="dashboard__stat-data-number"> <AnimationNumber number={this.state.betsData.bets.avg_bet_return}/> {this.state.ticker}</p>
                         <p style={{ color: '#894798' }}>Average Return (No Fee)</p>
                         </div>
                     </div>
