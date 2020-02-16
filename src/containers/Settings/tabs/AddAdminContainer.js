@@ -54,6 +54,8 @@ class AddAdminContainer extends React.Component{
                                     email: v.email
                                 }
                             })}
+                            enableUpdate={false}
+                            enableDelete={false}
                         />
                     </Col>
                 </Row>
