@@ -46,14 +46,17 @@ class AddAdminContainer extends React.Component{
                             onChange={this.onChange}
                             compareField={'email'}
                             columns={[
-                                { title: 'Email', field: 'email'}
+                                { title: 'Email', field: 'email'}, { title: 'Status', field: 'status'}
                             ]}
                             rawData={authorizedAddAdmin}
                             data={authorizedAddAdmin.map( v => {
                                 return {
-                                    email: v.email
+                                    email: v.email,
+                                    status: ((v.registered === true) ? 'Registrado' : 'Pendente')
                                 }
                             })}
+                            enableUpdate={false}
+                            enableDelete={false}
                         />
                     </Col>
                 </Row>

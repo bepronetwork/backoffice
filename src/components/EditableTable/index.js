@@ -101,6 +101,7 @@ class EditableTable extends React.Component{
     /* Render */
 
     render = () => {
+        const { enableUpdate=true, enableDelete=true } = this.props;
         const { title, data, columns} = this.state;
         return (
             <Card>
@@ -110,23 +111,65 @@ class EditableTable extends React.Component{
                         title={title}
                         columns={columns}
                         data={data}
-                        editable={{
-                            onRowAdd: newData =>
-                                new Promise(async resolve => {
-                                    await this.onRowAdd(newData);
-                                    resolve();
+                        editable={
+                            enableUpdate && enableDelete ?
+                            {
+                                onRowAdd: newData =>
+                                    new Promise(async resolve => {
+                                        await this.onRowAdd(newData);
+                                        resolve();
                                 }),
-                            onRowUpdate: (newData, oldData)=>
-                                new Promise(async resolve => {
-                                    await this.onRowUpdate(newData, oldData);
-                                    resolve();
-                            }),
-                            onRowDelete: newData =>
-                                new Promise(async resolve => {
-                                    await this.onRowDelete(newData);
-                                    resolve();
-                            }),
-                        }}
+                                onRowUpdate: (newData, oldData)=>
+                                    new Promise(async resolve => {
+                                        await this.onRowUpdate(newData, oldData);
+                                        resolve();
+                                }),
+                                onRowDelete: newData =>
+                                    new Promise(async resolve => {
+                                        await this.onRowDelete(newData);
+                                        resolve();
+                                })
+                            }
+                            :
+                            !enableUpdate && !enableDelete ?
+                            {
+                                onRowAdd: newData =>
+                                    new Promise(async resolve => {
+                                        await this.onRowAdd(newData);
+                                        resolve();
+                                })
+                            }
+                            :
+                            enableUpdate ?
+                            {
+                                onRowAdd: newData =>
+                                    new Promise(async resolve => {
+                                        await this.onRowAdd(newData);
+                                        resolve();
+                                }),
+                                onRowUpdate: (newData, oldData)=>
+                                    new Promise(async resolve => {
+                                        await this.onRowUpdate(newData, oldData);
+                                        resolve();
+                                })
+                            }
+                            :
+                            enableDelete ?
+                            {
+                                onRowAdd: newData =>
+                                    new Promise(async resolve => {
+                                        await this.onRowAdd(newData);
+                                        resolve();
+                                }),
+                                onRowDelete: newData =>
+                                    new Promise(async resolve => {
+                                        await this.onRowDelete(newData);
+                                        resolve();
+                                })
+                            }
+                            :
+                            null
+                        }
                     />
                 </CardBody>
             </Card>
