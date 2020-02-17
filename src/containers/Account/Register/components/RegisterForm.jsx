@@ -67,9 +67,12 @@ class RegisterForm extends PureComponent {
 
     componentDidMount(){
         const parsed = queryString.parse(window.location.search);
+        const queryEmail = parsed ? parsed.email : null;
+        
         this.setState({
             token :  parsed ? parsed.token : null,
-            email : parsed ? parsed.email : null
+            queryEmail : queryEmail,
+            email : queryEmail
         });
     }
 
@@ -126,12 +129,12 @@ class RegisterForm extends PureComponent {
                     changeContent={this.changeContent}
                 />
                 {/* Admin Registered via email */}
-                {!this.state.email ?
+                {!this.state.queryEmail ?
                     <TextInput
                         icon={MailRuIcon}
                         name="email"
                         label="Email"
-                        defaultValue={this.state.email}
+                        defaultValue={this.state.queryEmail}
                         type="text"
                         placeholder="example@email.com"
                         changeContent={this.changeContent}
