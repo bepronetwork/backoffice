@@ -1,14 +1,14 @@
 import React from 'react';
-import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
+import { Container } from 'reactstrap';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import _ from 'lodash';
-import SettingsBox from './components/SettingsBox';
-import { AccountIcon, FinanceIcon, ExitToAppIcon, AccessibilityIcon, UpdateIcon, CurrencyEthIcon, CurrencySignIcon} from 'mdi-react';
+import { AccountIcon, CashMultipleIcon, FinanceIcon, ExitToAppIcon, AccessibilityIcon, UpdateIcon, CurrencyEthIcon, CurrencySignIcon} from 'mdi-react';
 import { Tab, Nav, Sonnet } from 'react-bootstrap';
-import { SettingsRiskContainer , SettingsAccountContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
+import { SettingsRiskContainer, AddAdminContainer, SettingsAccountContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
+// import { SettingsAccountContainer, SettingsRiskContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
 import TabsContainer from '../../shared/components/tabs/Tabs.js';
 
 const defaultState = {
@@ -41,12 +41,17 @@ class SettingsContainer extends React.Component{
                 <TabsContainer 
                     items={
                         [
-                            /*
                             {
                                 title : 'Account',
                                 container : <SettingsAccountContainer/>,
                                 icon : <AccountIcon size={20}/>
                             },
+                            {
+                                title : 'Admins',
+                                container : <AddAdminContainer/>,
+                                icon : <AccessibilityIcon size={20}/>
+                            }
+                            /*,
                             {
                                 title : 'Finance',
                                 container : <SettingsTransactionContainer/>,

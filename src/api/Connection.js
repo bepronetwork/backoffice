@@ -25,13 +25,17 @@ class Connection {
         }
     }
 
-    register = async ({username, password, name, email}) => {
+    register = async ({username, password, name, email, bearerToken}) => {
     
         try{
+            let data = {username, password, name, email};
+            if(bearerToken != null){
+                data['bearerToken'] = bearerToken;
+            }
             let response = await fetch(URL + '/api/admins/register', {
                 method : 'POST',
                 headers : config.headers,
-                body : JSON.stringify({username, password, name, email})
+                body : JSON.stringify(data)
             });
 
             return response.json();
@@ -238,6 +242,38 @@ class Connection {
     updateWallet = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/updateWallet`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            console.log(err);
+            throw err;
+        }
+    }
+
+    changeMaxDeposit = async ({params, headers}) => {
+        try{
+            params.amount = parseFloat(params.amount)
+            let response = await fetch( URL + `/api/deposit/max/set`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            console.log(err);
+            throw err;
+        }
+    }
+
+    changeMaxWithdraw = async ({params, headers}) => {
+        try{
+            params.amount = parseFloat(params.amount)
+            let response = await fetch( API_URL_WITHDRAW + `/api/withdraw/max/set`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -506,7 +542,31 @@ class Connection {
         }
     }
 
+    addAdmin = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/admins/add`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
 
+    getAdminByApp = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/admin/app/get`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 function addHeaders(config, newHeaders){

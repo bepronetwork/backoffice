@@ -45,14 +45,14 @@ class WithdrawWidget extends React.Component{
     }
 
     withdrawTokens = async (withdrawObject) => {
-        var { id, amount } = withdrawObject;
+        var { id } = withdrawObject;
         const { wallet } = this.props;
         const { currency } = wallet;
 
         try{
             this.setState({...this.state, disabled : true});
             /* Create Withdraw */
-            await this.props.profile.finalizeWithdraw({amount : parseFloat(amount), withdraw_id : id, currency, bank_address : wallet.bank_address });
+            await this.props.profile.finalizeWithdraw({withdraw_id : id, currency});
             await this.props.profile.getApp().updateAppInfoAsync();
             await this.props.profile.update();
             /* Update User Balance */

@@ -13,6 +13,7 @@ import userViewReducer from './userViewReducer';
 import modalReducer from './modalReducer';
 import currencyReducer from './currencyReducer';
 import walletReducer from './walletReducer';
+import addCurrencyWalletReducer from './addCurrencyWalletReducer';
 
 export {
     themeReducer,
@@ -29,5 +30,6 @@ export {
     newOrderTableReducer,
     customizerReducer,
     profileReducer,
-    appCreationReducer
+    appCreationReducer,
+    addCurrencyWalletReducer
 };

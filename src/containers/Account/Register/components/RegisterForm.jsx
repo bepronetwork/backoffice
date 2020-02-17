@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import Account from '../../../../controllers/Account';
 import TextField from '@material-ui/core/TextField';
 import TextInput from '../../../../shared/components/TextInput';
+const queryString = require('query-string');
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 
@@ -56,11 +57,20 @@ class RegisterForm extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-        showPassword: false,
-        isLoading : false
+            showPassword: false,
+            isLoading : false
         };
 
         this.showPassword = this.showPassword.bind(this);
+      
+    }
+
+    componentDidMount(){
+        const parsed = queryString.parse(window.location.search);
+        this.setState({
+            token :  parsed ? parsed.token : null,
+            email : parsed ? parsed.email : null
+        });
     }
 
     showPassword(e) {
@@ -78,8 +88,12 @@ class RegisterForm extends PureComponent {
         try{
             this.setState({...this.state, isLoading : true})
             let account = new Account(this.state);
-            await account.register();
-            this.props.history.push('/initial');
+            await account.register(this.state.token);
+            if(!this.state.token) {
+                this.props.history.push('/initial');
+            } else {
+                this.props.history.push('/home');
+            }
             this.setState({...this.state, isLoading : false})
         }catch(err){
             this.props.showNotification(err.message);
@@ -111,14 +125,18 @@ class RegisterForm extends PureComponent {
                     placeholder="James"
                     changeContent={this.changeContent}
                 />
-                <TextInput
-                    icon={MailRuIcon}
-                    name="email"
-                    label="Email"
-                    type="text"
-                    placeholder="example@email.com"
-                    changeContent={this.changeContent}
-                />
+                {/* Admin Registered via email */}
+                {!this.state.email ?
+                    <TextInput
+                        icon={MailRuIcon}
+                        name="email"
+                        label="Email"
+                        defaultValue={this.state.email}
+                        type="text"
+                        placeholder="example@email.com"
+                        changeContent={this.changeContent}
+                    />
+                : null}
                 <TextInput
                     icon={KeyVariantIcon}
                     name="password"

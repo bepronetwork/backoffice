@@ -7,7 +7,7 @@ class ScrollToTop extends PureComponent {
     location: PropTypes.shape({
       pathname: PropTypes.string,
     }).isRequired,
-    children: PropTypes.element.isRequired,
+    children: PropTypes.array.isRequired,
   };
 
   componentDidUpdate(prevProps) {

@@ -32,7 +32,7 @@ class TabsContainer extends React.Component{
                             <Nav variant="pills" className="flex-column">
                                 {items.map( (item, index) => {
                                     return (
-                                        <Nav.Item>
+                                        <Nav.Item key={index}>
                                             <Nav.Link eventKey={`item-${index}`}>
                                                 <Row>
                                                     <Col sm={3}>
@@ -54,7 +54,7 @@ class TabsContainer extends React.Component{
                             <Tab.Content>
                                 {items.map( (item, index) => {
                                     return (
-                                        <Tab.Pane eventKey={`item-${index}`}>
+                                        <Tab.Pane eventKey={`item-${index}`} key={index}>
                                             {item.container}
                                         </Tab.Pane>
                                        

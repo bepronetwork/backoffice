@@ -2,6 +2,7 @@ import React from "react";
 import { Col, Row } from 'reactstrap';
 import PropTypes from "prop-types";
 import { CloseIcon } from 'mdi-react';
+import _ from 'lodash';
 
 class ModalContainer extends React.Component {
     static propTypes = {
@@ -30,7 +31,7 @@ class ModalContainer extends React.Component {
     };
 
     render() {
-        const { children, title } = this.props;
+        const { children, title, height, width } = this.props;
 
         return (
             <div>
@@ -49,6 +50,7 @@ class ModalContainer extends React.Component {
                     <div
                     role="presentation"
                     className="modal-content"
+                    style={{height : !_.isEmpty(height) ? Number(height) : null, width : !_.isEmpty(width) ? Number(width) : null}}
                     onClick={this.handleContentClick}
                     >
                         <Row>
