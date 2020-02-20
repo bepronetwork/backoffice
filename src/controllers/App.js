@@ -545,6 +545,26 @@ class App{
         }
     }
 
+    editFaviconCustomization = async ({topIcon}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editFaviconCustomization({   
+                params : {
+                    app : this.getId(),
+                    topIcon
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editColorsCustomization = async ({colors}) => {
         try{
             /* Cancel Withdraw Response */ 

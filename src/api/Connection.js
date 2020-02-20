@@ -464,6 +464,19 @@ class Connection {
         }
     }
 
+    editFaviconCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/topicon`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     addCurrencyWallet = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/wallet/currency/add`, {
