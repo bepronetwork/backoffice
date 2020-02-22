@@ -506,7 +506,6 @@ class App{
 
     editBannersCustomization = async ({banners, autoDisplay}) => {
         try{
-            /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editBannersCustomization({   
                 params : {
                     app : this.getId(),
@@ -527,7 +526,6 @@ class App{
 
     editLogoCustomization = async ({logo}) => {
         try{
-            /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editLogoCustomization({   
                 params : {
                     app : this.getId(),
@@ -547,11 +545,29 @@ class App{
 
     editFaviconCustomization = async ({topIcon}) => {
         try{
-            /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editFaviconCustomization({   
                 params : {
                     app : this.getId(),
                     topIcon
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editLoadingGifCustomization = async ({loadingGif}) => {
+        try{
+            let res = await ConnectionSingleton.editLoadingGifCustomization({   
+                params : {
+                    app : this.getId(),
+                    loadingGif
                 },         
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
