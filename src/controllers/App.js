@@ -504,6 +504,27 @@ class App{
         }
     }
 
+    editEmailIntegration = async ({apiKey, templateIds}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editEmailIntegration({   
+                params : {
+                    app : this.getId(),
+                    apiKey,
+                    templateIds
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editBannersCustomization = async ({banners, autoDisplay}) => {
         try{
             /* Cancel Withdraw Response */ 
