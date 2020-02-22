@@ -4,18 +4,13 @@ import TextInput from '../../../../shared/components/TextInput';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
 import { EditableTable } from '../../../../components/index.js';
+import { throwUIError } from '../../../../lib/errors';
+import _ from 'lodash';
 
 
 const defaultState = {
     apiKey: '',
-    templateIds:  [{
-            templateRegister: 'xxxxxxx',
-            templateLogin : 'xxxxxxxxxxx'
-        },
-        {
-            templateRegister: 'yyyyyyy',
-            templateLogin : 'yyyyyyy'
-        }],
+    templateIds: [],
     locked: true
 }
 
@@ -36,12 +31,12 @@ class EmailTab extends Component {
     }
 
     projectData = async (props) => {
-        const email = props.profile.getApp().getChatIntegration();
-        /*const { apiKey, templateIds } = email;
+        const email = props.profile.getApp().getEmailIntegration();
+        const { apiKey, templateIds } = email;
         this.setState({...this.state, 
             apiKey,
             templateIds
-        })*/
+        })
     }
 
     onChangeApiKey = ({name, value}) => {
@@ -50,19 +45,15 @@ class EmailTab extends Component {
 
     onChangeTemplates = async (new_data) => {
 
-        console.log(new_data)
-        /*const { profile } = this.props;
-        new_data = new_data.map(i => {
-            let pl = parseFloat(i.percentageOnLoss);
-            if(i.isNew){
-                pl = parseFloat(pl/100)
-            }
-            if(i.isActive != true){return null }
-            return {level : parseInt(i.level), percentageOnLoss : pl}
-        }).filter(el => el != null)
-        let res = await profile.getApp().editAffiliateStructure({structures : new_data});
+        const { templateIds } = this.state;
+        const { contactlist_Id, functionName, template_id } = new_data[-1];
+        const newElement = { contactlist_Id, functionName, template_id : parseInt(template_id) };
 
-        await profile.getData();*/
+        var cleanArray = _.reject(templateIds, function(el) { return el.functionName === functionName; });
+        cleanArray.push(newElement);
+
+        this.setState({...this.state, templateIds : cleanArray });
+
     }
 
     unlockField = () => {
@@ -74,11 +65,33 @@ class EmailTab extends Component {
     }
 
     confirmChanges = async () => {
-        var { profile } = this.props;
-        this.setState({...this.state, isLoading : true});
-        await profile.getApp().editEmailIntegration(this.state);
-        this.setState({...this.state, isLoading : false, locked: true})
-        this.projectData(this.props);
+        const { profile } = this.props;
+        const { apiKey, templateIds } = this.state;
+        var errorMessage = null;
+
+        try {
+            if(!apiKey){
+                errorMessage = "API Key is empty.";
+            }
+
+            let templateArr = templateIds.filter(n => n.template_id == null)
+            if(templateArr.length) {
+                errorMessage = "Template Id cannot be null.";
+            }
+
+            if(errorMessage){
+                return throwUIError(errorMessage);
+            }
+                
+            this.setState({...this.state, isLoading : true});
+            await profile.getApp().editEmailIntegration(this.state);
+            this.setState({...this.state, isLoading : false, locked: true})
+            this.projectData(this.props);
+            
+        } catch(err){
+            console.log(err);
+            throwUIError(err);
+        }
     }
 
 
@@ -121,19 +134,23 @@ class EmailTab extends Component {
                                 <EditableTable
                                     title={'E-mail integration'}
                                     onChange={this.onChangeTemplates}
-                                    compareField={'templateRegister'}
+                                    compareField={'template_id'}
                                     columns={[
-                                        { title: 'Register Template', field: 'templateRegister' },
-                                        { title: 'Login Template', field: 'templateLogin' }
+                                        { title: 'Contact List Id', field: 'contactlist_Id', type : 'numeric', editable : 'never' },
+                                        { title: 'Function Name', field: 'functionName', type: 'string', editable : 'never' },
+                                        { title: 'Template Id', field: 'template_id', type : 'numeric' }
                                     ]}
                                     rawData={templateIds}
                                     data={templateIds.map( v => {
                                         return {
-                                            templateRegister: v.templateRegister,
-                                            templateLogin: v.templateLogin
+                                            contactlist_Id: v.contactlist_Id,
+                                            functionName: v.functionName,
+                                            template_id: v.template_id
                                         }
                                     })}
                                     isEditable={!locked}
+                                    enableDelete={false}
+                                    enableAdd={false}
                                 />
                             </div>
                         </Col>

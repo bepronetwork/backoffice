@@ -101,7 +101,7 @@ class EditableTable extends React.Component{
     /* Render */
 
     render = () => {
-        const { enableUpdate=true, enableDelete=true, isEditable=true } = this.props;
+        const { enableAdd=true, enableUpdate=true, enableDelete=true, isEditable=true } = this.props;
         const { title, data, columns} = this.state;
         return (
             <Card>
@@ -113,7 +113,7 @@ class EditableTable extends React.Component{
                         data={data}
                         editable={
                             isEditable ?
-                                enableUpdate && enableDelete ?
+                                enableAdd && enableUpdate && enableDelete ?
                                 {
                                     onRowAdd: newData =>
                                         new Promise(async resolve => {
@@ -132,16 +132,7 @@ class EditableTable extends React.Component{
                                     })
                                 }
                                 :
-                                !enableUpdate && !enableDelete ?
-                                {
-                                    onRowAdd: newData =>
-                                        new Promise(async resolve => {
-                                            await this.onRowAdd(newData);
-                                            resolve();
-                                    })
-                                }
-                                :
-                                enableUpdate ?
+                                enableAdd && enableUpdate && !enableDelete ?
                                 {
                                     onRowAdd: newData =>
                                         new Promise(async resolve => {
@@ -155,13 +146,54 @@ class EditableTable extends React.Component{
                                     })
                                 }
                                 :
-                                enableDelete ?
+                                enableAdd && !enableUpdate && enableDelete ?
                                 {
                                     onRowAdd: newData =>
                                         new Promise(async resolve => {
                                             await this.onRowAdd(newData);
                                             resolve();
                                     }),
+                                    onRowDelete: newData =>
+                                        new Promise(async resolve => {
+                                            await this.onRowDelete(newData);
+                                            resolve();
+                                    })
+                                }
+                                :
+                                !enableAdd && enableUpdate && enableDelete ?
+                                {
+                                    onRowUpdate: (newData, oldData)=>
+                                        new Promise(async resolve => {
+                                            await this.onRowUpdate(newData, oldData);
+                                            resolve();
+                                    }),
+                                    onRowDelete: newData =>
+                                        new Promise(async resolve => {
+                                            await this.onRowDelete(newData);
+                                            resolve();
+                                    })
+                                }
+                                :
+                                enableAdd && !enableUpdate && !enableDelete ?
+                                {
+                                    onRowAdd: newData =>
+                                        new Promise(async resolve => {
+                                            await this.onRowAdd(newData);
+                                            resolve();
+                                    })
+                                }
+                                :
+                                !enableAdd && enableUpdate && !enableDelete ?
+                                {
+                                    onRowUpdate: (newData, oldData)=>
+                                        new Promise(async resolve => {
+                                            await this.onRowUpdate(newData, oldData);
+                                            resolve();
+                                    })
+                                }
+                                :
+                                !enableAdd && !enableUpdate && !enableDelete ?
+                                {
                                     onRowDelete: newData =>
                                         new Promise(async resolve => {
                                             await this.onRowDelete(newData);
