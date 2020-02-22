@@ -246,6 +246,10 @@ class App{
         return this.params.integrations.chat;
     }
 
+    getEmailIntegration(){
+        return this.params.integrations.mailSender;
+    }
+
     getInformation(key){
         return this.params[key];
     }
@@ -491,6 +495,27 @@ class App{
                     publicKey,
                     privateKey,
                     integration_type
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editEmailIntegration = async ({apiKey, templateIds}) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editEmailIntegration({   
+                params : {
+                    app : this.getId(),
+                    apiKey,
+                    templateIds
                 },         
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
