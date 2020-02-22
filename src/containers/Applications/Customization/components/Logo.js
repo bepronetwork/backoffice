@@ -11,10 +11,12 @@ const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
 const defaultState = {
     logoItem: null,
     faviconItem: null,
+    loadingGifItem: null,
     isLoading: false,
     locks : {
         logo : true,
-        favicon : true
+        favicon : true,
+        loadingGif : true
     }
 }
 
@@ -40,12 +42,19 @@ class Logo extends Component {
         this.setState({faviconItem : blob});
     }
 
+    onLoadingGifAddedFile = async (files) => {
+        const file = files[0];
+        let blob = await image2base64(file.preview) // you can also to use url
+        this.setState({loadingGifItem : blob});
+    }
+
     projectData = async (props) => {
-        const { logo, topIcon } = props.profile.getApp().getCustomization();
+        const { logo, topIcon, loadingGif } = props.profile.getApp().getCustomization();
 
         this.setState({...this.state, 
             logoItem : logo ? logo.id : null,
-            faviconItem : topIcon ? topIcon.id : null
+            faviconItem : topIcon ? topIcon.id : null,
+            loadingGifItem : loadingGif ? loadingGif.id : null
         })
     }
 
@@ -71,6 +80,17 @@ class Logo extends Component {
         )
     }
 
+    renderLoadingGifAddImage = () => {
+        return(
+            <div className='dropzone-image' style={{ marginBottom: 40}}>
+                <Dropzone onDrop={this.onLoadingGifAddedFile} width={200} ref={(el) => (this.dropzoneRef = el)}>
+                    <img src={upload} className='image-info' style={{marginTop : 50}}/>
+                    <p className='text-center'> Drop the Loading Image here</p>
+                </Dropzone>
+            </div>
+        )
+    }
+
     removeImage = (src, field) => {
 
         switch(field){
@@ -80,6 +100,11 @@ class Logo extends Component {
             };
             case 'favicon' : {
                 this.setState({faviconItem : null})
+                break;
+            }
+            ;
+            case 'loadingGif' : {
+                this.setState({loadingGifItem : null})
                 break;
             }
         }
@@ -93,7 +118,7 @@ class Logo extends Component {
 
         return (
             <div style={{paddingBottom : 20, height : 220, overflow : 'hidden', margin : 'auto'}}>
-                <button disabled={[field] == 'logo' ? this.state.locks.logo : [field] == 'favicon' ? this.state.locks.favicon : true} onClick={() => this.removeImage(src, field)} 
+                <button disabled={[field] == 'logo' ? this.state.locks.logo : [field] == 'favicon' ? this.state.locks.favicon : [field] == 'loadingGif' ? this.state.locks.loadingGif : true} onClick={() => this.removeImage(src, field)} 
                     style={{right : 20, top : 6}}
                     className='carousel-trash button-hover'>
                     <img src={trash} style={{width : 15, height : 15}}/>
@@ -117,7 +142,7 @@ class Logo extends Component {
 
     confirmChanges = async ({field}) => {
         var { profile } = this.props;
-        const { logoItem, faviconItem } = this.state;
+        const { logoItem, faviconItem, loadingGifItem } = this.state;
 
         this.setState({...this.state, isLoading : true});
 
@@ -135,6 +160,14 @@ class Logo extends Component {
                 }
                 await profile.getApp().editFaviconCustomization(postData);
                 break;
+            };
+            case 'loadingGif' : {
+                const postData = {
+                    loadingGif : loadingGifItem
+                }
+                console.log("ggggggggggggggg")
+                await profile.getApp().editLoadingGifCustomization(postData);
+                break;
             }
         }
   
@@ -146,7 +179,7 @@ class Logo extends Component {
     handleOnDragStart = (e) => e.preventDefault()
 
     render() {
-        const { isLoading, logoItem, faviconItem } = this.state; 
+        const { isLoading, logoItem, faviconItem, loadingGifItem } = this.state; 
         
         return (
             <Card>
@@ -199,6 +232,33 @@ class Logo extends Component {
                                             this.renderImage(faviconItem, 'favicon')
                                             : 
                                             this.renderFaviconAddImage()
+                                        }
+                                    </div>
+                                </EditLock>
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row>
+                    <Col md={6}>
+                            <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 410, marginBottom : 30, padding : 30}}>
+                                <EditLock 
+                                isLoading={isLoading} 
+                                unlockField={this.unlockField} 
+                                lockField={this.lockField} 
+                                confirmChanges={this.confirmChanges} 
+                                type={'loadingGif'} 
+                                locked={this.state.locks.loadingGif}>
+                                    <div style={{paddingBottom : 20}}>
+                                        <h5 className={"bold-text dashboard__total-stat"}>Loading Image</h5>
+                                        <h6>Upload your Loading Image</h6>
+                                    </div>
+
+                                    <div style={{margin : 'auto'}}>
+                                        {
+                                            loadingGifItem ? 
+                                            this.renderImage(loadingGifItem, 'loadingGif')
+                                            : 
+                                            this.renderLoadingGifAddImage()
                                         }
                                     </div>
                                 </EditLock>
