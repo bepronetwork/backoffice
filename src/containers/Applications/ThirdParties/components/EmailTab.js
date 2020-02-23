@@ -31,12 +31,17 @@ class EmailTab extends Component {
     }
 
     projectData = async (props) => {
-        const email = props.profile.getApp().getEmailIntegration();
-        const { apiKey, templateIds } = email;
-        this.setState({...this.state, 
-            apiKey,
-            templateIds
-        })
+        const { locked } = this.state;
+        
+        if (locked) {
+            const email = props.profile.getApp().getEmailIntegration();
+            const { apiKey, templateIds } = email;
+
+            this.setState({...this.state, 
+                apiKey,
+                templateIds
+            });
+        }
     }
 
     onChangeApiKey = ({name, value}) => {
@@ -48,7 +53,7 @@ class EmailTab extends Component {
 
         if(new_data[-1]) {
             const { contactlist_Id, functionName, template_id } = new_data[-1];
-            const newElement = { contactlist_Id, functionName, template_id : parseInt(template_id) };
+            const newElement = { contactlist_Id, functionName, template_id : template_id ? parseInt(template_id) : null };
     
             var cleanArray = _.reject(templateIds, function(el) { return el.functionName === functionName; });
             cleanArray.push(newElement);
