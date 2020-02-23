@@ -31,12 +31,17 @@ class EmailTab extends Component {
     }
 
     projectData = async (props) => {
-        const email = props.profile.getApp().getEmailIntegration();
-        const { apiKey, templateIds } = email;
-        this.setState({...this.state, 
-            apiKey,
-            templateIds
-        })
+        const { locked } = this.state;
+        
+        if (locked) {
+            const email = props.profile.getApp().getEmailIntegration();
+            const { apiKey, templateIds } = email;
+
+            this.setState({...this.state, 
+                apiKey,
+                templateIds
+            });
+        }
     }
 
     onChangeApiKey = ({name, value}) => {
