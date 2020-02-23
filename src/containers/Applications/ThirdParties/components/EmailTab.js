@@ -112,7 +112,7 @@ class EmailTab extends Component {
                         <Col md={12}>
                                 <div>
                                     <img style={{width : 150, marginTop : 10}} src={sendinblue}></img>
-                                    <p className="text-small text-left" style={{marginTop : 10}}><a href="https://www.sendinblue.com" target="_blank">https://getstream.io</a></p>
+                                    <p className="text-small text-left" style={{marginTop : 10}}><a href="https://www.sendinblue.com" target="_blank">https://www.sendinblue.com</a></p>
                                     <p className="text-left secondary-text" style={{marginTop: 40, marginBottom: 40}}> Add your API Key to integrate </p>
                                 </div>
 
