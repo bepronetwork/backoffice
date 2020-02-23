@@ -49,18 +49,13 @@ class EmailTab extends Component {
     }
 
     onChangeTemplates = async (new_data) => {
-        const { templateIds } = this.state;
+        const newArray = new_data.map(a =>
+            a.template_id
+              ? { ...a, template_id: parseInt(a.template_id) }
+              : a
+        );
 
-        if(new_data[-1]) {
-            const { contactlist_Id, functionName, template_id } = new_data[-1];
-            const newElement = { contactlist_Id, functionName, template_id : template_id ? parseInt(template_id) : null };
-    
-            var cleanArray = _.reject(templateIds, function(el) { return el.functionName === functionName; });
-            cleanArray.push(newElement);
-    
-            this.setState({...this.state, templateIds : cleanArray });
-        }
-
+        this.setState({...this.state, templateIds : newArray });
     }
 
     unlockField = () => {
@@ -141,7 +136,7 @@ class EmailTab extends Component {
                                 <EditableTable
                                     title={'E-mail integration'}
                                     onChange={this.onChangeTemplates}
-                                    compareField={'template_id'}
+                                    compareField={'functionName'}
                                     columns={[
                                         { title: 'Contact List Id', field: 'contactlist_Id', type : 'numeric', editable : 'never' },
                                         { title: 'Function Name', field: 'functionName', type: 'string', editable : 'never' },
