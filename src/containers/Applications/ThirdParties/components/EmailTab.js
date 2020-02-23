@@ -44,15 +44,17 @@ class EmailTab extends Component {
     }
 
     onChangeTemplates = async (new_data) => {
-
         const { templateIds } = this.state;
-        const { contactlist_Id, functionName, template_id } = new_data[-1];
-        const newElement = { contactlist_Id, functionName, template_id : parseInt(template_id) };
 
-        var cleanArray = _.reject(templateIds, function(el) { return el.functionName === functionName; });
-        cleanArray.push(newElement);
-
-        this.setState({...this.state, templateIds : cleanArray });
+        if(new_data[-1]) {
+            const { contactlist_Id, functionName, template_id } = new_data[-1];
+            const newElement = { contactlist_Id, functionName, template_id : parseInt(template_id) };
+    
+            var cleanArray = _.reject(templateIds, function(el) { return el.functionName === functionName; });
+            cleanArray.push(newElement);
+    
+            this.setState({...this.state, templateIds : cleanArray });
+        }
 
     }
 
@@ -112,7 +114,7 @@ class EmailTab extends Component {
                         <Col md={12}>
                                 <div>
                                     <img style={{width : 150, marginTop : 10}} src={sendinblue}></img>
-                                    <p className="text-small text-left" style={{marginTop : 10}}><a href="https://www.sendinblue.com" target="_blank">https://getstream.io</a></p>
+                                    <p className="text-small text-left" style={{marginTop : 10}}><a href="https://www.sendinblue.com" target="_blank">https://www.sendinblue.com</a></p>
                                     <p className="text-left secondary-text" style={{marginTop: 40, marginBottom: 40}}> Add your API Key to integrate </p>
                                 </div>
 
