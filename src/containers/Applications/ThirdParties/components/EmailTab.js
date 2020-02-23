@@ -44,15 +44,17 @@ class EmailTab extends Component {
     }
 
     onChangeTemplates = async (new_data) => {
-
         const { templateIds } = this.state;
-        const { contactlist_Id, functionName, template_id } = new_data[-1];
-        const newElement = { contactlist_Id, functionName, template_id : parseInt(template_id) };
 
-        var cleanArray = _.reject(templateIds, function(el) { return el.functionName === functionName; });
-        cleanArray.push(newElement);
-
-        this.setState({...this.state, templateIds : cleanArray });
+        if(new_data[-1]) {
+            const { contactlist_Id, functionName, template_id } = new_data[-1];
+            const newElement = { contactlist_Id, functionName, template_id : parseInt(template_id) };
+    
+            var cleanArray = _.reject(templateIds, function(el) { return el.functionName === functionName; });
+            cleanArray.push(newElement);
+    
+            this.setState({...this.state, templateIds : cleanArray });
+        }
 
     }
 
