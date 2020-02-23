@@ -48,7 +48,7 @@ class EmailTab extends Component {
 
         if(new_data[-1]) {
             const { contactlist_Id, functionName, template_id } = new_data[-1];
-            const newElement = { contactlist_Id, functionName, template_id : parseInt(template_id) };
+            const newElement = { contactlist_Id, functionName, template_id : template_id ? parseInt(template_id) : null };
     
             var cleanArray = _.reject(templateIds, function(el) { return el.functionName === functionName; });
             cleanArray.push(newElement);
