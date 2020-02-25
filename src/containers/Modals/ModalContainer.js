@@ -53,21 +53,21 @@ class ModalContainer extends React.Component {
                     style={{height : !_.isEmpty(height) ? Number(height) : null, width : !_.isEmpty(width) ? Number(width) : null}}
                     onClick={this.handleContentClick}
                     >
-                        <Row>
-                            <Col md={9}>
+                        <div className="flex-container">
+                            <dvi style={{flexGrow: 7}}>
                                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> {title} </p>
                                 <hr></hr>
-                            </Col>
-                            <Col md={3}>
+                            </dvi>
+                            <dvi style={{flexGrow: 3}}>
                                 <button
                                 className="button-hover modal-icon"
                                 onClick={this.handleOutsideClick}
                                 type="button"
                             >
-                                    <CloseIcon/>
+                                <CloseIcon/>
                                 </button>
-                            </Col>
-                        </Row>
+                            </dvi>
+                        </div>
                 
                     {children}
                     </div>
