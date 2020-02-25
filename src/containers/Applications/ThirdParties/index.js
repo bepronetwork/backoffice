@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { ChatTab } from './components';
+import { ChatTab, EmailTab } from './components';
 import TabsContainer from '../../../shared/components/tabs/Tabs';
-import { ChatIcon } from 'mdi-react';
+import { ChatIcon, EmailIcon } from 'mdi-react';
 
 export default class ThirdPartiesContainer extends Component {
     render() {
@@ -14,6 +14,11 @@ export default class ThirdPartiesContainer extends Component {
                                 title : 'Chat',
                                 container :  <ChatTab />,
                                 icon : <ChatIcon/>
+                            },
+                            {
+                                title : 'E-mail',
+                                container :  <EmailTab />,
+                                icon : <EmailIcon/>
                             }
                          
                         ]

@@ -438,6 +438,19 @@ class Connection {
         }
     }
 
+    editEmailIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/integrations/mailSender/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editBannersCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/banners`, {
@@ -454,6 +467,32 @@ class Connection {
     editLogoCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/logo`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editFaviconCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/topicon`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editLoadingGifCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/loadinggif`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
