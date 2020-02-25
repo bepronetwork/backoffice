@@ -82,7 +82,7 @@ class TopbarLanguage extends PureComponent {
           >
             <GbLng />
           </button>
-          <button
+          {/* <button
             className="topbar__language-btn"
             type="button"
             onClick={() => this.changeLanguage('fr')}
@@ -95,7 +95,7 @@ class TopbarLanguage extends PureComponent {
             onClick={() => this.changeLanguage('de')}
           >
             <DeLng />
-          </button>
+          </button> */}
         </Collapse>
       </div>
     );
