@@ -34,14 +34,14 @@ class LiquidityInfo extends PureComponent {
         return (
             <Col md={12} lg={12} xl={12} >
                 <Card>
-                    <Row>
-                        <Col lg={6}>
-                            <h4 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>Application</h4>
-                            <p className="">
+                    <div className="flex-container">
+                        <div style={{marginLeft: 0, flexGrow: 5}}>
+                            <h4 style={{marginTop : 20, textAlign:'left'}} className={"bold-text dashboard__total-stat"}>Application</h4>
+                            <p style={{textAlign:'left'}}>
                                 Current Liquidity
                             </p>
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                 </Card>
             </Col>
         );

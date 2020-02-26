@@ -35,7 +35,7 @@ class LiquidityInfo extends PureComponent {
     render() {
         
         return (
-            <Col md={12} xl={12} lg={12} xs={12}>
+            <div style={{flexGrow: 10}}>
                 <Card>
                     <CardBody className="dashboard__card-widget">
                         <div className="dashboard__visitors-chart">
@@ -48,7 +48,7 @@ class LiquidityInfo extends PureComponent {
                         </div>
                     </CardBody>
                 </Card>
-            </Col>
+            </div>
         );
     }
 }

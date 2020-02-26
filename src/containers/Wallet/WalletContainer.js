@@ -31,30 +31,30 @@ class WalletContainer extends React.Component{
                                 title : 'My Wallet',
                                 container : (
                                     <>
-                                        <Row>
-                                            <Col lg={3}>
+                                        <div className="flex-container">
+                                            <div style={{flexGrow: 2}}>
                                                 <LiquidityInfo/>
-                                            </Col>
-                                        </Row> 
-                                        <Row>
+                                            </div>
+                                        </div> 
+                                        <div className="flex-container">
                                             {wallets && wallets.length > 0 ? 
                                                 wallets.map( w => {
                                                     return (
-                                                        <Col md={4}>
+                                                        <div style={{maxWidth: '300px',  flexGrow: 3}}>
                                                             <LiquidityWalletWidget data={{
                                                                 wallet : w,
                                                                 app : this.props.profile.getApp()
                                                             }} {...this.props}/>
-                                                        </Col>
+                                                        </div>
                                                     )
                                                 })
-                                            : 
+                                            :
                                             <div>
                                                 <h4>You have no Currencies enabled currently</h4>
                                                 <img src={image} style={{width :'30%', marginTop : 20}}/>
                                             </div>
                                             }
-                                        </Row>
+                                        </div>
                                     </>
                                 ),
                                 icon : <WalletIcon/>
