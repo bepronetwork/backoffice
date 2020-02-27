@@ -63,18 +63,18 @@ class LiquidityWalletWidget extends PureComponent {
                     <button className='clean_button' onClick={ () => this.goToWalletView(wallet)}>
                         <CardBody className="dashboard__card-widget dashboard_borderTop">
                             <Row>
-                                <Col lg={3}>
+                                <Col lg={4}>
                                     <img style={{borderRadius : 0, position: "initial"}} className="company-logo-card" src={image} alt="avatar" />
                                     <div className="dashboard__visitors-chart" style={{ marginTop: 20}}>
                                         <p className="dashboard__visitors-chart-title" style={{fontSize : 25}}> {this.state.ticker} </p>
                                     </div>
                                 </Col>
-                                <Col lg={9}>
+                                <Col lg={8}>
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-number-second" style={
                                             {color : '#646777'}
                                         }><AnimationNumber decimals={6} number={this.state.totalLiquidity}/> <span> {this.state.ticker}</span></p>
-                                </div>
+                                    </div>
                                 
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-title">{new String(this.state.platformBlockchain).toUpperCase()} <span> Available </span></p>

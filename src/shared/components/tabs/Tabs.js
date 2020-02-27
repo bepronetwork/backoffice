@@ -7,10 +7,7 @@ import { compose } from 'lodash/fp'
 import _ from 'lodash';
 import { Tab, Nav } from 'react-bootstrap';
 
-
-const defaultState = {
-    
-}
+const defaultState = {}
 
 class TabsContainer extends React.Component{
 
@@ -18,7 +15,6 @@ class TabsContainer extends React.Component{
         super(props);
         this.state = defaultState;
     }
-    
 
     render = () => {
 
@@ -28,38 +24,33 @@ class TabsContainer extends React.Component{
             <div>
                 <Tab.Container id="left-tabs-example" defaultActiveKey="item-0">
                     <Row>
-                        <Col sm={2}>
+                        <Col sm={3}>
                             <Nav variant="pills" className="flex-column">
                                 {items.map( (item, index) => {
                                     return (
-                                        <Nav.Item key={index}>
-                                            <Nav.Link eventKey={`item-${index}`}>
-                                                <Row>
-                                                    <Col sm={3}>
-                                                        {item.icon}
-                                                    </Col>
-                                                    <Col sm={9}>
-                                                        <div style={{marginTop : 3}}>
-                                                            {item.title}
-                                                        </div>
-                                                    </Col>
-                                                </Row>
-                                            </Nav.Link>
-                                        </Nav.Item>
+                                        <Row>
+                                            <Col sm={12} style={{maxWidth: `220px`, minWidth: `190px`}}>
+                                                <Nav.Item key={index}>
+                                                    <Nav.Link eventKey={`item-${index}`}>
+                                                        {item.icon} {item.title}
+                                                    </Nav.Link>
+                                                </Nav.Item>
+                                            </Col>
+                                        </Row>
                                     )
-                                })} 
+                                })}
                             </Nav>
                         </Col>
-                        <Col sm={10}>
+                        <p></p>
+                        <Col sm={9}>
                             <Tab.Content>
                                 {items.map( (item, index) => {
                                     return (
                                         <Tab.Pane eventKey={`item-${index}`} key={index}>
                                             {item.container}
                                         </Tab.Pane>
-                                       
                                     )
-                                })} 
+                                })}
                             </Tab.Content>
                         </Col>
                     </Row>

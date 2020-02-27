@@ -28,17 +28,17 @@ class CurrencyStoreContainer extends PureComponent {
         return (
             <div>
                 <CardBody className="dashboard__card-widget box-content">
-                    <Row>
-                        <Col lg={5} >  
+                    <div className="flex-container">
+                        <div style={{flexGrow: 5}} >
                             <img className='application__game__image' src={image}/>
-                        </Col>
-                        <Col lg={7} >
+                        </div>
+                        <div style={{flexGrow: 5}} >
                             <div className="dashboard__visitors-chart text-left">
                                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 25}}> {ticker} </p>
                                 <p className="text-left secondary-text"> {name} </p>
                             </div>
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                     <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.onClick()} >
                         {   
                             isLoading ?

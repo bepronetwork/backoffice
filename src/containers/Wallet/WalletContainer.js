@@ -32,7 +32,7 @@ class WalletContainer extends React.Component{
                                 container : (
                                     <>
                                         <Row>
-                                            <Col lg={3}>
+                                            <Col lg={6}>
                                                 <LiquidityInfo/>
                                             </Col>
                                         </Row> 
@@ -40,7 +40,7 @@ class WalletContainer extends React.Component{
                                             {wallets && wallets.length > 0 ? 
                                                 wallets.map( w => {
                                                     return (
-                                                        <Col md={4}>
+                                                        <Col md={6}>
                                                             <LiquidityWalletWidget data={{
                                                                 wallet : w,
                                                                 app : this.props.profile.getApp()

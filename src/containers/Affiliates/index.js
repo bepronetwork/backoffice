@@ -72,7 +72,7 @@ class AffiliatesContainer extends React.Component{
         return (
             <Container className="dashboard">
                 <Row>
-                    <Col md={4}>
+                    <Col md={5}>
                         <InfoNumericCard 
                             title={'Affiliate Cut'}
                             subtitle={'How much affiliates make on % of house wins'}
@@ -84,7 +84,7 @@ class AffiliatesContainer extends React.Component{
                   
                 </Row>
                 <Row>
-                    <Col md={5}>
+                    <Col md={7}>
                         <EditableTable
                             title={'Affiliate Structure'}
                             onChange={this.onChange}

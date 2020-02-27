@@ -59,7 +59,7 @@ class LiquidityWalletWidget extends PureComponent {
                             <Col lg={4}>
                                 <img style={{borderRadius : 0}} className="company-logo-card" src={Ava} alt="avatar" />
                             </Col>
-                            <Col lg={8}>
+                            <Col lg={8} style={{minWidth: `140px`}}>
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={{color : '#646777'}}>
                                         <AnimationNumber decimals={6} number={this.state.playBalance}/> 
@@ -70,7 +70,6 @@ class LiquidityWalletWidget extends PureComponent {
                                     <p className="dashboard__visitors-chart-title"> {this.state.ticker} <span> Available </span></p>
                                 </div>
                             </Col>
-                           
                         </Row>
                     </CardBody>
                 </Card>
