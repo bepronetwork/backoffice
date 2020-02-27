@@ -8,6 +8,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { compareIDS } from '../../../../lib/string';
 import { emptyObject } from '../../../../lib/misc';
+import {formatCurrency} from '../../../../utils/numberFormatation';
+
 const Ava = `${process.env.PUBLIC_URL}/img/dashboard/euro.png`;
 
 
@@ -62,7 +64,7 @@ class LiquidityWalletWidget extends PureComponent {
                             <Col lg={8} style={{minWidth: `140px`}}>
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={{color : '#646777'}}>
-                                        <AnimationNumber decimals={6} number={this.state.playBalance}/> 
+                                        <AnimationNumber decimals={6} number={ formatCurrency(this.state.playBalance)}/> 
                                         <span> {this.state.ticker}</span>
                                     </p>
                                 </div>

@@ -78,7 +78,7 @@ class Topbar extends React.Component {
                     <TopBarWithdrawNotice/>
                     <TopbarNotification />
                     <TopbarProfile />
-                    <TopbarLanguage />
+                    {/* <TopbarLanguage /> */}
                 </div>
                 </div>
             </div>

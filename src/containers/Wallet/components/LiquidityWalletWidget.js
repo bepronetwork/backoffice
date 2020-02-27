@@ -7,6 +7,8 @@ import { ETHEREUM_NET_DEFAULT } from '../../../config/apiConfig';
 import store from '../../App/store';
 import { setWalletView } from '../../../redux/actions/walletReducer';
 
+import {formatCurrency} from '../../../utils/numberFormatation';
+
 const defaultProps = {
     ticker : 'N/A',
     platformBlockchain : 'N/A',
@@ -73,7 +75,7 @@ class LiquidityWalletWidget extends PureComponent {
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-number-second" style={
                                             {color : '#646777'}
-                                        }><AnimationNumber decimals={6} number={this.state.totalLiquidity}/> <span> {this.state.ticker}</span></p>
+                                        }><AnimationNumber decimals={6} number={ this.state.totalLiquidity}/> <span> {this.state.ticker}</span></p>
                                     </div>
                                 
                                     <div className="dashboard__visitors-chart">
