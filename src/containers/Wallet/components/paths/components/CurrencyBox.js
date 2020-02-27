@@ -75,17 +75,14 @@ class CurrencyBox extends PureComponent {
                             <hr></hr>
                         </div>
                         <Row>
-                            <Col lg={3}>
-                                <img style={{borderRadius : 0}} className="company-logo-card" src={image} alt="avatar" />
-                            </Col>
-                            <Col lg={9}>
+                            <Col lg={12}>
                                 <div className="dashboard__visitors-chart">
                                     <Row>
                                         <Col lg={6} style={{marginTop : 30}}>
                                             <p className="dashboard__visitors-chart-number-second" style={
                                                 {color : '#646777'}
                                             }>
-                                            {this.state.ticker}
+                                            <img style={{borderRadius : 0}} className="company-logo-card" src={image} alt="avatar" /> {this.state.ticker}
                                             </p>
                                         </Col>
                                         <Col lg={6}>
@@ -95,7 +92,7 @@ class CurrencyBox extends PureComponent {
                                                 </p>
                                             </a>
                                         </Col>
-                                    </Row>   
+                                    </Row>
                                 </div>
                             </Col>
                             <div className='container' style={{textAlign : 'center'}}>

@@ -24,12 +24,12 @@ class TabsContainer extends React.Component{
             <div>
                 <Tab.Container id="left-tabs-example" defaultActiveKey="item-0">
                     <Row>
-                        <Col sm={3}>
+                        <Col md={2}>
                             <Nav variant="pills" className="flex-column">
                                 {items.map( (item, index) => {
                                     return (
                                         <Row>
-                                            <Col sm={12} style={{maxWidth: `220px`, minWidth: `190px`}}>
+                                            <Col md={12} style={{maxWidth: `220px`, minWidth: `190px`}}>
                                                 <Nav.Item key={index}>
                                                     <Nav.Link eventKey={`item-${index}`}>
                                                         {item.icon} {item.title}
@@ -41,8 +41,7 @@ class TabsContainer extends React.Component{
                                 })}
                             </Nav>
                         </Col>
-                        <p></p>
-                        <Col sm={9}>
+                        <Col md={10}>
                             <Tab.Content>
                                 {items.map( (item, index) => {
                                     return (

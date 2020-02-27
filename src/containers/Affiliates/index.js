@@ -86,7 +86,7 @@ class AffiliatesContainer extends React.Component{
                 <Row>
                     <Col md={7}>
                         <EditableTable
-                            title={'Affiliate Structure'}
+                            title={''}
                             onChange={this.onChange}
                             compareField={'level'}
                             columns={[
