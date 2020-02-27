@@ -13,6 +13,9 @@ import ReciptBox from './ReciptBox';
 import TextInput from '../../../../../shared/components/TextInput';
 import Numbers from '../../../../../services/numbers';
 import { ETHEREUM_NET_DEFAULT } from '../../../../../config/apiConfig';
+import {formatCurrency} from '../../../../../utils/numberFormatation';
+
+
 const Ava = `${process.env.PUBLIC_URL}/img/dashboard/ethereum.png`;
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -67,7 +70,7 @@ class CurrencyBox extends PureComponent {
                     <CardBody className="dashboard__card-widget" >
                         <div  className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title" style={{fontSize : 20, textAlign : 'center'}}> 
-                                House Liquidity <span style={{fontSize : 20}}> {this.state.playBalance}</span> {this.state.ticker}
+                                House Liquidity <span style={{fontSize : 20}}> {formatCurrency(parseFloat(this.state.playBalance))}</span> {this.state.ticker}
                             </p>
                             <hr></hr>
                         </div>

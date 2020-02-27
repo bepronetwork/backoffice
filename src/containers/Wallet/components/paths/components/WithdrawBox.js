@@ -8,6 +8,8 @@ import { compose } from 'lodash/fp';
 import TextInput from '../../../../../shared/components/TextInput';
 import { ETHEREUM_NET_DEFAULT } from '../../../../../config/apiConfig';
 import _ from 'lodash';
+import {formatCurrency} from '../../../../../utils/numberFormatation';
+
 const loading = `${process.env.PUBLIC_URL}/img/loading-dots.gif`;
 
 
@@ -100,7 +102,7 @@ class WithdrawBox extends PureComponent {
                 <CardBody className="dashboard__card-widget" >
                         <div  className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title" style={{fontSize : 20, textAlign : 'center'}}> 
-                                House Liquidity <span style={{fontSize : 20}}> {playBalance}</span> {ticker}
+                                House Liquidity <span style={{fontSize : 20}}> {formatCurrency(parseFloat(playBalance))}</span> {ticker}
                             </p>
                             <hr></hr>
                         </div>

@@ -69,7 +69,7 @@ class NoDataContainer extends PureComponent {
                         <Col lg={12}>
                         
                             <CardBody className="dashboard__card-widget">
-                                <Row>
+                                <Row style={{align: 'center'}}>
                                     <Col lg={4}>
                                         <img style={{width : '80%', margin : 'auto'}} src={Ava} alt="avatar" />
                                     </Col>
@@ -79,10 +79,10 @@ class NoDataContainer extends PureComponent {
                                             </h4>
                                             <div className="progress-wrap">
                                                 <Progress value={this.state.progress} style={{width : 100}} />
-                                            </div>                                        
+                                            </div>
                                         <Row>
                                             <Col lg={12}>
-                                                <button disabled={this.state.isDeployed} style={{margin : 'auto', marginBottom  : 30,  maxWidth : 400}} className="btn btn-primary account__btn" onClick={() => this.goToApplication()} > 
+                                                <button disabled={this.state.isDeployed} className="btn btn-primary account__btn account_btn_app" onClick={() => this.goToApplication()} > 
                                                     Add Games & Customize your platform!
                                                 </button>
                                             </Col>

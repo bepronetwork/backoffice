@@ -22,19 +22,20 @@ class AddressBox extends PureComponent {
 
     }
 
-    render() {        
+    render() {
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card style={{margin : 'auto', paddingBottom : 0}}>
                     <p className="inside__card__text">
-                        Deposit Address                        
+                        Deposit Address
                     </p>
                     <div className="form__form-group">
-                       
+
                         <div className="input__card" style={{display : 'block'}}>
                             <Row>
-                                <Col lg={9}> 
+                                <Col lg={9}>
                                     <input
+                                    style={{width: `100%`}}
                                     value={this.props.value}
                                     className={''}
                                     name="address"
