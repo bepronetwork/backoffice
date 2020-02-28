@@ -33,7 +33,7 @@ class AddressBox extends PureComponent {
 
                         <div className="input__card" style={{display : 'block'}}>
                             <Row>
-                                <Col lg={9}>
+                                <Col lg={10}>
                                     <input
                                     style={{width: `100%`}}
                                     value={this.props.value}
@@ -44,10 +44,10 @@ class AddressBox extends PureComponent {
                                     placeholder="Address"
                                 />
                                 </Col>
-                                <Col lg={3}> 
+                                <Col lg={2}>
                                     <button
                                         className={'form__form-group-button'}
-                                        onClick={e => this.copyAddress(e)}
+                                        onClick={e => { console.log(e); return this.copyAddress(e)}}
                                         >
                                         <ContentPasteIcon />
                                     </button>

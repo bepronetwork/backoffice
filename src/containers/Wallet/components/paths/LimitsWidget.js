@@ -41,20 +41,31 @@ class LimitsWidget extends React.Component{
     componentWillReceiveProps(props){
         this.projectData(props);
     }
-    
     projectData = async (props) => {
         const { wallet } = props;
-
         let currencyTicker = wallet.currency.ticker;
         let maxDeposit = wallet.max_deposit;
         let maxWithdrawal = wallet.max_withdraw;
 
-        this.setState({...this.state, 
+        this.setState({...this.state,
             currencyTicker,
             maxDeposit,
             maxWithdrawal
         });
-        
+
+        await this.props.profile.getApp().getSummary();
+
+        wallet = (this.props.profile.getApp().getSummaryData('walletSimple')).data[0];
+
+        currencyTicker = wallet.currency.ticker;
+        maxDeposit = wallet.max_deposit;
+        maxWithdrawal = wallet.max_withdraw;
+
+        this.setState({...this.state,
+            currencyTicker,
+            maxDeposit,
+            maxWithdrawal
+        });
     }
 
     onChange = ({type, value}) => {
@@ -71,7 +82,10 @@ class LimitsWidget extends React.Component{
 
     confirmChanges = async ({field}) => {
         var { profile, wallet } = this.props;
-        this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : true}})
+        this.setState({
+            ...this.state,
+            isLoading : {...this.state.isLoading, [field] : true}
+        })
         switch(field){
             case 'maxDeposit' : {
                 await profile.getApp().changeMaxDeposit({ amount : this.state[`new_${field}`], wallet_id : wallet._id });
@@ -82,9 +96,12 @@ class LimitsWidget extends React.Component{
                 break;
             };
         }
-        this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : false}})
         this.projectData(this.props);
-        this.state.locks[field] = true; 
+        this.setState({
+            ...this.state,
+            isLoading : {...this.state.isLoading, [field] : false}
+        });
+        this.state.locks[field] = true;
     }
 
     render = () => {
