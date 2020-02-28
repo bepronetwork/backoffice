@@ -11,14 +11,8 @@ import DateInput from '../../../../../shared/components/DateInput';
 
 class LimitsBox extends React.Component{
 
-    // eslint-disable-next-line no-useless-constructor
     constructor(props){
         super(props)
-        // currencyTicker = "Paulo";
-        // this.setState({
-        //     ...this.state,
-        //     currencyTicker: "paulo"
-        // });
     }
 
     
@@ -47,10 +41,7 @@ class LimitsBox extends React.Component{
             inputType = 'text'
         }
 
-        // setTimeout(() => {
-        //     currencyTicker = 100;
-        //     console.log(currencyTicker)
-        // }, 10000);
+        
 
         return (
             <Card>
@@ -60,8 +51,9 @@ class LimitsBox extends React.Component{
                             <img className='application__game__image' src={image}/>
                             <hr></hr>
                                 <h5 className=""> {title} {
-                                    (this.props.currencyTicker ? `(${this.props.currencyTicker})` : null)
+                                    (currencyTicker ? `(${currencyTicker})` : null)
                                 } </h5>
+
                             <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.props.value}</h3>
                         </Col>
                         <Col md={8}>
