@@ -61,8 +61,8 @@ class LimitsWidget extends React.Component{
         }
 
         await props.profile.getApp().getSummary();
-        await props.profile.update();
         wallet = props.profile.getApp().getSummaryData('walletSimple').data[0];
+        await props.profile.update();
         console.log(wallet);
         currencyTicker = wallet.currency.ticker;
         maxDeposit = wallet.max_deposit;
@@ -165,7 +165,7 @@ class LimitsWidget extends React.Component{
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        wallet: state.wallet
+        wallet: (state.wallet.currency) ? state.wallet : state.profile.getApp().getSummaryData('walletSimple').data[0]
     };
 }
 

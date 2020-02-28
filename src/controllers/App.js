@@ -730,6 +730,7 @@ class App{
                 },
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>", res);
             let {
                 status
             } = res.data;
