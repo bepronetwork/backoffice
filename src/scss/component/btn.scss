@@ -478,7 +478,10 @@ button:focus, button:active {
 }
 
 .game-container{
-    width : 350px !important;
+    width : 100% !important;
+    height: 100% !important;
+    min-width: 200px;
+    max-width: 300px;
 }
 
 .text-left{

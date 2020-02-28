@@ -30,22 +30,22 @@ class GameInfo extends PureComponent {
         let game_image = game_images[new String(game.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
         return (
-            <Col md={12} xl={12} lg={12} xs={12}>
-                <button className='clean_button' onClick={ () => this.goToGamePage()}>
+            <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`}}>
+                <button className='clean_button' onClick={ () => this.goToGamePage()} style={{width: `100%`, height: `100%`}}>
                     <Card className='game-container'>
                         <CardBody className="dashboard__card-widget">
                             <Row>
                                 <Col lg={8} >
                                     <div className="dashboard__visitors-chart text-left">
-                                        <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 25}}> {game.name} </p>
+                                        <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 20}}> {game.name} </p>
                                     </div>
                                     <div className="dashboard__visitors-chart text-left" style={{marginTop : 10}}>
                                         <p className="application__span" >Edge</p>
                                         <h4><AnimationNumber number={game.edge}/>%</h4>
                                     </div>
                                 </Col>
-                                <Col lg={4} >  
-                                    <img className='application__game__image' src={image}/>
+                                <Col lg={4} >
+                                    <img className='application__game__image' style={{width: `50px`}} src={image}/>
                                 </Col>
                             </Row>
                         

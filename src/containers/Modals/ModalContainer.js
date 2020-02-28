@@ -11,7 +11,7 @@ class ModalContainer extends React.Component {
     };
 
     componentDidMount() {
-        document.documentElement.style.overflow = "hidden";
+        document.documentElement.style.overflow = "scroll";
         document.documentElement.style.width = `calc(100%)`;
     }
 
@@ -31,7 +31,7 @@ class ModalContainer extends React.Component {
     };
 
     render() {
-        const { children, title, height, width } = this.props;
+        const { children, title, height, width, overflowY } = this.props;
 
         return (
             <div>
@@ -50,24 +50,28 @@ class ModalContainer extends React.Component {
                     <div
                     role="presentation"
                     className="modal-content"
-                    style={{height : !_.isEmpty(height) ? Number(height) : null, width : !_.isEmpty(width) ? Number(width) : null}}
+                    style={{
+                        height      : !_.isEmpty(height) ? Number(height) : null,
+                        width       : !_.isEmpty(width) ? Number(width)   : null,
+                        overflowY   : !_.isEmpty(overflowY) ? overflowY   : null
+                    }}
                     onClick={this.handleContentClick}
                     >
-                        <Row>
-                            <Col md={9}>
+                        <div className="flex-container">
+                            <dvi style={{flexGrow: 7}}>
                                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> {title} </p>
                                 <hr></hr>
-                            </Col>
-                            <Col md={3}>
+                            </dvi>
+                            <dvi style={{flexGrow: 3}}>
                                 <button
                                 className="button-hover modal-icon"
                                 onClick={this.handleOutsideClick}
                                 type="button"
                             >
-                                    <CloseIcon/>
+                                <CloseIcon/>
                                 </button>
-                            </Col>
-                        </Row>
+                            </dvi>
+                        </div>
                 
                     {children}
                     </div>

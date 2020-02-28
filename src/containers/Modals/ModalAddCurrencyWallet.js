@@ -172,7 +172,7 @@ class ModalAddCurrencyWallet extends React.Component{
         if(!isActive){return null};
 
         return (
-            <ModalContainer onClose={this.closeModal.bind(this)} title={'Activate your wallet'} height="700" width="800">
+            <ModalContainer overflowY="scroll" onClose={this.closeModal.bind(this)} title={'Activate your wallet'} height="500" width="800">
                 <Container className="dashboard">
                     <h5 style={{marginTop : -20, marginBottom : 20, textAlign : "left"}}>
                         Use the keycard that was just downloaded to your computer to activate your wallet. 

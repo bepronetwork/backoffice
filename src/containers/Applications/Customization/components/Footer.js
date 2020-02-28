@@ -77,10 +77,12 @@ class Footer extends Component {
         return (
             <Card>
                 <CardBody>
-                    <Row>
-                        <Col md={6}>
+                    {/* <Row> */}
+                        
+                        <Row>
+                            <h3 style={{padding: `20px`}}>Support Links</h3>
                             <EditableTable
-                                title={'Support Links'}
+                                title={''}
                                 onChange={ (data) => this.onChange(data, 'supportLinks')}
                                 compareField={'name'}
                                 columns={[
@@ -90,10 +92,11 @@ class Footer extends Component {
                                 rawData={supportLinks}
                                 data={supportLinks}
                             />
-                        </Col>
-                        <Col md={6}>
+                        </Row>
+                        <h3 style={{padding: `20px`}}>Community Links</h3>
+                        <Row style={{top: `20px`}}>
                             <EditableTable
-                                title={'Community Links'}
+                                title={''}
                                 onChange={ (data) => this.onChange(data, 'communityLinks')}
                                 compareField={'name'}
                                 columns={[
@@ -103,8 +106,8 @@ class Footer extends Component {
                                 rawData={communityLinks}
                                 data={communityLinks}
                             />
-                        </Col>
-                    </Row>
+                        </Row>
+                    {/* </Row> */}
                 </CardBody>
             </Card>
             )
