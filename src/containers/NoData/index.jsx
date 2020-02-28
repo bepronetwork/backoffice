@@ -82,7 +82,7 @@ class NoDataContainer extends PureComponent {
                                             </div>
                                         <Row>
                                             <Col lg={12}>
-                                                <button disabled={this.state.isDeployed} className="btn btn-primary account__btn account_btn_app" onClick={() => this.goToApplication()} > 
+                                                <button disabled={this.state.isDeployed} className="btn btn-primary account_btn_app" onClick={() => this.goToApplication()} > 
                                                     Add Games & Customize your platform!
                                                 </button>
                                             </Col>
