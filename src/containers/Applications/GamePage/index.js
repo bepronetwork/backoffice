@@ -56,7 +56,7 @@ class GamePageContainer extends React.Component{
     projectData = (props) => {
         let game = this.getUpdatedGame({props, game : props.game});
         if(!game){return null}
-        let { edge, name, profit, _id, betsAmount, betAmount, fees, tableLimit } = game;
+        let { edge, name, profit, _id, betsAmount, betAmount, fees, tableLimit, image_url } = game;
         let currencyTicker = props.profile.getApp().getCurrencyTicker();
         this.setState({...this.state, 
             edge,
@@ -67,7 +67,8 @@ class GamePageContainer extends React.Component{
             id : _id,
             turnover : Numbers.toFloat(betsAmount),
             betAmount : Numbers.toFloat(betAmount), 
-            fees : Numbers.toFloat(fees)
+            fees : Numbers.toFloat(fees),
+            imageItem : image_url
         })
     }
 
@@ -89,7 +90,7 @@ class GamePageContainer extends React.Component{
     }
 
     removeImage = () => {
-        this.setState({image : null})
+        this.setState({imageItem : null})
     }
 
     renderImage = (src, field) => {
@@ -140,9 +141,10 @@ class GamePageContainer extends React.Component{
             }
             case 'image' : {
                 const postData = {
-                    image : imageItem
+                    image_url : imageItem,
+                    game : this.state.id
                 }
-                //await profile.getApp().editLogoCustomization(postData);
+                await profile.getApp().editGameImage(postData);
                 break;
             };
         }
@@ -280,7 +282,7 @@ class GamePageContainer extends React.Component{
                                             <div style={{margin : 'auto'}}>
                                                 {
                                                     imageItem ? 
-                                                    this.renderImage()
+                                                    this.renderImage(imageItem)
                                                     :
                                                     this.renderAddImage()
                                                 }
