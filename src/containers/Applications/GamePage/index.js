@@ -1,16 +1,17 @@
 import React from 'react';
 import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
-import { translate } from 'react-i18next';
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import { compose } from 'lodash/fp'
 import _ from 'lodash';
+import Dropzone from 'react-dropzone';
 import Slider from './components/Slider';
 import Numbers from '../../../services/numbers';
 import game_images from '../components/game_images';
 import { ArrowExpandRightIcon, LockIcon, BankIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
+const image2base64 = require('image-to-base64');
+const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
+const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
 const edge = `${process.env.PUBLIC_URL}/img/dashboard/edge.png`;
 const tableLimit = `${process.env.PUBLIC_URL}/img/dashboard/tableLimit.png`;
 
@@ -23,9 +24,11 @@ const defaultState = {
     currencyTicker : 'N/A',
     new_edge : 0,
     id : 'N/A',
+    imageItem: null,
     locks : {
         tableLimit : true,
-        edge : true
+        edge : true,
+        image : true
 
     }
 }
@@ -53,7 +56,7 @@ class GamePageContainer extends React.Component{
     projectData = (props) => {
         let game = this.getUpdatedGame({props, game : props.game});
         if(!game){return null}
-        let { edge, name, profit, _id, betsAmount, betAmount, fees, tableLimit } = game;
+        let { edge, name, profit, _id, betsAmount, betAmount, fees, tableLimit, image_url } = game;
         let currencyTicker = props.profile.getApp().getCurrencyTicker();
         this.setState({...this.state, 
             edge,
@@ -64,8 +67,47 @@ class GamePageContainer extends React.Component{
             id : _id,
             turnover : Numbers.toFloat(betsAmount),
             betAmount : Numbers.toFloat(betAmount), 
-            fees : Numbers.toFloat(fees)
+            fees : Numbers.toFloat(fees),
+            imageItem : image_url
         })
+    }
+
+    onAddedFile = async (files) => {
+        const file = files[0];
+        let blob = await image2base64(file.preview) // you can also to use url
+        this.setState({imageItem : blob});
+    }
+
+    renderAddImage = () => {
+        return(
+            <div className='dropzone-image'>
+                <Dropzone onDrop={this.onAddedFile} ref={(el) => (this.dropzoneRef = el)} style={{height:120, borderWidth: 2, borderolor: "#666666", borderStyle: "dashed", borderRadius: 5}}>
+                    <img src={upload} className='image-info' style={{marginTop : 20, marginBottom : 20}}/>
+                    <p className='text-center'> Drop image here</p>
+                </Dropzone>
+            </div>
+        )
+    }
+
+    removeImage = () => {
+        this.setState({imageItem : null})
+    }
+
+    renderImage = (src, field) => {
+        if(!src.includes("https")){
+            src = "data:image;base64," + src;
+        }
+
+        return (
+            <div style={{paddingBottom : 20, height : 220, overflow : 'hidden', margin : 'auto'}}>
+                <button disabled={[field] == this.state.locks.image} onClick={() => this.removeImage(src, field)} 
+                    style={{right : 20, top : 6}}
+                    className='carousel-trash button-hover'>
+                    <img src={trash} style={{width : 15, height : 15}}/>
+                </button>
+                <img src={src} onDragStart={this.handleOnDragStart}/>
+            </div>
+        )
     }
 
     onChange = ({type, value}) => {
@@ -77,11 +119,15 @@ class GamePageContainer extends React.Component{
     }
 
     lockField = ({field}) => {
-        this.setState({...this.state, locks : {...this.state.locks, [field] : true }})
+        this.setState({...this.state, locks : {...this.state.locks, [field] : true }, isLoading : false})
     }
 
     confirmChanges = async ({field}) => {
         var { profile } = this.props;
+        const { imageItem } = this.state;
+
+        this.setState({...this.state, isLoading : true});
+
         switch(field){
             case 'edge' : {
                 // Change Edge
@@ -93,6 +139,14 @@ class GamePageContainer extends React.Component{
                 let res = await profile.getApp().editTableLimit({game : this.state.id, tableLimit : this.state[`new_${field}`]});
                 break;
             }
+            case 'image' : {
+                const postData = {
+                    image_url : imageItem,
+                    game : this.state.id
+                }
+                await profile.getApp().editGameImage(postData);
+                break;
+            };
         }
         await profile.setGameDataAsync();
         this.projectData(this.props);
@@ -102,6 +156,7 @@ class GamePageContainer extends React.Component{
 
 
     render = () => {
+        const { isLoading, imageItem } = this.state; 
         let game_image = game_images[new String(this.state.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
 
@@ -206,7 +261,37 @@ class GamePageContainer extends React.Component{
                         </Card>
                     </Col>
                     <Col lg={4}>
-                      
+                        <Card>
+                            <CardBody>
+                                <Row>
+                                    <Col md={4}>
+                                        <div style={{paddingBottom : 20}}>
+                                            <h5 className={"bold-text dashboard__total-stat"}>Image</h5>
+                                            <h6>Upload game image</h6>
+                                        </div>
+                                    </Col>
+                                    <Col md={8}>
+                                        <EditLock 
+                                        isLoading={isLoading} 
+                                        unlockField={this.unlockField} 
+                                        lockField={this.lockField} 
+                                        confirmChanges={this.confirmChanges} 
+                                        type={'image'} 
+                                        locked={this.state.locks.image}>
+                                        
+                                            <div style={{margin : 'auto'}}>
+                                                {
+                                                    imageItem ? 
+                                                    this.renderImage(imageItem)
+                                                    :
+                                                    this.renderAddImage()
+                                                }
+                                            </div>
+                                        </EditLock>
+                                    </Col>
+                                </Row>
+                            </CardBody>
+                        </Card>
                     </Col>
                 </Row>
           </Container>
