@@ -9,6 +9,7 @@ import game_images from '../components/game_images';
 import { ArrowExpandRightIcon, LockIcon, BankIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
+import EditLock from '../../Shared/EditLock';
 const image2base64 = require('image-to-base64');
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
@@ -30,6 +31,11 @@ const defaultState = {
         edge : true,
         image : true
 
+    },
+    isLoading : {
+        edge : false,
+        tableLimit : false,
+        image : false
     }
 }
 
@@ -99,8 +105,8 @@ class GamePageContainer extends React.Component{
         }
 
         return (
-            <div style={{paddingBottom : 20, height : 220, overflow : 'hidden', margin : 'auto'}}>
-                <button disabled={[field] == this.state.locks.image} onClick={() => this.removeImage(src, field)} 
+            <div style={{paddingBottom : 20, height : 220, overflow : 'hidden', margin : 'auto', border: '1px solid rgba(0, 0, 0, 0.1)', borderRadius: 5}}>
+                <button disabled={this.state.locks.image} onClick={() => this.removeImage(src, field)} 
                     style={{right : 20, top : 6}}
                     className='carousel-trash button-hover'>
                     <img src={trash} style={{width : 15, height : 15}}/>
@@ -126,7 +132,7 @@ class GamePageContainer extends React.Component{
         var { profile } = this.props;
         const { imageItem } = this.state;
 
-        this.setState({...this.state, isLoading : true});
+        this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : true}})
 
         switch(field){
             case 'edge' : {
@@ -150,13 +156,14 @@ class GamePageContainer extends React.Component{
         }
         await profile.setGameDataAsync();
         this.projectData(this.props);
+        this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : false}})
         this.lockField({field});
     }
 
 
 
     render = () => {
-        const { isLoading, imageItem } = this.state; 
+        const { imageItem } = this.state; 
         let game_image = game_images[new String(this.state.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
 
@@ -222,7 +229,13 @@ class GamePageContainer extends React.Component{
                                         <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.edge}%</h3>
                                     </Col>
                                     <Col md={8}>
-                                        <EditLock unlockField={this.unlockField} lockField={this.lockField} confirmChanges={this.confirmChanges} type={'edge'} locked={this.state.locks.edge}>
+                                        <EditLock 
+                                            unlockField={this.unlockField} 
+                                            lockField={this.lockField} 
+                                            confirmChanges={this.confirmChanges} 
+                                            type={'edge'} 
+                                            isLoading={this.state.isLoading.edge}
+                                            locked={this.state.locks.edge}>
                                             <h6 className="">New Edge </h6>
                                             <h5 className={"bold-text dashboard__total-stat"}>{this.state.new_edge}%</h5>
                                             <Slider disabled={this.state.locks.edge} value={this.state.edge} onChange={this.onChange}/>
@@ -243,7 +256,13 @@ class GamePageContainer extends React.Component{
                                         <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.tableLimit}</h3>
                                     </Col>
                                     <Col md={8}>
-                                        <EditLock unlockField={this.unlockField} lockField={this.lockField} confirmChanges={this.confirmChanges} type={'tableLimit'} locked={this.state.locks.tableLimit}>
+                                        <EditLock 
+                                            unlockField={this.unlockField} 
+                                            lockField={this.lockField} 
+                                            confirmChanges={this.confirmChanges} 
+                                            type={'tableLimit'} 
+                                            isLoading={this.state.isLoading.tableLimit}
+                                            locked={this.state.locks.tableLimit}>
                                             <h6 className="">New Table Limit </h6>
                                             <h5 className={"bold-text dashboard__total-stat"}>{this.state.new_tableLimit} {this.state.currencyTicker} </h5>
                                             <TextInput
@@ -267,16 +286,17 @@ class GamePageContainer extends React.Component{
                                     <Col md={4}>
                                         <div style={{paddingBottom : 20}}>
                                             <h5 className={"bold-text dashboard__total-stat"}>Image</h5>
+                                            <hr/>
                                             <h6>Upload game image</h6>
                                         </div>
                                     </Col>
                                     <Col md={8}>
                                         <EditLock 
-                                        isLoading={isLoading} 
                                         unlockField={this.unlockField} 
                                         lockField={this.lockField} 
                                         confirmChanges={this.confirmChanges} 
                                         type={'image'} 
+                                        isLoading={this.state.isLoading.image}
                                         locked={this.state.locks.image}>
                                         
                                             <div style={{margin : 'auto'}}>
@@ -297,33 +317,7 @@ class GamePageContainer extends React.Component{
           </Container>
         )
     }
-} 
-
-
-const EditLock = (props) => {
-    return(
-        <div className={`${props.locked ? 'locker-container' : null}`}>
-            {props.children}
-            <div style={{marginTop : 20}}>
-                {props.locked ?
-                    <Button onClick={() => props.unlockField({field : props.type})} className="icon" outline>
-                        <p><LockIcon className="deposit-icon"/> Unlock</p>
-                    </Button>
-                :        
-                    <div>
-                        <Button onClick={() => props.lockField({field : props.type})} className="icon" outline>
-                            <p><LockIcon className="deposit-icon"/> Lock </p>
-                        </Button>
-                        <Button onClick={() => props.confirmChanges({field : props.type})} className="icon" outline>
-                            <p><ArrowExpandRightIcon className="deposit-icon"/> Confirm </p>
-                        </Button>
-                    </div>        
-                }
-            </div>
-        </div>
-    )
-}
-   
+}  
 
 function mapStateToProps(state){
     return {
