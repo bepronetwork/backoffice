@@ -30,7 +30,7 @@ class CurrencyStoreContainer extends PureComponent {
                 <CardBody className="dashboard__card-widget box-content">
                     <div className="flex-container">
                         <div style={{flexGrow: 5}} >
-                            <img className='application__game__image' src={image}/>
+                            <img className='application__game__image' style={{display: 'block', marginLeft: `0px`}} src={image}/>
                         </div>
                         <div style={{flexGrow: 5}} >
                             <div className="dashboard__visitors-chart text-left">
@@ -51,6 +51,8 @@ class CurrencyStoreContainer extends PureComponent {
                                         <p><AddIcon className="deposit-icon"/> Add </p>
                                 }
                             </Button>
+                        </div>
+                        <div style={{flexGrow: 5}} >
                         </div>
                     </div>
                 </CardBody>

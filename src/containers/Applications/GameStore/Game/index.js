@@ -25,12 +25,12 @@ class GameStoreContainer extends PureComponent {
         if(!game){return null}
         const { name, description, image_url } = game;
         return (
-            <Col md={12} xl={12} lg={12} xs={8}>
+            <Col md={12} xl={12} lg={12} xs={12}>
                 <Card className='game-container'>
                     <CardBody className="dashboard__card-widget">
                         <Row>
                             <Col lg={4} >  
-                                <img className='application__game__image' src={image_url}/>
+                                <img className='application__game__image' style={{display: 'block', marginLeft: `-10px`}} src={image_url}/>
                             </Col>
                             <Col lg={8} >
                                 <div className="dashboard__visitors-chart text-left">
