@@ -39,16 +39,20 @@ class CurrencyStoreContainer extends PureComponent {
                             </div>
                         </div>
                     </div>
-                    <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.onClick()} >
-                        {   
-                            isLoading ?
-                                "Adding"
-                            : isAdded ? 
-                                "Added"
-                            : 
-                                <p><AddIcon className="deposit-icon"/> Add </p>
-                        }
-                    </Button>
+                    <div className="flex-container">
+                        <div style={{flexGrow: 5}} >
+                            <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.onClick()} >
+                                {   
+                                    isLoading ?
+                                        "Adding"
+                                    : isAdded ? 
+                                        "Added"
+                                    : 
+                                        <p><AddIcon className="deposit-icon"/> Add </p>
+                                }
+                            </Button>
+                        </div>
+                    </div>
                 </CardBody>
             </div>
         );

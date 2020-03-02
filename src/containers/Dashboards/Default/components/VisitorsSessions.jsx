@@ -89,7 +89,7 @@ class VisitorsSessions extends React.Component{
             >
                 <div className="dashboard__visitors-chart">
                     <p className="dashboard__visitors-chart-title"> Total Bets <span> last month </span></p>
-                    <p className="dashboard__visitors-chart-number"><AnimationNumber number={data.betAmount}/></p>
+                    <p className="dashboard__visitors-chart-number"><AnimationNumber decimals={0} number={data.betAmount}/></p>
                     <ResponsiveContainer className="dashboard__chart-pie" width="100%" height={220}>
                     <PieChart className="dashboard__chart-pie-container">
                         <Tooltip />

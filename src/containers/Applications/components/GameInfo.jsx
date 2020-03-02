@@ -57,7 +57,7 @@ class GameInfo extends PureComponent {
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-number-second" style={
                                             {color : '#646777'}
-                                        }><AnimationNumber number={game.profit}/> <span> {ticker}</span></p>
+                                        }><AnimationNumber decimals={0} number={game.profit}/> <span> {ticker}</span></p>
                                     </div>
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-title"> Profit  </p>
@@ -68,7 +68,7 @@ class GameInfo extends PureComponent {
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-number-second" style={
                                             {color : '#646777'}
-                                        }><AnimationNumber number={game.betAmount-1}/></p>
+                                        }><AnimationNumber decimals={0} number={game.betAmount-1}/></p>
                                     </div>
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-title"> Bets Amount</p>

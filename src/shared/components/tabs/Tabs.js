@@ -32,7 +32,7 @@ class TabsContainer extends React.Component{
                                             <Col md={12} style={{maxWidth: `220px`, minWidth: `190px`}}>
                                                 <Nav.Item key={index}>
                                                     <Nav.Link eventKey={`item-${index}`}>
-                                                        {item.icon} {item.title}
+                                                        {item.icon} &nbsp; {item.title}
                                                     </Nav.Link>
                                                 </Nav.Item>
                                             </Col>

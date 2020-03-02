@@ -25,7 +25,7 @@ class GameStoreContainer extends PureComponent {
         if(!game){return null}
         const { name, description, image_url } = game;
         return (
-            <Col md={12} xl={12} lg={12} xs={12}>
+            <Col md={12} xl={12} lg={12} xs={8}>
                 <Card className='game-container'>
                     <CardBody className="dashboard__card-widget">
                         <Row>
@@ -34,7 +34,7 @@ class GameStoreContainer extends PureComponent {
                             </Col>
                             <Col lg={8} >
                                 <div className="dashboard__visitors-chart text-left">
-                                    <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 25}}> {name} </p>
+                                    <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 20}}> {name} </p>
                                     <p className="text-left secondary-text"> {description} </p>
                                 </div>
                             </Col>

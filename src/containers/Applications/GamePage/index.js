@@ -132,20 +132,20 @@ class GamePageContainer extends React.Component{
                                     <Col md={4}>
                                         <h5 className="">Bets Amount</h5>
                                         <p className="dashboard__visitors-chart-number-second">
-                                            <AnimationNumber number={this.state.betAmount}/> 
+                                            <AnimationNumber decimals={0} number={this.state.betAmount}/> 
                                         </p>
                                     </Col>
                                     <Col md={4}>
                                         <h5 className="">Turnover</h5>
                                         <p className="dashboard__visitors-chart-number-second">
-                                            <AnimationNumber number={this.state.turnover}/> 
+                                            <AnimationNumber decimals={0} number={this.state.turnover}/> 
                                             <span> {this.state.currencyTicker} </span> 
                                         </p>
                                     </Col>
                                     <Col md={4}>
                                         <h5 className="">Profit</h5>
                                         <p className="dashboard__visitors-chart-number-second">
-                                            <AnimationNumber number={this.state.profit}/> 
+                                            <AnimationNumber decimals={0} number={this.state.profit}/> 
                                             <span> {this.state.currencyTicker} </span> 
                                         </p>
                                     </Col>

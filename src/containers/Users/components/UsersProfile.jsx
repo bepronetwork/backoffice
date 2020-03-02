@@ -29,7 +29,7 @@ class UsersProfile extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : '#646777'}
-                            }><AnimationNumber  number={users}/></p>
+                            }><AnimationNumber decimals={0} number={users}/></p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Registerd Users <span> All </span></p>
