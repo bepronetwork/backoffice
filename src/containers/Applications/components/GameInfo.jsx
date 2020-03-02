@@ -57,7 +57,7 @@ class GameInfo extends PureComponent {
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-number-second" style={
                                             {color : '#646777'}
-                                        }><AnimationNumber decimals={0} number={game.profit}/> <span> {ticker}</span></p>
+                                        }><AnimationNumber decimals={6} number={game.profit}/> <span> {ticker}</span></p>
                                     </div>
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-title"> Profit  </p>

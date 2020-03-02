@@ -79,11 +79,11 @@ class BetsStatistics extends React.Component {
                     </div>
                     <div className="dashboard__stat-data">
                         <div>
-                        <p className="dashboard__stat-data-number"><AnimationNumber decimals={0} number={this.state.betsData.bets.avg_bet}/> {this.state.ticker}</p>
+                        <p className="dashboard__stat-data-number"><AnimationNumber decimals={6} number={this.state.betsData.bets.avg_bet}/> {this.state.ticker}</p>
                         <p style={{ color: '#ff4861' }}> Average User Bet </p>
                         </div>
                         <div>
-                        <p className="dashboard__stat-data-number"> <AnimationNumber decimals={0} number={this.state.betsData.bets.avg_bet_return}/> {this.state.ticker}</p>
+                        <p className="dashboard__stat-data-number"> <AnimationNumber decimals={6} number={this.state.betsData.bets.avg_bet_return}/> {this.state.ticker}</p>
                         <p style={{ color: '#894798' }}>Average Return (No Fee)</p>
                         </div>
                     </div>
