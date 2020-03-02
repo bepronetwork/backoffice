@@ -6,7 +6,7 @@ const AnimationNumber = ({number, decimals=2}) => {
     return (
     <AnimatedNumber 
         style={{
-            fontSize: `16pt`,
+            fontSize: `48px`,
             transition: '0.4s ease-out',
             transitionProperty:
                 'background-color, color, opacity'

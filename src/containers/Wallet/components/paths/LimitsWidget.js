@@ -104,7 +104,7 @@ class LimitsWidget extends React.Component{
         }
         this.projectData(this.props);
         this.state.locks[field] = true;
-        // this.setState()
+        // this.setState();
         
     }
 
