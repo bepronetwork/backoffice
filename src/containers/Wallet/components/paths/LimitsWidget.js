@@ -39,42 +39,26 @@ class LimitsWidget extends React.Component{
     }
 
     componentWillReceiveProps(props){
-        this.projectData(props);
+        // this.projectData(props);
     }
 
     projectData = async (props) => {
-
         let { wallet } = props;
         let currencyTicker, maxDeposit, maxWithdrawal;
-
-        if(wallet.currency != undefined) {
-
-            let currencyTicker = wallet.currency.ticker;
-            let maxDeposit = wallet.max_deposit;
-            let maxWithdrawal = wallet.max_withdraw;
-
-            this.setState({...this.state, 
-                currencyTicker,
-                maxDeposit,
-                maxWithdrawal
-            });
-        }
+        currencyTicker = wallet.currency.ticker;
 
         await props.profile.getApp().getSummary();
-        wallet = props.profile.getApp().getSummaryData('walletSimple').data[0];
-        await props.profile.update();
-        console.log(wallet);
+        wallet = props.profile.getApp().getSummaryData('walletSimple').data.find(c => {return c.currency.ticker === currencyTicker });
         currencyTicker = wallet.currency.ticker;
         maxDeposit = wallet.max_deposit;
         maxWithdrawal = wallet.max_withdraw;
 
-        this.setState({...this.state, 
+        this.setState({...this.state,
             currencyTicker,
             maxDeposit,
             maxWithdrawal,
             wallet
         });
-        
     }
 
     onChange = ({type, value}) => {
@@ -91,21 +75,39 @@ class LimitsWidget extends React.Component{
 
     confirmChanges = async ({field}) => {
         var { profile, wallet } = this.props;
-        this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : true}})
-        switch(field){
+
+        this.setState({
+            ...this.state,
+            isLoading : {
+                ...this.state.isLoading,
+                [field] : true
+            }
+        });
+        // eslint-disable-next-line default-case
+        switch (field){
+            // eslint-disable-next-line no-lone-blocks
             case 'maxDeposit' : {
+                // this.setState({...this.state,
+                //     maxDeposit: this.state.new_maxDeposit
+                // });
                 await profile.getApp().changeMaxDeposit({ amount : this.state[`new_${field}`], wallet_id : wallet._id });
+                this.state.locks[field] = true;
+                this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : false}, maxDeposit: this.state.new_maxDeposit});
                 break;
-            };
+            }
+            // eslint-disable-next-line no-lone-blocks
             case 'maxWithdrawal' : {
+                // this.setState({...this.state,
+                //     maxWithdrawal: this.state.new_maxWithdrawal
+                // });
                 await profile.getApp().changeMaxWithdraw({ amount : this.state[`new_${field}`], wallet_id : wallet._id });
+                this.state.locks[field] = true;
+                this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : false}, maxWithdrawal: this.state.new_maxWithdrawal});
                 break;
-            };
+            }
         }
-        this.projectData(this.props);
-        this.state.locks[field] = true;
+        // this.projectData(this.props);
         // this.setState();
-        
     }
 
     render = () => {

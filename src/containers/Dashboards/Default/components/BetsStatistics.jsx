@@ -68,7 +68,7 @@ class BetsStatistics extends React.Component {
                 <div className="dashboard__stat dashboard__stat--budget">
                     <div className="dashboard__stat-main">
                         <p className="dashboard__stat-main-title">Won Bets</p>
-                        <p className="dashboard__stat-main-number"><AnimationNumber decimals={2} number={this.state.percentage}/> %</p>
+                        <p className="dashboard__stat-main-number percent"><AnimationNumber font = '45px' decimals={2} number={this.state.percentage}/> %</p>
                         <hr />
                     </div>
                     <div className="dashboard__stat-chart">

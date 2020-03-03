@@ -528,9 +528,13 @@
 
       .dashboard__stat-main-number {
         color: $color-red;
-        font-size: 48px;
+        font-size: 16pt;
         line-height: 34px;
         margin-top: 15px;
+      }
+
+      .percent {
+        font-size: 48px !important;
       }
 
       .dashboard__stat-data {
