@@ -165,7 +165,6 @@ class Logo extends Component {
                 const postData = {
                     loadingGif : loadingGifItem
                 }
-                console.log("ggggggggggggggg")
                 await profile.getApp().editLoadingGifCustomization(postData);
                 break;
             }
