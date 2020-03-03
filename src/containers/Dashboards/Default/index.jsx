@@ -96,7 +96,7 @@ class DefaultDashboard extends React.Component{
                             </Col>    
                         </Row>
                         <Row>
-                            <Col md={4}>
+                            <Col md={6}>
                                 <DataWidget>
                                     <BetsStatistics currency={currency} data={{
                                         bets : this.props.profile.getApp().getSummaryData('bets'),
@@ -104,7 +104,7 @@ class DefaultDashboard extends React.Component{
                                         }}/>
                                 </DataWidget>
                             </Col>
-                            <Col md={4}>
+                            <Col md={6}>
                                 <DataWidget>
                                     <VisitorsSessions currency={currency} data={{
                                         users : this.props.profile.getApp().getSummaryData('games'),
