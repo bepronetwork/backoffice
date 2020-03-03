@@ -2,11 +2,11 @@ import React from 'react';
 import AnimatedNumber from 'react-animated-number';
 import Numbers from '../../../../services/numbers';
 
-const AnimationNumber = ({number, decimals=2}) => {
+const AnimationNumber = ({number, decimals=2, font = '16pt'}) => {
     return (
     <AnimatedNumber 
         style={{
-            fontSize: `16pt`,
+            fontSize: font,
             transition: '0.4s ease-out',
             transitionProperty:
                 'background-color, color, opacity'

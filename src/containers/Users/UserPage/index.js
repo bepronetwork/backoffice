@@ -43,13 +43,15 @@ class UserPage extends React.Component{
 
     allowWithdraw = async (withdraw) => {
         const { profile } = this.props;
-
+        const wallet = this.props.profile.getApp().getWallet({currency_id : withdraw.currency._id});
+        // console.log(wallet);
         /** Do Withdraw to User */
-        await profile.getApp().approveWithdraw(withdraw);
+        await profile.getApp().approveWithdraw({...withdraw, currency : wallet.currency, bank_address : wallet.bank_address});
 
         /** Update Info */
         await profile.getApp().getWithdrawsAsync({});
         await profile.update();
+
     }
 
     renderDataTitle = ({title, data, span}) => {
@@ -66,6 +68,8 @@ class UserPage extends React.Component{
     render = () => {
         const { user, currencyTicker } = this.state;
         if(!user || _.isEmpty(user)){return null};
+
+        // console.log(user);
 
         const { currency } = this.props;
         const {
@@ -85,6 +89,7 @@ class UserPage extends React.Component{
         } = user;
 
         const transactions = withdraws.map( w => {return {...w, isWithdraw : true}}).concat(deposits);
+        // console.log(transactions);
 
         return (
             <Container className="dashboard">
@@ -116,16 +121,16 @@ class UserPage extends React.Component{
                     <Col md={8}>
                         <Row>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Gaming Wallet', data : !_.isEmpty(playBalance) ? parseFloat(playBalance) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Gaming Wallet', data : !_.isEmpty(playBalance) ? parseFloat(playBalance).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'TurnOver', data :  !_.isEmpty(betAmount) ? parseFloat(betAmount) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'TurnOver', data :  !_.isEmpty(betAmount) ? parseFloat(betAmount).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Win Amount', data :  !_.isEmpty(winAmount) ? parseFloat(winAmount) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Win Amount', data :  !_.isEmpty(winAmount) ? parseFloat(winAmount).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Profit', data :  !_.isEmpty(profit) ? parseFloat(profit) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Profit', data :  !_.isEmpty(profit) ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length)})}
@@ -134,7 +139,7 @@ class UserPage extends React.Component{
                                 {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length)})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliate.wallet.playBalance) ? parseFloat(affiliate.wallet.playBalance) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliate.wallet.playBalance) ? parseFloat(affiliate.wallet.playBalance).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length})}

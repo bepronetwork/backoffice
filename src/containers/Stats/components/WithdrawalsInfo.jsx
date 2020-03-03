@@ -32,7 +32,7 @@ class WithdrawalsInfo extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : withdrawals >= 0 ? '#76d076' : '#646777'}
-                            }><AnimationNumber  number={withdrawals}/> €</p>
+                            }><AnimationNumber decimals={2} number={withdrawals}/> €</p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Withdrawals <span> this week </span></p>

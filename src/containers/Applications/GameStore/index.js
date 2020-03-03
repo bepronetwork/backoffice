@@ -80,12 +80,10 @@ class GameStorePageContainer extends React.Component{
             </div>
         )
     }
-} 
+}
 
-   
 
 function mapStateToProps(state){
-    
     return {
         profile: state.profile
     };

@@ -32,7 +32,7 @@ class PlatformCostsInfo extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : '#646777'}
-                            }><AnimationNumber  number={costs}/> €</p>
+                            }><AnimationNumber decimals={2} number={costs}/> €</p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Costs <span> this week </span></p>

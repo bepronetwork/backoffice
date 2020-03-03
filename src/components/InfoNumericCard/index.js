@@ -46,7 +46,7 @@ class InfoNumericCard extends PureComponent {
                 <CardBody className="dashboard__card-widget">
                     <div className="dashboard__visitors-chart">
                         <p className="dashboard__visitors-chart-number-second"
-                        ><AnimationNumber number={amount}/> 
+                        ><AnimationNumber decimals={2} number={amount}/> 
                         <span style={ {color : '#646777'}}> {ticker}</span> </p>
                     </div>
                     <div className="dashboard__visitors-chart">
