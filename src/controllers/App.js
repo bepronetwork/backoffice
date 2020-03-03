@@ -647,6 +647,26 @@ class App{
         }
     }
 
+    editGameImage = async ({image_url, game}) => {
+        try{
+            let res = await ConnectionSingleton.editGameImage({   
+                params : {
+                    app : this.getId(),
+                    image_url,
+                    game
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     cancelWithdraw = async () => {
         try{
             /* Cancel Withdraw Response */
@@ -730,6 +750,7 @@ class App{
                 },
                 headers : authHeaders(this.params.bearerToken, this.params.id)
             });
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>", res);
             let {
                 status
             } = res.data;

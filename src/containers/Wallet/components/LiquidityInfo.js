@@ -35,7 +35,7 @@ class LiquidityInfo extends PureComponent {
             <Col md={12} lg={12} xl={12} >
                 <Card>
                     <Row>
-                        <Col lg={6}>
+                        <Col lg={12}>
                             <h4 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>Application</h4>
                             <p className="">
                                 Current Liquidity

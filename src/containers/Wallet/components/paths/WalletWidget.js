@@ -18,9 +18,9 @@ class WalletWidget extends React.Component{
     }
     
     render = () => {
-        const { profile } = this.props;
+        // const { profile } = this.props;
         
-        let wallets = (profile.getApp().getSummaryData('walletSimple')).data;
+        // let wallets = (profile.getApp().getSummaryData('walletSimple')).data;
 
         return (
             <Container className="dashboard">

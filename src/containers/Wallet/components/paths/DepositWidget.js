@@ -80,10 +80,10 @@ class DepositWidget extends React.Component{
                     </p>
                 </Col>
                 <Row>
-                    <Col lg={4}>
+                    <Col lg={12}>
                         <CurrencyBox data={wallet}/>
                     </Col>
-                    <Col lg={8}>
+                    <Col lg={12}>
                         <div style={{marginTop : 50}}>
                             <DepositsTable
                                 disabled={this.state.disabled}

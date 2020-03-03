@@ -116,16 +116,16 @@ class UserPage extends React.Component{
                     <Col md={8}>
                         <Row>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Gaming Wallet', data : !_.isEmpty(currency) ? parseFloat(playBalance) : '', span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Gaming Wallet', data : !_.isEmpty(playBalance) ? parseFloat(playBalance) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'TurnOver', data :  !_.isEmpty(currency) ? parseFloat(betAmount) : '', span : currencyTicker})}
+                                {this.renderDataTitle({title : 'TurnOver', data :  !_.isEmpty(betAmount) ? parseFloat(betAmount) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Win Amount', data :  !_.isEmpty(currency) ? parseFloat(winAmount) : '', span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Win Amount', data :  !_.isEmpty(winAmount) ? parseFloat(winAmount) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Profit', data :  !_.isEmpty(currency) ? parseFloat(profit) : '', span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Profit', data :  !_.isEmpty(profit) ? parseFloat(profit) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length)})}
@@ -134,7 +134,7 @@ class UserPage extends React.Component{
                                 {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length)})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(currency) ? parseFloat(affiliate.wallet.playBalance) : '', span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliate.wallet.playBalance) ? parseFloat(affiliate.wallet.playBalance) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length})}

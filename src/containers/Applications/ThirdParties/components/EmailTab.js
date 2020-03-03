@@ -134,7 +134,7 @@ class EmailTab extends Component {
                         <Col md={12}>
                             <div style={{paddingTop : 10}} >
                                 <EditableTable
-                                    title={'E-mail integration'}
+                                    title={''}
                                     onChange={this.onChangeTemplates}
                                     compareField={'functionName'}
                                     columns={[

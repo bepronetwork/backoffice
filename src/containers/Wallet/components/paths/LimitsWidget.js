@@ -41,18 +41,38 @@ class LimitsWidget extends React.Component{
     componentWillReceiveProps(props){
         this.projectData(props);
     }
-    
-    projectData = async (props) => {
-        const { wallet } = props;
 
-        let currencyTicker = wallet.currency.ticker;
-        let maxDeposit = wallet.max_deposit;
-        let maxWithdrawal = wallet.max_withdraw;
+    projectData = async (props) => {
+
+        let { wallet } = props;
+        let currencyTicker, maxDeposit, maxWithdrawal;
+
+        if(wallet.currency != undefined) {
+
+            let currencyTicker = wallet.currency.ticker;
+            let maxDeposit = wallet.max_deposit;
+            let maxWithdrawal = wallet.max_withdraw;
+
+            this.setState({...this.state, 
+                currencyTicker,
+                maxDeposit,
+                maxWithdrawal
+            });
+        }
+
+        await props.profile.getApp().getSummary();
+        wallet = props.profile.getApp().getSummaryData('walletSimple').data[0];
+        await props.profile.update();
+        console.log(wallet);
+        currencyTicker = wallet.currency.ticker;
+        maxDeposit = wallet.max_deposit;
+        maxWithdrawal = wallet.max_withdraw;
 
         this.setState({...this.state, 
             currencyTicker,
             maxDeposit,
-            maxWithdrawal
+            maxWithdrawal,
+            wallet
         });
         
     }
@@ -82,9 +102,10 @@ class LimitsWidget extends React.Component{
                 break;
             };
         }
-        this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : false}})
         this.projectData(this.props);
-        this.state.locks[field] = true; 
+        this.state.locks[field] = true;
+        // this.setState()
+        
     }
 
     render = () => {
@@ -144,7 +165,7 @@ class LimitsWidget extends React.Component{
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        wallet: state.wallet
+        wallet: (state.wallet.currency) ? state.wallet : state.profile.getApp().getSummaryData('walletSimple').data[0]
     };
 }
 

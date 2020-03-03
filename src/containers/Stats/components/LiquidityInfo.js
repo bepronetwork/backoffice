@@ -41,7 +41,7 @@ class LiquidityInfo extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : this.state.playBalance >= 0 ? '#76d076' : '#646777'}
-                            }><AnimationNumber  number={this.state.totalLiquidity}/> <span> {this.state.ticker}</span></p>
+                            }><AnimationNumber decimals={6} number={this.state.totalLiquidity}/> <span> {this.state.ticker}</span></p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Liquidity <span> Available </span></p>

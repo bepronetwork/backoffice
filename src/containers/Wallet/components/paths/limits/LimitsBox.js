@@ -41,6 +41,8 @@ class LimitsBox extends React.Component{
             inputType = 'text'
         }
 
+        
+
         return (
             <Card>
                 <CardBody>
@@ -48,19 +50,18 @@ class LimitsBox extends React.Component{
                         <Col md={4}>
                             <img className='application__game__image' src={image}/>
                             <hr></hr>
-                            
-                                <h5 className=""> {title} {currencyTicker ? `(${currencyTicker})` : null } </h5>
-                            
+                                <h5 className=""> {title} {
+                                    (currencyTicker ? `(${currencyTicker})` : null)
+                                } </h5>
 
-                            <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{value}</h3>
+                            <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.props.value}</h3>
                         </Col>
                         <Col md={8}>
                             <EditLock isLoading={isLoading} unlockField={unlockField} lockField={lockField} confirmChanges={confirmChanges} type={type} locked={lock}>
                                 <h6 className="">New {title} </h6>
-                                
                                     <h5 className={"bold-text dashboard__total-stat"}>{new_value} {currencyTicker} </h5>
                                 {
-                                    inputType == 'text' ? 
+                                    inputType == 'text' ?
                                         <TextInput
                                             icon={inputIcon}
                                             name={type}
@@ -68,7 +69,7 @@ class LimitsBox extends React.Component{
                                             disabled={lock}
                                             changeContent={ (type, value) => onChange({type, value})}
                                         />
-                                    : inputType == 'date' ? 
+                                    : inputType == 'date' ?
                                         <DateInput
                                             name={type}
                                             defaultValue={defaultValue}
