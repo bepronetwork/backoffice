@@ -62,8 +62,8 @@ class GamePageContainer extends React.Component{
             name,
             profit : Numbers.toFloat(profit),
             id : _id,
-            turnover : Numbers.toFloat(betsAmount),
-            betAmount : Numbers.toFloat(betAmount), 
+            turnover : Numbers.toFloat(betsAmount).toFixed(6),
+            betAmount : Numbers.toFloat(betAmount).toFixed(6),
             fees : Numbers.toFloat(fees)
         })
     }

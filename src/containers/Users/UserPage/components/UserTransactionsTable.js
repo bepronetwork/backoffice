@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from "react-redux";
+import { compose } from 'lodash/fp';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -46,16 +48,23 @@ function getSorting(order, orderBy) {
 }
 
 
-const fromDatabasetoTable = (data) => {
+const fromDatabasetoTable = (data, { currencies=[] }) => {
+
 	return data.map( (key) => {
+
+        const currency = currencies.find(c => new String(c._id).toString() == new String(key.currency).toString());
+
 		return {
             _id :  key._id,
-            isWithdraw : key.isWithdraw,
+            user : key.user,
+            currency : currency, 
+            address: key.address,
+            ticker : currency ? currency.ticker : '',
+            status :  key.status,
+            amount: key.amount,
             transactionHash : key.transactionHash,
 			creation_timestamp: moment(new Date(key.creation_timestamp)).format('lll'),
-			isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
-            amount: key.amount,
-            status :  key.transactionHash ? 'Confirmed' : (key.isWithdraw ? 'Queue' : 'Unconfirmed')
+			isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal'
 		}
 	})
 }
@@ -198,7 +207,7 @@ class UserTransactionsTable extends React.Component {
             order: 'asc',
             orderBy: 'id',
             selected: [],
-            data: fromDatabasetoTable(props.data),
+            data: fromDatabasetoTable(props.data, {currencies : []}),
             page: 0,
             isLoading : {},
             ticker : 'N/A',
@@ -215,9 +224,11 @@ class UserTransactionsTable extends React.Component {
         this.projectData(props);
     }
 
-    projectData = (props) => {
+    projectData = async (props) => {
+        let app = props.profile.getApp();
+        const { currencies } = (await app.getEcosystemVariables()).data.message;
         this.setState({...this.state, 
-            data : fromDatabasetoTable(props.data),
+            data : fromDatabasetoTable(props.data, { currencies }),
             ticker : props.ticker,
         })
     }
@@ -387,4 +398,11 @@ UserTransactionsTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UserTransactionsTable);
+function mapStateToProps(state){
+    return {
+        profile : state.profile
+    };
+}
+
+export default compose(connect(mapStateToProps))( withStyles(styles)(UserTransactionsTable) );
+// export default withStyles(styles)(UserTransactionsTable);

@@ -54,8 +54,8 @@ const fromDatabasetoTable = (data) => {
         return {
             id :  data[key]._id,
 			name : data[key].name,
-			turnoverAmount: Numbers.formatNumber(data[key].betAmount),
-			bets: Numbers.formatNumber(data[key].bets),
+			turnoverAmount: Numbers.formatNumber(data[key].betAmount.toFixed(6)),
+			bets: Numbers.formatNumber(data[key].bets.toFixed(6)),
 			email: data[key].email,
 			playBalance :  Numbers.formatNumber(data[key].playBalance),
             profit: Numbers.formatNumber(data[key].profit)
