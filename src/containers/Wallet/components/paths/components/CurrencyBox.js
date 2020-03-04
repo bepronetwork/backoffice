@@ -1,18 +1,12 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row , Button} from 'reactstrap';
-import {  BarcodeIcon, TickCircleIcon, DirectionsIcon } from 'mdi-react';
-import AnimationNumber from '../../../../UI/Typography/components/AnimationNumber';
-import ConverterSingleton from '../../../../../services/converter';
+import {  DirectionsIcon } from 'mdi-react';
 import QRCodeContainer from './QRCode';
 import AddressBox from './AddressBox';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
-import ReciptBox from './ReciptBox';
-import TextInput from '../../../../../shared/components/TextInput';
-import Numbers from '../../../../../services/numbers';
-import { ETHEREUM_NET_DEFAULT } from '../../../../../config/apiConfig';
 import {formatCurrency} from '../../../../../utils/numberFormatation';
 
 
@@ -54,7 +48,7 @@ class CurrencyBox extends PureComponent {
             image : currency.image,
             playBalance :  wallet.playBalance ? wallet.playBalance : defaultProps.houseLiquidity,
             ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
-            tokenAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + tokenAddress,
+            tokenAddressLink : wallet.link_url,
             tokenAddress :  tokenAddress,
             tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
 
@@ -86,11 +80,18 @@ class CurrencyBox extends PureComponent {
                                             </p>
                                         </Col>
                                         <Col lg={6}>
-                                            <a target={'__blank'} className='ethereum-address-a' href={this.state.tokenAddressLink} style={{marginTop : 30}}>
-                                                <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />
-                                                    {this.state.tokenAddressTrimmed}
-                                                </p>
-                                            </a>
+                                            {
+                                                this.state.tokenAddressLink ?
+                                                    <a target={'__blank'} className='ethereum-address-a' href={this.state.tokenAddressLink} style={{marginTop : 30}}>
+                                                        <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />
+                                                            {this.state.tokenAddressTrimmed}
+                                                        </p>
+                                                    </a>
+                                                :
+                                                    <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />
+                                                        {this.state.tokenAddressTrimmed}
+                                                    </p>
+                                            }
                                         </Col>
                                     </Row>
                                 </div>

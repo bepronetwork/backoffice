@@ -3,11 +3,8 @@ import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import { DirectionsIcon } from 'mdi-react';
-import { ETHEREUM_NET_DEFAULT } from '../../../config/apiConfig';
 import store from '../../App/store';
 import { setWalletView } from '../../../redux/actions/walletReducer';
-
-import {formatCurrency} from '../../../utils/numberFormatation';
 
 const defaultProps = {
     ticker : 'N/A',
@@ -48,7 +45,7 @@ class LiquidityWalletWidget extends PureComponent {
                 totalLiquidity :  wallet.playBalance ? wallet.playBalance : defaultProps.totalLiquidity,
                 ticker : wallet.currency.ticker ? wallet.currency.ticker : defaultProps.ticker,
                 platformBlockchain : wallet.currency.name ? wallet.currency.name: defaultProps.platformBlockchain,
-                platformAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + wallet.bank_address,
+                platformAddressLink : wallet.link_url,
                 tokenAddress :  `${wallet.bank_address.substring(0, 6)}...${wallet.bank_address.substring(wallet.bank_address.length - 2)}`,
                 isIntegrated : true,
                 image : wallet.currency.image
@@ -81,10 +78,14 @@ class LiquidityWalletWidget extends PureComponent {
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-title">{new String(this.state.platformBlockchain).toUpperCase()} <span> Available </span></p>
                                     </div>
-                                
-                                    <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
-                                        <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.tokenAddress}</p>
-                                    </a>
+                                    {
+                                       this.state.platformAddressLink ?
+                                            <a target={'__blank'} className='ethereum-address-a' href={this.state.platformAddressLink}>
+                                                <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.tokenAddress}</p>
+                                            </a>
+                                        :
+                                            <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{this.state.tokenAddress}</p>
+                                    }
                                 </Col>
 
                             </Row>

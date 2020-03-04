@@ -338,12 +338,14 @@ class UserTransactionsTable extends React.Component {
                             <TableCell align="left">
                                 { 
                                     n.transactionHash ? 
-                                    <a target={'__blank'} href={`${ETHERSCAN_URL}/tx/${n.transactionHash}`}>
-                                        <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
-                                    </a>
+                                        n.link_url ?
+                                            <a target={'__blank'} href={`${n.link_url}`}>
+                                                <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
+                                            </a>
+                                        :
+                                            <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
                                     : 'N/A'
                                 }
-                              
                             </TableCell>
                             <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
                             <TableCell align="left">
