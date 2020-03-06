@@ -667,6 +667,26 @@ class App{
         }
     }
 
+    editBackgroundImage = async ({background_url, game}) => {
+        try{
+            let res = await ConnectionSingleton.editBackgroundImage({   
+                params : {
+                    app : this.getId(),
+                    background_url,
+                    game
+                },         
+                headers : authHeaders(this.params.bearerToken, this.params.id)
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     cancelWithdraw = async () => {
         try{
             /* Cancel Withdraw Response */
