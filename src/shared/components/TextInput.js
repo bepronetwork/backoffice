@@ -57,9 +57,9 @@ class TextInput extends PureComponent {
 
     }
 
-    changeContent = (type, item) => {
+    changeContent = (type, item, index) => {
         if(this.props.changeContent){
-            this.props.changeContent(type, item)
+            this.props.changeContent(type, item, index)
         }
     }
 
@@ -81,8 +81,9 @@ class TextInput extends PureComponent {
                     disabled={this.props.disabled}
                     defaultValue={this.props.defaultValue}
                     component={renderTextField}
-                    placeholder={this.props.placehlder}
-                    onChange={(e) =>  this.changeContent(this.props.name, e.target.value)}/>
+                    placeholder={this.props.placeholder}
+                    index={this.props.index}
+                    onChange={(e) =>  this.changeContent(this.props.name, e.target.value, this.props.index)}/>
             </div>
         );
     }

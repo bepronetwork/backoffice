@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
+import TextInput from '../../../../shared/components/TextInput';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
 import AliceCarousel from 'react-alice-carousel'
@@ -12,7 +13,8 @@ const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
 const defaultState = {
     autoDisplay: false,
     items: [],
-    new_items : [],
+    links: [],
+    banners: [],
     locked: true,
     isLoading: false
 }
@@ -33,14 +35,19 @@ class Banners extends Component {
     onAddedFile = async (files) => {
         const file = files[0];
         let blob = await image2base64(file.preview) // you can also to use url
-        this.setState({new_items : this.state.new_items.concat([blob])});
+        const banner = {
+            image_url : blob,
+            link_url : ''
+        }
+
+        this.setState({ banners : this.state.banners.concat([banner]) });
     }
 
     projectData = async (props) => {
         const { banners } = props.profile.getApp().getCustomization();
         const { ids, autoDisplay } = banners;
         this.setState({...this.state, 
-            items : ids,
+            banners : ids,
             autoDisplay
         })
     }
@@ -48,7 +55,7 @@ class Banners extends Component {
     renderAddImage = () => {
         return(
             <div className='dropzone-image'>
-                <Dropzone onDrop={this.onAddedFile} width={400} ref={(el) => (this.dropzoneRef = el)}>
+                <Dropzone onDrop={this.onAddedFile} width='100%' ref={(el) => (this.dropzoneRef = el)} disabled={this.state.locked}>
                     <img src={upload} className='image-info' style={{marginTop : 50}}/>
                     <p className='text-center'> Drop the Banner here</p>
                 </Dropzone>
@@ -56,39 +63,46 @@ class Banners extends Component {
         )
     }
 
-    removeImage = (src) => {
-        if(src.includes("https")){
-            // Not new
-            const index = this.state.items.indexOf(src);
-            let items = this.state.items;
-            items.splice(index, 1);
-            this.setState({items})
-        }else{
-            // New Item
-            const index = this.state.new_items.indexOf(src);
-            let new_items = this.state.new_items;
-            new_items.splice(index, 1);
-            this.setState({new_items})
-        }
+    removeImage = (src, index) => {
+        let banners = this.state.banners;
+        banners.splice(index, 1);
+
+        this.setState({ banners });
     }
 
-    renderImage = (src) => {
+    renderImage = (src, index) => {
+        const banners = this.state.banners;
+        const link_url = banners[index].link_url;
+
         if(!src.includes("https")){
             src = "data:image;base64," + src;
         }
-
         return (
-            <div style={{width : 500, height : 240, overflow : 'hidden', margin : 'auto'}}>
-                <button disabled={this.state.locked} onClick={() => this.removeImage(src)} className='carousel-trash button-hover'>
+            <div style={{width : '100%', height : 240, margin : 'auto'}}>
+                <button disabled={this.state.locked} onClick={() => this.removeImage(src, index)} className='carousel-trash button-hover' style={{right: '0%'}}>
                     <img src={trash} style={{width : 15, height : 15}}/>
                 </button>
-                <img src={src} onDragStart={this.handleOnDragStart}/>
+                <img src={src} onDragStart={this.handleOnDragStart} style={{height : '100%'}}/>
+                <div style={{marginTop : 36}}>
+                    <TextInput
+                        name="link_url"
+                        label="Link URL"
+                        type="text"
+                        value={link_url}
+                        defaultValue={link_url}
+                        disabled={this.state.locked}
+                        index={index}
+                        changeContent={(name, value, index) => this.onChange({name, value, index})}
+                    />
+                </div>
             </div>
         )
     }
 
-    onChange = ({type, value}) => {
-        this.setState({...this.state, [type] : value })
+    onChange = ({name, value, index}) => {
+        let banners = this.state.banners;
+        banners[index].link_url = value;
+        this.setState({...this.state, banners })
     }
 
     unlockField = () => {
@@ -101,22 +115,22 @@ class Banners extends Component {
 
     confirmChanges = async () => {
         var { profile } = this.props;
-        const { items, new_items } = this.state;
+        const { banners } = this.state;
 
         this.setState({...this.state, isLoading : true});
         const postData = {
-            banners : items.concat(new_items),
+            banners,
             autoDisplay : false
         }
         await profile.getApp().editBannersCustomization(postData);
-        this.setState({...this.state, isLoading : false, locked: true, new_items : []})
+        this.setState({...this.state, isLoading : false, locked: true})
         this.projectData(this.props);
     }
 
     handleOnDragStart = (e) => e.preventDefault()
 
     render() {
-        const { isLoading, locked, autoDisplay, items, new_items } = this.state; 
+        const { isLoading, locked, autoDisplay, banners } = this.state; 
         return (
             <Card>
                 <CardBody>
@@ -130,17 +144,24 @@ class Banners extends Component {
                                 type={'announcementTab'} 
                                 locked={locked}
                             >
-                            <div style={{width : '80%', height : 350, margin : 'auto'}}>
-                               
-                                <AliceCarousel 
-                                    infinite={false}
-                                    ref={(el) => (this.Carousel = el)}
-                                    autoPlay={true}
-                                    startIndex={0}
-                                    mouseTrackingEnabled={true}
-                                    items={new_items.map(i => this.renderImage(i)).concat(items.map(i => this.renderImage(i)).concat(this.renderAddImage()))}
-                                />
-                            </div>
+                                <div style={{width : '96%', margin : 'auto'}}>
+                                    <Row>
+                                        {banners.map((i, index) => {
+                                            return (
+                                                <Col lg={6}>
+                                                    <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 410, marginBottom : 30, padding : 30}}>
+                                                        {this.renderImage(i.image_url, index)}
+                                                    </div>
+                                                </Col>
+                                            )
+                                        })}
+                                        <Col lg={6}>
+                                            <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 270, marginBottom : 30, padding : 30}}>
+                                                {this.renderAddImage(banners.length)}
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </div>
                             </EditLock>
                         </Col>
                     </Row>
