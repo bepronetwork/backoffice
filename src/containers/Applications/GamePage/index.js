@@ -26,16 +26,18 @@ const defaultState = {
     new_edge : 0,
     id : 'N/A',
     imageItem: null,
+    backgroundItem: null,
     locks : {
         tableLimit : true,
         edge : true,
-        image : true
-
+        image : true,
+        background : true
     },
     isLoading : {
         edge : false,
         tableLimit : false,
-        image : false
+        image : false,
+        background : false
     }
 }
 
@@ -62,7 +64,7 @@ class GamePageContainer extends React.Component{
     projectData = (props) => {
         let game = this.getUpdatedGame({props, game : props.game});
         if(!game){return null}
-        let { edge, name, profit, _id, betsAmount, betAmount, fees, tableLimit, image_url } = game;
+        let { edge, name, profit, _id, betsAmount, betAmount, fees, tableLimit, image_url, background_url } = game;
         let currencyTicker = props.profile.getApp().getCurrencyTicker();
         this.setState({...this.state, 
             edge,
@@ -74,7 +76,8 @@ class GamePageContainer extends React.Component{
             turnover : Numbers.toFloat(betsAmount),
             betAmount : Numbers.toFloat(betAmount), 
             fees : Numbers.toFloat(fees),
-            imageItem : image_url
+            imageItem : image_url,
+            backgroundItem : background_url
         })
     }
 
@@ -84,10 +87,18 @@ class GamePageContainer extends React.Component{
         this.setState({imageItem : blob});
     }
 
+    onBackgroundAddedFile = async (files) => {
+        const file = files[0];
+        let blob = await image2base64(file.preview) // you can also to use url
+        this.setState({backgroundItem : blob});
+    }
+
     renderAddImage = () => {
         return(
             <div className='dropzone-image'>
-                <Dropzone onDrop={this.onAddedFile} ref={(el) => (this.dropzoneRef = el)} style={{height:120, borderWidth: 2, borderolor: "#666666", borderStyle: "dashed", borderRadius: 5}}>
+                <Dropzone onDrop={this.onAddedFile} ref={(el) => (this.dropzoneRef = el)} 
+                    style={{height:120, borderWidth: 2, borderolor: "#666666", borderStyle: "dashed", borderRadius: 5}}
+                    disabled={this.state.locks.image}>
                     <img src={upload} className='image-info' style={{marginTop : 20, marginBottom : 20}}/>
                     <p className='text-center'> Drop image here</p>
                 </Dropzone>
@@ -95,8 +106,31 @@ class GamePageContainer extends React.Component{
         )
     }
 
-    removeImage = () => {
-        this.setState({imageItem : null})
+    renderAddBackground = () => {
+        return(
+            <div className='dropzone-image'>
+                <Dropzone onDrop={this.onBackgroundAddedFile} ref={(el) => (this.dropzoneRef = el)} 
+                    style={{height:120, borderWidth: 2, borderolor: "#666666", borderStyle: "dashed", borderRadius: 5}}
+                    disabled={this.state.locks.background}>
+                    <img src={upload} className='image-info' style={{marginTop : 20, marginBottom : 20}}/>
+                    <p className='text-center'> Drop background image here</p>
+                </Dropzone>
+            </div>
+        )
+    }
+
+    removeImage = (src, field) => {
+        switch(field){
+            case 'image' : {
+                this.setState({imageItem : null})
+                break;
+            };
+            case 'background' : {
+                this.setState({backgroundItem : null})
+                break;
+            }
+        }
+
     }
 
     renderImage = (src, field) => {
@@ -106,7 +140,7 @@ class GamePageContainer extends React.Component{
 
         return (
             <div style={{paddingBottom : 20, height : 220, overflow : 'hidden', margin : 'auto', border: '1px solid rgba(0, 0, 0, 0.1)', borderRadius: 5}}>
-                <button disabled={this.state.locks.image} onClick={() => this.removeImage(src, field)} 
+                <button disabled={[field] == 'image' ? this.state.locks.image : [field] == 'background' ? this.state.locks.background : true} onClick={() => this.removeImage(src, field)} 
                     style={{right : 20, top : 6}}
                     className='carousel-trash button-hover'>
                     <img src={trash} style={{width : 15, height : 15}}/>
@@ -130,7 +164,7 @@ class GamePageContainer extends React.Component{
 
     confirmChanges = async ({field}) => {
         var { profile } = this.props;
-        const { imageItem } = this.state;
+        const { imageItem, backgroundItem } = this.state;
 
         this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : true}})
 
@@ -152,6 +186,14 @@ class GamePageContainer extends React.Component{
                 }
                 await profile.getApp().editGameImage(postData);
                 break;
+            }
+            case 'background' : {
+                const postData = {
+                    background_url : backgroundItem,
+                    game : this.state.id
+                }
+                await profile.getApp().editBackgroundImage(postData);
+                break;
             };
         }
         await profile.setGameDataAsync();
@@ -163,7 +205,7 @@ class GamePageContainer extends React.Component{
 
 
     render = () => {
-        const { imageItem } = this.state; 
+        const { imageItem, backgroundItem } = this.state; 
         let game_image = game_images[new String(this.state.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
 
@@ -302,9 +344,43 @@ class GamePageContainer extends React.Component{
                                             <div style={{margin : 'auto'}}>
                                                 {
                                                     imageItem ? 
-                                                    this.renderImage(imageItem)
+                                                    this.renderImage(imageItem, 'image')
                                                     :
                                                     this.renderAddImage()
+                                                }
+                                            </div>
+                                        </EditLock>
+                                    </Col>
+                                </Row>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                    <Col lg={4}>
+                        <Card>
+                            <CardBody>
+                                <Row>
+                                    <Col md={4}>
+                                        <div style={{paddingBottom : 20}}>
+                                            <h5 className={"bold-text dashboard__total-stat"}>Background</h5>
+                                            <hr/>
+                                            <h6>Upload background game image</h6>
+                                        </div>
+                                    </Col>
+                                    <Col md={8}>
+                                        <EditLock 
+                                        unlockField={this.unlockField} 
+                                        lockField={this.lockField} 
+                                        confirmChanges={this.confirmChanges} 
+                                        type={'background'} 
+                                        isLoading={this.state.isLoading.background}
+                                        locked={this.state.locks.background}>
+                                        
+                                            <div style={{margin : 'auto'}}>
+                                                {
+                                                    backgroundItem ? 
+                                                    this.renderImage(backgroundItem, 'background')
+                                                    :
+                                                    this.renderAddBackground()
                                                 }
                                             </div>
                                         </EditLock>

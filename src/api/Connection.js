@@ -516,6 +516,19 @@ class Connection {
         }
     }
 
+    editBackgroundImage = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/games/editBackgroundImage`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     addCurrencyWallet = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/wallet/currency/add`, {
