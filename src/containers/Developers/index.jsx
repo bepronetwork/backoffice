@@ -35,7 +35,7 @@ class DevelopersContainer extends React.Component{
         
         this.setState({...this.state, 
             platformId  : app.getId(),
-            apiKey : app.getBearerToken()
+            apiKey : profile.getUserInfo().security.bearerToken
         })
     }
 
