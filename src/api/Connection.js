@@ -109,12 +109,12 @@ class Connection {
         }
     }
 
-    getApp =  async ({app, headers}) => {
+    getApp =  async ({admin, app, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/get/auth', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({app})
+                body : JSON.stringify({admin, app})
             });
             return response.json();
         }catch(err){
