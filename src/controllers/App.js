@@ -89,8 +89,6 @@ class App{
                 this.getWithdrawsAsync({size : 1000, currency : currency._id})
             ]);
 
-            console.log("res", res[0]);
-
             let serverApiInfo = {
                 users : res[0].data ? res[0].data.message : [],
                 games : res[1].data ? res[1].data.message : [],
