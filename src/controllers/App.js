@@ -705,11 +705,12 @@ class App{
         try{
             let res = await ConnectionSingleton.editBackgroundImage({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     background_url,
                     game
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
