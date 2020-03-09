@@ -148,12 +148,12 @@ class Connection {
         }
     }
 
-    getTransactions =  async ({app, filters, headers}) => {
+    getTransactions =  async ({admin, app, filters, headers}) => {
         try{
             let response = await fetch(URL + '/api/app/transactions', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({app, filters})
+                body : JSON.stringify({admin, app, filters})
             });
             return response.json();
         }catch(err){
