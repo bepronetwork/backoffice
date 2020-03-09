@@ -274,7 +274,7 @@ class App{
     }
 
     getAdminId(){
-        return this.admin.id;
+        return this.admin.admin;
     }
 
     getWallet = ({currency_id}) => {
