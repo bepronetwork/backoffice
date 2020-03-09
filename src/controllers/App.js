@@ -438,7 +438,7 @@ class App{
 
             let res = await ConnectionSingleton.finalizeUserWithdraw({
                 params : {
-                    user, app : this.getId(), transactionHash : null, withdraw_id : _id, currency : currency._id
+                    admin : this.getAdminId(), user, app : this.getId(), transactionHash : null, withdraw_id : _id, currency : currency._id
                 },
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             })
@@ -459,7 +459,7 @@ class App{
                 /* TO DO */
                 let item = items[i];
                 let res = await ConnectionSingleton.finalizeUserWithdraw({
-                    user : item.user, app : this.getId(), transactionHash : null, withdraw_id : item._id,
+                    admin : this.getAdminId(), user : item.user, app : this.getId(), transactionHash : null, withdraw_id : item._id,
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 });
                 console.log(res);
