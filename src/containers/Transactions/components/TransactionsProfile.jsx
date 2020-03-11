@@ -31,7 +31,7 @@ class UsersProfile extends PureComponent {
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : '#646777'}
-                            }><AnimationNumber  number={withdraws.length}/></p>
+                            }><AnimationNumber decimals={0} number={withdraws.length}/></p>
                         </div>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Total Withdraws <span> All </span></p>

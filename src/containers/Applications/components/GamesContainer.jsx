@@ -25,7 +25,6 @@ class GamesContainer extends PureComponent {
     }
 
     async projectData(props){
-        console.log(props.data);
         if(props.data.games.data && props.data.games.data[0]){
             const gamesInfo = props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
             const games = getAllGames(props.data.games.data, gamesInfo);

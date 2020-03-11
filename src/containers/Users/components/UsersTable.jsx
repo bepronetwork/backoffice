@@ -396,7 +396,7 @@ class UsersTable extends React.Component {
                                     </TableCell>
                                     <TableCell align="left">
                                         <p className='text-small'>
-                                            {!_.isEmpty(currency) ? n.wallet : null }
+                                            {!_.isEmpty(currency) ? n.wallet.toFixed(6) : null }
                                             <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
                                         </p>
                                     </TableCell>
@@ -407,13 +407,13 @@ class UsersTable extends React.Component {
                                     </TableCell>
                                     <TableCell align="left">
                                         <p className='text-small'>
-                                            {!_.isEmpty(currency) ? n.turnoverAmount : null }
+                                            {!_.isEmpty(currency) ? n.turnoverAmount.toFixed(6) : null }
                                             <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
                                         </p>
                                     </TableCell>
                                     <TableCell align="left">
                                         <p className='text-small'>
-                                            {!_.isEmpty(currency) ? n.profit : null }
+                                            {!_.isEmpty(currency) ? n.profit.toFixed(6) : null }
                                             <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
                                         </p>
                                     </TableCell>

@@ -1,12 +1,11 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row , Button} from 'reactstrap';
-import {  BarcodeIcon, TickCircleIcon, DirectionsIcon } from 'mdi-react';
+import {  TickCircleIcon, DirectionsIcon } from 'mdi-react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
 import TextInput from '../../../../../shared/components/TextInput';
-import { ETHEREUM_NET_DEFAULT } from '../../../../../config/apiConfig';
 import _ from 'lodash';
 import {formatCurrency} from '../../../../../utils/numberFormatation';
 
@@ -55,7 +54,7 @@ class WithdrawBox extends PureComponent {
             image : currency.image,
             playBalance :  wallet.playBalance ? wallet.playBalance : this.state.houseLiquidity,
             ticker : currency.ticker ? currency.ticker : this.state.ticker,
-            tokenAddressLink : `https://${ETHEREUM_NET_DEFAULT}.etherscan.io/token/` + tokenAddress,
+            tokenAddressLink : wallet.link_url,
             tokenAddress,
             tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
 
@@ -145,12 +144,18 @@ class WithdrawBox extends PureComponent {
                                         </Col>
                                     </Row> 
                                 </div>
-                                <a target={'__blank'} className='ethereum-address-a' href={tokenAddressLink}>
-                                    <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />
-                                        {tokenAddressTrimmed}
-                                    </p>
-                                </a>
-                              
+                                {
+                                    tokenAddressLink ?
+                                        <a target={'__blank'} className='ethereum-address-a' href={tokenAddressLink}>
+                                            <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />
+                                                {tokenAddressTrimmed}
+                                            </p>
+                                        </a>
+                                    :
+                                        <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />
+                                            {tokenAddressTrimmed}
+                                        </p>
+                                }
                             </Col>
                             <div className='container' style={{textAlign : 'center'}}>
                                 <Col lg={12} style={{margin : '10px auto', textAlign : 'center'}} >

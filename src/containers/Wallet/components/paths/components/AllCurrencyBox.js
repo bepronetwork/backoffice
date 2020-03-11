@@ -84,10 +84,10 @@ class AllCurrencyBox extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : '#646777'}
-                                    }><AnimationNumber decimals number={eth}/> ETH</p>
+                                    }><AnimationNumber decimals={6} number={eth}/> ETH</p>
                                 </div>
                                 <div className="dashboard__visitors-chart">
-                                    <p className="dashboard__visitors-chart-title"> <AnimationNumber decimals number={this.state.usd}/> <span> EUR </span></p>
+                                    <p className="dashboard__visitors-chart-title"> <AnimationNumber decimals={2} number={this.state.usd}/> <span> EUR </span></p>
                                 </div>
                             </Col>
                             <div className='container' style={{textAlign : 'center'}}>

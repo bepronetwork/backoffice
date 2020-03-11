@@ -109,12 +109,12 @@ class Connection {
         }
     }
 
-    getApp =  async ({app, headers}) => {
+    getApp =  async ({admin, app, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/get/auth', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({app})
+                body : JSON.stringify({admin, app})
             });
             return response.json();
         }catch(err){
@@ -122,12 +122,12 @@ class Connection {
         }
     }
 
-    editTableLimit = async ({app, game, tableLimit, headers}) => {
+    editTableLimit = async ({admin, app, game, tableLimit, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/games/editTableLimit', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({app, game, tableLimit : parseInt(tableLimit)})
+                body : JSON.stringify({admin, app, game, tableLimit : parseInt(tableLimit)})
             });
             return response.json();
         }catch(err){
@@ -135,12 +135,12 @@ class Connection {
         }
     }
 
-    editEdge = async ({app, game, edge, headers}) => {
+    editEdge = async ({admin, app, game, edge, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/games/editEdge', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({app, game, edge})
+                body : JSON.stringify({admin, app, game, edge})
             });
             return response.json();
         }catch(err){
@@ -148,12 +148,12 @@ class Connection {
         }
     }
 
-    getTransactions =  async ({app, filters, headers}) => {
+    getTransactions =  async ({admin, app, filters, headers}) => {
         try{
             let response = await fetch(URL + '/api/app/transactions', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({app, filters})
+                body : JSON.stringify({admin, app, filters})
             });
             return response.json();
         }catch(err){
@@ -506,6 +506,19 @@ class Connection {
     editGameImage = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/games/editImage`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editBackgroundImage = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/games/editBackgroundImage`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

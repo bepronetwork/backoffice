@@ -4,6 +4,7 @@ import Numbers from "../services/numbers";
 import { getNonce } from "../lib/number";
 import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
+import { getAuthFromCookies } from "./services/services";
 import _ from 'lodash';
 
 class App{    
@@ -12,6 +13,7 @@ class App{
         this.data = {
             summary : {}
         };
+        this.admin = getAuthFromCookies();
     }
 
     getSummary = async () => {
@@ -23,64 +25,69 @@ class App{
             let res = await Promise.all([
                 !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
-                        app : this.params.id,
+                        admin : this.getAdminId(),
+                        app : this.getId(),
                         type : 'USERS',
                         periodicity : periodicity,
                         currency : currency._id,
                     },
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }) : currency,
                 !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
-                        app : this.params.id,
+                        admin : this.getAdminId(),
+                        app : this.getId(),
                         type : 'GAMES',
                         periodicity : periodicity,
                         currency : currency._id,
                     },
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }) : currency,
                 !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
-                        app : this.params.id,
+                        admin : this.getAdminId(),
+                        app : this.getId(),
                         type : 'BETS',
                         periodicity : periodicity,
                         currency : currency._id,
                     },
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }) : currency,
                 !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
-                        app : this.params.id,
+                        admin : this.getAdminId(),
+                        app : this.getId(),
                         type : 'REVENUE',
                         periodicity : periodicity,
                         currency : currency._id,
                     },
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }) : currency,
                 !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
-                        app : this.params.id,
+                        admin : this.getAdminId(),
+                        app : this.getId(),
                         type : 'WALLET',
                         periodicity : periodicity,
                         currency : currency._id,
                     },
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }) : currency,
                 ConnectionSingleton.getApp({
-                    app : this.params.id,
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
                 ConnectionSingleton.getTransactions({
-                    app : this.params.id,
+                    admin : this.getAdminId(),
+                    app : this.getId(),
                     filters : [],
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
                 this.getGamesAsync({currency : currency._id}),
                 this.getUsersAsync({size : 1000, currency : currency._id}),
                 this.getWithdrawsAsync({size : 1000, currency : currency._id})
             ]);
-
-            console.log("res", res[0]);
 
             let serverApiInfo = {
                 users : res[0].data ? res[0].data.message : [],
@@ -113,8 +120,9 @@ class App{
 
     updateAppInfoAsync = async () => {
         this.params = (await ConnectionSingleton.getApp({
-            app : this.params.id,
-            headers : authHeaders(this.params.bearerToken, this.params.id)
+            admin : this.getAdminId(),
+            app : this.getId(),
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
         })).data.message;
     }
 
@@ -125,7 +133,7 @@ class App{
                 {   
                     currency, 
                     entity : this.getId(), 
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 });
         }catch(err){
             throw err;
@@ -137,9 +145,10 @@ class App{
         try{
             return await ConnectionSingleton.getTransactions(
                 {   
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     filters,
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 });
         }catch(err){
             throw err;
@@ -152,9 +161,10 @@ class App{
             return await ConnectionSingleton.deployApp(
                 {   
                     params : {
+                        admin : this.getAdminId(),
                         app : this.getId()
                     },
-                    headers : authHeaders(this.params.bearerToken, this.params.id)
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 });
         }catch(err){
             throw err;
@@ -173,8 +183,9 @@ class App{
     async addServices(services){
         try{
             let res = await ConnectionSingleton.addServices({
+                admin : this.getAdminId(),
                 app : this.getId(),
-                headers : authHeaders(this.params.bearerToken, this.params.id),
+                headers : authHeaders(this.getBearerToken(), this.getAdminId()),
                 services
             });
             return res;
@@ -187,11 +198,12 @@ class App{
         try{           
             return await ConnectionSingleton.editAffiliateStructure({
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     structures, 
                     affiliateTotalCut : structures.reduce( (acc, s) => acc+parseFloat(s.percentageOnLoss), 0)
                 },
-                headers : authHeaders(this.getBearerToken(), this.getId())
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             })
         }catch(err){
             throw err;
@@ -202,11 +214,12 @@ class App{
         try{           
             return await ConnectionSingleton.setCustomAffiliateStructureToUser({
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     user,
                     affiliatePercentage
                 },
-                headers : authHeaders(this.getBearerToken(), this.getId())
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             })
         }catch(err){
             throw err;
@@ -255,7 +268,11 @@ class App{
     }
 
     getBearerToken(){
-        return this.params.bearerToken;
+        return this.admin.bearerToken;
+    }
+
+    getAdminId(){
+        return this.admin.admin;
     }
 
     getWallet = ({currency_id}) => {
@@ -278,12 +295,13 @@ class App{
         try{
             let res = await ConnectionSingleton.updateWallet({
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     amount,
                     transactionHash,
                     currency : currency_id
                 },
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
             let {
                 message,
@@ -335,9 +353,10 @@ class App{
                     nonce : getNonce(), 
                     currency : currency._id,
                     tokenAmount,
-                    app : this.getId()
+                    app : this.getId(),
+                    admin : this.getAdminId()
                 },
-                headers : authHeaders(this.params.bearerToken, this.params.id),
+                headers : authHeaders(this.getBearerToken(), this.getAdminId()),
             });
     
             return res_with;
@@ -355,9 +374,10 @@ class App{
                     withdraw_id, 
                     nonce : getNonce(), 
                     currency : currency._id,
-                    app : this.getId()
+                    app : this.getId(),
+                    admin : this.getAdminId()
                 },
-                headers : authHeaders(this.params.bearerToken, this.params.id),
+                headers : authHeaders(this.getBearerToken(), this.getAdminId()),
             });
     
             return res_with;
@@ -371,9 +391,10 @@ class App{
         return (await ConnectionSingleton.getUser({
             params : {
                 user,
-                app : this.getId()
+                app : this.getId(),
+                admin : this.getAdminId()
             },
-            headers : authHeaders(this.params.bearerToken, this.params.id),
+            headers : authHeaders(this.getBearerToken(), this.getAdminId()),
         })).data.message;
     }
 
@@ -384,9 +405,10 @@ class App{
                 params : {
                     size,
                     offset,
-                    app : this.getId()
+                    app : this.getId(),
+                    admin : this.getAdminId()
                 },
-                headers : authHeaders(this.params.bearerToken, this.params.id),
+                headers : authHeaders(this.getBearerToken(), this.getAdminId()),
             })).data.message;
             return this.data.summary.usersInfoSummary;
         }catch(err){
@@ -400,9 +422,10 @@ class App{
                 params : {
                     size,
                     offset,
-                    app : this.getId()
+                    app : this.getId(),
+                    admin : this.getAdminId()
                 },
-                headers : authHeaders(this.params.bearerToken, this.params.id),
+                headers : authHeaders(this.getBearerToken(), this.getAdminId()),
             })).data.message;
             return this.data.summary.withdraws;
         }catch(err){
@@ -415,9 +438,9 @@ class App{
 
             let res = await ConnectionSingleton.finalizeUserWithdraw({
                 params : {
-                    user, app : this.getId(), transactionHash : null, withdraw_id : _id, currency : currency._id
+                    admin : this.getAdminId(), user, app : this.getId(), transactionHash : null, withdraw_id : _id, currency : currency._id
                 },
-                headers : authHeaders(this.params.bearerToken, this.getId())
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             })
 
             return res;
@@ -436,8 +459,8 @@ class App{
                 /* TO DO */
                 let item = items[i];
                 let res = await ConnectionSingleton.finalizeUserWithdraw({
-                    user : item.user, app : this.getId(), transactionHash : null, withdraw_id : item._id,
-                    headers : authHeaders(this.params.bearerToken, this.getId())
+                    admin : this.getAdminId(), user : item.user, app : this.getId(), transactionHash : null, withdraw_id : item._id,
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 });
                 console.log(res);
             }
@@ -450,10 +473,11 @@ class App{
     editTableLimit = async ({game, tableLimit}) => {
         try{
             /* Cancel Withdraw Response */ 
-            return await ConnectionSingleton.editTableLimit({               
+            return await ConnectionSingleton.editTableLimit({    
+                admin : this.getAdminId(),           
                 app : this.getId(),
                 game, tableLimit,
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
         }catch(err){
@@ -466,13 +490,14 @@ class App{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editTopBarCustomization({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     textColor,
                     backgroundColor,
                     text,
                     isActive
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -489,6 +514,7 @@ class App{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editIntegration({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     isActive,
                     integration_id,
@@ -496,7 +522,7 @@ class App{
                     privateKey,
                     integration_type
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -513,11 +539,12 @@ class App{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editEmailIntegration({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     apiKey,
                     templateIds
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -533,11 +560,12 @@ class App{
         try{
             let res = await ConnectionSingleton.editBannersCustomization({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     banners,
                     autoDisplay
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -553,10 +581,11 @@ class App{
         try{
             let res = await ConnectionSingleton.editLogoCustomization({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     logo
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -572,10 +601,11 @@ class App{
         try{
             let res = await ConnectionSingleton.editFaviconCustomization({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     topIcon
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -591,10 +621,11 @@ class App{
         try{
             let res = await ConnectionSingleton.editLoadingGifCustomization({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     loadingGif
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -611,10 +642,11 @@ class App{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editColorsCustomization({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     colors
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -631,11 +663,12 @@ class App{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editFooterCustomization({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     communityLinks,
                     supportLinks
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -651,11 +684,33 @@ class App{
         try{
             let res = await ConnectionSingleton.editGameImage({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     image_url,
                     game
                 },         
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editBackgroundImage = async ({background_url, game}) => {
+        try{
+            let res = await ConnectionSingleton.editBackgroundImage({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    background_url,
+                    game
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
             /* Update App Info Async */
@@ -670,9 +725,10 @@ class App{
     cancelWithdraw = async () => {
         try{
             /* Cancel Withdraw Response */
-            return await ConnectionSingleton.cancelWithdraw({               
+            return await ConnectionSingleton.cancelWithdraw({      
+                admin : this.getAdminId(),         
                 app : this.getId(),
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
         }catch(err){
@@ -685,10 +741,11 @@ class App{
             /* Cancel Withdraw Response */
             return await ConnectionSingleton.getGames({       
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     currency
                 }, 
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
         }catch(err){
@@ -702,11 +759,12 @@ class App{
             // Send info to server
             let res = await ConnectionSingleton.addCurrencyWallet({          
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     passphrase : passphrase,
                     currency_id : currency._id
                 },
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
             console.log(res);
 
@@ -728,11 +786,12 @@ class App{
 
     editEdge = async ({game, edge}) => {
         try{
-            return await ConnectionSingleton.editEdge({               
+            return await ConnectionSingleton.editEdge({
+                admin : this.getAdminId(),            
                 app : this.getId(),
                 game,
                 edge,
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
         }catch(err){
@@ -744,13 +803,14 @@ class App{
         try{
             let res = await ConnectionSingleton.changeMaxDeposit({
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     amount,
                     wallet_id : wallet_id
                 },
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>", res);
+
             let {
                 status
             } = res.data;
@@ -770,11 +830,12 @@ class App{
         try{
             let res = await ConnectionSingleton.changeMaxWithdraw({
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     amount,
                     wallet_id : wallet_id
                 },
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
             let {
                 status
@@ -844,10 +905,11 @@ class App{
         try{
             return await ConnectionSingleton.addGameToPlatform({   
                 params : {
+                    admin : this.getAdminId(),
                     app : this.getId(),
                     game
                 },     
-                headers : authHeaders(this.params.bearerToken, this.params.id)
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
         }catch(err){

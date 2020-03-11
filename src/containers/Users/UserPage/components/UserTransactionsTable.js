@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from "react-redux";
+import { compose } from 'lodash/fp';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -16,7 +18,7 @@ import { AddressConcat } from '../../../../lib/string';
 import { ETHERSCAN_URL } from '../../../../lib/etherscan';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
-const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdraw.png`;
+const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
 const deposit = `${process.env.PUBLIC_URL}/img/dashboard/deposit.png`;
 
 
@@ -46,16 +48,26 @@ function getSorting(order, orderBy) {
 }
 
 
-const fromDatabasetoTable = (data) => {
+const fromDatabasetoTable = (data, { currencies=[] }) => {
+
 	return data.map( (key) => {
+
+        const currency = currencies.find(c => new String(c._id).toString() == new String(key.currency).toString());
+
 		return {
             _id :  key._id,
-            isWithdraw : key.isWithdraw,
+            user : key.user,
+            currency : currency, 
+            address: key.address,
+            ticker : currency ? currency.ticker : '',
+            status :  key.status,
+            amount: key.amount,
             transactionHash : key.transactionHash,
 			creation_timestamp: moment(new Date(key.creation_timestamp)).format('lll'),
-			isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
-            amount: key.amount,
-            status :  key.transactionHash ? 'Confirmed' : (key.isWithdraw ? 'Queue' : 'Unconfirmed')
+            isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
+            typeIcon: key.isWithdraw ? withdraw : deposit,
+            type: key.isWithdraw ? 'Withdraw' : 'Deposit',
+            link_url: key.link_url
 		}
 	})
 }
@@ -198,7 +210,7 @@ class UserTransactionsTable extends React.Component {
             order: 'asc',
             orderBy: 'id',
             selected: [],
-            data: fromDatabasetoTable(props.data),
+            data: fromDatabasetoTable(props.data, {currencies : []}),
             page: 0,
             isLoading : {},
             ticker : 'N/A',
@@ -215,9 +227,11 @@ class UserTransactionsTable extends React.Component {
         this.projectData(props);
     }
 
-    projectData = (props) => {
+    projectData = async (props) => {
+        let app = props.profile.getApp();
+        const { currencies } = (await app.getEcosystemVariables()).data.message;
         this.setState({...this.state, 
-            data : fromDatabasetoTable(props.data),
+            data : fromDatabasetoTable(props.data, { currencies }),
             ticker : props.ticker,
         })
     }
@@ -305,9 +319,7 @@ class UserTransactionsTable extends React.Component {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map(n => {
                     const isSelected = this.isSelected(n.id);
-                    const imageTransaction = n.isWithdraw ? withdraw : deposit;
-                    const textTransaction = n.isWithdraw ? 'Withdraw' : 'Deposit';
-                    
+
                     return (
                         <TableRow
                             hover
@@ -321,18 +333,20 @@ class UserTransactionsTable extends React.Component {
                         >
                             <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
                             <TableCell align="left"> 
-                                <p className={`text-small text-${n.isAffiliate.toLowerCase()}`} style={{float : 'left', marginRight : 4}}>{textTransaction}</p>
-                                <img src={imageTransaction} style={{width : 20, height : 20}}/>
+                                <p className={`text-small text-${n.isAffiliate.toLowerCase()}`} style={{float : 'left', marginRight : 4}}>{n.type}</p>
+                                <img src={n.typeIcon} style={{width : 20, height : 20}}/>
                             </TableCell>
                             <TableCell align="left">
                                 { 
                                     n.transactionHash ? 
-                                    <a target={'__blank'} href={`${ETHERSCAN_URL}/tx/${n.transactionHash}`}>
-                                        <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
-                                    </a>
+                                        n.link_url ?
+                                            <a target={'__blank'} href={`${n.link_url}`}>
+                                                <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
+                                            </a>
+                                        :
+                                            <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
                                     : 'N/A'
                                 }
-                              
                             </TableCell>
                             <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
                             <TableCell align="left">
@@ -349,7 +363,11 @@ class UserTransactionsTable extends React.Component {
                                                 : <img src={loading} style={{width : 20, height : 20}}/>
                                             }
                                         </button>
-                                    :  <p className='text-small background-green text-white'>{n.status}</p>
+                                    :  
+                                        n.status ?
+                                            <p className='text-small background-green text-white'>{n.status}</p>
+                                        :
+                                            null
                                 }
                             </TableCell>
                         </TableRow>
@@ -387,4 +405,11 @@ UserTransactionsTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UserTransactionsTable);
+function mapStateToProps(state){
+    return {
+        profile : state.profile
+    };
+}
+
+export default compose(connect(mapStateToProps))( withStyles(styles)(UserTransactionsTable) );
+// export default withStyles(styles)(UserTransactionsTable);

@@ -30,11 +30,11 @@ class GameStoreContainer extends PureComponent {
                     <CardBody className="dashboard__card-widget">
                         <Row>
                             <Col lg={4} >  
-                                <img className='application__game__image' src={image_url}/>
+                                <img className='application__game__image' style={{display: 'block', marginLeft: `-10px`}} src={image_url}/>
                             </Col>
                             <Col lg={8} >
                                 <div className="dashboard__visitors-chart text-left">
-                                    <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 25}}> {name} </p>
+                                    <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 20}}> {name} </p>
                                     <p className="text-left secondary-text"> {description} </p>
                                 </div>
                             </Col>

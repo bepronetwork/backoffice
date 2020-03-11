@@ -19,7 +19,7 @@ class Account{
 
     getId = () => this.User.id;
 
-    getBearerToken = () => {return (this.User.bearerToken || this.User.security.bearerToken)};
+    getBearerToken = () => {return this.User.security.bearerToken};
 
     auth = async () => {
         try{
@@ -326,7 +326,7 @@ class Account{
 
             setAuthToCookies({
                 admin : data.id,
-                bearerToken : data.bearerToken || data.security.bearerToken
+                bearerToken : data.security.bearerToken
             });
 
             /* SET APP */

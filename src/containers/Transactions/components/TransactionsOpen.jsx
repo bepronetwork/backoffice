@@ -45,7 +45,7 @@ class TransactionsOpen extends PureComponent {
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : openWithdraws >= 0 ? '#76d076' : '#646777'}
-                                    }><AnimationNumber decimals number={openWithdraws}/></p>
+                                    }><AnimationNumber decimals={0} number={openWithdraws}/></p>
                                 </div>
                               
                             </Col>                         
