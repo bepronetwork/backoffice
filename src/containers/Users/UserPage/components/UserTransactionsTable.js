@@ -18,7 +18,7 @@ import { AddressConcat } from '../../../../lib/string';
 import { ETHERSCAN_URL } from '../../../../lib/etherscan';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
-const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdraw.png`;
+const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
 const deposit = `${process.env.PUBLIC_URL}/img/dashboard/deposit.png`;
 
 
@@ -64,7 +64,10 @@ const fromDatabasetoTable = (data, { currencies=[] }) => {
             amount: key.amount,
             transactionHash : key.transactionHash,
 			creation_timestamp: moment(new Date(key.creation_timestamp)).format('lll'),
-			isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal'
+            isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
+            typeIcon: key.isWithdraw ? withdraw : deposit,
+            type: key.isWithdraw ? 'Withdraw' : 'Deposit',
+            link_url: key.link_url
 		}
 	})
 }
@@ -316,9 +319,7 @@ class UserTransactionsTable extends React.Component {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map(n => {
                     const isSelected = this.isSelected(n.id);
-                    const imageTransaction = n.isWithdraw ? withdraw : deposit;
-                    const textTransaction = n.isWithdraw ? 'Withdraw' : 'Deposit';
-                    
+
                     return (
                         <TableRow
                             hover
@@ -332,8 +333,8 @@ class UserTransactionsTable extends React.Component {
                         >
                             <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
                             <TableCell align="left"> 
-                                <p className={`text-small text-${n.isAffiliate.toLowerCase()}`} style={{float : 'left', marginRight : 4}}>{textTransaction}</p>
-                                <img src={imageTransaction} style={{width : 20, height : 20}}/>
+                                <p className={`text-small text-${n.isAffiliate.toLowerCase()}`} style={{float : 'left', marginRight : 4}}>{n.type}</p>
+                                <img src={n.typeIcon} style={{width : 20, height : 20}}/>
                             </TableCell>
                             <TableCell align="left">
                                 { 
@@ -362,7 +363,11 @@ class UserTransactionsTable extends React.Component {
                                                 : <img src={loading} style={{width : 20, height : 20}}/>
                                             }
                                         </button>
-                                    :  <p className='text-small background-green text-white'>{n.status}</p>
+                                    :  
+                                        n.status ?
+                                            <p className='text-small background-green text-white'>{n.status}</p>
+                                        :
+                                            null
                                 }
                             </TableCell>
                         </TableRow>
