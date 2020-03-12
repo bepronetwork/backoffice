@@ -67,7 +67,8 @@ const fromDatabasetoTable = (data, { currencies=[] }) => {
             isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
             typeIcon: key.isWithdraw ? withdraw : deposit,
             type: key.isWithdraw ? 'Withdraw' : 'Deposit',
-            link_url: key.link_url
+            link_url: key.link_url,
+            confirmed : key.confirmed
 		}
 	})
 }
@@ -359,7 +360,7 @@ class UserTransactionsTable extends React.Component {
                                         <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover ${this.state.isLoading[n._id] ? 'background-grey' : ''}`} onClick={ () => this.allowWithdraw(n)}> 
                                             {
                                                 !this.state.isLoading[n._id] ? 
-                                                    <p className='text-small text-white'>{n.status}</p>
+                                                    <p className='text-small text-white'>To Confirm</p>
                                                 : <img src={loading} style={{width : 20, height : 20}}/>
                                             }
                                         </button>
@@ -367,7 +368,10 @@ class UserTransactionsTable extends React.Component {
                                         n.status ?
                                             <p className='text-small background-green text-white'>{n.status}</p>
                                         :
-                                            null
+                                            n.confirmed ?
+                                                <p className='text-small background-green text-white'>Confirmed</p>
+                                            :
+                                                <p className='text-small background-red text-white'>Not Confirmed</p>
                                 }
                             </TableCell>
                         </TableRow>
