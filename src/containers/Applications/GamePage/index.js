@@ -176,7 +176,7 @@ class GamePageContainer extends React.Component{
             };
             case 'tableLimit' : {
                 // Change Table Limit
-                let res = await profile.getApp().editTableLimit({game : this.state.id, tableLimit : this.state[`new_${field}`]});
+                await profile.getApp().editTableLimit({game : this.state.id, tableLimit : this.state[`new_${field}`], wallet : this.state.currencyTicker});
                 break;
             }
             case 'image' : {

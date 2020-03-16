@@ -470,13 +470,13 @@ class App{
         }
     }
 
-    editTableLimit = async ({game, tableLimit}) => {
+    editTableLimit = async ({game, tableLimit, wallet}) => {
         try{
             /* Cancel Withdraw Response */ 
             return await ConnectionSingleton.editTableLimit({    
                 admin : this.getAdminId(),           
                 app : this.getId(),
-                game, tableLimit,
+                game, tableLimit, wallet,
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
