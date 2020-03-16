@@ -3,23 +3,25 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select } from '@material-ui/core';
+import DownIcon from 'mdi-react/ChevronDownIcon';
+import { Col, Collapse, Row } from 'reactstrap';
+import { Field } from 'redux-form';
+import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
+import TextInput from '../../../shared/components/TextInput';
 import { FilterListIcon } from 'mdi-react';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
+import _ from 'lodash';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -125,17 +127,17 @@ class EnhancedTableHead extends React.Component {
                         sortDirection={orderBy === row.id ? order : false}
                     >
                         <Tooltip
-                        title="Sort"
-                        placement={row.numeric ? 'bottom-end' : 'bottom-start'}
-                        enterDelay={300}
-                        >
-                        <TableSortLabel
-                            active={orderBy === row.id}
-                            direction={order}
-                            onClick={this.createSortHandler(row.id)}
-                        >
-                            {row.label}
-                        </TableSortLabel>
+                            title="Sort"
+                            placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                            enterDelay={300}
+                            >
+                            <TableSortLabel
+                                active={orderBy === row.id}
+                                direction={order}
+                                onClick={this.createSortHandler(row.id)}
+                            >
+                                {row.label}
+                            </TableSortLabel>
                         </Tooltip>
                     </TableCell>
                     ),
@@ -250,7 +252,10 @@ class EnhancedTable extends React.Component {
             data: fromDatabasetoTable(props.data.withdraws.data, {currencies : []}),
             page: 0,
             isLoading : {},
-            rowsPerPage: 5
+            rowsPerPage: 10,
+            currencyFilter: '',
+            statusFilter: '',
+            userFilter: null
         };
     }
 
@@ -332,18 +337,75 @@ class EnhancedTable extends React.Component {
         this.setState({ rowsPerPage: event.target.value });
     };
 
+    handleChangeInputContent = (type, item) => {
+        this.setState({[type] : item});
+    }
+
+    handleChangeDropDown = event => {
+        const field = event.target.name;
+
+        this.setState({ [field]: event.target.value });
+    };
+
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page, userFilter, currencyFilter, statusFilter } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const statusMap = new Map();
+    const currencyMap = new Map();
 
     return (
       <Paper className={classes.root}>
-      
             <EnhancedTableToolbar numSelected={selected.length} />
-                <div className={classes.tableWrapper}>
+            <div style={{padding : '16px 30px'}}>
+                <Row>
+                    <Col>
+                        <FormControl style={{width : '100%'}}>
+                            <TextInput
+                                label={'User Id'}
+                                name={'userFilter'}
+                                type={'text'} 
+                                defaultValue={userFilter}
+                                changeContent={this.handleChangeInputContent} />
+                        </FormControl>
+                    </Col>
+                    <Col>
+                        <FormControl style={{width : '100%', marginTop : 13}}>
+                            <InputLabel id="currencyFilterLabel">Currency</InputLabel>
+                            <Select labelId="currencyFilterLabel" id="currencyFilter" name="currencyFilter" value={currencyFilter} onChange={this.handleChangeDropDown}>
+                                <MenuItem value="">All</MenuItem>
+                                {
+                                    data.map(s => {
+                                        if(!currencyMap.has(s.currency) && s.currency){
+                                            currencyMap.set(s.currency, true); 
+                                            return (<MenuItem value={s.currency._id}>{s.currency.name}</MenuItem>)
+                                        }
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                    </Col>
+                    <Col>
+                        <FormControl style={{width : '100%', marginTop : 13}}>
+                            <InputLabel id="statusFilterLabel">Status</InputLabel>
+                            <Select labelId="statusFilterLabel" id="statusFilter" name="statusFilter" value={statusFilter} onChange={this.handleChangeDropDown}>
+                                <MenuItem value="">All</MenuItem>
+                                {
+                                    data.map(s => {
+                                        if(!statusMap.has(s.status)){
+                                            statusMap.set(s.status, true); 
+                                            return (<MenuItem value={s.status}>{s.status}</MenuItem>)
+                                        }
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                    </Col>
+                </Row>
+            </div>
+            <div className={classes.tableWrapper}>
             <Table className={classes.table} aria-labelledby="tableTitle">
                 <EnhancedTableHead
                     numSelected={selected.length}
@@ -356,6 +418,10 @@ class EnhancedTable extends React.Component {
             <TableBody>
                 {stableSort(data, getSorting(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .filter(n => 
+                        (_.isEmpty(statusFilter) || n.status == statusFilter) && 
+                        (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
+                        (_.isEmpty(userFilter) || n.user.includes(userFilter)))
                     .map(n => {
                     const isSelected = this.isSelected(n.id);
                     return (
@@ -422,7 +488,8 @@ class EnhancedTable extends React.Component {
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        currency: state.currency
     };
 }
 
