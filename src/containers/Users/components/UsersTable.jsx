@@ -4,21 +4,14 @@ import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
+import { 
+    Table, TableBody, TableCell, TableHead, TablePagination, TableRow, IconButton,
+    TableSortLabel, Toolbar, Typography, Paper, Tooltip, FormControl
+      } from '@material-ui/core';
+import { Col, Row } from 'reactstrap';
+import TextInput from '../../../shared/components/TextInput';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { FilterListIcon } from 'mdi-react';
 import { compareIDS } from '../../../lib/string';
@@ -268,7 +261,9 @@ class UsersTable extends React.Component {
             selected: [],
             data: [],
             page: 0,
-            rowsPerPage: 5,
+            rowsPerPage: 10,
+            usernameFilter: null,
+            emailFilter: null,
             ...defaultProps
         };
     }
@@ -332,6 +327,10 @@ class UsersTable extends React.Component {
         this.setState({ selected: newSelected });
     };
 
+    handleChangeInputContent = (type, item) => {
+        this.setState({[type] : item});
+    }
+
     handleChangePage = (event, page) => {
         this.setState({ page });
     };
@@ -344,13 +343,37 @@ class UsersTable extends React.Component {
 
     render() {
         const { classes, currency } = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+        const { data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
             <Paper className={classes.root}>
-                    <EnhancedTableToolbar numSelected={selected.length} />
-                        <div className={classes.tableWrapper}>
+                <EnhancedTableToolbar numSelected={selected.length} />
+                <div style={{padding : '16px 30px'}}>
+                    <Row>
+                        <Col>
+                            <FormControl style={{width : '100%'}}>
+                                <TextInput
+                                    label={'Username'}
+                                    name={'usernameFilter'}
+                                    type={'text'} 
+                                    defaultValue={usernameFilter}
+                                    changeContent={this.handleChangeInputContent} />
+                            </FormControl>
+                        </Col>
+                        <Col>
+                            <FormControl style={{width : '100%'}}>
+                                <TextInput
+                                    label={'Email'}
+                                    name={'emailFilter'}
+                                    type={'text'} 
+                                    defaultValue={emailFilter}
+                                    changeContent={this.handleChangeInputContent} />
+                            </FormControl>
+                        </Col>
+                    </Row>
+                </div>             
+                <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead
                             numSelected={selected.length}
@@ -360,77 +383,81 @@ class UsersTable extends React.Component {
                             onRequestSort={this.handleRequestSort}
                             rowCount={data.length}
                         />
-                    <TableBody>
-                        {stableSort(data, getSorting(order, orderBy))
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map(n => {
-                            const isSelected = this.isSelected(n.id);
-                            return (
-                                <TableRow
-                                    hover
-                                    onClick={event => this.handleClick(event, n.id)}
-                                    role="checkbox"
-                                    style={{padding : 0}}
-                                    aria-checked={isSelected}
-                                    tabIndex={-1}
-                                    key={n.id}
-                                    selected={isSelected}
-                                >
-                                    <TableCell align="left">
-                                        <img src={`https://avatars.dicebear.com/v2/avataaars/${n._id}.svg`} className={'avatar-image-small'}/>
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <p className='text-small'>
-                                            {n._id}
-                                        </p>
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <p className='text-small'>
-                                            {n.username}
-                                        </p>
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <p className='text-small'>
-                                            {n.email}
-                                        </p>
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <p className='text-small'>
-                                            {!_.isEmpty(currency) ? n.wallet.toFixed(6) : null }
-                                            <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
-                                        </p>
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <p className='text-small background-grey text-white'>
-                                            {n.bets} 
-                                        </p>
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <p className='text-small'>
-                                            {!_.isEmpty(currency) ? n.turnoverAmount.toFixed(6) : null }
-                                            <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
-                                        </p>
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <p className='text-small'>
-                                            {!_.isEmpty(currency) ? n.profit.toFixed(6) : null }
-                                            <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
-                                        </p>
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <button className={`clean_button button-normal button-hover`} onClick={ () => this.props.goToUserPage({user : n.full_info})}> 
-                                            <p className='text-small text-white'>See More</p>
-                                        </button>
-                                    </TableCell>
-                                    
+                        <TableBody>
+                            {stableSort(data, getSorting(order, orderBy))
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .filter(n => 
+                                    (_.isEmpty(usernameFilter) || n.username.includes(usernameFilter)) &&
+                                    (_.isEmpty(emailFilter) || n.email.includes(emailFilter))
+                                )
+                                .map(n => {
+                                const isSelected = this.isSelected(n.id);
+                                return (
+                                    <TableRow
+                                        hover
+                                        onClick={event => this.handleClick(event, n.id)}
+                                        role="checkbox"
+                                        style={{padding : 0}}
+                                        aria-checked={isSelected}
+                                        tabIndex={-1}
+                                        key={n.id}
+                                        selected={isSelected}
+                                    >
+                                        <TableCell align="left">
+                                            <img src={`https://avatars.dicebear.com/v2/avataaars/${n._id}.svg`} className={'avatar-image-small'}/>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <p className='text-small'>
+                                                {n._id}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <p className='text-small'>
+                                                {n.username}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <p className='text-small'>
+                                                {n.email}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <p className='text-small'>
+                                                {!_.isEmpty(currency) ? n.wallet.toFixed(6) : null }
+                                                <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
+                                            </p>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <p className='text-small background-grey text-white'>
+                                                {n.bets} 
+                                            </p>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <p className='text-small'>
+                                                {!_.isEmpty(currency) ? n.turnoverAmount.toFixed(6) : null }
+                                                <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
+                                            </p>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <p className='text-small'>
+                                                {!_.isEmpty(currency) ? n.profit.toFixed(6) : null }
+                                                <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
+                                            </p>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <button className={`clean_button button-normal button-hover`} onClick={ () => this.props.goToUserPage({user : n.full_info})}> 
+                                                <p className='text-small text-white'>See More</p>
+                                            </button>
+                                        </TableCell>
+                                        
+                                    </TableRow>
+                                );
+                            })}
+                            {emptyRows > 0 && (
+                                <TableRow style={{ height: 49 * emptyRows }}>
+                                <TableCell colSpan={6} />
                                 </TableRow>
-                            );
-                        })}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 49 * emptyRows }}>
-                            <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
+                            )}
                         </TableBody>
                     </Table>
                 </div>
