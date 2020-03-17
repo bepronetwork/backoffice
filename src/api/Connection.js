@@ -122,12 +122,12 @@ class Connection {
         }
     }
 
-    editTableLimit = async ({admin, app, game, tableLimit, headers}) => {
+    editTableLimit = async ({admin, app, game, tableLimit, wallet, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/games/editTableLimit', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({admin, app, game, tableLimit : parseInt(tableLimit)})
+                body : JSON.stringify({admin, app, game, tableLimit : parseInt(tableLimit), wallet})
             });
             return response.json();
         }catch(err){
