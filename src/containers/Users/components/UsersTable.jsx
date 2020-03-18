@@ -179,7 +179,7 @@ const toolbarStyles = theme => ({
         flex: '1 1 100%',
     },
     actions: {
-        color: theme.palette.text.secondary,
+        color: theme.palette.text.secondary, zIndex: 20
     },
     title: {
         flex: '0 0 auto',
@@ -187,7 +187,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
+  const { numSelected, classes, filterClick } = props;
 
     return (
         <Toolbar
@@ -196,30 +196,18 @@ let EnhancedTableToolbar = props => {
         })}
         >
         <div className={classes.title}>
-            {numSelected > 0 ? (
-            <Typography color="inherit" variant="subtitle1">
-                {numSelected} selected
-            </Typography>
-            ) : (
             <Typography variant="h6" id="tableTitle">
                 Users
             </Typography>
-            )}
         </div>
         <div className={classes.spacer} />
-        <div className={classes.actions}>
-            {numSelected > 0 ? (
-            <Tooltip title="Delete">
-                <IconButton aria-label="Delete">
-                </IconButton>
-            </Tooltip>
-            ) : (
+        <div className={classes.actions} onClick={filterClick}>
+            <div style={{position: "absolute", right: 0, margin: "14px 70px 0 0", cursor: "pointer"}}><p>Filter List</p></div>
             <Tooltip title="Filter list">
                 <IconButton aria-label="Filter list">
                 <FilterListIcon />
                 </IconButton>
             </Tooltip>
-            )}
         </div>
         </Toolbar>
     );
@@ -264,6 +252,7 @@ class UsersTable extends React.Component {
             rowsPerPage: 10,
             usernameFilter: null,
             emailFilter: null,
+            showFilter: false,
             ...defaultProps
         };
     }
@@ -341,21 +330,31 @@ class UsersTable extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+    handleFilterClick = () => {
+        const { showFilter } = this.state;
+        this.setState({ showFilter: showFilter ? false : true });
+    }
+
     render() {
         const { classes, currency } = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter } = this.state;
+        const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter } = this.state;
         const dataFiltered = data.filter(n => 
             (_.isEmpty(usernameFilter) || n.username.includes(usernameFilter)) &&
             (_.isEmpty(emailFilter) || n.email.includes(emailFilter))
         );
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, dataFiltered.length - page * rowsPerPage);
+        const styles = {
+            fitler: {
+                padding: '20px 20px 30px 20px', border: "1px solid #d9d9d9", margin: '24px 14px 0 0',
+                backgroundColor: "#f2f4f7", borderRadius: 4, width: 330, position: 'absolute',
+                top: 0, right: 0, left: 'auto', zIndex: 10, display: showFilter ? 'block' : 'none'
+            }
+        };
 
         return (
             <Paper className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length} />
-                <div style={{padding : 20, border : "1px solid #d9d9d9", margin: '0 10% 20px 10%',
-                        backgroundColor : "#f2f4f7", borderRadius : 4}}>
-                    <p>Filter</p>
+                <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
+                <div style={styles.fitler}>
                     <Row>
                         <Col>
                             <FormControl style={{width : '100%'}}>
