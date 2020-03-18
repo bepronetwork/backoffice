@@ -252,6 +252,7 @@ class EnhancedTable extends React.Component {
             rowsPerPage: 10,
             currencyFilter: '',
             statusFilter: '',
+            idFilter: null,
             userFilter: null
         };
     }
@@ -348,20 +349,38 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page, userFilter, currencyFilter, statusFilter } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const { data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
+    const dataFiltered = data.filter(n => 
+        (_.isEmpty(statusFilter) || n.status == statusFilter) && 
+        (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
+        (_.isEmpty(idFilter) || n._id.includes(idFilter)) &&
+        (_.isEmpty(userFilter) || n.user.includes(userFilter))
+    );
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, dataFiltered.length - page * rowsPerPage);
     const statusMap = new Map();
     const currencyMap = new Map();
 
     return (
-      <Paper className={classes.root}>
+        <Paper className={classes.root}>
             <EnhancedTableToolbar numSelected={selected.length} />
-            <div style={{padding : '16px 30px'}}>
+            <div style={{padding : 20, border : "1px solid #d9d9d9", margin: '0 10% 20px 10%',
+                        backgroundColor : "#f2f4f7", borderRadius : 4}}>
+                <p>Filter</p>
                 <Row>
                     <Col>
                         <FormControl style={{width : '100%'}}>
                             <TextInput
-                                label={'User Id'}
+                                label={'ID'}
+                                name={'idFilter'}
+                                type={'text'} 
+                                defaultValue={idFilter}
+                                changeContent={this.handleChangeInputContent} />
+                        </FormControl>
+                    </Col>
+                    <Col>
+                        <FormControl style={{width : '100%'}}>
+                            <TextInput
+                                label={'User'}
                                 name={'userFilter'}
                                 type={'text'} 
                                 defaultValue={userFilter}
@@ -403,82 +422,84 @@ class EnhancedTable extends React.Component {
                 </Row>
             </div>
             <div className={classes.tableWrapper}>
-            <Table className={classes.table} aria-labelledby="tableTitle">
-                <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={this.handleSelectAllClick}
-                    onRequestSort={this.handleRequestSort}
-                    rowCount={data.length}
-                />
-            <TableBody>
-                {stableSort(data, getSorting(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .filter(n => 
-                        (_.isEmpty(statusFilter) || n.status == statusFilter) && 
-                        (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
-                        (_.isEmpty(userFilter) || n.user.includes(userFilter)))
-                    .map(n => {
-                    const isSelected = this.isSelected(n.id);
-                    return (
-                        <TableRow
-                            hover
-                            onClick={event => this.handleClick(event, n.id)}
-                            role="checkbox"
-                            style={{padding : 0}}
-                            aria-checked={isSelected}
-                            tabIndex={-1}
-                            key={n.id}
-                            selected={isSelected}
-                        >
-                            <TableCell align="left"> <p className='text-small'>{n._id}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
-                            <TableCell align="left">
-                                <p className={`text-small text-${n.isAffiliate.toLowerCase()}`}>{n.isAffiliate}</p>
-                            </TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.amount} {n.ticker}</p></TableCell>
-                            <TableCell align="left">
-                                {n.status == 'Queue'
-                                    ?
-                                        <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover ${this.state.isLoading[n._id] ? 'background-grey' : ''}`} onClick={ () => this.allowWithdraw(n)}> 
-                                            {
-                                                !this.state.isLoading[n._id] ? 
-                                                    <p className='text-small text-white'>{n.status}</p>
-                                                : <img src={loading} style={{width : 20, height : 20}}/>
-                                            }
-                                        </button>
-                                    :  <p className='text-small background-green text-white'>{n.status}</p>
-                                }
-                            </TableCell>
-                        </TableRow>
-                    );
-                    })}
-                {emptyRows > 0 && (
-                    <TableRow style={{ height: 49 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                    </TableRow>
-                )}
-                </TableBody>
-            </Table>
-        </div>
-        <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            backIconButtonProps={{
-                'aria-label': 'Previous Page',
-            }}
-            nextIconButtonProps={{
-                'aria-label': 'Next Page',
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
-      </Paper>
+                <Table className={classes.table} aria-labelledby="tableTitle">
+                    <EnhancedTableHead
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={this.handleSelectAllClick}
+                        onRequestSort={this.handleRequestSort}
+                        rowCount={dataFiltered.length}
+                    />
+                    <TableBody>
+                        {stableSort(dataFiltered, getSorting(order, orderBy))
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .filter(n => 
+                                (_.isEmpty(statusFilter) || n.status == statusFilter) && 
+                                (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
+                                (_.isEmpty(idFilter) || n._id.includes(idFilter)) &&
+                                (_.isEmpty(userFilter) || n.user.includes(userFilter))
+                            )
+                            .map(n => {
+                            const isSelected = this.isSelected(n.id);
+                            return (
+                                <TableRow
+                                    hover
+                                    onClick={event => this.handleClick(event, n.id)}
+                                    role="checkbox"
+                                    style={{padding : 0}}
+                                    aria-checked={isSelected}
+                                    tabIndex={-1}
+                                    key={n.id}
+                                    selected={isSelected}
+                                >
+                                    <TableCell align="left"> <p className='text-small'>{n._id}</p></TableCell>
+                                    <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell>
+                                    <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
+                                    <TableCell align="left">
+                                        <p className={`text-small text-${n.isAffiliate.toLowerCase()}`}>{n.isAffiliate}</p>
+                                    </TableCell>
+                                    <TableCell align="left"><p className='text-small'>{n.amount} {n.ticker}</p></TableCell>
+                                    <TableCell align="left">
+                                        {n.status == 'Queue'
+                                            ?
+                                                <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover ${this.state.isLoading[n._id] ? 'background-grey' : ''}`} onClick={ () => this.allowWithdraw(n)}> 
+                                                    {
+                                                        !this.state.isLoading[n._id] ? 
+                                                            <p className='text-small text-white'>{n.status}</p>
+                                                        : <img src={loading} style={{width : 20, height : 20}}/>
+                                                    }
+                                                </button>
+                                            :  <p className='text-small background-green text-white'>{n.status}</p>
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            );
+                            })}
+                        {emptyRows > 0 && (
+                            <TableRow style={{ height: 49 * emptyRows }}>
+                            <TableCell colSpan={6} />
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={dataFiltered.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                backIconButtonProps={{
+                    'aria-label': 'Previous Page',
+                }}
+                nextIconButtonProps={{
+                    'aria-label': 'Next Page',
+                }}
+                onChangePage={this.handleChangePage}
+                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+        </Paper>
     );
   }
 }
