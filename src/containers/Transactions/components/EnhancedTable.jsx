@@ -52,6 +52,7 @@ function getSorting(order, orderBy) {
 
 
 const fromDatabasetoTable = (data, { currencies=[] }) => {
+
 	return data.map( (key) => {
 
         const currency = currencies.find(c => new String(c._id).toString() == new String(key.currency).toString());
