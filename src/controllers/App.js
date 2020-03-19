@@ -865,6 +865,12 @@ class App{
         return currency.ticker ? currency.ticker : 'N/A';
     }
 
+    getCurrency = () => {
+        const state = store.getState();
+        const { currency } = state;
+        return currency;
+    }
+
     getVersion = () => this.params.version;
     
     getManagerAddress = () => this.params.address;
