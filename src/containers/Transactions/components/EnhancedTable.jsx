@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import TextInput from '../../../shared/components/TextInput';
+import { AddressConcat } from '../../../lib/string';
 import { FilterListIcon } from 'mdi-react';
 import moment from 'moment';
 import { connect } from "react-redux";
@@ -51,7 +52,6 @@ function getSorting(order, orderBy) {
 
 
 const fromDatabasetoTable = (data, { currencies=[] }) => {
-
 	return data.map( (key) => {
 
         const currency = currencies.find(c => new String(c._id).toString() == new String(key.currency).toString());
@@ -65,7 +65,9 @@ const fromDatabasetoTable = (data, { currencies=[] }) => {
             status :  key.status,
 			amount: key.amount,
 			creation_timestamp: moment(new Date(key.creation_timestamp)).format('lll'),
-			isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal'
+            isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
+            link_url : key.link_url,
+            transactionHash : key.transactionHash
 		}
 	})
 }
@@ -79,6 +81,11 @@ const rows = [
     {
         id: 'user',
         label: 'User',
+        numeric: true
+    },
+    {
+        id: 'transactionHash',
+        label: 'Transaction Hash',
         numeric: true
     },
     {
@@ -454,6 +461,18 @@ class EnhancedTable extends React.Component {
                                 >
                                     <TableCell align="left"> <p className='text-small'>{n._id}</p></TableCell>
                                     <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell>
+                                    <TableCell align="left">
+                                        { 
+                                            n.transactionHash ? 
+                                                n.link_url ?
+                                                    <a target={'__blank'} href={`${n.link_url}`}>
+                                                        <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
+                                                    </a>
+                                                :
+                                                    <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
+                                            : 'N/A'
+                                        }
+                                    </TableCell>
                                     <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
                                     <TableCell align="left">
                                         <p className={`text-small text-${n.isAffiliate.toLowerCase()}`}>{n.isAffiliate}</p>
