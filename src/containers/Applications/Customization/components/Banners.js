@@ -37,7 +37,10 @@ class Banners extends Component {
         let blob = await image2base64(file.preview) // you can also to use url
         const banner = {
             image_url : blob,
-            link_url : ''
+            link_url : '',
+            button_text : '',
+            title : '',
+            subtitle : ''
         }
 
         this.setState({ banners : this.state.banners.concat([banner]) });
@@ -73,6 +76,9 @@ class Banners extends Component {
     renderImage = (src, index) => {
         const banners = this.state.banners;
         const link_url = banners[index].link_url;
+        const button_text = banners[index].button_text;
+        const title = banners[index].title;
+        const subtitle = banners[index].subtitle;
 
         if(!src.includes("https")){
             src = "data:image;base64," + src;
@@ -95,13 +101,67 @@ class Banners extends Component {
                         changeContent={(name, value, index) => this.onChange({name, value, index})}
                     />
                 </div>
+                <div style={{marginTop : 10}}>
+                    <TextInput
+                        name="button_text"
+                        label="URL Button Text"
+                        type="text"
+                        value={button_text}
+                        defaultValue={button_text}
+                        disabled={this.state.locked}
+                        index={index}
+                        changeContent={(name, value, index) => this.onChange({name, value, index})}
+                    />
+                </div>
+                <div style={{marginTop : 10}}>
+                    <TextInput
+                        name="title"
+                        label="Title"
+                        type="text"
+                        value={title}
+                        defaultValue={title}
+                        disabled={this.state.locked}
+                        index={index}
+                        changeContent={(name, value, index) => this.onChange({name, value, index})}
+                    />
+                </div>
+                <div style={{marginTop : 10}}>
+                    <TextInput
+                        name="subtitle"
+                        label="Subtitle"
+                        type="text"
+                        value={subtitle}
+                        defaultValue={subtitle}
+                        disabled={this.state.locked}
+                        index={index}
+                        changeContent={(name, value, index) => this.onChange({name, value, index})}
+                    />
+                </div>
             </div>
         )
     }
 
     onChange = ({name, value, index}) => {
         let banners = this.state.banners;
-        banners[index].link_url = value;
+        switch(name){
+            case 'link_url' : {
+                banners[index].link_url = value;
+                break;
+            };
+            case 'button_text' : {
+                banners[index].button_text = value;
+                break;
+            };
+            case 'title' : {
+                banners[index].title = value;
+                break;
+            };
+            case 'subtitle' : {
+                banners[index].subtitle = value;
+                break;
+            }
+        }
+
         this.setState({...this.state, banners })
     }
 
@@ -149,7 +209,7 @@ class Banners extends Component {
                                         {banners.map((i, index) => {
                                             return (
                                                 <Col lg={6}>
-                                                    <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 410, marginBottom : 30, padding : 30}}>
+                                                    <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 580, marginBottom : 30, padding : 30}}>
                                                         {this.renderImage(i.image_url, index)}
                                                     </div>
                                                 </Col>

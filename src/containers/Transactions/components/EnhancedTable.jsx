@@ -3,23 +3,23 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select } from '@material-ui/core';
+import { Col, Row } from 'reactstrap';
+import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
+import TextInput from '../../../shared/components/TextInput';
+import { AddressConcat } from '../../../lib/string';
 import { FilterListIcon } from 'mdi-react';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
+import _ from 'lodash';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -66,7 +66,9 @@ const fromDatabasetoTable = (data, { currencies=[] }) => {
             status :  key.status,
 			amount: key.amount,
 			creation_timestamp: moment(new Date(key.creation_timestamp)).format('lll'),
-			isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal'
+            isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
+            link_url : key.link_url,
+            transactionHash : key.transactionHash
 		}
 	})
 }
@@ -80,6 +82,11 @@ const rows = [
     {
         id: 'user',
         label: 'User',
+        numeric: true
+    },
+    {
+        id: 'transactionHash',
+        label: 'Transaction Hash',
         numeric: true
     },
     {
@@ -125,17 +132,17 @@ class EnhancedTableHead extends React.Component {
                         sortDirection={orderBy === row.id ? order : false}
                     >
                         <Tooltip
-                        title="Sort"
-                        placement={row.numeric ? 'bottom-end' : 'bottom-start'}
-                        enterDelay={300}
-                        >
-                        <TableSortLabel
-                            active={orderBy === row.id}
-                            direction={order}
-                            onClick={this.createSortHandler(row.id)}
-                        >
-                            {row.label}
-                        </TableSortLabel>
+                            title="Sort"
+                            placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                            enterDelay={300}
+                            >
+                            <TableSortLabel
+                                active={orderBy === row.id}
+                                direction={order}
+                                onClick={this.createSortHandler(row.id)}
+                            >
+                                {row.label}
+                            </TableSortLabel>
                         </Tooltip>
                     </TableCell>
                     ),
@@ -174,7 +181,7 @@ const toolbarStyles = theme => ({
         flex: '1 1 100%',
     },
     actions: {
-        color: theme.palette.text.secondary,
+        color: theme.palette.text.secondary, zIndex: 20
     },
     title: {
         flex: '0 0 auto',
@@ -182,7 +189,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
+  const { numSelected, classes, filterClick } = props;
 
     return (
         <Toolbar
@@ -191,30 +198,18 @@ let EnhancedTableToolbar = props => {
         })}
         >
         <div className={classes.title}>
-            {numSelected > 0 ? (
-            <Typography color="inherit" variant="subtitle1">
-                {numSelected} selected
-            </Typography>
-            ) : (
             <Typography variant="h6" id="tableTitle">
                 Transactions
             </Typography>
-            )}
         </div>
         <div className={classes.spacer} />
-        <div className={classes.actions}>
-            {numSelected > 0 ? (
-            <Tooltip title="Delete">
-                <IconButton aria-label="Delete">
-                </IconButton>
-            </Tooltip>
-            ) : (
+        <div className={classes.actions} onClick={filterClick}>
+            <div style={{position: "absolute", right: 0, margin: "14px 70px 0 0", cursor: "pointer"}}><p>Filter List</p></div>
             <Tooltip title="Filter list">
                 <IconButton aria-label="Filter list">
                 <FilterListIcon />
                 </IconButton>
             </Tooltip>
-            )}
         </div>
         </Toolbar>
     );
@@ -250,7 +245,12 @@ class EnhancedTable extends React.Component {
             data: fromDatabasetoTable(props.data.withdraws.data, {currencies : []}),
             page: 0,
             isLoading : {},
-            rowsPerPage: 5
+            rowsPerPage: 10,
+            currencyFilter: '',
+            statusFilter: '',
+            idFilter: null,
+            userFilter: null,
+            showFilter: false
         };
     }
 
@@ -332,97 +332,201 @@ class EnhancedTable extends React.Component {
         this.setState({ rowsPerPage: event.target.value });
     };
 
+    handleChangeInputContent = (type, item) => {
+        this.setState({[type] : item});
+    }
+
+    handleChangeDropDown = event => {
+        const field = event.target.name;
+
+        this.setState({ [field]: event.target.value });
+    };
+
     isSelected = id => this.state.selected.indexOf(id) !== -1;
+
+    handleFilterClick = () => {
+        const { showFilter } = this.state;
+        this.setState({ showFilter: showFilter ? false : true });
+    }
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const { showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
+    const dataFiltered = data.filter(n => 
+        (_.isEmpty(statusFilter) || n.status == statusFilter) && 
+        (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
+        (_.isEmpty(idFilter) || n._id.includes(idFilter)) &&
+        (_.isEmpty(userFilter) || n.user.includes(userFilter))
+    );
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, dataFiltered.length - page * rowsPerPage);
+    const statusMap = new Map();
+    const currencyMap = new Map();
+    const styles = {
+        fitler: {
+            padding: '20px 20px 30px 20px', border: "1px solid #d9d9d9", margin: '24px 14px 0 0',
+            backgroundColor: "#f2f4f7", borderRadius: 4, width: 330, position: 'absolute',
+            top: 0, right: 0, left: 'auto', zIndex: 10, display: showFilter ? 'block' : 'none'
+        }
+    };
 
     return (
-      <Paper className={classes.root}>
-      
-            <EnhancedTableToolbar numSelected={selected.length} />
-                <div className={classes.tableWrapper}>
-            <Table className={classes.table} aria-labelledby="tableTitle">
-                <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={this.handleSelectAllClick}
-                    onRequestSort={this.handleRequestSort}
-                    rowCount={data.length}
-                />
-            <TableBody>
-                {stableSort(data, getSorting(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(n => {
-                    const isSelected = this.isSelected(n.id);
-                    return (
-                        <TableRow
-                            hover
-                            onClick={event => this.handleClick(event, n.id)}
-                            role="checkbox"
-                            style={{padding : 0}}
-                            aria-checked={isSelected}
-                            tabIndex={-1}
-                            key={n.id}
-                            selected={isSelected}
-                        >
-                            <TableCell align="left"> <p className='text-small'>{n._id}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
-                            <TableCell align="left">
-                                <p className={`text-small text-${n.isAffiliate.toLowerCase()}`}>{n.isAffiliate}</p>
-                            </TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.amount} {n.ticker}</p></TableCell>
-                            <TableCell align="left">
-                                {n.status == 'Queue'
-                                    ?
-                                        <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover ${this.state.isLoading[n._id] ? 'background-grey' : ''}`} onClick={ () => this.allowWithdraw(n)}> 
-                                            {
-                                                !this.state.isLoading[n._id] ? 
-                                                    <p className='text-small text-white'>{n.status}</p>
-                                                : <img src={loading} style={{width : 20, height : 20}}/>
-                                            }
-                                        </button>
-                                    :  <p className='text-small background-green text-white'>{n.status}</p>
+        <Paper className={classes.root}>
+            <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
+            <div style={styles.fitler}>
+                <Row>
+                    <Col>
+                        <FormControl style={{width : '100%'}}>
+                            <TextInput
+                                label={'ID'}
+                                name={'idFilter'}
+                                type={'text'} 
+                                defaultValue={idFilter}
+                                changeContent={this.handleChangeInputContent} />
+                        </FormControl>
+                    </Col>
+                    <Col>
+                        <FormControl style={{width : '100%'}}>
+                            <TextInput
+                                label={'User'}
+                                name={'userFilter'}
+                                type={'text'} 
+                                defaultValue={userFilter}
+                                changeContent={this.handleChangeInputContent} />
+                        </FormControl>
+                    </Col>
+                    <Col>
+                        <FormControl style={{width : '100%', marginTop : 13}}>
+                            <InputLabel id="currencyFilterLabel">Currency</InputLabel>
+                            <Select labelId="currencyFilterLabel" id="currencyFilter" name="currencyFilter" value={currencyFilter} onChange={this.handleChangeDropDown}>
+                                <MenuItem value="">All</MenuItem>
+                                {
+                                    data.map(s => {
+                                        if(!currencyMap.has(s.currency) && s.currency){
+                                            currencyMap.set(s.currency, true); 
+                                            return (<MenuItem value={s.currency._id}>{s.currency.name}</MenuItem>)
+                                        }
+                                    })
                                 }
-                            </TableCell>
-                        </TableRow>
-                    );
-                    })}
-                {emptyRows > 0 && (
-                    <TableRow style={{ height: 49 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                    </TableRow>
-                )}
-                </TableBody>
-            </Table>
-        </div>
-        <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            backIconButtonProps={{
-                'aria-label': 'Previous Page',
-            }}
-            nextIconButtonProps={{
-                'aria-label': 'Next Page',
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
-      </Paper>
+                            </Select>
+                        </FormControl>
+                    </Col>
+                    <Col>
+                        <FormControl style={{width : '100%', marginTop : 13}}>
+                            <InputLabel id="statusFilterLabel">Status</InputLabel>
+                            <Select labelId="statusFilterLabel" id="statusFilter" name="statusFilter" value={statusFilter} onChange={this.handleChangeDropDown}>
+                                <MenuItem value="">All</MenuItem>
+                                {
+                                    data.map(s => {
+                                        if(!statusMap.has(s.status)){
+                                            statusMap.set(s.status, true); 
+                                            return (<MenuItem value={s.status}>{s.status}</MenuItem>)
+                                        }
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                    </Col>
+                </Row>
+            </div>
+            <div className={classes.tableWrapper}>
+                <Table className={classes.table} aria-labelledby="tableTitle">
+                    <EnhancedTableHead
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={this.handleSelectAllClick}
+                        onRequestSort={this.handleRequestSort}
+                        rowCount={dataFiltered.length}
+                    />
+                    <TableBody>
+                        {stableSort(dataFiltered, getSorting(order, orderBy))
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .filter(n => 
+                                (_.isEmpty(statusFilter) || n.status == statusFilter) && 
+                                (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
+                                (_.isEmpty(idFilter) || n._id.includes(idFilter)) &&
+                                (_.isEmpty(userFilter) || n.user.includes(userFilter))
+                            )
+                            .map(n => {
+                            const isSelected = this.isSelected(n.id);
+                            return (
+                                <TableRow
+                                    hover
+                                    onClick={event => this.handleClick(event, n.id)}
+                                    role="checkbox"
+                                    style={{padding : 0}}
+                                    aria-checked={isSelected}
+                                    tabIndex={-1}
+                                    key={n.id}
+                                    selected={isSelected}
+                                >
+                                    <TableCell align="left"> <p className='text-small'>{n._id}</p></TableCell>
+                                    <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell>
+                                    <TableCell align="left">
+                                        { 
+                                            n.transactionHash ? 
+                                                n.link_url ?
+                                                    <a target={'__blank'} href={`${n.link_url}`}>
+                                                        <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
+                                                    </a>
+                                                :
+                                                    <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
+                                            : 'N/A'
+                                        }
+                                    </TableCell>
+                                    <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
+                                    <TableCell align="left">
+                                        <p className={`text-small text-${n.isAffiliate.toLowerCase()}`}>{n.isAffiliate}</p>
+                                    </TableCell>
+                                    <TableCell align="left"><p className='text-small'>{n.amount} {n.ticker}</p></TableCell>
+                                    <TableCell align="left">
+                                        {n.status == 'Queue'
+                                            ?
+                                                <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover ${this.state.isLoading[n._id] ? 'background-grey' : ''}`} onClick={ () => this.allowWithdraw(n)}> 
+                                                    {
+                                                        !this.state.isLoading[n._id] ? 
+                                                            <p className='text-small text-white'>{n.status}</p>
+                                                        : <img src={loading} style={{width : 20, height : 20}}/>
+                                                    }
+                                                </button>
+                                            :  <p className='text-small background-green text-white'>{n.status}</p>
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            );
+                            })}
+                        {emptyRows > 0 && (
+                            <TableRow style={{ height: 49 * emptyRows }}>
+                            <TableCell colSpan={6} />
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={dataFiltered.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                backIconButtonProps={{
+                    'aria-label': 'Previous Page',
+                }}
+                nextIconButtonProps={{
+                    'aria-label': 'Next Page',
+                }}
+                onChangePage={this.handleChangePage}
+                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+        </Paper>
     );
   }
 }
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        currency: state.currency
     };
 }
 

@@ -13,8 +13,8 @@ import EditLock from '../../Shared/EditLock';
 const image2base64 = require('image-to-base64');
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
-const edge = `${process.env.PUBLIC_URL}/img/dashboard/edge.png`;
-const tableLimit = `${process.env.PUBLIC_URL}/img/dashboard/tableLimit.png`;
+const edgeImg = `${process.env.PUBLIC_URL}/img/dashboard/edge.png`;
+const tableLimitImg = `${process.env.PUBLIC_URL}/img/dashboard/tableLimit.png`;
 
 
 const defaultState = {
@@ -27,6 +27,7 @@ const defaultState = {
     id : 'N/A',
     imageItem: null,
     backgroundItem: null,
+    wallet: null,
     locks : {
         tableLimit : true,
         edge : true,
@@ -62,10 +63,16 @@ class GamePageContainer extends React.Component{
     }
     
     projectData = (props) => {
+        const { profile } = props;
         let game = this.getUpdatedGame({props, game : props.game});
         if(!game){return null}
-        let { edge, name, profit, _id, betsAmount, betAmount, fees, tableLimit, image_url, background_url } = game;
-        let currencyTicker = props.profile.getApp().getCurrencyTicker();
+        let { edge, name, profit, _id, betsAmount, betAmount, fees, wallets, image_url, background_url } = game;
+        let currencyTicker = profile.getApp().getCurrencyTicker();
+        const currency = profile.getApp().getCurrency();
+        const wallet = currency ? profile.getApp().getWallet({ currency_id : currency._id }) : null;
+        const gameWallet = wallets.find( w => new String(w.wallet).toString() == new String(wallet._id).toString());
+        const tableLimit = gameWallet ? gameWallet.tableLimit : null;
+ 
         this.setState({...this.state, 
             edge,
             tableLimit,
@@ -77,7 +84,8 @@ class GamePageContainer extends React.Component{
             betAmount : Numbers.toFloat(betAmount), 
             fees : Numbers.toFloat(fees),
             imageItem : image_url,
-            backgroundItem : background_url
+            backgroundItem : background_url,
+            wallet
         })
     }
 
@@ -164,7 +172,7 @@ class GamePageContainer extends React.Component{
 
     confirmChanges = async ({field}) => {
         var { profile } = this.props;
-        const { imageItem, backgroundItem } = this.state;
+        const { imageItem, backgroundItem, wallet } = this.state;
 
         this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : true}})
 
@@ -176,7 +184,7 @@ class GamePageContainer extends React.Component{
             };
             case 'tableLimit' : {
                 // Change Table Limit
-                let res = await profile.getApp().editTableLimit({game : this.state.id, tableLimit : this.state[`new_${field}`]});
+                await profile.getApp().editTableLimit({game : this.state.id, tableLimit : this.state[`new_${field}`], wallet : wallet._id});
                 break;
             }
             case 'image' : {
@@ -265,7 +273,7 @@ class GamePageContainer extends React.Component{
                             <CardBody>
                                 <Row>
                                     <Col md={4}>
-                                        <img className='application__game__image' src={edge}/>
+                                        <img className='application__game__image' src={edgeImg}/>
                                         <hr></hr>
                                         <h5 className="">Edge</h5>
                                         <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.edge}%</h3>
@@ -292,7 +300,7 @@ class GamePageContainer extends React.Component{
                             <CardBody>
                                 <Row>
                                     <Col md={4}>
-                                        <img className='application__game__image' src={tableLimit}/>
+                                        <img className='application__game__image' src={tableLimitImg}/>
                                         <hr></hr>
                                         <h5 className="">Table Limit ({this.state.currencyTicker})</h5>
                                         <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.tableLimit}</h3>

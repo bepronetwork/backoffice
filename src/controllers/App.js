@@ -470,13 +470,13 @@ class App{
         }
     }
 
-    editTableLimit = async ({game, tableLimit}) => {
+    editTableLimit = async ({game, tableLimit, wallet}) => {
         try{
             /* Cancel Withdraw Response */ 
             return await ConnectionSingleton.editTableLimit({    
                 admin : this.getAdminId(),           
                 app : this.getId(),
-                game, tableLimit,
+                game, tableLimit, wallet,
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
@@ -863,6 +863,12 @@ class App{
         const state = store.getState();
         const { currency } = state;
         return currency.ticker ? currency.ticker : 'N/A';
+    }
+
+    getCurrency = () => {
+        const state = store.getState();
+        const { currency } = state;
+        return currency;
     }
 
     getVersion = () => this.params.version;
