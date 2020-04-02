@@ -58,6 +58,11 @@ class BetsStatistics extends React.Component {
                 percentage
             })
         }
+        else {
+            this.setState({...this.state, 
+                betsData : defaultProps.betsData
+            })
+        }
       
     }
 
