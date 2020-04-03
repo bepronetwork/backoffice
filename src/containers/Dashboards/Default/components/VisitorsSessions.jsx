@@ -55,7 +55,7 @@ class VisitorsSessions extends React.Component{
         this.projectData(this.props)
     }
 
-    componentWillReceiveProps(props){
+    UNSAFE_componentWillReceiveProps(props){
         this.projectData(props);
     }
 
@@ -74,6 +74,10 @@ class VisitorsSessions extends React.Component{
 
             this.setState({...this.state, 
                 data : data ? data : defaultProps.data
+            })
+        } else {
+            this.setState({...this.state, 
+                data: defaultProps.data
             })
         }
       
