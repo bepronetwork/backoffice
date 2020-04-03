@@ -42,12 +42,13 @@ class GamesContainer extends PureComponent {
         return (
             (games.length > 0) ? 
                 <Row md={12} xl={12} lg={12} xs={12}>
-                    {Object.keys(games).map( key => {
+                    {games.filter(game => game.betAmount > 1).map(game => {
                         return (
-                        <Col lg={4}>
-                            <GameInfo game={games[key]} wallet={wallet} {...this.props}/>
-                        </Col>
-                        )
+                            <Col lg={4}>
+                                <GameInfo game={game} wallet={wallet} {...this.props}/>
+                            </Col>
+
+                        )                  
                     })}
                 </Row>
             : 
