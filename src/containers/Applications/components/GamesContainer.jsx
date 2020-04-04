@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import {  Col, Row } from 'reactstrap';
 import GameInfo from './GameInfo';
 import { connect } from "react-redux";
+import store from '../../App/store';
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
 class GamesContainer extends PureComponent {
@@ -42,7 +43,7 @@ class GamesContainer extends PureComponent {
         return (
             (games.length > 0) ? 
                 <Row md={12} xl={12} lg={12} xs={12}>
-                    {games.filter(game => game.betAmount > 1).map(game => {
+                    {gamesFilter(games, 1).map(game => {
                         return (
                             <Col lg={4}>
                                 <GameInfo game={game} wallet={wallet} {...this.props}/>
@@ -60,6 +61,15 @@ class GamesContainer extends PureComponent {
     }
 }
 
+function gamesFilter(games, minAmount) {
+    const periodicity = store.getState().periodicity;
+
+    if (periodicity === 'all') {
+        return games;
+    } else {
+        return games.filter(game => game.betAmount > minAmount);
+    }
+}
 
 function getAllGames(data, gamesInfo){
     let games = [];
