@@ -69,8 +69,6 @@ class UserPage extends React.Component{
         const { user, currencyTicker } = this.state;
         if(!user || _.isEmpty(user)){return null};
 
-        // console.log(user);
-
         const { currency } = this.props;
         const {
             username,
@@ -121,16 +119,16 @@ class UserPage extends React.Component{
                     <Col md={8}>
                         <Row>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Gaming Wallet', data : !_.isEmpty(playBalance) ? parseFloat(playBalance).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Gaming Wallet', data : playBalance ? parseFloat(playBalance).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'TurnOver', data :  !_.isEmpty(betAmount) ? parseFloat(betAmount).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'TurnOver', data :  betAmount ? parseFloat(betAmount).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Win Amount', data :  !_.isEmpty(winAmount) ? parseFloat(winAmount).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Win Amount', data :  winAmount ? parseFloat(winAmount).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Profit', data :  !_.isEmpty(profit) ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Profit', data :  profit ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length)})}
@@ -139,7 +137,7 @@ class UserPage extends React.Component{
                                 {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length)})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliate.wallet.playBalance) ? parseFloat(affiliate.wallet.playBalance).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliate.wallet) ? parseFloat(affiliate.wallet[0].playBalance).toFixed(6) : 0, span : currencyTicker})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length})}

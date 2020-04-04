@@ -12,6 +12,7 @@ import DataWidget from '../DataWidget/DataWidget';
 import UsersTable from './components/UsersTable';
 import store from '../App/store';
 import { setUserView } from '../../redux/actions/userView';
+import UsersBalance from './components/UsersBalance';
 
 class UsersContainer extends React.Component{
 
@@ -51,11 +52,15 @@ class UsersContainer extends React.Component{
                             }}/>
                         </DataWidget>
                     </Col>
-                   {/* 
-                        <Col lg={3}>
-                            <UsersInfoFilter/>
-                        </Col>
-                    */}
+                    <Col lg={3}>
+                        <DataWidget>
+                            <UsersBalance data={{
+                                users : this.props.profile.getApp().getSummaryData('users'),
+                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                revenue : this.props.profile.getApp().getSummaryData('revenue')
+                            }}/>
+                        </DataWidget>
+                    </Col>
                 </Row>
                 <Row>
                     <Col lg={12}>

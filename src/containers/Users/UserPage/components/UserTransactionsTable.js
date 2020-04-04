@@ -353,7 +353,7 @@ class UserTransactionsTable extends React.Component {
                             <TableCell align="left">
                                 <p className={`text-small text-${n.isAffiliate.toLowerCase()}`}>{n.isAffiliate}</p>
                             </TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.amount} {ticker}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.amount} {n.ticker}</p></TableCell>
                             <TableCell align="left">
                                 {n.status == 'Queue'
                                     ?
@@ -368,7 +368,7 @@ class UserTransactionsTable extends React.Component {
                                         n.status ?
                                             <p className='text-small background-green text-white'>{n.status}</p>
                                         :
-                                            n.confirmed ?
+                                            n.confirmed || n.type === 'Deposit'?
                                                 <p className='text-small background-green text-white'>Confirmed</p>
                                             :
                                                 <p className='text-small background-red text-white'>Not Confirmed</p>
