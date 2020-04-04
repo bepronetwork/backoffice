@@ -32,7 +32,7 @@ class BetsStatistics extends React.Component {
         this.projectData(this.props)
     }
 
-    UNSAFE_componentWillReceiveProps(props){
+    componentWillReceiveProps(props){
         this.projectData(props);
     }
 
