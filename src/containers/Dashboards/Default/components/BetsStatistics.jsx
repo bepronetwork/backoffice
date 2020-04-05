@@ -32,7 +32,7 @@ class BetsStatistics extends React.Component {
         this.projectData(this.props)
     }
 
-    UNSAFE_componentWillReceiveProps(props){
+    componentWillReceiveProps(props){
         this.projectData(props);
     }
 
@@ -44,12 +44,12 @@ class BetsStatistics extends React.Component {
             let betsData = {
                 bets : bets.data[0].bets,
                 graph : [
-                    { value: Numbers.toFloat(bets.data[0].bets.percentage_won*100), fill: '#894798' },
-                    { value: Numbers.toFloat(bets.data[0].bets.percentage_won*100), fill: '#eeeeee' }
+                    { value: 100-Numbers.toFloat(bets.data[0].bets.percentage_won*100), fill: '#894798' },
+                    { value: 100-Numbers.toFloat(bets.data[0].bets.percentage_won*100), fill: '#eeeeee' }
                 ]
             }
-        
-            let percentage = Numbers.toFloat(betsData.bets.percentage_won*100);
+
+            let percentage = 100-Numbers.toFloat(betsData.bets.percentage_won*100);
     
     
             this.setState({...this.state, 
