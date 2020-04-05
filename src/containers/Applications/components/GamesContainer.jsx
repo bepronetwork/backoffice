@@ -30,6 +30,7 @@ class GamesContainer extends PureComponent {
             const gamesInfo = props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
             const games = getAllGames(props.data.games.data, gamesInfo);
             const wallet = props.data.wallet.data;
+
             this.setState({...this.state, 
                 wallet,
                 games
@@ -43,7 +44,7 @@ class GamesContainer extends PureComponent {
         return (
             (games.length > 0) ? 
                 <Row md={12} xl={12} lg={12} xs={12}>
-                    {gamesFilter(games, 1).map(game => {
+                    {games.map(game => {
                         return (
                             <Col lg={4}>
                                 <GameInfo game={game} wallet={wallet} {...this.props}/>
@@ -61,38 +62,31 @@ class GamesContainer extends PureComponent {
     }
 }
 
-function gamesFilter(games, minAmount) {
-    const periodicity = store.getState().periodicity;
-
-    if (periodicity === 'all') {
-        return games;
-    } else {
-        return games.filter(game => game.betAmount > minAmount);
-    }
-}
-
 function getAllGames(data, gamesInfo){
-    let games = [];
-    for(var i = 0; i < data.length; i++) {
-        for(var k = 0; k < data[i].games.length; k++) {
-            let exists = false;
-            for(var j = 0; j < games.length; j++){
-                if(new String(games[j]._id).toLowerCase() == new String(data[i].games[k]._id).toLowerCase()){
-                    exists = true;
-                }     
-            }
-            if(!exists){
-                let gameAdditionalInfo = gamesInfo.map( item => {
-                    if(new String(item._id).toLowerCase() == new String(data[i].games[k]._id).toLowerCase()){
-                        return item;
-                    }
-                }).filter(el => el != null)[0];
-                games.push({...data[i].games[k], ...gameAdditionalInfo})
-            }
-        }
-    }
+    let allGames = [];
 
-    return games;
+    const gamesOnPeriodicity = data.map(index => index.games);
+    const concatGames = [].concat(...gamesOnPeriodicity);
+
+    const games = Object.values([...concatGames].reduce((acc, { _id, name, edge, betsAmount, betAmount, profit, fees }) => {
+    acc[_id] = { _id, name, 
+        edge: (acc[_id] ? acc[_id].edge : 0) + edge,
+        betsAmount: (acc[_id] ? acc[_id].betsAmount : 0) + betsAmount,
+        betAmount: (acc[_id] ? acc[_id].betAmount : 0) + betAmount,
+        profit: (acc[_id] ? acc[_id].profit : 0) + profit,
+        fees: (acc[_id] ? acc[_id].fees : 0) + fees };
+    return acc;
+    }, {}));
+
+    gamesInfo.filter(game => games.map(g => g._id).includes(game._id)).map(game => {
+        games.filter(g => g._id === game._id).map(g => allGames.push({...g, ...game}));
+    })
+
+    gamesInfo.filter(game => !games.map(g => g._id).includes(game._id)).map(game => {
+        allGames.push({edge: 0, betsAmount: 0, betAmount: 1, profit: 0, fees: 0, ...game });
+    });
+
+    return allGames;
 }
 
 function mapStateToProps(state){
