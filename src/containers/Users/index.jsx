@@ -30,6 +30,9 @@ class UsersContainer extends React.Component{
 
 
     render = () => {
+
+        const { isLoading } = this.props;
+
         return (
             <Container className="dashboard">
                 <Row>
@@ -45,7 +48,7 @@ class UsersContainer extends React.Component{
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <UsersProfit data={{
+                            <UsersProfit isLoading={isLoading} data={{
                                 users : this.props.profile.getApp().getSummaryData('users'),
                                 wallet : this.props.profile.getApp().getSummaryData('wallet'),
                                 revenue : this.props.profile.getApp().getSummaryData('revenue')
@@ -54,7 +57,7 @@ class UsersContainer extends React.Component{
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <UsersBalance data={{
+                            <UsersBalance isLoading={isLoading} data={{
                                 users : this.props.profile.getApp().getSummaryData('users'),
                                 wallet : this.props.profile.getApp().getSummaryData('wallet'),
                                 revenue : this.props.profile.getApp().getSummaryData('revenue')
@@ -67,6 +70,7 @@ class UsersContainer extends React.Component{
                         <DataWidget>
                             <UsersTable 
                                 goToUserPage={this.goToUserPage}
+                                isLoading={isLoading}
                                 data={{
                                     users : this.props.profile.getApp().getSummaryData('usersInfoSummary'),
                                     usersOtherInfo : this.props.profile.getApp().getSummaryData('users'),
@@ -91,7 +95,8 @@ class UsersContainer extends React.Component{
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        isLoading: state.isLoading
     };
 }
 

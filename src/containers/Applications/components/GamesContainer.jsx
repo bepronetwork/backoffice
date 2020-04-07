@@ -40,6 +40,7 @@ class GamesContainer extends PureComponent {
 
     render() {
        const { wallet, games } = this.state;
+       const { isLoading } = this.props;
         
         return (
             (games.length > 0) ? 
@@ -47,7 +48,7 @@ class GamesContainer extends PureComponent {
                     {games.map(game => {
                         return (
                             <Col lg={4}>
-                                <GameInfo game={game} wallet={wallet} {...this.props}/>
+                                <GameInfo game={game} isLoading={isLoading} wallet={wallet} {...this.props}/>
                             </Col>
 
                         )                  
@@ -91,7 +92,8 @@ function getAllGames(data, gamesInfo){
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        isLoading: state.isLoading
     };
 }
 

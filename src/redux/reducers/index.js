@@ -6,6 +6,7 @@ import customizerReducer from './customizerReducer';
 import profileReducer from './profileReducer';
 import appCreationReducer from './appCreationReducer';
 import gameReducer from './gameReducer';
+import loadingReducer from './loadingReducer';
 import messageContainerReducer from './messageContainerReducer';
 import periodicityReducer from './periodicityReducer';
 import set2FAReducer from './set2FAReducer';
@@ -24,6 +25,7 @@ export {
     walletReducer,
     userViewReducer,
     cryptoTableReducer,
+    loadingReducer,
     messageContainerReducer,
     gameReducer,
     periodicityReducer,
