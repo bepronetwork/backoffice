@@ -10,6 +10,7 @@ import { ArrowExpandRightIcon, LockIcon, BankIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import EditLock from '../../Shared/EditLock';
+import Skeleton from '@material-ui/lab/Skeleton';
 const image2base64 = require('image-to-base64');
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
@@ -213,6 +214,7 @@ class GamePageContainer extends React.Component{
 
 
     render = () => {
+        const { loading } = this.props;
         const { imageItem, backgroundItem } = this.state; 
         let game_image = game_images[new String(this.state.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
@@ -243,23 +245,33 @@ class GamePageContainer extends React.Component{
                                 <Row>
                                     <Col md={4}>
                                         <h5 className="">Bets Amount</h5>
-                                        <p className="dashboard__visitors-chart-number-second">
-                                            <AnimationNumber decimals={0} number={this.state.betAmount}/> 
-                                        </p>
+                                        {loading ? (
+                                            <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                        ) : (
+                                            <p className="dashboard__visitors-chart-number-second">
+                                                <AnimationNumber decimals={0} number={this.state.betAmount}/>
+                                            </p>
+                                        )} 
                                     </Col>
                                     <Col md={4}>
                                         <h5 className="">Turnover</h5>
+                                        {loading ? (
+                                            <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                        ) : (
                                         <p className="dashboard__visitors-chart-number-second">
                                             <AnimationNumber decimals={0} number={this.state.turnover}/> 
                                             <span> {this.state.currencyTicker} </span> 
-                                        </p>
+                                        </p>)}
                                     </Col>
                                     <Col md={4}>
                                         <h5 className="">Profit</h5>
+                                        {loading ? (
+                                            <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                        ) : (
                                         <p className="dashboard__visitors-chart-number-second">
                                             <AnimationNumber decimals={0} number={this.state.profit}/> 
                                             <span> {this.state.currencyTicker} </span> 
-                                        </p>
+                                        </p>)}
                                     </Col>
                                 </Row>
                             </CardBody>
@@ -276,7 +288,10 @@ class GamePageContainer extends React.Component{
                                         <img className='application__game__image' src={edgeImg}/>
                                         <hr></hr>
                                         <h5 className="">Edge</h5>
-                                        <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.edge}%</h3>
+                                        {loading ? (
+                                            <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                        ) : (
+                                        <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.edge}%</h3>)}
                                     </Col>
                                     <Col md={8}>
                                         <EditLock 
@@ -287,7 +302,10 @@ class GamePageContainer extends React.Component{
                                             isLoading={this.state.isLoading.edge}
                                             locked={this.state.locks.edge}>
                                             <h6 className="">New Edge </h6>
-                                            <h5 className={"bold-text dashboard__total-stat"}>{this.state.new_edge}%</h5>
+                                            {loading ? (
+                                            <Skeleton variant="rect" height={9} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                            ) : (
+                                            <h5 className={"bold-text dashboard__total-stat"}>{this.state.new_edge}%</h5>)}
                                             <Slider disabled={this.state.locks.edge} value={this.state.edge} onChange={this.onChange}/>
                                         </EditLock>
                                     </Col>
@@ -303,7 +321,10 @@ class GamePageContainer extends React.Component{
                                         <img className='application__game__image' src={tableLimitImg}/>
                                         <hr></hr>
                                         <h5 className="">Table Limit ({this.state.currencyTicker})</h5>
-                                        <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.tableLimit}</h3>
+                                        {loading ? (
+                                            <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                        ) : (
+                                        <h3 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{this.state.tableLimit}</h3>)}
                                     </Col>
                                     <Col md={8}>
                                         <EditLock 
@@ -314,7 +335,10 @@ class GamePageContainer extends React.Component{
                                             isLoading={this.state.isLoading.tableLimit}
                                             locked={this.state.locks.tableLimit}>
                                             <h6 className="">New Table Limit </h6>
-                                            <h5 className={"bold-text dashboard__total-stat"}>{this.state.new_tableLimit} {this.state.currencyTicker} </h5>
+                                            {loading ? (
+                                            <Skeleton variant="rect" height={9} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                            ) : (
+                                            <h5 className={"bold-text dashboard__total-stat"}>{this.state.new_tableLimit} {this.state.currencyTicker} </h5>)}
                                             <TextInput
                                                 icon={BankIcon}
                                                 name="tableLimit"
@@ -406,7 +430,8 @@ class GamePageContainer extends React.Component{
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        game : state.game
+        game : state.game,
+        loading: state.isLoading
     };
 }
 
