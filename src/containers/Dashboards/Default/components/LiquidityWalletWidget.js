@@ -9,6 +9,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { compareIDS } from '../../../../lib/string';
 import { emptyObject } from '../../../../lib/misc';
 import {formatCurrency} from '../../../../utils/numberFormatation';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const Ava = `${process.env.PUBLIC_URL}/img/dashboard/euro.png`;
 
@@ -51,7 +52,9 @@ class LiquidityWalletWidget extends PureComponent {
     
     }
 
-    render() {        
+    render() {    
+        
+        const { isLoading } = this.props;
         
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -62,12 +65,19 @@ class LiquidityWalletWidget extends PureComponent {
                                 <img style={{borderRadius : 0}} className="company-logo-card" src={Ava} alt="avatar" />
                             </Col>
                             <Col lg={8} style={{minWidth: `140px`}}>
+                            {isLoading ? (
+                                <Skeleton 
+                                variant="rect"
+                                animation="wave"
+                                height={29} 
+                                style={{ marginTop: 10, marginBottom: 10 }}/> 
+                                 ) : (
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={{color : '#646777'}}>
                                         <AnimationNumber decimals={6} number={ formatCurrency(this.state.playBalance)}/> 
                                         <span> {this.state.ticker}</span>
                                     </p>
-                                </div>
+                                </div>)}
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-title"> {this.state.ticker} <span> Available </span></p>
                                 </div>

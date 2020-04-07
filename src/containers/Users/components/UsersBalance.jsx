@@ -5,6 +5,7 @@ import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import Numbers from '../../../services/numbers';
 import { connect } from "react-redux";
 import _ from 'lodash';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const defaultProps = {
     balance : '0',
@@ -42,11 +43,14 @@ class UsersBalance extends PureComponent {
 
 
     render() {        
-        const { currency } = this.props;
+        const { currency, isLoading } = this.props;
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
                     <CardBody className="dashboard__card-widget">
+                        {isLoading ? (
+                        <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/> 
+                        ) : (
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : this.state.balance >= 0 ? '#76d076' : '#646777'}
@@ -56,7 +60,7 @@ class UsersBalance extends PureComponent {
                                 : null
                             }
                             <span> {this.state.ticker}</span></p>
-                        </div>
+                        </div>)}
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-title"> Users Balance <span> {this.state.timeline} </span></p>
                         </div>

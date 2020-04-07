@@ -6,6 +6,7 @@ import Panel from '../../../../shared/components/Panel';
 import Numbers from '../../../../services/numbers';
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
 import { connect } from "react-redux";
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const defaultProps = {
     betsData : {
@@ -68,28 +69,46 @@ class BetsStatistics extends React.Component {
     }
 
     render = () => {
+
+        const { isLoading } = this.props;
+
         return (
             <Panel title={'Bet´s Stats'} subhead="last 7 days"
             >
                 <div className="dashboard__stat dashboard__stat--budget">
                     <div className="dashboard__stat-main">
                         <p className="dashboard__stat-main-title">Won Bets</p>
-                        <p className="dashboard__stat-main-number percent"><AnimationNumber font = '45px' decimals={2} number={this.state.percentage}/> %</p>
+                        {isLoading ? (
+                        <Skeleton variant="rect" width={150} height={45} style={{ marginTop: 10, marginBottom: 10, marginLeft: 'auto', marginRight: 'auto' }}/> 
+                        ) : (
+                        <p className="dashboard__stat-main-number percent"><AnimationNumber font = '45px' decimals={2} number={this.state.percentage}/> %</p>)}
                         <hr />
                     </div>
                     <div className="dashboard__stat-chart">
+                        {isLoading ? (
+                        <Skeleton variant="circle" width={80} height={80} style={{ marginLeft: 'auto', marginRight: 'auto' }}/> 
+                        ) : (
+                        <>
                         <PieChart height={120} width={120}>
                         <Pie data={this.state.betsData.graph} dataKey="value" cx={55} cy={55} innerRadius={50} outerRadius={60} />
                         </PieChart>
                         <p className="dashboard__stat-label">{this.state.ticker}</p>
+                        </>
+                        )}
                     </div>
                     <div className="dashboard__stat-data">
                         <div>
-                        <p className="dashboard__stat-data-number"><AnimationNumber decimals={6} number={this.state.betsData.bets.avg_bet}/> {this.state.ticker}</p>
+                        {isLoading ? (
+                        <Skeleton ariant="rect" height={29}/> 
+                        ) : (
+                        <p className="dashboard__stat-data-number"><AnimationNumber decimals={6} number={this.state.betsData.bets.avg_bet}/> {this.state.ticker}</p>)}
                         <p style={{ color: '#ff4861' }}> Average User Bet </p>
                         </div>
                         <div>
-                        <p className="dashboard__stat-data-number"> <AnimationNumber decimals={6} number={this.state.betsData.bets.avg_bet_return}/> {this.state.ticker}</p>
+                        {isLoading ? (
+                        <Skeleton ariant="rect" height={29}/> 
+                        ) : (
+                        <p className="dashboard__stat-data-number"> <AnimationNumber decimals={6} number={this.state.betsData.bets.avg_bet_return}/> {this.state.ticker}</p>)}
                         <p style={{ color: '#894798' }}>Average Return (No Fee)</p>
                         </div>
                     </div>

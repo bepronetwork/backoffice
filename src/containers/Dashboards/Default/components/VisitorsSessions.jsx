@@ -7,6 +7,7 @@ import Panel from '../../../../shared/components/Panel';
 import DashboardMapperSingleton from '../../../../services/mappers/Dashboard';
 import Numbers from '../../../../services/numbers';
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const data01 = [{ name: 'CoinFlip', value: 2034, fill: '#894798' },
 	{ name: 'Dice', value: 934, fill: '#70bbfd' },
@@ -85,6 +86,7 @@ class VisitorsSessions extends React.Component{
 
     render = () => {
         const { data } = this.state;
+        const { isLoading } = this.props;
 
         return (
             <Panel
@@ -93,6 +95,13 @@ class VisitorsSessions extends React.Component{
             >
                 <div className="dashboard__visitors-chart">
                     <p className="dashboard__visitors-chart-title"> Total Bets <span> last month </span></p>
+                    {isLoading ? (
+                    <>
+                    <Skeleton variant="rect" width={50} height={29} style={{ marginTop: 10, marginBottom: 10, marginRight: 'auto' }}/>
+                    <Skeleton variant="rect" height={210} style={{ marginTop: 10, marginBottom: 5 }}/> 
+                    </>
+                    ) : (
+                    <>
                     <p className="dashboard__visitors-chart-number"><AnimationNumber decimals={0} number={data.betAmount}/></p>
                     <ResponsiveContainer className="dashboard__chart-pie" width="100%" height={220}>
                     <PieChart className="dashboard__chart-pie-container">
@@ -101,6 +110,8 @@ class VisitorsSessions extends React.Component{
                         <Legend layout="vertical" verticalAlign="bottom" wrapperStyle={style} content={renderLegend} />
                     </PieChart>
                     </ResponsiveContainer>
+                    </>
+                    )}
                 </div>
             </Panel>
         )

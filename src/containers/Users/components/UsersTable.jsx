@@ -16,6 +16,7 @@ import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { FilterListIcon } from 'mdi-react';
 import { compareIDS } from '../../../lib/string';
 import _ from 'lodash';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 let counter = 0;
 
@@ -336,7 +337,7 @@ class UsersTable extends React.Component {
     }
 
     render() {
-        const { classes, currency } = this.props;
+        const { classes, currency, isLoading } = this.props;
         const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter } = this.state;
         const dataFiltered = data.filter(n => 
             (_.isEmpty(usernameFilter) || n.username.includes(usernameFilter)) &&
@@ -354,129 +355,141 @@ class UsersTable extends React.Component {
         return (
             <Paper className={classes.root}>
                 <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
-                <div style={styles.fitler}>
-                    <Row>
-                        <Col>
-                            <FormControl style={{width : '100%'}}>
-                                <TextInput
-                                    label={'Username'}
-                                    name={'usernameFilter'}
-                                    type={'text'} 
-                                    defaultValue={usernameFilter}
-                                    changeContent={this.handleChangeInputContent} />
-                            </FormControl>
-                        </Col>
-                        <Col>
-                            <FormControl style={{width : '100%'}}>
-                                <TextInput
-                                    label={'Email'}
-                                    name={'emailFilter'}
-                                    type={'text'} 
-                                    defaultValue={emailFilter}
-                                    changeContent={this.handleChangeInputContent} />
-                            </FormControl>
-                        </Col>
-                    </Row>
-                </div>             
-                <div className={classes.tableWrapper}>
-                    <Table className={classes.table} aria-labelledby="tableTitle">
-                        <EnhancedTableHead
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={this.handleSelectAllClick}
-                            onRequestSort={this.handleRequestSort}
-                            rowCount={dataFiltered.length}
-                        />
-                        <TableBody>
-                            {stableSort(dataFiltered, getSorting(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map(n => {
-                                const isSelected = this.isSelected(n.id);
-                                return (
-                                    <TableRow
-                                        hover
-                                        onClick={event => this.handleClick(event, n.id)}
-                                        role="checkbox"
-                                        style={{padding : 0}}
-                                        aria-checked={isSelected}
-                                        tabIndex={-1}
-                                        key={n.id}
-                                        selected={isSelected}
-                                    >
-                                        <TableCell align="left">
-                                            <img src={`https://avatars.dicebear.com/v2/avataaars/${n._id}.svg`} className={'avatar-image-small'}/>
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            <p className='text-small'>
-                                                {n._id}
-                                            </p>
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            <p className='text-small'>
-                                                {n.username}
-                                            </p>
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            <p className='text-small'>
-                                                {n.email}
-                                            </p>
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            <p className='text-small'>
-                                                {!_.isEmpty(currency) ? n.wallet.toFixed(6) : null }
-                                                <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
-                                            </p>
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            <p className='text-small background-grey text-white'>
-                                                {n.bets} 
-                                            </p>
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            <p className='text-small'>
-                                                {!_.isEmpty(currency) ? n.turnoverAmount.toFixed(6) : null }
-                                                <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
-                                            </p>
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            <p className='text-small'>
-                                                {!_.isEmpty(currency) ? n.profit.toFixed(6) : null }
-                                                <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
-                                            </p>
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            <button className={`clean_button button-normal button-hover`} onClick={ () => this.props.goToUserPage({user : n.full_info})}> 
-                                                <p className='text-small text-white'>See More</p>
-                                            </button>
-                                        </TableCell>
-                                        
+                {isLoading ? (
+                    <>
+                    <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 20 }}/>
+                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    </>
+                    ) : (
+                    <>
+                    <div style={styles.fitler}>
+                        <Row>
+                            <Col>
+                                <FormControl style={{width : '100%'}}>
+                                    <TextInput
+                                        label={'Username'}
+                                        name={'usernameFilter'}
+                                        type={'text'} 
+                                        defaultValue={usernameFilter}
+                                        changeContent={this.handleChangeInputContent} />
+                                </FormControl>
+                            </Col>
+                            <Col>
+                                <FormControl style={{width : '100%'}}>
+                                    <TextInput
+                                        label={'Email'}
+                                        name={'emailFilter'}
+                                        type={'text'} 
+                                        defaultValue={emailFilter}
+                                        changeContent={this.handleChangeInputContent} />
+                                </FormControl>
+                            </Col>
+                        </Row>
+                    </div>             
+                    <div className={classes.tableWrapper}>
+                        <Table className={classes.table} aria-labelledby="tableTitle">
+                            <EnhancedTableHead
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onSelectAllClick={this.handleSelectAllClick}
+                                onRequestSort={this.handleRequestSort}
+                                rowCount={dataFiltered.length}
+                            />
+                            <TableBody>
+                                {stableSort(dataFiltered, getSorting(order, orderBy))
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map(n => {
+                                    const isSelected = this.isSelected(n.id);
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={event => this.handleClick(event, n.id)}
+                                            role="checkbox"
+                                            style={{padding : 0}}
+                                            aria-checked={isSelected}
+                                            tabIndex={-1}
+                                            key={n.id}
+                                            selected={isSelected}
+                                        >
+                                            <TableCell align="left">
+                                                <img src={`https://avatars.dicebear.com/v2/avataaars/${n._id}.svg`} className={'avatar-image-small'}/>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <p className='text-small'>
+                                                    {n._id}
+                                                </p>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <p className='text-small'>
+                                                    {n.username}
+                                                </p>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <p className='text-small'>
+                                                    {n.email}
+                                                </p>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <p className='text-small'>
+                                                    {!_.isEmpty(currency) ? n.wallet.toFixed(6) : null }
+                                                    <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
+                                                </p>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <p className='text-small background-grey text-white'>
+                                                    {n.bets} 
+                                                </p>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <p className='text-small'>
+                                                    {!_.isEmpty(currency) ? n.turnoverAmount.toFixed(6) : null }
+                                                    <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
+                                                </p>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <p className='text-small'>
+                                                    {!_.isEmpty(currency) ? n.profit.toFixed(6) : null }
+                                                    <span className={!_.isEmpty(currency) ? 'text-small text-grey' : 'text-small background-soft-grey text-white' } > {this.state.ticker}</span>
+                                                </p>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <button className={`clean_button button-normal button-hover`} onClick={ () => this.props.goToUserPage({user : n.full_info})}> 
+                                                    <p className='text-small text-white'>See More</p>
+                                                </button>
+                                            </TableCell>
+                                            
+                                        </TableRow>
+                                    );
+                                })}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{ height: 49 * emptyRows }}>
+                                    <TableCell colSpan={6} />
                                     </TableRow>
-                                );
-                            })}
-                            {emptyRows > 0 && (
-                                <TableRow style={{ height: 49 * emptyRows }}>
-                                <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={dataFiltered.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    backIconButtonProps={{
-                        'aria-label': 'Previous Page',
-                    }}
-                    nextIconButtonProps={{
-                        'aria-label': 'Next Page',
-                    }}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+                    </>)}
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={dataFiltered.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        backIconButtonProps={{
+                            'aria-label': 'Previous Page',
+                        }}
+                        nextIconButtonProps={{
+                            'aria-label': 'Next Page',
+                        }}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
             </Paper>
         );
     }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Collapse } from 'reactstrap';
 import DownIcon from 'mdi-react/ChevronDownIcon';
 import { setDataPeriodicity } from '../../../redux/actions/periodicityAction';
+import { setLoadingStatus } from '../../../redux/actions/loadingAction';
 import { connect } from "react-redux";
 import _ from 'lodash';
 import store from '../../App/store';
@@ -46,8 +47,10 @@ class TopBarPeriodicity extends React.Component {
 
     changePeriodicity = async ({periodicity}) => {
         const { profile } = this.props;
+        store.dispatch(setLoadingStatus(true));
         await store.dispatch(setDataPeriodicity(periodicity));
         await profile.getData();
+        store.dispatch(setLoadingStatus(false));
     };
 
     render() {
