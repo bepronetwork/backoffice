@@ -52,6 +52,7 @@ class TopBarCurrencyView extends React.Component {
     changeCurrency = async ({currency}) => {
         store.dispatch(setLoadingStatus(true));
         await store.dispatch(setCurrencyView(currency));
+        this.toggle();
         await this.props.profile.getApp().getSummary();
         this.props.profile.update();
         store.dispatch(setLoadingStatus(false));

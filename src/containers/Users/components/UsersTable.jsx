@@ -48,18 +48,19 @@ function getSorting(order, orderBy) {
 
 const fromDatabasetoTable = (data, otherInfo, currency) => {
 
-	return data.map( (key) => {
+	return data.map((key) => {
         var d;
         if(otherInfo){
             d = otherInfo.find( f => f._id == key._id);
         }
-        const wallet = key.wallet.find(w => compareIDS(w.currrency, currency._id));
 
+        const wallet = key.wallet.filter(w => compareIDS(w.currency, currency._id));
+        
         return {
             _id :  key._id,
             full_info : {...d, ...key}, 
 			username : key.username,
-			wallet: wallet ? parseFloat(wallet.playBalance) : 0,
+			wallet: wallet[0] ? parseFloat(wallet[0].playBalance) : 0,
 			bets: parseFloat(key.bets.length),
             email: key.email,
             turnoverAmount: d ? parseFloat(d.betAmount) : 0,
@@ -253,6 +254,7 @@ class UsersTable extends React.Component {
             rowsPerPage: 10,
             usernameFilter: null,
             emailFilter: null,
+            idFilter: null,
             showFilter: false,
             ...defaultProps
         };
@@ -338,10 +340,11 @@ class UsersTable extends React.Component {
 
     render() {
         const { classes, currency, isLoading } = this.props;
-        const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter } = this.state;
+        const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter, idFilter } = this.state;
         const dataFiltered = data.filter(n => 
             (_.isEmpty(usernameFilter) || n.username.includes(usernameFilter)) &&
-            (_.isEmpty(emailFilter) || n.email.includes(emailFilter))
+            (_.isEmpty(emailFilter) || n.email.includes(emailFilter)) &&
+            (_.isEmpty(idFilter) || n._id.includes(idFilter))
         );
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, dataFiltered.length - page * rowsPerPage);
         const styles = {
@@ -385,6 +388,16 @@ class UsersTable extends React.Component {
                                         name={'emailFilter'}
                                         type={'text'} 
                                         defaultValue={emailFilter}
+                                        changeContent={this.handleChangeInputContent} />
+                                </FormControl>
+                            </Col>
+                            <Col>
+                                <FormControl style={{width : '100%'}}>
+                                    <TextInput
+                                        label={'Id'}
+                                        name={'idFilter'}
+                                        type={'text'} 
+                                        defaultValue={idFilter}
                                         changeContent={this.handleChangeInputContent} />
                                 </FormControl>
                             </Col>
