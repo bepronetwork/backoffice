@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { Row, Col, Container, Card, CardBody } from 'reactstrap';
+import Skeleton from '@material-ui/lab/Skeleton';
 import _ from 'lodash';
 import Numbers from '../../../services/numbers';
 import HorizontalTabs from '../../HorizontalTabs';
 import UserTransactionsTable from './components/UserTransactionsTable';
 import AffiliateInfo from './components/AffiliateInfo';
+import { compareIDS } from '../../../lib/string';
 
 const defaultProps = {
     ticker : 'No Currency Chosen'
@@ -28,10 +30,13 @@ class UserPage extends React.Component{
     }
 
     projectData = async (props) => {
-        const { user, profile, currency } = props;
-        if(!user || _.isEmpty(user)){return null}
+        const { profile, currency } = props;
+
+        const user = await this.getUserInfo(currency);
+
         const currencyTicker = currency.ticker ? currency.ticker : defaultProps.ticker;
         const userInfo = await profile.getApp().getUserAsync({user : user._id});
+
         this.setState({...this.state, 
             currencyTicker,
             user : {
@@ -39,6 +44,15 @@ class UserPage extends React.Component{
                 ...userInfo
             }
         })
+    }
+
+    getUserInfo = async (currency) => {
+        const users = await this.props.profile.getApp().getSummaryData('usersInfoSummary');
+        const otherInfo = await this.props.profile.getApp().getSummaryData('users');
+        const user = users.data.filter(u => u._id === this.props.location.state.userId);
+        const info = otherInfo.data.filter(i => i._id === user[0]._id);
+        
+        return {...info[0], ...user[0]};
     }
 
     allowWithdraw = async (withdraw) => {
@@ -54,12 +68,16 @@ class UserPage extends React.Component{
 
     }
 
-    renderDataTitle = ({title, data, span}) => {
+    renderDataTitle = ({title, data, span, loading}) => {
         return (
             <Card>
                 <CardBody className="dashboard__card-widget">
                     <p className='text-small pink-text'> {title} </p>
-                    <h4 className='secondary-text' style={{marginTop : 5}}> {data} <span className='text-x-small'>{span}</span></h4>
+                    {loading ? (
+                        <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    ) : (
+                        <h4 className='secondary-text' style={{marginTop : 5}}> {data} <span className='text-x-small'>{span}</span></h4>
+                    )}
                 </CardBody>
             </Card>
         )
@@ -69,7 +87,7 @@ class UserPage extends React.Component{
         const { user, currencyTicker } = this.state;
         if(!user || _.isEmpty(user)){return null};
 
-        const { currency } = this.props;
+        const { currency, isLoading } = this.props;
         const {
             username,
             email,
@@ -87,7 +105,7 @@ class UserPage extends React.Component{
         } = user;
 
         const transactions = withdraws.map( w => {return {...w, isWithdraw : true}}).concat(deposits);
-        // console.log(transactions);
+        const affiliateWallet = affiliate.wallet.filter(w => w.currency._id === currency._id);
 
         return (
             <Container className="dashboard">
@@ -119,16 +137,16 @@ class UserPage extends React.Component{
                     <Col md={8}>
                         <Row>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Gaming Wallet', data : playBalance ? parseFloat(playBalance).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Gaming Wallet', data : playBalance ? parseFloat(playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'TurnOver', data :  betAmount ? parseFloat(betAmount).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'TurnOver', data :  betAmount ? parseFloat(betAmount).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Win Amount', data :  winAmount ? parseFloat(winAmount).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Win Amount', data :  winAmount ? parseFloat(winAmount).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Profit', data :  profit ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Profit', data :  profit ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length)})}
@@ -137,10 +155,10 @@ class UserPage extends React.Component{
                                 {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length)})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliate.wallet) ? parseFloat(affiliate.wallet[0].playBalance).toFixed(6) : 0, span : currencyTicker})}
+                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliateWallet) ? parseFloat(affiliateWallet[0].playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length})}
+                                {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length, loading: isLoading})}
                             </Col>
                         </Row>
                     </Col>
@@ -178,7 +196,8 @@ function mapStateToProps(state){
     return {
         profile: state.profile,
         user : state.userView,
-        currency : state.currency
+        currency : state.currency,
+        isLoading: state.isLoading
     };
 }
 

@@ -49,6 +49,7 @@ class TopBarPeriodicity extends React.Component {
         const { profile } = this.props;
         store.dispatch(setLoadingStatus(true));
         await store.dispatch(setDataPeriodicity(periodicity));
+        this.toggle();
         await profile.getData();
         store.dispatch(setLoadingStatus(false));
     };

@@ -25,9 +25,8 @@ class UsersContainer extends React.Component{
         /* Set User to Redux */
         await store.dispatch(setUserView(user));
         /* Go To User Page */
-        this.props.history.push('/users/user');
+        this.props.history.push({pathname: '/users/user', state: { userId: user._id }});
     }
-
 
     render = () => {
 
