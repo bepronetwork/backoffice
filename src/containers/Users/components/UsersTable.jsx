@@ -254,6 +254,7 @@ class UsersTable extends React.Component {
             rowsPerPage: 10,
             usernameFilter: null,
             emailFilter: null,
+            idFilter: null,
             showFilter: false,
             ...defaultProps
         };
@@ -339,10 +340,11 @@ class UsersTable extends React.Component {
 
     render() {
         const { classes, currency, isLoading } = this.props;
-        const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter } = this.state;
+        const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter, idFilter } = this.state;
         const dataFiltered = data.filter(n => 
             (_.isEmpty(usernameFilter) || n.username.includes(usernameFilter)) &&
-            (_.isEmpty(emailFilter) || n.email.includes(emailFilter))
+            (_.isEmpty(emailFilter) || n.email.includes(emailFilter)) &&
+            (_.isEmpty(idFilter) || n._id.includes(idFilter))
         );
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, dataFiltered.length - page * rowsPerPage);
         const styles = {
@@ -386,6 +388,16 @@ class UsersTable extends React.Component {
                                         name={'emailFilter'}
                                         type={'text'} 
                                         defaultValue={emailFilter}
+                                        changeContent={this.handleChangeInputContent} />
+                                </FormControl>
+                            </Col>
+                            <Col>
+                                <FormControl style={{width : '100%'}}>
+                                    <TextInput
+                                        label={'Id'}
+                                        name={'idFilter'}
+                                        type={'text'} 
+                                        defaultValue={idFilter}
                                         changeContent={this.handleChangeInputContent} />
                                 </FormControl>
                             </Col>
