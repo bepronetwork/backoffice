@@ -98,7 +98,7 @@ class DefaultDashboard extends React.Component{
                         <Row>
                             <Col md={6}>
                                 <DataWidget>
-                                    <BetsStatistics currency={currency} isLoading={isLoading} data={{
+                                    <BetsStatistics currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
                                         bets : this.props.profile.getApp().getSummaryData('bets'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet')
                                         }}/>
@@ -106,7 +106,7 @@ class DefaultDashboard extends React.Component{
                             </Col>
                             <Col md={6}>
                                 <DataWidget>
-                                    <VisitorsSessions currency={currency} isLoading={isLoading} data={{
+                                    <VisitorsSessions currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
                                         users : this.props.profile.getApp().getSummaryData('games'),
                                         bets : this.props.profile.getApp().getSummaryData('bets'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet')

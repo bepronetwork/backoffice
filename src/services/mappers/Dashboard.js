@@ -33,7 +33,7 @@ class DashboardMapper{
             // Each Item is date based
             return {
                 name : data[key].name,
-                value : Numbers.toFloat(data[key].betsAmount),
+                value : Numbers.toFloat(data[key].betAmount),
                 fill : colors[index]
             }
         })
