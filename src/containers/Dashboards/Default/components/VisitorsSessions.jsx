@@ -63,13 +63,15 @@ class VisitorsSessions extends React.Component{
     projectData = (props) => {
         const { bets, users } = props.data;
 
-        if(bets.data[0] && users.data[0]){
-            let lastMonthUserBets = users.data.find( data => (data.date.month != null && data.date.year != null))
-            let amount = lastMonthUserBets.games.reduce( (acc, game) => acc+game.betAmount, 0);
+        if(bets.data.length > 0 && users.data.length > 0){
+            
+            const allBets = getAllBets(users.data);
+
+            let amount = allBets.reduce((acc, game) => acc+game.betAmount, 0);
 
             let data = {
                 betAmount : amount,
-                games : DashboardMapperSingleton.toPieChart(lastMonthUserBets.games)
+                games : DashboardMapperSingleton.toPieChart(allBets)
             }
             
 
@@ -86,7 +88,7 @@ class VisitorsSessions extends React.Component{
 
     render = () => {
         const { data } = this.state;
-        const { isLoading } = this.props;
+        const { isLoading, periodicity } = this.props;
 
         return (
             <Panel
@@ -94,7 +96,7 @@ class VisitorsSessions extends React.Component{
                 subhead="What games are more popular?"
             >
                 <div className="dashboard__visitors-chart">
-                    <p className="dashboard__visitors-chart-title"> Total Bets <span> last month </span></p>
+                    <p className="dashboard__visitors-chart-title"> Total Bets <span>{periodicity}</span> </p>
                     {isLoading ? (
                     <>
                     <Skeleton variant="rect" width={50} height={29} style={{ marginTop: 10, marginBottom: 10, marginRight: 'auto' }}/>
@@ -117,6 +119,24 @@ class VisitorsSessions extends React.Component{
         )
         }
 };
+
+function getAllBets(users){
+
+    const betsOnPeriodicity = users.map(index => index.games);
+    const concatBets = [].concat(...betsOnPeriodicity);
+
+    const allBets = Object.values([...concatBets].reduce((acc, { _id, name, edge, betsAmount, betAmount, profit, fees }) => {
+    acc[_id] = { _id, name, 
+        edge: (acc[_id] ? acc[_id].edge : 0) + edge,
+        betsAmount: (acc[_id] ? acc[_id].betsAmount : 0) + betsAmount,
+        betAmount: (acc[_id] ? acc[_id].betAmount : 0) + betAmount,
+        profit: (acc[_id] ? acc[_id].profit : 0) + profit,
+        fees: (acc[_id] ? acc[_id].fees : 0) + fees };
+    return acc;
+    }, {}));
+
+    return allBets;
+}
 
 VisitorsSessions.propTypes = {
   	t: PropTypes.func.isRequired,

@@ -26,7 +26,7 @@ class GamesContainer extends PureComponent {
     }
 
     async projectData(props){
-        if(props.data.games.data && props.data.games.data[0]){
+
             const gamesInfo = props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
             const games = getAllGames(props.data.games.data, gamesInfo);
             const wallet = props.data.wallet.data;
@@ -35,7 +35,6 @@ class GamesContainer extends PureComponent {
                 wallet,
                 games
             })
-        }
     }
 
     render() {

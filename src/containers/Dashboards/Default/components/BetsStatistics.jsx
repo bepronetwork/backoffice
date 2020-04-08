@@ -40,17 +40,19 @@ class BetsStatistics extends React.Component {
     projectData = (props) => {
         const { bets, wallet } = props.data;
         const { currency } = props;
+       
+        if(bets.data.length > 0){
+            const allBets = getAllBets(bets.data);
 
-        if(bets.data[0]){
             let betsData = {
-                bets : bets.data[0].bets,
+                bets : allBets,
                 graph : [
-                    { value: 100-Numbers.toFloat(bets.data[0].bets.percentage_won*100), fill: '#894798' },
-                    { value: 100-Numbers.toFloat(bets.data[0].bets.percentage_won*100), fill: '#eeeeee' }
+                    { value: 100-Numbers.toFloat(allBets.percentage_won*100), fill: '#894798' },
+                    { value: 100-Numbers.toFloat(allBets.percentage_won*100), fill: '#eeeeee' }
                 ]
             }
 
-            let percentage = 100-Numbers.toFloat(betsData.bets.percentage_won*100);
+            let percentage = 100-Numbers.toFloat(allBets.percentage_won*100);
     
     
             this.setState({...this.state, 
@@ -70,10 +72,10 @@ class BetsStatistics extends React.Component {
 
     render = () => {
 
-        const { isLoading } = this.props;
+        const { isLoading, periodicity } = this.props;
 
         return (
-            <Panel title={'Bet´s Stats'} subhead="last 7 days"
+            <Panel title={'Bet´s Stats'} subhead={periodicity}
             >
                 <div className="dashboard__stat dashboard__stat--budget">
                     <div className="dashboard__stat-main">
@@ -118,6 +120,33 @@ class BetsStatistics extends React.Component {
         
     }
 } 
+
+function getAllBets(data) {
+
+    let allBets = {};
+
+    const betsOnPeriodicity = data.map(index => index.bets);
+    const concatBets = [].concat(...betsOnPeriodicity);
+
+    const betsAmont = concatBets.length;
+
+    const combined = [...concatBets].reduce((a, obj) => {
+        Object.entries(obj).forEach(([key, val]) => {
+          a[key] = (a[key] || 0) + val;
+        });
+        return a;
+      });
+
+    allBets.avg_bet = combined.avg_bet / betsAmont;
+    allBets.avg_bet_return = combined.avg_bet_return / betsAmont;
+    allBets.won = combined.won;
+    allBets.amount = combined.amount;
+    allBets.percentage_won = allBets.amount === 0 ? 0 : allBets.won / allBets.amount;
+    
+    return allBets;
+
+}
+
  
 function mapStateToProps(state){
     return {
