@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { Row, Col, Container, Card, CardBody } from 'reactstrap';
 import Skeleton from '@material-ui/lab/Skeleton';
+import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import _ from 'lodash';
 import Numbers from '../../../services/numbers';
 import HorizontalTabs from '../../HorizontalTabs';
@@ -68,7 +69,8 @@ class UserPage extends React.Component{
 
     }
 
-    renderDataTitle = ({title, data, span, loading}) => {
+    renderDataTitle = ({title, data, span, loading, decimals}) => {
+
         return (
             <Card>
                 <CardBody className="dashboard__card-widget">
@@ -76,7 +78,7 @@ class UserPage extends React.Component{
                     {loading ? (
                         <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
                     ) : (
-                        <h4 className='secondary-text' style={{marginTop : 5}}> {data} <span className='text-x-small'>{span}</span></h4>
+                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={decimals} font={'11pt'} number={data}/> <span className='text-x-small'>{span}</span></h4>
                     )}
                 </CardBody>
             </Card>
@@ -137,28 +139,28 @@ class UserPage extends React.Component{
                     <Col md={8}>
                         <Row>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Gaming Wallet', data : playBalance ? parseFloat(playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
+                                {this.renderDataTitle({title : 'Gaming Wallet', data : playBalance ? parseFloat(playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'TurnOver', data :  betAmount ? parseFloat(betAmount).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
+                                {this.renderDataTitle({title : 'TurnOver', data :  betAmount ? parseFloat(betAmount).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Win Amount', data :  winAmount ? parseFloat(winAmount).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
+                                {this.renderDataTitle({title : 'Win Amount', data :  winAmount ? parseFloat(winAmount).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Profit', data :  profit ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
+                                {this.renderDataTitle({title : 'Profit', data :  profit ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length)})}
+                                {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length), decimals: 0})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length)})}
+                                {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length), decimals: 0})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliateWallet) ? parseFloat(affiliateWallet[0].playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading})}
+                                {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliateWallet) ? parseFloat(affiliateWallet[0].playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length, loading: isLoading})}
+                                {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length, loading: isLoading, decimals: 0})}
                             </Col>
                         </Row>
                     </Col>
