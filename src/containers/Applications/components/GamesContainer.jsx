@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import {  Col, Row } from 'reactstrap';
 import GameInfo from './GameInfo';
 import { connect } from "react-redux";
+import store from '../../App/store';
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
 class GamesContainer extends PureComponent {
@@ -25,29 +26,31 @@ class GamesContainer extends PureComponent {
     }
 
     async projectData(props){
-        if(props.data.games.data && props.data.games.data[0]){
+
             const gamesInfo = props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
             const games = getAllGames(props.data.games.data, gamesInfo);
             const wallet = props.data.wallet.data;
+
             this.setState({...this.state, 
                 wallet,
                 games
             })
-        }
     }
 
     render() {
        const { wallet, games } = this.state;
+       const { isLoading } = this.props;
         
         return (
             (games.length > 0) ? 
                 <Row md={12} xl={12} lg={12} xs={12}>
-                    {Object.keys(games).map( key => {
+                    {games.map(game => {
                         return (
-                        <Col lg={4}>
-                            <GameInfo game={games[key]} wallet={wallet} {...this.props}/>
-                        </Col>
-                        )
+                            <Col lg={4}>
+                                <GameInfo game={game} isLoading={isLoading} wallet={wallet} {...this.props}/>
+                            </Col>
+
+                        )                  
                     })}
                 </Row>
             : 
@@ -59,34 +62,37 @@ class GamesContainer extends PureComponent {
     }
 }
 
-
 function getAllGames(data, gamesInfo){
-    let games = [];
-    for(var i = 0; i < data.length; i++) {
-        for(var k = 0; k < data[i].games.length; k++) {
-            let exists = false;
-            for(var j = 0; j < games.length; j++){
-                if(new String(games[j]._id).toLowerCase() == new String(data[i].games[k]._id).toLowerCase()){
-                    exists = true;
-                }     
-            }
-            if(!exists){
-                let gameAdditionalInfo = gamesInfo.map( item => {
-                    if(new String(item._id).toLowerCase() == new String(data[i].games[k]._id).toLowerCase()){
-                        return item;
-                    }
-                }).filter(el => el != null)[0];
-                games.push({...data[i].games[k], ...gameAdditionalInfo})
-            }
-        }
-    }
+    let allGames = [];
 
-    return games;
+    const gamesOnPeriodicity = data.map(index => index.games);
+    const concatGames = [].concat(...gamesOnPeriodicity);
+
+    const games = Object.values([...concatGames].reduce((acc, { _id, name, edge, betsAmount, betAmount, profit, fees }) => {
+    acc[_id] = { _id, name, 
+        edge: (acc[_id] ? acc[_id].edge : 0) + edge,
+        betsAmount: (acc[_id] ? acc[_id].betsAmount : 0) + betsAmount,
+        betAmount: (acc[_id] ? acc[_id].betAmount : 0) + betAmount,
+        profit: (acc[_id] ? acc[_id].profit : 0) + profit,
+        fees: (acc[_id] ? acc[_id].fees : 0) + fees };
+    return acc;
+    }, {}));
+
+    gamesInfo.filter(game => games.map(g => g._id).includes(game._id)).map(game => {
+        games.filter(g => g._id === game._id).map(g => allGames.push({...g, ...game}));
+    })
+
+    gamesInfo.filter(game => !games.map(g => g._id).includes(game._id)).map(game => {
+        allGames.push({edge: 0, betsAmount: 0, betAmount: 1, profit: 0, fees: 0, ...game });
+    });
+
+    return allGames;
 }
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        isLoading: state.isLoading
     };
 }
 

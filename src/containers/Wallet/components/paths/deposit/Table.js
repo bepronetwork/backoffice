@@ -340,7 +340,7 @@ class DepositsTable extends React.Component {
                                     </StyledTableCell>
                                     <StyledTableCell align="left"> 
                                         <p className='text-small'>
-                                            {n.amount} {this.props.currency}
+                                            {parseFloat(n.amount).toFixed(6)} {this.props.currency}
                                         </p>
                                     </StyledTableCell>
                                     <StyledTableCell style={{width : 120}} align="left">

@@ -255,6 +255,10 @@ class App{
         return this.params.customization;
     }
 
+    getTypography(){
+        return this.params.typography;
+    }
+
     getChatIntegration(){
         return this.params.integrations.chat;
     }
@@ -496,6 +500,26 @@ class App{
                     backgroundColor,
                     text,
                     isActive
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editTypography = async (typography) => {
+        try{
+            let res = await ConnectionSingleton.editTypography({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    typography
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });

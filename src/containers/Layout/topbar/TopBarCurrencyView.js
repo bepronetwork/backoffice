@@ -1,6 +1,7 @@
 import React from 'react';
 import { Collapse } from 'reactstrap';
 import DownIcon from 'mdi-react/ChevronDownIcon';
+import { setLoadingStatus } from '../../../redux/actions/loadingAction';
 import { setCurrencyView } from '../../../redux/actions/currencyReducer';
 import { connect } from "react-redux";
 import _ from 'lodash';
@@ -49,9 +50,11 @@ class TopBarCurrencyView extends React.Component {
     };
 
     changeCurrency = async ({currency}) => {
+        store.dispatch(setLoadingStatus(true));
         await store.dispatch(setCurrencyView(currency));
         await this.props.profile.getApp().getSummary();
         this.props.profile.update();
+        store.dispatch(setLoadingStatus(false));
     };
 
     render() {

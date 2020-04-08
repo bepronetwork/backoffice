@@ -338,7 +338,7 @@ class WithdrawTable extends React.Component {
                                     </StyledTableCell>
                                     <StyledTableCell style={{width : 60}} align="left">
                                         <p className='text-small'> 
-                                            {n.amount} {this.props.currency}
+                                            {parseFloat(n.amount).toFixed(6)} {this.props.currency}
                                         </p>
                                     </StyledTableCell>
                                    

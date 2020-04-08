@@ -50,7 +50,7 @@ class DefaultDashboard extends React.Component{
     render = () => {
 
         const { isDeployed } = this.state;
-        const { periodicity, currency } = this.props;
+        const { periodicity, currency, isLoading } = this.props;
                         
         return (
             <Container className="dashboard">   
@@ -62,12 +62,12 @@ class DefaultDashboard extends React.Component{
                     </Col>  
                     <Col lg={3}>
                         <DataWidget>
-                            <LiquidityWalletWidget currency={currency} data={this.props.profile.getApp().getSummaryData('wallet')} />
+                            <LiquidityWalletWidget currency={currency} isLoading={isLoading} data={this.props.profile.getApp().getSummaryData('wallet')} />
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <ProfitResume currency={currency} periodicity={periodicity} data={{
+                            <ProfitResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
                                 revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                 wallet : this.props.profile.getApp().getSummaryData('wallet'),
                                 }} />
@@ -75,7 +75,7 @@ class DefaultDashboard extends React.Component{
                     </Col> 
                     <Col lg={3}>
                         <DataWidget>
-                            <TurnoverResume currency={currency} periodicity={periodicity} data={{
+                            <TurnoverResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
                                 revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                 wallet : this.props.profile.getApp().getSummaryData('wallet'),
                             }} />
@@ -87,7 +87,7 @@ class DefaultDashboard extends React.Component{
                         <Row>
                             <Col lg={12}>
                                 <DataWidget>
-                                    <RevenueChart currency={currency} currency={currency} periodicity={periodicity} data={{
+                                    <RevenueChart currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
                                         revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet'),
                                     }} 
@@ -98,7 +98,7 @@ class DefaultDashboard extends React.Component{
                         <Row>
                             <Col md={6}>
                                 <DataWidget>
-                                    <BetsStatistics currency={currency} data={{
+                                    <BetsStatistics currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
                                         bets : this.props.profile.getApp().getSummaryData('bets'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet')
                                         }}/>
@@ -106,7 +106,7 @@ class DefaultDashboard extends React.Component{
                             </Col>
                             <Col md={6}>
                                 <DataWidget>
-                                    <VisitorsSessions currency={currency} data={{
+                                    <VisitorsSessions currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
                                         users : this.props.profile.getApp().getSummaryData('games'),
                                         bets : this.props.profile.getApp().getSummaryData('bets'),
                                         wallet : this.props.profile.getApp().getSummaryData('wallet')
@@ -141,7 +141,8 @@ function mapStateToProps(state){
     return {
         profile: state.profile,
         periodicity : state.periodicity,
-        currency : state.currency
+        currency : state.currency,
+        isLoading: state.isLoading
     };
 }
 

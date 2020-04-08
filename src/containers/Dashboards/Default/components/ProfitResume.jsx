@@ -1,6 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col } from 'reactstrap';
+import Skeleton from '@material-ui/lab/Skeleton';
 import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
 import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import AnimationNumber from '../../../UI/Typography/components/AnimationNumber';
@@ -47,11 +48,15 @@ class ProfitResume extends PureComponent {
 
   
     render() {
-        const { currency } = this.props;
+        const { currency, isLoading } = this.props;
+
         return (
         <Col md={12} xl={12} lg={12} xs={12}>
             <Card>
                 <CardBody className="dashboard__card-widget">
+                    {isLoading ? (
+                    <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/> 
+                    ) : ( 
                     <div className="dashboard__visitors-chart">
                         <p className="dashboard__visitors-chart-number-second" style={
                             {color : this.state.profit >= 0 ? '#76d076' : '#646777'}
@@ -61,7 +66,8 @@ class ProfitResume extends PureComponent {
                             : null
                         }
                         <span style={ {color : this.state.profit >= 0 && !_.isEmpty(currency) ? '#76d076' : '#646777'}}> {this.state.ticker}</span> </p>
-                    </div>
+                    </div> )}
+                    
                     <div className="dashboard__visitors-chart">
                         <p className="dashboard__visitors-chart-title"> Profit <span> {this.state.timeline}</span></p>
                     </div>
@@ -73,3 +79,4 @@ class ProfitResume extends PureComponent {
 }
 
 export default ProfitResume;
+

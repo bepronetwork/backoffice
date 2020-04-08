@@ -1,12 +1,14 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
+import Skeleton from "@material-ui/lab/Skeleton";
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import Numbers from '../../../services/numbers';
 import game_images from './game_images';
 import store from '../../App/store';
 import { setGameView } from '../../../redux/actions/game';
 import { connect } from "react-redux";
+import { Grid } from '@material-ui/core';
 
 class GameInfo extends PureComponent {
  
@@ -24,13 +26,31 @@ class GameInfo extends PureComponent {
     }
 
     render() {
-        const { currency } = this.props;
+        const { currency, isLoading } = this.props;
         let game = this.props.game;
         let ticker = currency.ticker;
         let game_image = game_images[new String(game.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
         return (
             <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`}}>
+                {isLoading ? (
+                <>
+                <Card className='game-container'>
+                    <CardBody className="dashboard__card-widget">
+                        <Grid container direction='row' spacing={1}>
+                            <Grid item xs={9}>
+                                <Skeleton variant="rect" width={120} height={29} style={{ marginTop: 10, marginBottom: 10 }}/>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Skeleton variant="circle" width={50} height={50} style={{ marginBottom: 10, marginLeft: 'auto', marginRight: 0 }}/>
+                            </Grid>           
+                        </Grid>
+                        <Skeleton variant="rect" width={120} height={29} style={{ marginBottom: 10 }}/>
+                        <Skeleton variant="rect" height={130} style={{ marginBottom: 10 }}/>
+                    </CardBody>
+                </Card>
+                </>   
+                ) : (
                 <button className='clean_button' onClick={ () => this.goToGamePage()} style={{width: `100%`, height: `100%`}}>
                     <Card className='game-container'>
                         <CardBody className="dashboard__card-widget">
@@ -80,6 +100,7 @@ class GameInfo extends PureComponent {
                         </CardBody>
                     </Card>
                 </button>
+                )}
             </Col>
         );
     }
