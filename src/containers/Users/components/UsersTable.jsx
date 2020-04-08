@@ -48,18 +48,19 @@ function getSorting(order, orderBy) {
 
 const fromDatabasetoTable = (data, otherInfo, currency) => {
 
-	return data.map( (key) => {
+	return data.map((key) => {
         var d;
         if(otherInfo){
             d = otherInfo.find( f => f._id == key._id);
         }
-        const wallet = key.wallet.find(w => compareIDS(w.currrency, currency._id));
 
+        const wallet = key.wallet.filter(w => compareIDS(w.currency, currency._id));
+        
         return {
             _id :  key._id,
             full_info : {...d, ...key}, 
 			username : key.username,
-			wallet: wallet ? parseFloat(wallet.playBalance) : 0,
+			wallet: wallet[0] ? parseFloat(wallet[0].playBalance) : 0,
 			bets: parseFloat(key.bets.length),
             email: key.email,
             turnoverAmount: d ? parseFloat(d.betAmount) : 0,
