@@ -3,6 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { translate } from 'react-i18next';
 import Panel from '../../../shared/components/Panel';
 import DashboardMapperSingleton from '../../../services/mappers/Dashboard';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const defaultProps = {
     chartData : [
@@ -31,6 +32,10 @@ class RevenueChart extends React.Component{
         this.projectData(this.props)
     }
 
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+
     projectData = (props) => {
         let data = props.data;
         const { currency } = props;
@@ -44,8 +49,13 @@ class RevenueChart extends React.Component{
 
     render(){
 
+        const { isLoading } = this.props;
+
         return(
                 <Panel naked={true} md={12} lg={12} xl={12} title={`Summary`}>
+                    {isLoading ? (
+                    <Skeleton variant="rect" height={250}/> 
+                    ) : (
                     <ResponsiveContainer height={250} className="dashboard__area">
                         <AreaChart data={this.state.chartData} margin={{ top: 20, left: 5, bottom: 20 }} >
                         <XAxis dataKey="name" tickLine={false} />
@@ -57,7 +67,7 @@ class RevenueChart extends React.Component{
                         <Area name="Revenue" type="monotone" dataKey="a" fill="#894798" stroke="#894798" fillOpacity={0.3} /> 
                         <Area name="Profit" type="monotone" dataKey="c" fill="#70bbfd" stroke="#70bbfd" fillOpacity={0.4} /> 
                         </AreaChart>
-                    </ResponsiveContainer>
+                    </ResponsiveContainer>)}
                 </Panel>
                 )
                 
