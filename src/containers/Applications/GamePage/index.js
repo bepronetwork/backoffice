@@ -343,7 +343,7 @@ class GamePageContainer extends React.Component{
                                                 icon={BankIcon}
                                                 name="tableLimit"
                                                 label="Table Limit"
-                                                type="number"
+                                                type="text"
                                                 disabled={this.state.locks.tableLimit}
                                                 changeContent={ (type, value) => this.onChange({type, value})}
                                             />

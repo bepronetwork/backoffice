@@ -48,6 +48,7 @@ export default class RangeTheme extends PureComponent {
                     tipFormatter={tipFormatter}
                     marks={marks}
                     tipProps={{ visible: true }}
+                    step={0.1}
                 /> : null
             }
         </div>
