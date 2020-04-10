@@ -45,16 +45,22 @@ class SidebarContent extends Component {
     hasInfo = data => data ? true : false ;
 
     getData = (props) => {
+        const User = props.profile.User;
+
         let newState = {
-            home        : true,
-            application : true,
-            users       : this.hasData(props.profile.hasAppStats('usersInfoSummary')),
-            stats       : this.hasData(props.profile.hasAppStats('revenue')),
-            wallet      : true,
-            settings    : true,//this.hasInfo(props.profile.getApp().isDeployed()),
-            affiliates  : this.hasData(props.profile.hasAppStats('affiliates')),
-            transactions: this.hasData(props.profile.hasAppStats('withdraws')),
-            developers  : true
+            home        : User.permission.super_admin || User.permission.financials,
+            application : User.permission.super_admin || User.permission.customization,
+            users       : this.hasData(props.profile.hasAppStats('usersInfoSummary')) && 
+                          (User.permission.super_admin || User.permission.financials),
+            stats       : this.hasData(props.profile.hasAppStats('revenue')) &&
+                          (User.permission.super_admin || User.permission.financials),
+            wallet      : User.permission.super_admin || User.permission.financials || 
+                          User.permission.withdraw,
+            settings    : User.permission.super_admin,//this.hasInfo(getApp().isDeployed()),
+            affiliates  : this.hasData(props.profile.hasAppStats('affiliates')) && User.permission.super_admin,
+            transactions: this.hasData(props.profile.hasAppStats('withdraws')) && (User.permission.super_admin || 
+                          User.permission.financials || User.permission.user_withdraw),
+            developers  : User.permission.super_admin
         }
         this.setState({...this.state, ...newState})
     }
