@@ -128,6 +128,22 @@ class Account{
         }
     }
 
+    editAdminType = async ({adminToModify, permission}) => {
+        try{
+            let res = await ConnectionSingleton.editAdminType({
+                params: {
+                    adminToModify,
+                    permission,
+                    admin: this.getUserInfo().id
+                },
+                headers : authHeaders(this.getUserInfo().security.bearerToken, this.getId())
+            })
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     getAdminByApp = async () => {
         try{
             let res = await ConnectionSingleton.getAdminByApp({
