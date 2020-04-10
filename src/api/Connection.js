@@ -127,7 +127,7 @@ class Connection {
             let response = await fetch(URL+ '/api/app/games/editTableLimit', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({admin, app, game, tableLimit : parseInt(tableLimit), wallet})
+                body : JSON.stringify({admin, app, game, tableLimit : parseFloat(tableLimit), wallet})
             });
             return response.json();
         }catch(err){
