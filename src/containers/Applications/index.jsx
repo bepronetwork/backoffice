@@ -9,12 +9,13 @@ import DataWidget from '../DataWidget/DataWidget';
 import IntegrationsContainer from './components/IntegrationsContainer';
 import _ from 'lodash';
 import { fromCodesToServices } from '../../controllers/services/services';
-import { GamesIcon, StoreIcon, SettingsIcon, ArrowDecisionIcon } from 'mdi-react';
+import { GamesIcon, StoreIcon, SettingsIcon, ArrowDecisionIcon, PuzzleIcon } from 'mdi-react';
 import TabsContainer from '../../shared/components/tabs/Tabs';
 import GameStorePageContainer from './GameStore/index.js';
 import CustomizationContainer from './Customization/index.js';
 import ThirdPartiesContainer from './ThirdParties/index.js';
 import HostingLink from './components/HostingLink';
+import AddOnsContainer from './AddOnPage';
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
@@ -85,6 +86,14 @@ class ApplicationsContainer extends React.Component{
                                                 
                                             ),
                                             icon : <ArrowDecisionIcon/>
+                                        },
+                                        {
+                                            title : 'Add-Ons ',
+                                            container : (
+                                                <AddOnsContainer/>
+                                                
+                                            ),
+                                            icon : <PuzzleIcon/>
                                         },
 
                                     ]
