@@ -385,6 +385,34 @@ class Connection {
         }
     }
 
+    addAutoWithdraw = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/autoWithdraw/add`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editAutoWithdraw = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/autoWithdraw/editAutoWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editAffiliateStructure = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/affiliate/edit`, {
