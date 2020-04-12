@@ -380,6 +380,34 @@
   }
 }
 
+.topbar__virutal-btn-title {
+  display: flex;
+  font-size: 11px;
+  align-items: center;
+  margin: auto 0;
+
+  @include themify($themes) {
+    color: themed('colorText');
+  }
+
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
+
+  img {
+    height: 11px;
+    width: 16px;
+    margin-right: 4px;
+  }
+
+  p {
+    background-color: #894798;
+    color: #fff;
+    padding: 4px 6px;
+    border-radius: 3px;
+  }
+}
+
 .topbar__periodicity-btn {
   padding: 4px 15px;
   width: 100%;

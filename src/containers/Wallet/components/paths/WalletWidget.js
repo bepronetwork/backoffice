@@ -9,7 +9,6 @@ import DepositWidget from './DepositWidget';
 import WithdrawWidget from './WithdrawWidget';
 import LimitsWidget from './LimitsWidget';
 import { ArrowDownIcon, ArrowCollapseUpIcon, CurrencyUsdIcon } from 'mdi-react';
-import { useParams } from "react-router-dom";
 
 class WalletWidget extends React.Component{
 
@@ -18,9 +17,8 @@ class WalletWidget extends React.Component{
     }
     
     render = () => {
-        // const { profile } = this.props;
-        
-        // let wallets = (profile.getApp().getSummaryData('walletSimple')).data;
+        const { profile } = this.props;
+        const { virtual } = profile.getApp().getParams();
 
         return (
             <Container className="dashboard">
@@ -32,14 +30,16 @@ class WalletWidget extends React.Component{
                                 container : (
                                     <DepositWidget/>
                                 ),
-                                icon : <ArrowCollapseUpIcon/>
+                                icon : <ArrowCollapseUpIcon/>,
+                                disabled : virtual
                             },
                             {
                                 title : 'Withdraw',
                                 container : (
                                     <WithdrawWidget/>
                                 ),
-                                icon : <ArrowDownIcon/>
+                                icon : <ArrowDownIcon/>,
+                                disabled : virtual
                             },
                             {
                                 title : 'Limits',

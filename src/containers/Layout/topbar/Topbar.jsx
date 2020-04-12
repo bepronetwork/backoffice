@@ -10,6 +10,7 @@ import TopbarSearch from './TopbarSearch';
 import TopbarLanguage from './TopbarLanguage';
 import TopBarCurrencyView from './TopBarCurrencyView';
 import TopBarPeriodicity from './TopBarPeriodicity';
+import TopBarMoneyType from './TopBarMoneyType';
 import Tooltip from '@material-ui/core/Tooltip';
 import { IconButton } from '@material-ui/core';
 import { CheckCircleIcon, AlertCircleIcon } from 'mdi-react';
@@ -73,6 +74,7 @@ class Topbar extends React.Component {
                     />
                 </div>
                 <div className="topbar__right">
+                    <TopBarMoneyType/>
                     <TopBarPeriodicity/>
                     <TopBarCurrencyView/>
                     <TopBarWithdrawNotice/>

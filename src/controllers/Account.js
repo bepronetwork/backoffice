@@ -114,7 +114,6 @@ class Account{
 
     addAdmin = async ({email}) => {
         try{
-            console.log(this.getUserInfo());
             let res = await ConnectionSingleton.addAdmin({
                 params : {
                     email, app : this.getApp().getId(), admin: this.getUserInfo().id
@@ -340,9 +339,14 @@ class Account{
             }
 
             /* SET CURRENCY */
-            if(data.app.wallet && data.app.wallet.length > 0 && data.app.wallet[0].currency) {
-                const currency = data.app.wallet[0].currency;
-                await store.dispatch(setCurrencyView(currency));
+            if(data.app.wallet && data.app.wallet.length) {
+                const virtual = data.app.virtual;
+                const wallets = data.app.wallet.filter(w => (w.currency.virtual === virtual) || (!virtual && !w.currency.hasOwnProperty('virtual')));
+
+                if(wallets.length) {
+                    const currency = wallets[0].currency;
+                    await store.dispatch(setCurrencyView(currency));
+                }
             }
 
             this.update()

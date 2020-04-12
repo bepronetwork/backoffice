@@ -19,7 +19,6 @@ class AddAdminContainer extends React.Component{
     projectData = async (props) => {
         let { profile } = props;
         let list = (await profile.getAdminByApp()).reverse();
-        console.log(list);
         this.setState({...this.state, authorizedAddAdmin : list });
     }
     onChange = async (new_data) => {

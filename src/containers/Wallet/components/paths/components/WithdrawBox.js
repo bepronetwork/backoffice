@@ -207,7 +207,6 @@ class WithdrawBox extends PureComponent {
 }
 
 function mapStateToProps(state){
-    console.log(state.profile);
     return {
         profile: state.profile,
         wallet : (state.wallet.currency) ? state.wallet : state.profile.getApp().getSummaryData('walletSimple').data[0]

@@ -38,7 +38,7 @@ class LiquidityWalletWidget extends PureComponent {
 
     projectData = (props) => {
         const { wallet } = props.data;
-    
+        
         if(wallet._id){
             this.setState({...this.state,
                 wallet,
@@ -46,7 +46,7 @@ class LiquidityWalletWidget extends PureComponent {
                 ticker : wallet.currency.ticker ? wallet.currency.ticker : defaultProps.ticker,
                 platformBlockchain : wallet.currency.name ? wallet.currency.name: defaultProps.platformBlockchain,
                 platformAddressLink : wallet.link_url,
-                tokenAddress :  `${wallet.bank_address.substring(0, 6)}...${wallet.bank_address.substring(wallet.bank_address.length - 2)}`,
+                tokenAddress :  wallet.bank_address ? `${wallet.bank_address.substring(0, 6)}...${wallet.bank_address.substring(wallet.bank_address.length - 2)}` : null,
                 isIntegrated : true,
                 image : wallet.currency.image
             })
@@ -62,13 +62,13 @@ class LiquidityWalletWidget extends PureComponent {
                     <button className='clean_button' onClick={ () => this.goToWalletView(wallet)}>
                         <CardBody className="dashboard__card-widget dashboard_borderTop">
                             <Row>
-                                <Col lg={4}>
+                                <Col lg={5}>
                                     <img style={{borderRadius : 0, position: "initial"}} className="company-logo-card" src={image} alt="avatar" />
                                     <div className="dashboard__visitors-chart" style={{ marginTop: 20}}>
                                         <p className="dashboard__visitors-chart-title" style={{fontSize : 25}}> {this.state.ticker} </p>
                                     </div>
                                 </Col>
-                                <Col lg={8}>
+                                <Col lg={7}>
                                     <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-number-second" style={
                                             {color : '#646777'}

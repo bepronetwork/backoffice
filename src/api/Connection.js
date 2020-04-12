@@ -70,12 +70,12 @@ class Connection {
         }
     }
 
-    createApp = async ({name, description, metadataJSON, admin_id, marketType}) => {
+    createApp = async ({name, description, virtual, metadataJSON, admin_id, marketType}) => {
         try{
             let response = await fetch(URL + '/api/app/create', {
                 method : 'POST',
                 headers : config.headers,
-                body : JSON.stringify({name, description , metadataJSON, admin_id, marketType})
+                body : JSON.stringify({name, description, virtual, metadataJSON, admin_id, marketType})
             });
             return response.json();
         }catch(err){
