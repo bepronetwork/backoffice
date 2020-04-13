@@ -18,7 +18,8 @@ class TabsContainer extends React.Component{
 
     render = () => {
 
-        const { items} = this.props;
+        const { items } = this.props;
+        const filteredItems = items.filter(item => item.disabled !== true);
         const permission = this.props.profile.User.permission;
 
         return (
@@ -27,7 +28,7 @@ class TabsContainer extends React.Component{
                     <Row>
                         <Col md={2}>
                             <Nav variant="pills" className="flex-column">
-                                {items.map( (item, index) => {
+                                {filteredItems.map( (item, index) => {
                                     const disabled = item.name !== 'Customization ' && !permission.super_admin
                                     return (
                                         <Row>
@@ -45,7 +46,7 @@ class TabsContainer extends React.Component{
                         </Col>
                         <Col md={10}>
                             <Tab.Content>
-                                {items.map( (item, index) => {
+                                {filteredItems.map( (item, index) => {
                                     return (
                                         <Tab.Pane eventKey={`item-${index}`} key={index}>
                                             {item.container}

@@ -14,6 +14,12 @@ const renderCurrency = ({currency}) => (
     </span>
 )
 
+const selectCurrency = () => (
+    <span className="topbar__language-btn-title" style={{height : 20}}>
+        <p style={{marginTop : -3}}>CURRENCY</p>
+    </span>
+)
+
 class TopBarCurrencyView extends React.Component {
 
     constructor(props) {
@@ -21,7 +27,7 @@ class TopBarCurrencyView extends React.Component {
         this.state = {
             currencies : [],
             collapse: false,
-            mainButtonContent: null,
+            mainButtonContent: null
         };
     }
 
@@ -34,14 +40,15 @@ class TopBarCurrencyView extends React.Component {
     }
 
     projectData(props){
-        var { profile, currency } = props; 
-        const currencies = profile.getApp().getSummaryData('walletSimple').data.map( w => w.currency);
-        currency = !_.isEmpty(currency) ? currency : currencies[0];
+        var { profile, currency } = props;
+        const { virtual } = profile.getApp().getParams();
+
+        const currencies = profile.getApp().getSummaryData('walletSimple').data.map( w => w.currency).filter(c => c.virtual === virtual );
 
         this.setState({
             currencies,
             currency,
-            mainButtonContent : currency ? renderCurrency({currency : currency}) : null
+            mainButtonContent : !_.isEmpty(currency) ? renderCurrency({currency : currency}) : selectCurrency()
         });
     }
 
@@ -60,22 +67,21 @@ class TopBarCurrencyView extends React.Component {
 
     render() {
         const { currencies } = this.state;
-        let hasCurrency = false;
+
         return (
             <div className="topbar__collapse topbar__collapse--language">
                 <button className="topbar__btn" onClick={this.toggle}>
                     {currencies.length > 0
                     ?
-                        hasCurrency = true
+                        this.state.mainButtonContent
                     :
                         <span className="topbar__currency-btn-title" style={{height : 20}}>
                             <p style={{marginTop : -3}}>No currencies installed</p>
                         </span>
                     }
-                    {this.state.mainButtonContent}
                     <DownIcon className="topbar__icon" />
                 </button>
-                {hasCurrency
+                {currencies.length
                 ?
                     <Collapse
                         isOpen={this.state.collapse}

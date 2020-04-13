@@ -193,7 +193,6 @@ class CasinoContract{
         try{
             let accounts = await window.web3.eth.getAccounts();
             let amountsWithDecimals = amounts.map( a => Numbers.toSmartContractDecimals(a, self.decimals))
-            console.log(amountsWithDecimals)
             return new Promise ( (resolve, reject) => {
                 self.contract.getContract().methods.setUserWithdrawalBatch(
                     addresses,
