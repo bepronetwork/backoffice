@@ -89,7 +89,7 @@ class Banners extends Component {
             <div style={{paddingBottom : 20, width: '100%', height : 240, margin : 'auto'}}>
                 <button disabled={this.state.locked} onClick={() => this.removeImage(src, index)} 
                 className='carousel-trash button-hover'
-                style={{right : 20, top: 6}}>
+                style={{right: 25, top: 3, position: 'relative'}}>
                     <img src={trash} style={{width : 15, height : 15}}/>
                 </button>
                 <img src={src} onDragStart={this.handleOnDragStart} style={{height : '100%'}}/>
@@ -215,16 +215,19 @@ class Banners extends Component {
                                         <GridList className={classes.gridList} cols={2.5}>
                                         {banners.map((i, index) => {
                                             return (
-                                                <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 580, width: 300, margin: 20, padding : 30}}>
+                                                <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 580, width: 300, margin: 20, padding : "0px 30px 30px 30px"}}>
                                                     {this.renderImage(i.image_url, index)}
                                                 </div>
                                             )
                                         })}
+                                        <div>
+                                            <h4 style={{padding: 20}}>Add Banner</h4> 
+                                            <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 270, width: 230, margin: "0px 20px 20px 20px"}}> 
+                                                {this.renderAddImage(banners.length)}
+                                            </div>
+                                        </div>
+                                        
                                         </GridList>
-                                    </div>
-
-                                    <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 270, width: 230, margin: 20}}>
-                                        {this.renderAddImage(banners.length)}
                                     </div>
                                 </div>
                             </EditLock>
