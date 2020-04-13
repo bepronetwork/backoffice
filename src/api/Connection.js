@@ -204,13 +204,14 @@ class Connection {
         }
     }
 
-    addServices = async ({app, services, headers}) => {
+    addServices = async ({admin, app, services, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/services/add`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({
-                    app,  
+                    app,
+                    admin,
                     services
                 })
             });
