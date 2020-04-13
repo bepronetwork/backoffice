@@ -223,6 +223,19 @@ class Account{
             });
             await this.login();
             res = await this.getApp().deployApp();
+            
+            const { virtual } = this.getApp().getParams();
+            if(virtual) {
+                let ecosystemCurrencies = await this.getApp().getEcosystemCurrencies();
+                ecosystemCurrencies = ecosystemCurrencies.filter(el => el != null && el.virtual === virtual);
+
+                if(ecosystemCurrencies) {
+                    const currency = ecosystemCurrencies[0];
+                    await this.getApp().addCurrencyWallet({currency : currency, passphrase : 'none'});
+                }
+
+            }
+
             await this.getApp().addServices([101, 201]);
             await this.login();
             return res; 

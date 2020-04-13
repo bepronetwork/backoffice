@@ -46,7 +46,7 @@ class CurrencyStore extends React.Component{
             })
             if(!exists){return ecoCurrency}
             else{ return {...ecoCurrency, isAdded : true}}
-        }).filter(el => el != null && el.virtual === virtual);
+        }).filter(el => el != null && ((virtual && !el.virtual) || (!virtual && !el.hasOwnProperty('virtual')) || el.virtual === virtual));
 
         this.setState({...this.state, 
             ecosystemCurrencies,
