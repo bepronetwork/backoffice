@@ -3,10 +3,10 @@ import React from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 import Skeleton from "@material-ui/lab/Skeleton";
 import { connect } from "react-redux";
-import { Grid, Switch } from '@material-ui/core';
+import { Grid, Switch, Typography, ExpansionPanelDetails, ExpansionPanelSummary, ExpansionPanel, makeStyles } from '@material-ui/core';
 import TextInput from '../../../../../shared/components/TextInput';
 import EditLock from '../../../../Shared/EditLock';
-import { BankIcon } from 'mdi-react';
+import { BankIcon, ExpandMoreIcon } from 'mdi-react';
 
 const defaultState = {
     name: 'AutoWithdraw',
@@ -31,7 +31,9 @@ class AutoWithdraw extends React.Component {
     }
 
     componentWillReceiveProps(props){
-        this.projectData(props);
+        if (this.state.lock) {
+            this.projectData(props);
+        }
     }
 
     projectData = (props) => {
@@ -112,9 +114,16 @@ class AutoWithdraw extends React.Component {
                     </CardBody>
                 </Card>
                 </>   
-                ) : (
+                ) : (                  
                     <Card className='game-container'>
                         <CardBody className="dashboard__card-widget" style={{width: '420px'}}>
+                            <ExpansionPanel elevation={0}>
+                            <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="content"
+                            id="header"
+                            style={{padding: 0}}
+                            >
                             <Row>
                                 <Col lg={8} >
                                     <div className="dashboard__visitors-chart text-left">
@@ -129,7 +138,8 @@ class AutoWithdraw extends React.Component {
                                     <img className='application__game__image' style={{width: `60px`, margin: '10px'}} src={image_url}/>
                                 </Col>
                             </Row>
-                        
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails style={{padding: 0}}>
                             <hr/>
 
                             <EditLock 
@@ -139,7 +149,6 @@ class AutoWithdraw extends React.Component {
                                 isLoading={this.state.loading}
                                 locked={lock}>
                                 <h5 style={{ margin: 0 }} >AutoWithdraw</h5>
-                                <h4 style={{marginTop: 10}}className={"bold-text dashboard__total-stat"}>{isAutoWithdraw ? 'Yes' : 'Not'}</h4>
                                 <Switch
                                     checked={isAutoWithdraw}
                                     onChange={this.handleChange}
@@ -149,8 +158,7 @@ class AutoWithdraw extends React.Component {
                                     inputProps={{ 'aria-label': 'primary checkbox' }}
                                 />
                                 <hr/>
-                                <h5 className="">Max Withdraw amount cumulative</h5>
-                                <h3 style={{marginTop: 10}}className={"bold-text dashboard__total-stat"}>{maxWithdrawAmountCumulative} {currency.ticker}</h3>
+                                <h5 className="">Max Withdraw amount cumulative ({maxWithdrawAmountCumulative} {currency.ticker})</h5>
                                 <TextInput
                                     icon={BankIcon}
                                     name="maxWithdrawAmountCumulative"
@@ -160,8 +168,7 @@ class AutoWithdraw extends React.Component {
                                     changeContent={(type, value) => this.onChangeCumulative(value)}
                                 />
                                 <hr/>
-                                <h5 className="">Max Withdraw amount per transaction</h5>
-                                <h3 style={{marginTop: 10}}className={"bold-text dashboard__total-stat"}>{maxWithdrawAmountPerTransaction} {currency.ticker}</h3>
+                                <h5 className="">Max Withdraw amount per transaction ({maxWithdrawAmountPerTransaction} {currency.ticker})</h5>
                                 <TextInput
                                     icon={BankIcon}
                                     name="maxWithdrawAmountPerTransaction"
@@ -171,9 +178,10 @@ class AutoWithdraw extends React.Component {
                                     changeContent={(type, value) => this.onChangePerTransaction(value)}
                                 />
                             </EditLock>
+                            </ExpansionPanelDetails>
+                            </ExpansionPanel>
                         </CardBody>
-                    </Card>
-                )}
+                    </Card> )}
             </Col>
         );
     }
