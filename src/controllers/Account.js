@@ -225,7 +225,7 @@ class Account{
             res = await this.getApp().deployApp();
             
             const { virtual } = this.getApp().getParams();
-            if(virtual) {
+            if(virtual === true) {
                 let ecosystemCurrencies = await this.getApp().getEcosystemCurrencies();
                 ecosystemCurrencies = ecosystemCurrencies.filter(el => el != null && el.virtual === virtual);
 
@@ -370,7 +370,7 @@ class Account{
             /* SET CURRENCY */
             if(data.app.wallet && data.app.wallet.length) {
                 const virtual = data.app.virtual;
-                const wallets = data.app.wallet.filter(w => (w.currency.virtual === virtual) || (!virtual && !w.currency.hasOwnProperty('virtual')));
+                const wallets = data.app.wallet.filter(w => (w.currency.virtual === virtual) || (virtual === false && !w.currency.hasOwnProperty('virtual')));
 
                 if(wallets.length) {
                     const currency = wallets[0].currency;
