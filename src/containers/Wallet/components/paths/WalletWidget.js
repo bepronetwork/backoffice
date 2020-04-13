@@ -17,8 +17,13 @@ class WalletWidget extends React.Component{
     }
     
     render = () => {
-        const { profile } = this.props;
+        const { profile, wallet } = this.props;
         const { virtual } = profile.getApp().getParams();
+        let disabled = false;
+
+        if (virtual === true) {
+            disabled = wallet.currency.virtual === true ? true : false;
+        }
 
         return (
             <Container className="dashboard">
@@ -31,7 +36,7 @@ class WalletWidget extends React.Component{
                                     <DepositWidget/>
                                 ),
                                 icon : <ArrowCollapseUpIcon/>,
-                                disabled : virtual
+                                disabled : disabled
                             },
                             {
                                 title : 'Withdraw',
@@ -39,7 +44,7 @@ class WalletWidget extends React.Component{
                                     <WithdrawWidget/>
                                 ),
                                 icon : <ArrowDownIcon/>,
-                                disabled : virtual
+                                disabled : disabled
                             },
                             {
                                 title : 'Limits',
@@ -61,7 +66,8 @@ class WalletWidget extends React.Component{
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        wallet : state.wallet
     };
 }
 
