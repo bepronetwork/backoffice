@@ -11,6 +11,8 @@ import LiquidityInfo from './components/LiquidityInfo';
 import PlatformCostsInfo from './components/PlatformCostsInfo';
 import RevenueChart from './components/RevenueChart';
 import DataWidget from '../DataWidget/DataWidget';
+import ProfitResume from './components/ProfitResume';
+import TurnoverResume from './components/TurnoverResume';
 
 
 class StatsContainer extends React.Component{
@@ -21,7 +23,7 @@ class StatsContainer extends React.Component{
 
 
     render = () => {
-        const { currency } = this.props;
+        const { currency, isLoading, periodicity } = this.props;
 
         return (
             <Container className="dashboard">
@@ -29,23 +31,24 @@ class StatsContainer extends React.Component{
                   
                     <Col lg={3}>
                         <DataWidget>
-                            <LiquidityInfo currency={currency} data={this.props.profile.getApp().getSummaryData('wallet')}/>
+                            <LiquidityInfo currency={currency} isLoading={isLoading} data={this.props.profile.getApp().getSummaryData('wallet')}/>
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
-                        {/* <DataWidget>
-                            <DepositsInfo/>
-                        </DataWidget> */}
+                        <DataWidget>
+                            <ProfitResume currency={currency} isLoading={isLoading} periodicity={periodicity} data={{
+                                revenue : this.props.profile.getApp().getSummaryData('revenue'),
+                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                }}/>
+                        </DataWidget>
                     </Col>
                     <Col lg={3}>
-                          {/* <DataWidget>
-                            <WithdrawalsInfo/>
-                        </DataWidget>*/}
-                    </Col>
-                    <Col lg={3}>
-                        {/* <DataWidget>
-                            <PlatformCostsInfo/>
-                        </DataWidget> */}
+                     <DataWidget>
+                            <TurnoverResume currency={currency} isLoading={isLoading} periodicity={periodicity} data={{
+                                revenue : this.props.profile.getApp().getSummaryData('revenue'),
+                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                            }} />
+                        </DataWidget>
                     </Col>
                    
                 </Row>
@@ -54,6 +57,7 @@ class StatsContainer extends React.Component{
                         <DataWidget>
                             <RevenueChart  
                                 currency={currency}
+                                isLoading={isLoading}
                                 data={{
                                     revenue : this.props.profile.getApp().getSummaryData('revenue'),
                                     wallet : this.props.profile.getApp().getSummaryData('wallet'),
@@ -81,7 +85,9 @@ class StatsContainer extends React.Component{
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        currency : state.currency
+        currency : state.currency,
+        periodicity: state.periodicity,
+        isLoading: state.isLoading
     };
 }
 

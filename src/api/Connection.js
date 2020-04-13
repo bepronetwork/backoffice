@@ -127,7 +127,7 @@ class Connection {
             let response = await fetch(URL+ '/api/app/games/editTableLimit', {
                 method : 'POST',
                 headers : addHeaders(config, headers),
-                body : JSON.stringify({admin, app, game, tableLimit : parseInt(tableLimit), wallet})
+                body : JSON.stringify({admin, app, game, tableLimit : parseFloat(tableLimit), wallet})
             });
             return response.json();
         }catch(err){
@@ -385,6 +385,34 @@ class Connection {
         }
     }
 
+    addAutoWithdraw = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/autoWithdraw/add`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editAutoWithdraw = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/autoWithdraw/editAutoWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editAffiliateStructure = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/affiliate/edit`, {
@@ -627,6 +655,19 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editAdminType = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/admins/editType`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
             return response.json();
         }catch(err){
             throw err;

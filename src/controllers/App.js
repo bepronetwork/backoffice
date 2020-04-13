@@ -947,6 +947,38 @@ class App{
         }
     }
 
+    addAutoWithdraw = async () => {
+        try{
+            return await ConnectionSingleton.addAutoWithdraw({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editAutoWithdraw = async ({currency, autoWithdrawParams}) => {
+        try{
+            return await ConnectionSingleton.editAutoWithdraw({   
+                params : {
+                    currency,
+                    autoWithdrawParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     getEcosystemGames = async () => {
         try{
             return (await ConnectionSingleton.getEcosystemGames()).data.message;
