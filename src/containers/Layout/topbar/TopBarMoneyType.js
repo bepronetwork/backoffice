@@ -16,7 +16,7 @@ class TopBarMoneyType extends React.Component {
             <div className="topbar__collapse topbar__collapse--language">
                 <button className="topbar__btn" onClick={this.toggle}>
                     <span className="topbar__virutal-btn-title" style={{height : 20}}>
-                        <p style={{marginTop : -3}}>{ virtual ? 'Fake Money' : 'Real Money' }</p>
+                        <p style={{marginTop : -3}}>{ virtual === true ? 'Fake Money' : 'Real Money' }</p>
                     </span>
                 </button>
             </div>
