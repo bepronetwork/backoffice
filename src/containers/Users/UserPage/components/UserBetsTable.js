@@ -367,7 +367,7 @@ class UserBetsTable extends React.Component {
                                 <p className='text-small' style={{margin: 0}}>{n.currency.name}</p>
                             </TableCell>
                             <TableCell align="left"><p className='text-small'>{n.game}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.isWon ? 'Yes' : 'No'}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.winAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.betAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
