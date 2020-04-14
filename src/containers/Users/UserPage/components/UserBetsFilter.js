@@ -20,7 +20,7 @@ const formFields = [
     {
         id: 1,
         name: "currency",
-        placeholder: "Currency Id",
+        placeholder: "Currency Ticker",
         type: "text",
         disabled: false
     },
@@ -65,7 +65,11 @@ class UserBetsFilter extends Component {
         const variables = await app.getEcosystemVariables()
         const currencies = variables.data.message.currencies;
 
-        return currencies.filter(currency => currency.ticker === ticker)[0]._id;
+        if (currencies.filter(currency => currency.ticker === ticker)[0]) {
+            return currencies.filter(currency => currency.ticker === ticker)[0]._id;
+        } else {
+            return null
+        }
     }
 
     handler = async (data) => {
