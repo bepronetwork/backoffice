@@ -17,6 +17,7 @@ import moment from 'moment';
 import { AddressConcat } from '../../../../lib/string';
 import { ETHERSCAN_URL } from '../../../../lib/etherscan';
 import UserBetsFilter from './UserBetsFilter';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
@@ -212,7 +213,7 @@ class UserBetsTable extends React.Component {
             selected: [],
             data: [],
             page: 0,
-            isLoading : {},
+            isLoading: false,
             ticker : 'N/A',
             rowsPerPage: 5
         };
@@ -243,6 +244,10 @@ class UserBetsTable extends React.Component {
                 currencies: currencies
             })
         }
+    }
+
+    setLoading = (status) => {
+        this.setState(state => ({ isLoading: status }));
     }
     
     handleRequestSort = (event, property) => {
@@ -314,10 +319,21 @@ class UserBetsTable extends React.Component {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page, ticker } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
+    const isLoading = this.state.isLoading;
+    
     return (
       <Paper elevation={0} className={classes.root}>
-            <UserBetsFilter setData={this.setData} reset={this.reset} user={this.props.user}/>
+            <UserBetsFilter setData={this.setData} reset={this.reset} user={this.props.user} setLoading={this.setLoading} loading={this.state.isLoading}/>
+            {isLoading ? (
+                <>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 20 }}/>
+                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                </>
+                ) : (
             <div className={classes.tableWrapper}>
             <Table elevation={0} className={classes.table} aria-labelledby="tableTitle">
                 <EnhancedTableHead
@@ -365,7 +381,7 @@ class UserBetsTable extends React.Component {
                 )}
                 </TableBody>
             </Table>
-        </div>
+        </div>)}
         <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
