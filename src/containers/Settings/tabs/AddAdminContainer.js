@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import { connect } from "react-redux";
 import { EditableTable } from '../../../components';
+import EditAdminButton from './EditAdminButton';
 const defaultProps = {
     authorizedAddAdmin : [],
 }
@@ -19,7 +20,7 @@ class AddAdminContainer extends React.Component{
     projectData = async (props) => {
         let { profile } = props;
         let list = (await profile.getAdminByApp()).reverse();
-        console.log(list);
+
         this.setState({...this.state, authorizedAddAdmin : list });
     }
     onChange = async (new_data) => {
@@ -34,6 +35,8 @@ class AddAdminContainer extends React.Component{
     }
     render = () => {
         const { authorizedAddAdmin } = this.state;
+        const { profile } = this.props;
+
         return (
             <div>
                 <h4> Application Admins </h4>
@@ -46,13 +49,16 @@ class AddAdminContainer extends React.Component{
                             onChange={this.onChange}
                             compareField={'email'}
                             columns={[
-                                { title: 'Email', field: 'email'}, { title: 'Status', field: 'status', editable : 'never'}
+                                { title: 'Email', field: 'email'}, 
+                                { title: 'Status', field: 'status', editable : 'never'},
+                                { title: 'Type', field: 'adminType', editable : 'never'}
                             ]}
                             rawData={authorizedAddAdmin}
                             data={authorizedAddAdmin.map( v => {
                                 return {
                                     email: v.email,
-                                    status: ((v.registered === true) ? 'Registered' : 'Pending')
+                                    status: ((v.registered === true) ? 'Registered' : 'Pending'),
+                                    adminType: <EditAdminButton profile={profile} user={v}/>
                                 }
                             })}
                             enableUpdate={false}

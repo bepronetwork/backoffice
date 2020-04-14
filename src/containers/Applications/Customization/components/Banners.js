@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import AliceCarousel from 'react-alice-carousel'
 import Dropzone from 'react-dropzone'
 import 'react-alice-carousel/lib/alice-carousel.css'
+import { Grid, GridList, withStyles } from '@material-ui/core';
+import { styles } from './styles';
 const image2base64 = require('image-to-base64');
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
@@ -84,8 +86,10 @@ class Banners extends Component {
             src = "data:image;base64," + src;
         }
         return (
-            <div style={{width : '100%', height : 240, margin : 'auto'}}>
-                <button disabled={this.state.locked} onClick={() => this.removeImage(src, index)} className='carousel-trash button-hover' style={{right: '0%'}}>
+            <div style={{paddingBottom : 20, width: '100%', height : 240, margin : 'auto'}}>
+                <button disabled={this.state.locked} onClick={() => this.removeImage(src, index)} 
+                className='carousel-trash button-hover'
+                style={{right: 25, top: 3, position: 'relative'}}>
                     <img src={trash} style={{width : 15, height : 15}}/>
                 </button>
                 <img src={src} onDragStart={this.handleOnDragStart} style={{height : '100%'}}/>
@@ -191,6 +195,8 @@ class Banners extends Component {
 
     render() {
         const { isLoading, locked, autoDisplay, banners } = this.state; 
+        const { classes } = this.props;
+        
         return (
             <Card>
                 <CardBody>
@@ -205,22 +211,24 @@ class Banners extends Component {
                                 locked={locked}
                             >
                                 <div style={{width : '96%', margin : 'auto'}}>
-                                    <Row>
+                                    <div className={classes.root}>
+                                        <GridList className={classes.gridList} cols={2.5}>
                                         {banners.map((i, index) => {
                                             return (
-                                                <Col lg={6}>
-                                                    <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 580, marginBottom : 30, padding : 30}}>
-                                                        {this.renderImage(i.image_url, index)}
-                                                    </div>
-                                                </Col>
+                                                <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 580, width: 300, margin: 20, padding : "0px 30px 30px 30px"}}>
+                                                    {this.renderImage(i.image_url, index)}
+                                                </div>
                                             )
                                         })}
-                                        <Col lg={6}>
-                                            <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 270, marginBottom : 30, padding : 30}}>
+                                        <div>
+                                            <h4 style={{padding: 20}}>Add Banner</h4> 
+                                            <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 270, width: 230, margin: "0px 20px 20px 20px"}}> 
                                                 {this.renderAddImage(banners.length)}
                                             </div>
-                                        </Col>
-                                    </Row>
+                                        </div>
+                                        
+                                        </GridList>
+                                    </div>
                                 </div>
                             </EditLock>
                         </Col>
@@ -237,4 +245,4 @@ function mapStateToProps(state){
   };
 }
 
-export default connect(mapStateToProps)(Banners);
+export default connect(mapStateToProps)(withStyles(styles)(Banners));

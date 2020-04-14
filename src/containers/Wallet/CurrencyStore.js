@@ -4,9 +4,6 @@ import { connect } from "react-redux";
 import store from '../App/store';
 import { setCurrencyView } from '../../redux/actions/currencyReducer';
 import { addCurrencyWallet } from '../../redux/actions/addCurrencyWallet';
-import AnimationNumber from '../UI/Typography/components/AnimationNumber';
-import { Tooltip, IconButton } from '@material-ui/core';
-import { InformationIcon } from 'mdi-react';
 import CurrencyStoreContainer from './store/Currency';
 
 
@@ -38,6 +35,8 @@ class CurrencyStore extends React.Component{
         let ecosystemCurrencies = await profile.getApp().getEcosystemCurrencies();
         if(!(profile.getApp().getSummaryData('walletSimple').data)){return null}
         let integratedWallets = (profile.getApp().getSummaryData('walletSimple')).data;
+        const { virtual } = profile.getApp().getParams();
+
         ecosystemCurrencies = ecosystemCurrencies.map( ecoCurrency => {
             let exists = false;
             integratedWallets.map( w => {
@@ -47,7 +46,7 @@ class CurrencyStore extends React.Component{
             })
             if(!exists){return ecoCurrency}
             else{ return {...ecoCurrency, isAdded : true}}
-        }).filter(el => el != null);
+        }).filter(el => el != null && ((virtual === true && !el.virtual) || (virtual === false && !el.hasOwnProperty('virtual')) || el.virtual === virtual));
 
         this.setState({...this.state, 
             ecosystemCurrencies,

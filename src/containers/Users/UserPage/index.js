@@ -10,6 +10,7 @@ import HorizontalTabs from '../../HorizontalTabs';
 import UserTransactionsTable from './components/UserTransactionsTable';
 import AffiliateInfo from './components/AffiliateInfo';
 import { compareIDS } from '../../../lib/string';
+import UserBetsTable from './components/UserBetsTable';
 
 const defaultProps = {
     ticker : 'No Currency Chosen'
@@ -100,13 +101,13 @@ class UserPage extends React.Component{
             deposits,
             affiliate,
             profit,
-            bets,
             address,
             betAmount,
             register_timestamp
-        } = user;
+        } = this.state.user;
 
         const transactions = withdraws.map( w => {return {...w, isWithdraw : true}}).concat(deposits);
+        const bets = this.props.user.bets;
         const affiliateWallet = affiliate.wallet.filter(w => w.currency._id === currency._id);
 
         return (
@@ -176,6 +177,14 @@ class UserPage extends React.Component{
                                         ticker={currencyTicker}
                                         data={transactions}
                                     />
+                                },
+                                {
+                                    label : 'Bets',
+                                    tab : bets ? <UserBetsTable
+                                        allowWithdraw={this.allowWithdraw}
+                                        ticker={currencyTicker}
+                                        user={user}
+                                    /> : <h5>No bets</h5>
                                 },
                                 {
                                     label : 'Affiliate',

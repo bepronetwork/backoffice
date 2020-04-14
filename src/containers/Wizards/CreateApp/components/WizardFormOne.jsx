@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Button, ButtonToolbar, Container, Row, Col, CardBody, Card } from 'reactstrap';
-import { Field, reduxForm } from 'redux-form';
+import { Row, Col, CardBody, Card } from 'reactstrap';
+import { reduxForm } from 'redux-form';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
-import PropTypes from 'prop-types';
-import { ApplicationIcon, DesktopMacDashboardIcon, BusinessIcon, CheckboxMultipleBlankCircleIcon, MediaNetworkIcon } from 'mdi-react';
+import { ApplicationIcon, DesktopMacDashboardIcon, CoinIcon, EthereumIcon } from 'mdi-react';
 import TextInput from '../../../../shared/components/TextInput';
 const Back = `${process.env.PUBLIC_URL}/img/dashboard/background-login.png`;
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
@@ -15,7 +14,8 @@ class WizardFormOne extends PureComponent {
 	constructor() {
 		super();
 		this.state = {
-		    showPassword: false,
+            showPassword: false,
+            virtual : false
 		};
 	}
 
@@ -28,6 +28,12 @@ class WizardFormOne extends PureComponent {
 		this.setState({
 		    showPassword: !this.state.showPassword,
 		});
+    };
+
+    selectMoneyType = () => {
+        const { virtual } = this.state;
+
+        this.setState({ virtual : !virtual });
     };
     
     createApp = async () => {
@@ -50,6 +56,7 @@ class WizardFormOne extends PureComponent {
     }
 
 	render() {
+        const { virtual } = this.state;
 		const { handleSubmit } = this.props;
 
 		return (
@@ -81,6 +88,32 @@ class WizardFormOne extends PureComponent {
                                     placeholder="A Great Casino Platform for Risk Users"
                                     changeContent={this.changeContent}
                                 />
+                                <div style={{width : "100%", display : "inline-flex", margin : "20px 0 0 28px"}}>
+                                    <div style={{ width : 130, textAlign : "center" }}>
+                                        <Card style={{paddingBottom : 10, cursor : "pointer"}} onClick={() => this.selectMoneyType('real')}>
+                                            <CardBody style={{padding : 10, backgroundColor: !virtual ? "rgba(137, 71, 152, 0.1)" : "#fff", border: !virtual ? "1px solid #894798" : "1px solid #bebdbd"}}>
+                                                <span style={{ display : "block", paddingBottom : 6}}><EthereumIcon color="grey"/></span>
+                                                <span>
+                                                    <p className="text-small">
+                                                        Real Money
+                                                    </p>
+                                                </span>
+                                            </CardBody>
+                                        </Card>
+                                    </div>
+                                    <div style={{ width : 130, marginLeft : 30, textAlign : "center" }}>
+                                        <Card style={{paddingBottom : 10, cursor : "pointer"}} onClick={() => this.selectMoneyType('fake')}>
+                                            <CardBody style={{padding : 10, backgroundColor: virtual ? "rgba(137, 71, 152, 0.1)" : "#fff", border: virtual ? "1px solid #894798" : "1px solid #bebdbd"}}>
+                                                <span style={{ display : "block", paddingBottom : 6}}><CoinIcon color="grey"/></span>
+                                                <span>
+                                                    <p className="text-small">
+                                                        Fake Money
+                                                    </p>
+                                                </span>
+                                            </CardBody>
+                                        </Card>
+                                    </div>
+                                </div>
                             </div>
                     
                             <div className="account__btns">

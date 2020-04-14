@@ -114,7 +114,6 @@ class Account{
 
     addAdmin = async ({email}) => {
         try{
-            console.log(this.getUserInfo());
             let res = await ConnectionSingleton.addAdmin({
                 params : {
                     email, app : this.getApp().getId(), admin: this.getUserInfo().id
@@ -122,6 +121,22 @@ class Account{
                 headers : authHeaders(this.getUserInfo().security.bearerToken, this.getId())
             })
 
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editAdminType = async ({adminToModify, permission}) => {
+        try{
+            let res = await ConnectionSingleton.editAdminType({
+                params: {
+                    adminToModify,
+                    permission,
+                    admin: this.getUserInfo().id
+                },
+                headers : authHeaders(this.getUserInfo().security.bearerToken, this.getId())
+            })
             return res;
         }catch(err){
             throw err;
@@ -208,6 +223,19 @@ class Account{
             });
             await this.login();
             res = await this.getApp().deployApp();
+            
+            const { virtual } = this.getApp().getParams();
+            if(virtual === true) {
+                let ecosystemCurrencies = await this.getApp().getEcosystemCurrencies();
+                ecosystemCurrencies = ecosystemCurrencies.filter(el => el != null && el.virtual === virtual);
+
+                if(ecosystemCurrencies) {
+                    const currency = ecosystemCurrencies[0];
+                    await this.getApp().addCurrencyWallet({currency : currency, passphrase : 'none'});
+                }
+
+            }
+
             await this.getApp().addServices([101, 201]);
             await this.login();
             return res; 
@@ -340,9 +368,14 @@ class Account{
             }
 
             /* SET CURRENCY */
-            if(data.app.wallet && data.app.wallet.length > 0 && data.app.wallet[0].currency) {
-                const currency = data.app.wallet[0].currency;
-                await store.dispatch(setCurrencyView(currency));
+            if(data.app.wallet && data.app.wallet.length) {
+                const virtual = data.app.virtual;
+                const wallets = data.app.wallet.filter(w => (w.currency.virtual === virtual) || (virtual === false && !w.currency.hasOwnProperty('virtual')));
+
+                if(wallets.length) {
+                    const currency = wallets[0].currency;
+                    await store.dispatch(setCurrencyView(currency));
+                }
             }
 
             this.update()

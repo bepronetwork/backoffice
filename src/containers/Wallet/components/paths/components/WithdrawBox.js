@@ -56,7 +56,7 @@ class WithdrawBox extends PureComponent {
             ticker : currency.ticker ? currency.ticker : this.state.ticker,
             tokenAddressLink : wallet.link_url,
             tokenAddress,
-            tokenAddressTrimmed : `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}`
+            tokenAddressTrimmed : tokenAddress ? `${tokenAddress.substring(0, 6)}...${tokenAddress.substring(tokenAddress.length - 2)}` : null
 
         })
     }
@@ -207,7 +207,6 @@ class WithdrawBox extends PureComponent {
 }
 
 function mapStateToProps(state){
-    console.log(state.profile);
     return {
         profile: state.profile,
         wallet : (state.wallet.currency) ? state.wallet : state.profile.getApp().getSummaryData('walletSimple').data[0]
