@@ -53,6 +53,29 @@ class LogIn extends React.Component{
     changeContent = (type, item) => {
         this.setState({[type] : item});
     }
+
+    getInitialRoute = (permission) => {
+
+        switch (true) {
+            case permission.super_admin:
+                return "/home";
+            
+            case permission.customization:
+                return '/application';
+            
+            case permission.financials:
+                return '/home';
+
+            case permission.withdraw:
+                return '/wallet';
+            
+            case permission.user_withdraw:
+                return '/transactions';
+        
+            default:
+                return '/home';
+        }
+    }
     
     setInstance = SW => this.setState({ ...this.state, SW });
 
@@ -64,8 +87,10 @@ class LogIn extends React.Component{
         try{
             this.setState({...this.state, isLoading : true})
             let account = new Account({username, password, token});
-            await account.login2FA();
-            this.props.history.push('/home')
+            const res = await account.login2FA();
+
+            this.props.history.push(this.getInitialRoute(res.data.message.permission))
+            
             this.setState({...this.state, isLoading : false})
         }catch(err){
             this.setState({...this.state, isLoading : false})
@@ -77,8 +102,10 @@ class LogIn extends React.Component{
         try{
             this.setState({...this.state, isLoading : true})
             let account = new Account(this.state);
-            await account.login();
-            this.props.history.push('/home')
+            const res = await account.login();
+
+            this.props.history.push(this.getInitialRoute(res.data.message.permission));
+
             this.setState({...this.state, isLoading : false})
         }catch(err){
             this.setState({...this.state, isLoading : false})
