@@ -43,7 +43,7 @@ class TopBarCurrencyView extends React.Component {
         var { profile, currency } = props;
         const { virtual } = profile.getApp().getParams();
 
-        const currencies = profile.getApp().getSummaryData('walletSimple').data.map( w => w.currency).filter(c => ((virtual === true && !c.virtual) || (virtual === false && !c.hasOwnProperty('virtual')) || c.virtual === virtual) );
+        const currencies = profile.getApp().getSummaryData('walletSimple').data.map( w => w.currency).filter(c => (virtual === false && !c.hasOwnProperty('virtual') || c.virtual === virtual) );
 
         this.setState({
             currencies,
