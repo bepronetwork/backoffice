@@ -16,6 +16,7 @@ import { lighten } from '@material-ui/core/styles/colorManipulator';
 import moment from 'moment';
 import { AddressConcat } from '../../../../lib/string';
 import { ETHERSCAN_URL } from '../../../../lib/etherscan';
+import UserBetsFilter from './UserBetsFilter';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
@@ -52,21 +53,21 @@ const fromDatabasetoTable = (data, currencies ) => {
 
 	return data.map( (key) => {
 
-        const currency = currencies.filter(c => new String(c._id).toString() == new String(key._id.currency).toString())[0];
+        const currency = currencies.filter(c => new String(c._id).toString() == new String(key.currency).toString())[0];
 
 		return {
-            _id :  key._id._id,
-            user : key._id.user,
+            _id :  key._id,
+            user : key.user,
             currency : currency, 
-            app : key._id.app,
-            game : key._id.game,
+            app : key.app,
+            game : key.game,
             ticker : currency ? currency.ticker : '',
-            isWon :  key._id.isWon,
-            winAmount : key._id.winAmount,
-            betAmount : key._id.betAmount,
-            nonce : key._id.nonce,
-            fee : key._id.fee,
-			creation_timestamp: moment(new Date(key._id.timestamp)).format('lll')
+            isWon :  key.isWon,
+            winAmount : key.winAmount,
+            betAmount : key.betAmount,
+            nonce : key.nonce,
+            fee : key.fee,
+			creation_timestamp: moment(new Date(key.timestamp)).format('lll')
 		}
 	})
 }
@@ -222,21 +223,28 @@ class UserBetsTable extends React.Component {
         this.projectData(this.props)
     }
 
-    componentWillReceiveProps(props){
-        this.projectData(props);
-    }
-
     projectData = async (props) => {
-        let app = props.profile.getApp();
+        let app = await props.profile.getApp();
         const variables = await app.getEcosystemVariables()
-        
+
+        const userBets = await this.props.profile.getApp().getUserBets({user: this.props.user._id});
         const currencies = variables.data.message.currencies;
 
-        this.setState({...this.state, 
-            data : fromDatabasetoTable(props.data, currencies),
-            ticker : props.ticker,
-        })
+        const bets = userBets.data.message.map(app => app.bets);
+
+        if (bets.length > 0) {
+            this.setState({...this.state, 
+                data: fromDatabasetoTable(bets, currencies),
+                currencies: currencies
+            })
+        } else {
+            this.setState({...this.state, 
+                data: [],
+                currencies: currencies
+            })
+        }
     }
+    
     handleRequestSort = (event, property) => {
         const orderBy = property;
         let order = 'desc';
@@ -277,6 +285,20 @@ class UserBetsTable extends React.Component {
         this.setState({ selected: newSelected });
     };
 
+    setData = async (data) => {
+        let app = this.props.profile.getApp();
+        const variables = await app.getEcosystemVariables()
+        
+        const currencies = variables.data.message.currencies;
+
+        this.setState({...this.state, 
+            data : fromDatabasetoTable(data, currencies)
+        })
+    }
+
+    reset = async () => {
+        await this.projectData();
+    }
 
     handleChangePage = (event, page) => {
         this.setState({ page });
@@ -295,6 +317,7 @@ class UserBetsTable extends React.Component {
 
     return (
       <Paper elevation={0} className={classes.root}>
+            <UserBetsFilter setData={this.setData} reset={this.reset} user={this.props.user}/>
             <div className={classes.tableWrapper}>
             <Table elevation={0} className={classes.table} aria-labelledby="tableTitle">
                 <EnhancedTableHead
@@ -374,4 +397,3 @@ function mapStateToProps(state){
 }
 
 export default compose(connect(mapStateToProps))( withStyles(styles)(UserBetsTable) );
-// export default withStyles(styles)(UserTransactionsTable);

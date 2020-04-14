@@ -777,6 +777,23 @@ class App{
         }
     }
 
+    getUserBets = async ({user, filters}) => {
+        try{
+            return await ConnectionSingleton.getUserBets({   
+                params : {
+                    user,
+                    ...filters,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     addCurrencyWallet = async ({currency, passphrase}) => {
         try{    
 

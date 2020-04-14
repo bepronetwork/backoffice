@@ -183,7 +183,7 @@ class UserPage extends React.Component{
                                     tab : bets ? <UserBetsTable
                                         allowWithdraw={this.allowWithdraw}
                                         ticker={currencyTicker}
-                                        data={bets}
+                                        user={user}
                                     /> : <h5>No bets</h5>
                                 },
                                 {
