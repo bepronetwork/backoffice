@@ -32,6 +32,8 @@ class ApplicationsContainer extends React.Component{
     render = () => {
         let services = this.props.profile.getApp().getServices();
         let servicesCodes = fromCodesToServices(services);
+
+        const permission = this.props.profile.User.permission;
     
         return (
             <Container className="dashboard">
@@ -51,7 +53,7 @@ class ApplicationsContainer extends React.Component{
                                 </Col>
                             </Row>
                             <TabsContainer 
-                                items={
+                                items={ permission.super_admin ?
                                     [
                                         {
                                             title : 'My Games',
@@ -97,7 +99,16 @@ class ApplicationsContainer extends React.Component{
                                         },
 
                                     ]
-                                }
+                                : [
+                                    {
+                                        title : 'Customization ',
+                                        container : (
+                                            <CustomizationContainer/>
+                                            
+                                        ),
+                                        icon : <SettingsIcon/>
+                                    }
+                                ]}
                             />
                                 
                         </div>   
