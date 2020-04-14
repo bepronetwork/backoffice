@@ -51,7 +51,7 @@ class AddAdminContainer extends React.Component{
                             columns={[
                                 { title: 'Email', field: 'email'}, 
                                 { title: 'Status', field: 'status', editable : 'never'},
-                                { title: 'Type', field: 'adminType'}
+                                { title: 'Type', field: 'adminType', editable : 'never'}
                             ]}
                             rawData={authorizedAddAdmin}
                             data={authorizedAddAdmin.map( v => {
