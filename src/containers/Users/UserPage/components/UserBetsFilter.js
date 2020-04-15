@@ -52,18 +52,31 @@ class UserBetsFilter extends Component {
     constructor(props){
         super(props)
         this.state = {
-            loading: false
+            loading: false,
+            currencies: []
         }
+    }
+
+    componentDidMount(){
+        this.projectData(this.props);
+    }
+
+    projectData = async(props) => {
+        let app = await this.props.profile.getApp();
+        const variables = await app.getEcosystemVariables()
+        const appCurrencies = variables.data.message.currencies;
+
+        this.setState(state => ({ currencies: appCurrencies}));
+
     }
 
     setLoadingStatus = (status) => {
         this.setState(state => ({ loading: status }));
     }
 
-    getCurrency = async (ticker) => {
-        let app = await this.props.profile.getApp();
-        const variables = await app.getEcosystemVariables()
-        const currencies = variables.data.message.currencies;
+    getCurrency = (ticker) => {
+
+        const currencies = this.state.currencies;
 
         if (currencies.filter(currency => currency.ticker === ticker)[0]) {
             return currencies.filter(currency => currency.ticker === ticker)[0]._id;
@@ -77,7 +90,7 @@ class UserBetsFilter extends Component {
         this.props.setLoading(true);
 
         if (data.currency) {
-            data.currency = await this.getCurrency(data.currency.toUpperCase());
+            data.currency = this.getCurrency(data.currency.toUpperCase());
         }
 
         const filters = _.pickBy(data, _.identity);
