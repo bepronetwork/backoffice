@@ -56,7 +56,7 @@ class EditAdminButton extends React.Component {
     handleSubmit = async (id, params) => {
         const { profile } = this.props;
 
-        profile.editAdminType({adminToModify: id, permission: params});
+        await profile.editAdminType({adminToModify: id, permission: params});
 
         this.setState(state => ({
             userType: params.super_admin ? 'Super Admin' : 'Collaborator'
