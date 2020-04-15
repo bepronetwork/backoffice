@@ -113,7 +113,7 @@ class UserBetsFilter extends Component {
 
         return (
             <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end', paddingBottom: 20}}>
-                <ExpansionPanel elevation={3} style={{position: 'absolute', zIndex: 10, width: 300, marginTop: '-40px'}}>
+                <ExpansionPanel elevation={0} style={{position: 'absolute', zIndex: 10, width: 300, marginTop: '-40px', border: '1px solid rgba(0, 0, 0, 0.2)'}}>
                     <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="filters"
