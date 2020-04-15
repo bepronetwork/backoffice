@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import TextField from '@material-ui/core/TextField';
 import { List, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import { Button as MaterialButton } from '@material-ui/core';
@@ -8,45 +8,6 @@ import { ExpandMoreIcon } from 'mdi-react';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-
-const formFields = [
-    {
-        id: 0,
-        name: "bet",
-        placeholder: "Bet Id",
-        type: "text",
-        disabled: false
-    },
-    {
-        id: 1,
-        name: "currency",
-        placeholder: "Currency Ticker",
-        type: "text",
-        disabled: false
-    },
-    {
-        id: 2,
-        name: "game",
-        placeholder: "Game Id",
-        type: "text",
-        disabled: false
-    },
-    {
-        id: 3,
-        name: "size",
-        placeholder: "Size",
-        defaultValue: 100,
-        type: "number",
-        disabled: false
-    },
-    {
-        id: 4,
-        name: "offset",
-        placeholder: "Offset",
-        type: "number",
-        disabled: true
-    }
-  ];
 
 class UserBetsFilter extends Component {
     constructor(props){
@@ -62,7 +23,9 @@ class UserBetsFilter extends Component {
     }
 
     projectData = async(props) => {
-        let app = await this.props.profile.getApp();
+        const { profile } = props;
+
+        let app = await profile.getApp();
         const variables = await app.getEcosystemVariables()
         const appCurrencies = variables.data.message.currencies;
 
@@ -85,39 +48,48 @@ class UserBetsFilter extends Component {
         }
     }
 
-    handler = async (data) => {
-        this.setLoadingStatus(true);
-        this.props.setLoading(true);
+    handleData = async (data) => {
+        const { setLoading, setData, profile, user } = this.props;
 
-        if (data.currency) {
-            data.currency = this.getCurrency(data.currency.toUpperCase());
+        const formData = Object.assign({}, data);
+
+        this.setLoadingStatus(true);
+        setLoading(true);
+
+        if (formData.currency) {
+            formData.currency = this.getCurrency(formData.currency.toUpperCase());
         }
 
-        const filters = _.pickBy(data, _.identity);
-        const bets = await this.props.profile.getApp().getUserBets({user: this.props.user._id, filters});
+        const filters = _.pickBy(formData, _.identity);
+        const bets = await profile.getApp().getUserBets({user: user._id, filters});
         
         if (bets.data.status === 200) {
-            this.props.setData(bets.data.message.map(app => app.bets));
+            setData(bets.data.message.map(app => app.bets));
         } else {
-            this.props.setData([]);
+            setData([]);
         }
+
         this.setLoadingStatus(false);
-        this.props.setLoading(false);
+        setLoading(false);
         
     }
 
-    clear = async () => {
-        this.props.setLoading(true);
+    clear = async (resetForm) => {
+        const { setLoading, setData, profile } = this.props;
 
-        const bets = await this.props.profile.getApp().getUserBets({user: this.props.user._id});
+        resetForm({})
+
+        setLoading(true);
+
+        const bets = await profile.getApp().getUserBets({user: this.props.user._id});
 
         if (bets.data.status === 200) {
-            this.props.setData(bets.data.message.map(app => app.bets));
+            setData(bets.data.message.map(app => app.bets));
         } else {
-            this.props.setData([]);
+            setData([]);
         }
 
-        this.props.setLoading(false);
+        setLoading(false);
 
     }
 
@@ -136,40 +108,84 @@ class UserBetsFilter extends Component {
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{paddingBottom: 0, width: 300}}>
                         <Col style={{padding: 0}}>
-                        <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end'}}>
-                        <MaterialButton size="small" variant="outlined" style={{ marginLeft: 0, marginTop: 5, marginBottom: 5, alignSelf: 'end', textTransform: 'none' }} onClick={this.clear}>
-                            Clear
-                        </MaterialButton>
-                        </div>
                         <Formik
                         initialValues={{
-                            bet: null,
-                            currency: null,
-                            game: null,
+                            bet: "",
+                            currency: "",
+                            game: "",
                             size: 100,
                             offset: null
                         }}
-                        onSubmit={data => this.handler(data)}
+                        onSubmit={data => this.handleData(data)}
                         >
-                        {({ handleChange, handleBlur, handleSubmit }) => (
+                        {({ handleChange, handleSubmit, resetForm, values }) => (
                             <>
+                            <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end'}}>
+                                <MaterialButton size="small" variant="outlined" 
+                                style={{ marginLeft: 0, marginTop: 5, marginBottom: 5, alignSelf: 'end', textTransform: 'none' }} 
+                                onClick={() => this.clear(resetForm)}
+                                >
+                                    Clear
+                                </MaterialButton>
+                            </div>
                             <Form onSubmit={handleSubmit}>
                             <List style={{width: 250, paddingTop: 0}}>
-                                {formFields.map(field => (
-                                    <List item key={field.id.toString()}>
-                                        <TextField
-                                        name={field.name}
-                                        placeholder={field.placeholder}
+                                    <List item key="bet">
+                                    <TextField
+                                        id="bet"
+                                        name="bet"
+                                        type="text"
+                                        placeholder="Bet Id"
                                         onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        defaultValue={field.defaultValue}
+                                        value={values.bet}
                                         fullWidth
-                                        type={field.type}
-                                        disabled={field.disabled}
-                                        >
-                                        </TextField>
+                                    />
                                     </List>
-                                ))}
+                                    <List item key="currency">
+                                    <TextField
+                                        id="currency"
+                                        name="currency"
+                                        type="text"
+                                        placeholder="Currency Ticker"
+                                        onChange={handleChange}
+                                        value={values.currency}
+                                        fullWidth
+                                    />
+                                    </List>
+                                    <List item key="game">
+                                    <TextField
+                                        id="game"
+                                        name="game"
+                                        type="text"
+                                        placeholder="Game Id"
+                                        onChange={handleChange}
+                                        value={values.game}
+                                        fullWidth
+                                    />
+                                    </List>
+                                    <List item key="size">
+                                    <TextField
+                                        id="size"
+                                        name="size"
+                                        type="number"
+                                        placeholder="Size"
+                                        onChange={handleChange}
+                                        value={values.size}
+                                        fullWidth
+                                    />
+                                    </List>
+                                    <List item key="offset">
+                                    <TextField
+                                        id="offset"
+                                        name="offset"
+                                        type="number"
+                                        placeholder="Offset"
+                                        onChange={handleChange}
+                                        value={values.offset}
+                                        fullWidth
+                                        disabled={true}
+                                    />
+                                    </List>
                             <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
                                 <Button className="icon" size="sm" style={{ height: 40, marginLeft: 0, marginTop: 5, marginBottom: 5, alignSelf: 'end' }} onClick={handleSubmit}>
                                     {loading ? 'Searching...' : 'Search'}
