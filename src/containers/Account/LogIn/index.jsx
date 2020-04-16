@@ -60,11 +60,11 @@ class LogIn extends React.Component{
             case permission.super_admin:
                 return "/home";
             
-            case permission.customization:
-                return '/application';
-            
             case permission.financials:
                 return '/home';
+            
+            case permission.customization:
+                return '/application';
 
             case permission.withdraw:
                 return '/wallet';

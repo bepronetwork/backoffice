@@ -35,13 +35,7 @@ class EditAdminButton extends React.Component {
     handleSelected = (event) => {
         event.persist();
 
-        if (event.target.value !== this.state.userType) {
-            this.setState(state => ({
-                userType: event.target.value,
-            }));
-
-            this.handleChangeUserType(event.target.value);
-        }   
+        this.handleChangeUserType(event.target.value);  
     }
 
     handleChangeUserType = (userType) => {
@@ -81,7 +75,7 @@ class EditAdminButton extends React.Component {
     projectData = (props) => {
         const { user } = props;
 
-        if (user) {
+        if (user && user.permission) {
             this.setState(state => ({
                 userPermissions: user.permission,
                 userType: user.permission.super_admin ? 'Super Admin' : 'Collaborator'

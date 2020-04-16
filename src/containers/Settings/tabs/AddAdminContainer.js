@@ -3,6 +3,7 @@ import { Col, Container, Row } from 'reactstrap';
 import { connect } from "react-redux";
 import { EditableTable } from '../../../components';
 import EditAdminButton from './EditAdminButton';
+import { Tooltip } from '@material-ui/core';
 const defaultProps = {
     authorizedAddAdmin : [],
 }
@@ -33,6 +34,20 @@ class AddAdminContainer extends React.Component{
         }
         await profile.update();
     }
+
+    renderEmail = (user) => {   
+
+        const permissions = user.permission;
+
+        return (
+        <Tooltip title={`Customization: ${permissions.customization} |
+                         Financials: ${permissions.financials} |
+                         Withdraw: ${permissions.withdraw} |
+                         User Withdraw: ${permissions.user_withdraw}`} placement="top">
+            <p>{user.email}</p>
+        </Tooltip>
+        )
+    }
     render = () => {
         const { authorizedAddAdmin } = this.state;
         const { profile } = this.props;
@@ -56,7 +71,7 @@ class AddAdminContainer extends React.Component{
                             rawData={authorizedAddAdmin}
                             data={authorizedAddAdmin.map( v => {
                                 return {
-                                    email: v.email,
+                                    email: this.renderEmail(v),
                                     status: ((v.registered === true) ? 'Registered' : 'Pending'),
                                     adminType: <EditAdminButton profile={profile} user={v}/>
                                 }

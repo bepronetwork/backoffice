@@ -16,6 +16,10 @@ class App{
         this.admin = getAuthFromCookies();
     }
 
+    hasPermission(res){
+        return res.data.status === 200;
+    }
+
     getSummary = async () => {
         // grab current state
         const state = store.getState();
@@ -94,11 +98,11 @@ class App{
                 games : res[1].data ? res[1].data.message : [],
                 bets : res[2].data ? res[2].data.message : [],
                 revenue : res[3].data ? res[3].data.message : [],
-                wallet : res[4].data && res[4].data.status !== 304 ? res[4].data.message[0] : [],        
+                wallet : res[4].data && this.hasPermission(res[4]) ? res[4].data.message[0] : [],        
                 affiliates : res[5].data.message ? res[5].data.message.affiliateSetup : null,
                 app : res[5].data.message ? res[5].data.message : null,
                 walletSimple : res[5].data.message ? res[5].data.message.wallet : null,
-                transactions :  res[6].data && res[6].data.status !== 304 ? res[6].data.message[0] : null,
+                transactions :  res[6].data && this.hasPermission(res[6]) ? res[6].data.message[0] : null,
                 gamesInfo : res[7],
                 usersInfoSummary : res[8],
                 withdraws : res[9]

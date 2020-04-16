@@ -225,6 +225,8 @@ class UserBetsTable extends React.Component {
     }
 
     projectData = async (props) => {
+        this.setLoading(true);
+        
         let app = await props.profile.getApp();
         const variables = await app.getEcosystemVariables()
 
@@ -244,6 +246,8 @@ class UserBetsTable extends React.Component {
                 currencies: currencies
             })
         }
+
+        this.setLoading(false);
     }
 
     setLoading = (status) => {
@@ -326,12 +330,12 @@ class UserBetsTable extends React.Component {
             <UserBetsFilter setData={this.setData} reset={this.reset} user={this.props.user} setLoading={this.setLoading} loading={this.state.isLoading}/>
             {isLoading ? (
                 <>
-                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 20 }}/>
-                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 20 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
                 </>
                 ) : (
             <div className={classes.tableWrapper}>
