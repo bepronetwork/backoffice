@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select } from '@material-ui/core';
+import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select, Button } from '@material-ui/core';
 import { Col, Row } from 'reactstrap';
 import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -20,6 +20,9 @@ import moment from 'moment';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
 import _ from 'lodash';
+import { CSVLink } from "react-csv";
+import { export2JSON } from "../../../utils/export2JSON";
+import { Button as MaterialButton } from "@material-ui/core";
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -110,6 +113,7 @@ const rows = [
         numeric: true
     },
 ];
+
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
@@ -349,6 +353,7 @@ class EnhancedTable extends React.Component {
         this.setState({ showFilter: showFilter ? false : true });
     }
 
+
   render() {
     const { classes } = this.props;
     const { showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
@@ -369,9 +374,31 @@ class EnhancedTable extends React.Component {
         }
     };
 
+    const headers = [
+        { label: "Id", key: "_id" },
+        { label: "User", key: "user" },
+        { label: "Transaction Hash", key: "transactionHash" },
+        { label: "Created At", key: "creation_timestamp" },
+        { label: "Amount", key: "amount" },
+        { label: "Status", key: "status" }
+    ];
+
+    const csvData = dataFiltered.map(row => ({...row, createdAt: moment(row.creation_timestamp).format("lll")}));
+    const jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'transactionHash', 'creation_timestamp', 'amount', 'status']));
+
     return (
         <Paper className={classes.root}>
             <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
+            <div style={{ display: "flex", justifyContent: "flex-end"}}>
+                <CSVLink data={csvData} filename={"transactions.csv"} headers={headers}>
+                    <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                        Export CSV
+                    </MaterialButton>
+                </CSVLink>
+                <MaterialButton onClick={() => export2JSON(jsonData, "transactions")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                    Export JSON
+                </MaterialButton>
+            </div>
             <div style={styles.fitler}>
                 <Row>
                     <Col>

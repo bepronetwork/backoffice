@@ -25,6 +25,11 @@ import Numbers from '../../../../../services/numbers';
 import InformationContainer from '../../../../../shared/components/information/InformationContainer';
 import { InformationIcon } from 'mdi-react';
 import { Row, Col} from 'reactstrap';
+import moment from 'moment';
+import _ from 'lodash';
+import { CSVLink } from "react-csv";
+import { Button as MaterialButton } from "@material-ui/core";
+import { export2JSON } from '../../../../../utils/export2JSON';
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 let counter = 0;
@@ -303,8 +308,32 @@ class WithdrawTable extends React.Component {
         const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
+        
+        const headers = [
+            { label: "Id", key: "id" },
+            { label: "Amount", key: "amount" },
+            { label: "Currency", key: "currency" },
+            { label: "Tx Hash", key: "transactionHash" },
+            { label: "Creation Date", key: "creation_date" },
+            { label: "Status", key: "withdraw" }
+        ];
+
+        const csvData = data.map(row => ({...row, currency: this.props.currency, creation_date: moment(row.creation_date).format("lll")}));
+        const jsonData = csvData.map(row => _.pick(row, ['id', 'amount', 'currency', 'transactionHash', 'creation_date', 'withdraw']));
+    
+
         return (
             <Paper className={classes.root}>
+                    <div style={{ display: "flex", justifyContent: "flex-end"}}>
+                        <CSVLink data={csvData} filename={"withdraw.csv"} headers={headers}>
+                            <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                                Export CSV
+                            </MaterialButton>
+                        </CSVLink>
+                        <MaterialButton onClick={() => export2JSON(jsonData, "withdraw")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                            Export JSON
+                        </MaterialButton>
+                    </div>
                     <EnhancedTableToolbar numSelected={selected.length}/>
                         <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">

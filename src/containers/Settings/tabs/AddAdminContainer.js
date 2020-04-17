@@ -4,6 +4,12 @@ import { connect } from "react-redux";
 import { EditableTable } from '../../../components';
 import EditAdminButton from './EditAdminButton';
 import { Tooltip } from '@material-ui/core';
+import _ from 'lodash';
+import { CSVLink } from "react-csv";
+import { Button as MaterialButton } from "@material-ui/core";
+import { export2JSON } from '../../../utils/export2JSON';
+
+
 const defaultProps = {
     authorizedAddAdmin : [],
 }
@@ -52,6 +58,16 @@ class AddAdminContainer extends React.Component{
         const { authorizedAddAdmin } = this.state;
         const { profile } = this.props;
 
+        const headers = [
+            { label: "Id", key: "id" },
+            { label: "Name", key: "name" },
+            { label: "Email", key: "email"},
+            { label: "Type", key: "type" }
+        ];
+
+        const csvData = authorizedAddAdmin.map(row => ({...row, type: row.permission.super_admin ? 'Super admin' : 'Collaborator' }));
+        const jsonData = csvData.map(row => _.pick(row, ['id', 'name', 'email', 'type']));
+
         return (
             <div>
                 <h4> Application Admins </h4>
@@ -59,6 +75,16 @@ class AddAdminContainer extends React.Component{
                 <hr></hr>
                 <Row>
                     <Col lg={12}>
+                        <div style={{ display: "flex", justifyContent: "flex-end"}}>
+                            <CSVLink data={csvData} filename={"admins.csv"} headers={headers}>
+                                <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                                    Export CSV
+                                </MaterialButton>
+                            </CSVLink>
+                            <MaterialButton onClick={() => export2JSON(jsonData, "admins")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                                Export JSON
+                            </MaterialButton>
+                        </div>
                         <EditableTable
                             title={''}
                             onChange={this.onChange}

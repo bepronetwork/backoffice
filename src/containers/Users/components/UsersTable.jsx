@@ -16,6 +16,9 @@ import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { FilterListIcon } from 'mdi-react';
 import { compareIDS } from '../../../lib/string';
 import _ from 'lodash';
+import { CSVLink } from "react-csv";
+import { export2JSON } from "../../../utils/export2JSON";
+import { Button as MaterialButton } from "@material-ui/core";
 import Skeleton from '@material-ui/lab/Skeleton';
 
 let counter = 0;
@@ -355,9 +358,31 @@ class UsersTable extends React.Component {
             }
         };
 
+        const headers = [
+            { label: "Id", key: "_id" },
+            { label: "Username", key: "username" },
+            { label: "Email", key: "email" },
+            { label: "Balance", key: "wallet" },
+            { label: "Bets", key: "bets" },
+            { label: "Turnover", key: "turnoverAmount" },
+            { label: "Profit", key: "profit"}
+        ];
+
+        const jsonData = dataFiltered.map(row => _.pick(row, ['_id', 'username', 'email', 'wallet', 'bets', 'turnoverAmount', 'profit']));
+
         return (
             <Paper className={classes.root}>
                 <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
+                <div style={{ display: "flex", justifyContent: "flex-end"}}>
+                    <CSVLink data={dataFiltered} filename={"users.csv"} headers={headers}>
+                        <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                            Export CSV
+                        </MaterialButton>
+                    </CSVLink>
+                    <MaterialButton onClick={() => export2JSON(jsonData, "users")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                        Export JSON
+                    </MaterialButton>
+                </div>
                 {isLoading ? (
                     <>
                     <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 20 }}/>
