@@ -400,9 +400,9 @@ class Connection {
         }
     }
 
-    addAutoWithdraw = async ({params, headers}) => {
+    addAddOn = async ({url, params, headers}) => {
         try{
-            let response = await fetch( URL + `/api/app/autoWithdraw/add`, {
+            let response = await fetch( URL + `/api${url}`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

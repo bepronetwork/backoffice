@@ -968,9 +968,10 @@ class App{
         }
     }
 
-    addAutoWithdraw = async () => {
+    addAddOn = async ({url}) => {
         try{
-            return await ConnectionSingleton.addAutoWithdraw({   
+            return await ConnectionSingleton.addAddOn({   
+                url: url,
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId()
