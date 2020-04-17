@@ -28,7 +28,11 @@ class AnnouncementTab extends Component {
     }
 
     componentWillReceiveProps(props){
-        this.projectData(props);
+        const { locked } = this.state;
+
+        if (locked) {
+            this.projectData(props);
+        }
     }
 
     projectData = async (props) => {
