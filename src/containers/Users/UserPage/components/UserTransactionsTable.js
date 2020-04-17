@@ -20,6 +20,7 @@ import { Button as MaterialButton } from "@material-ui/core";
 import { AddressConcat } from '../../../../lib/string';
 import { ETHERSCAN_URL } from '../../../../lib/etherscan';
 import { export2JSON } from '../../../../utils/export2JSON';
+import { TableIcon, JsonIcon } from 'mdi-react';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
@@ -326,11 +327,11 @@ class UserTransactionsTable extends React.Component {
             <div style={{ display: "flex", justifyContent: "flex-end"}}>
                 <CSVLink data={csvData} filename={"user_transactions.csv"} headers={headers}>
                     <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
-                        Export CSV
+                       <TableIcon/> CSV
                     </MaterialButton>
                 </CSVLink>
                 <MaterialButton onClick={() => export2JSON(jsonData, "user_transactions")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
-                    Export JSON
+                    <JsonIcon/> JSON
                 </MaterialButton>
             </div>
             <div className={classes.tableWrapper}>

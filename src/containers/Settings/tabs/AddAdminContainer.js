@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { CSVLink } from "react-csv";
 import { Button as MaterialButton } from "@material-ui/core";
 import { export2JSON } from '../../../utils/export2JSON';
+import { TableIcon, JsonIcon } from 'mdi-react';
 
 
 const defaultProps = {
@@ -78,11 +79,11 @@ class AddAdminContainer extends React.Component{
                         <div style={{ display: "flex", justifyContent: "flex-end"}}>
                             <CSVLink data={csvData} filename={"admins.csv"} headers={headers}>
                                 <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
-                                    Export CSV
+                                    <TableIcon/> CSV
                                 </MaterialButton>
                             </CSVLink>
                             <MaterialButton onClick={() => export2JSON(jsonData, "admins")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
-                                Export JSON
+                                <JsonIcon/> JSON
                             </MaterialButton>
                         </div>
                         <EditableTable

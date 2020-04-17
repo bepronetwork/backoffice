@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select, Button } from '@material-ui/core';
+import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select, Button, SvgIcon } from '@material-ui/core';
 import { Col, Row } from 'reactstrap';
 import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,7 +15,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import TextInput from '../../../shared/components/TextInput';
 import { AddressConcat } from '../../../lib/string';
-import { FilterListIcon } from 'mdi-react';
+import { FilterListIcon, TableIcon, JsonIcon } from 'mdi-react';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
@@ -391,12 +391,12 @@ class EnhancedTable extends React.Component {
             <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
             <div style={{ display: "flex", justifyContent: "flex-end"}}>
                 <CSVLink data={csvData} filename={"transactions.csv"} headers={headers}>
-                    <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
-                        Export CSV
+                <MaterialButton variant="contained" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                        <TableIcon/> CSV
                     </MaterialButton>
                 </CSVLink>
                 <MaterialButton onClick={() => export2JSON(jsonData, "transactions")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
-                    Export JSON
+                    <JsonIcon/> JSON
                 </MaterialButton>
             </div>
             <div style={styles.fitler}>

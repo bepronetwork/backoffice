@@ -13,7 +13,7 @@ import {
 import { Col, Row } from 'reactstrap';
 import TextInput from '../../../shared/components/TextInput';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
-import { FilterListIcon } from 'mdi-react';
+import { FilterListIcon, TableIcon, JsonIcon } from 'mdi-react';
 import { compareIDS } from '../../../lib/string';
 import _ from 'lodash';
 import { CSVLink } from "react-csv";
@@ -376,11 +376,11 @@ class UsersTable extends React.Component {
                 <div style={{ display: "flex", justifyContent: "flex-end"}}>
                     <CSVLink data={dataFiltered} filename={"users.csv"} headers={headers}>
                         <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
-                            Export CSV
+                            <TableIcon/> CSV
                         </MaterialButton>
                     </CSVLink>
                     <MaterialButton onClick={() => export2JSON(jsonData, "users")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
-                        Export JSON
+                        <JsonIcon/> JSON
                     </MaterialButton>
                 </div>
                 {isLoading ? (

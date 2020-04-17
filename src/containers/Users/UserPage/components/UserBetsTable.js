@@ -22,6 +22,7 @@ import _ from 'lodash';
 import { CSVLink } from "react-csv";
 import { Button as MaterialButton } from "@material-ui/core";
 import { export2JSON } from '../../../../utils/export2JSON';
+import { TableIcon, JsonIcon } from 'mdi-react';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
@@ -348,11 +349,11 @@ class UserBetsTable extends React.Component {
             <div style={{ display: "flex", justifyContent: "flex-start"}}>
                 <CSVLink data={csvData} filename={"user_bets.csv"} headers={headers}>
                     <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
-                        Export CSV
+                        <TableIcon/> CSV
                     </MaterialButton>
                 </CSVLink>
                 <MaterialButton onClick={() => export2JSON(jsonData, "user_bets")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
-                    Export JSON
+                    <JsonIcon/> JSON
                 </MaterialButton>
             </div>
             <UserBetsFilter setData={this.setData} reset={this.reset} user={this.props.user} setLoading={this.setLoading} loading={this.state.isLoading}/>

@@ -23,7 +23,7 @@ import withdrawStatus from './codes';
 import { Button } from "reactstrap";
 import Numbers from '../../../../../services/numbers';
 import InformationContainer from '../../../../../shared/components/information/InformationContainer';
-import { InformationIcon } from 'mdi-react';
+import { InformationIcon, TableIcon, JsonIcon } from 'mdi-react';
 import { Row, Col} from 'reactstrap';
 import moment from 'moment';
 import _ from 'lodash';
@@ -327,11 +327,11 @@ class WithdrawTable extends React.Component {
                     <div style={{ display: "flex", justifyContent: "flex-end"}}>
                         <CSVLink data={csvData} filename={"withdraw.csv"} headers={headers}>
                             <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
-                                Export CSV
+                                <TableIcon/> CSV
                             </MaterialButton>
                         </CSVLink>
                         <MaterialButton onClick={() => export2JSON(jsonData, "withdraw")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
-                            Export JSON
+                            <JsonIcon/> JSON
                         </MaterialButton>
                     </div>
                     <EnhancedTableToolbar numSelected={selected.length}/>
