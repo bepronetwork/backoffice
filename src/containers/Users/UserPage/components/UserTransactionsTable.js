@@ -14,8 +14,13 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import moment from 'moment';
+import _ from 'lodash';
+import { CSVLink } from "react-csv";
+import { Button as MaterialButton } from "@material-ui/core";
 import { AddressConcat } from '../../../../lib/string';
 import { ETHERSCAN_URL } from '../../../../lib/etherscan';
+import { export2JSON } from '../../../../utils/export2JSON';
+import { TableIcon, JsonIcon } from 'mdi-react';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
@@ -111,6 +116,7 @@ const rows = [
         numeric: true
     },
 ];
+
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
@@ -303,8 +309,31 @@ class UserTransactionsTable extends React.Component {
     const { data, order, orderBy, selected, rowsPerPage, page, ticker } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
+    const headers = [
+        { label: "Id", key: "_id" },
+        { label: "Transaction", key: "type" },
+        { label: "Transaction Hash", key: "transactionHash" },
+        { label: "Created At", key: "creation_timestamp" },
+        { label: "Type", key: "isAffiliate"},
+        { label: "Amount", key: "amount" },
+        { label: "Status", key: "status" }
+    ];
+
+    const csvData = data.map(row => ({...row, createdAt: moment(row.creation_timestamp).format("lll")}));
+    const jsonData = csvData.map(row => _.pick(row, ['_id', 'type', 'transactionHash', 'creation_timestamp', 'isAffiliate', 'amount', 'status']));
+
     return (
       <Paper elevation={0} className={classes.root}>
+            <div style={{ display: "flex", justifyContent: "flex-end"}}>
+                <CSVLink data={csvData} filename={"user_transactions.csv"} headers={headers}>
+                    <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                       <TableIcon style={{marginRight: 7}}/> CSV
+                    </MaterialButton>
+                </CSVLink>
+                <MaterialButton onClick={() => export2JSON(jsonData, "user_transactions")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                    <JsonIcon style={{marginRight: 7}}/> JSON
+                </MaterialButton>
+            </div>
             <div className={classes.tableWrapper}>
             <Table elevation={0} className={classes.table} aria-labelledby="tableTitle">
                 <EnhancedTableHead
