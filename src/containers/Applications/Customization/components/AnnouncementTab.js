@@ -5,6 +5,7 @@ import BooleanInput from '../../../../shared/components/BooleanInput';
 import ColorPickerInput from '../../../../shared/components/color_picker_input/ColorPickerInput';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
+import { FormControlLabel } from '@material-ui/core';
 
 
 const defaultState = {
@@ -28,7 +29,11 @@ class AnnouncementTab extends Component {
     }
 
     componentWillReceiveProps(props){
-        this.projectData(props);
+        const { locked } = this.state;
+
+        if (locked) {
+            this.projectData(props);
+        }
     }
 
     projectData = async (props) => {
@@ -101,12 +106,20 @@ class AnnouncementTab extends Component {
                                     disabled={locked}
                                     onChange={this.onChange}
                                 />
-                                <BooleanInput
-                                    checked={isActive} 
-                                    onChange={this.onChange}
-                                    disabled={locked}
-                                    type={'isActive'}
-                                    id={'check-active-101'}
+                                <FormControlLabel
+                                style={{margin: 0, padding: 0}}
+                                control={
+                                    <BooleanInput
+                                        checked={isActive} 
+                                        onChange={this.onChange}
+                                        disabled={locked}
+                                        type={'isActive'}
+                                        id={'check-active-101'}
+                                    />
+                                }
+                                label={isActive ? <h4 style={{fontSize: 16}}>Active</h4> 
+                                : <h4 style={{ fontSize: 16}}>Inactive</h4>}
+                                labelPlacement="top"
                                 />
                             </EditLock>
                         </Col>
