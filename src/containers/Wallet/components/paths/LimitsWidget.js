@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import _ from 'lodash';
-import { ArrowExpandDownIcon } from 'mdi-react';
+import { ArrowExpandDownIcon, WalletProductIcon } from 'mdi-react';
 import LimitsBox from './limits/LimitsBox';
 const deposit = `${process.env.PUBLIC_URL}/img/dashboard/deposit.png`;
 const withdrawal = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
@@ -15,15 +15,18 @@ const defaultState = {
     new_maxDeposit : 0,
     maxWithdrawal : 0,
     new_maxWithdrawal : 0,
-    locks : {},
+    minWithdrawal: 0,
+    new_minWithdrawal: 0,
     currencyTicker : 'N/A',
     locks : {
-        maxWithdrawal : true,
-        maxDeposit : true
+        maxWithdrawal: true,
+        maxDeposit: true,
+        minWithdrawal: true
     },
     isLoading : {
-        maxWithdrawal : false,
-        maxDeposit : false
+        maxWithdrawal: false,
+        maxDeposit: false,
+        minWithdrawal: false
     }
 }
 
@@ -44,18 +47,22 @@ class LimitsWidget extends React.Component{
 
     projectData = async (props) => {
         let { wallet } = props;
-        let currencyTicker, maxDeposit, maxWithdrawal;
+
+        let currencyTicker, maxDeposit, maxWithdrawal, minWithdrawal;
         currencyTicker = wallet.currency.ticker;
         await props.profile.getApp().getSummary();
         wallet = props.profile.getApp().getSummaryData('walletSimple').data.find(c => {return c.currency.ticker === currencyTicker });
+
         currencyTicker = wallet.currency.ticker;
         maxDeposit = wallet.max_deposit;
         maxWithdrawal = wallet.max_withdraw;
+        minWithdrawal = wallet.min_withdraw;
 
         this.setState({...this.state,
             currencyTicker,
             maxDeposit,
             maxWithdrawal,
+            minWithdrawal,
             wallet
         });
     }
@@ -104,6 +111,15 @@ class LimitsWidget extends React.Component{
                 this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : false}, maxWithdrawal: this.state.new_maxWithdrawal});
                 break;
             }
+
+            case 'minWithdrawal' : {
+
+                await profile.getApp().changeMinWithdraw({ amount: this.state[`new_${field}`], wallet_id: wallet._id });
+                this.state.locks[field] = true;
+                this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : false}, minWithdrawal: this.state.new_minWithdrawal});
+
+                break;
+            }
         }
         // this.projectData(this.props);
         // this.setState();
@@ -150,6 +166,23 @@ class LimitsWidget extends React.Component{
                            isLoading={this.state.isLoading.maxWithdrawal}
                            new_value={this.state.new_maxWithdrawal} 
                            /* Functions */
+                           unlockField={this.unlockField} 
+                           lockField={this.lockField} 
+                           onChange={this.onChange} 
+                           confirmChanges={this.confirmChanges} 
+                        />
+                    </Col>
+                    <Col lg={5}>
+                        <LimitsBox
+                           title={'Min Withdrawal'}
+                           inputIcon={ArrowExpandDownIcon}
+                           currencyTicker={this.state.currencyTicker}
+                           image={withdrawal}
+                           lock={this.state.locks.minWithdrawal}
+                           type={'minWithdrawal'} 
+                           value={this.state.minWithdrawal}
+                           isLoading={this.state.isLoading.minWithdrawal}
+                           new_value={this.state.new_minWithdrawal} 
                            unlockField={this.unlockField} 
                            lockField={this.lockField} 
                            onChange={this.onChange} 
