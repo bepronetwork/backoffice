@@ -968,9 +968,10 @@ class App{
         }
     }
 
-    addAutoWithdraw = async () => {
+    addAddOn = async ({url}) => {
         try{
-            return await ConnectionSingleton.addAutoWithdraw({   
+            return await ConnectionSingleton.addAddOn({   
+                url: url,
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId()
@@ -989,6 +990,40 @@ class App{
                 params : {
                     currency,
                     autoWithdrawParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
+    editJackpot = async ({edge}) => {
+        try{
+            return await ConnectionSingleton.editJackpot({   
+                params : {
+                    edge,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editInitialBalance = async ({balance, currency}) => {
+        try{
+            return await ConnectionSingleton.editInitialBalance({   
+                params : {
+                    balance,
+                    currency,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     

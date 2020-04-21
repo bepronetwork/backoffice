@@ -400,9 +400,9 @@ class Connection {
         }
     }
 
-    addAutoWithdraw = async ({params, headers}) => {
+    addAddOn = async ({url, params, headers}) => {
         try{
-            let response = await fetch( URL + `/api/app/autoWithdraw/add`, {
+            let response = await fetch( URL + `/api${url}`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -417,6 +417,35 @@ class Connection {
     editAutoWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/autoWithdraw/editAutoWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editJackpot = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/jackpot/edge/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
+    editInitialBalance = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/balance/edit`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

@@ -8,15 +8,18 @@ class AddOnStoreContainer extends PureComponent {
     constructor() {
         super();
         this.state = {
-            activeIndex: 0,
+            isLoading: false
         };
     }
 
-    onClick = async () => {
-        const { onClick, addOn } = this.props;
-        this.setState({...this.state, isLoading : true})
-        if(onClick){ await onClick(addOn) }
-        this.setState({...this.state, isLoading : false})
+    handleAddAddOn = async () => {
+        const { addAddOn, addOn } = this.props;
+
+        this.setState({ isLoading: true })
+
+        await addAddOn(addOn.endpoint);
+
+        this.setState({ isLoading: false })
     }
 
     render() {
@@ -44,7 +47,7 @@ class AddOnStoreContainer extends PureComponent {
                                 </div>
                             </Col>
                         </Row>
-                        <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.onClick()} >
+                        <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={this.handleAddAddOn} >
                             {   
                                 isLoading ?
                                     "Adding"
