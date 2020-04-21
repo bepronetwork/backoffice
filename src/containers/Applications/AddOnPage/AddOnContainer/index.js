@@ -6,7 +6,6 @@ import _ from 'lodash';
 import AutoWithdraw from './AddOn/AutoWithdraw';
 import Jackpot from './AddOn/Jackpot';
 
-
 class AddOnContainer extends PureComponent {
  
     constructor() {

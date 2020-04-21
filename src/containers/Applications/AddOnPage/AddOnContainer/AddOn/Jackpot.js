@@ -143,7 +143,7 @@ class Jackpot extends React.Component {
                                 locked={lock}>
                                 <h5 className="">Pot</h5>
                                 <div style={{ display: "flex"}}>
-                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"bold-text dashboard__total-stat"}>{limits.pot.toFixed(6)}</h3>
+                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{limits.pot.toFixed(6)}</h3>
                                     <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{currency.ticker}</h3>
                                 </div>
                             
@@ -173,12 +173,11 @@ class Jackpot extends React.Component {
                                 <hr/>
 
                                 <h5 className="">Edge</h5>
-                                <h3 style={{marginTop: 20}} className={"bold-text dashboard__total-stat"}>{edge}%</h3>
+                                <h3 style={{marginTop: 20}} className={"dashboard__total-stat"}>{edge}%</h3>
                                 <br/>
                                 <h6 className="">New Edge </h6>
-                                <h5 className={"bold-text dashboard__total-stat"}>{newEdge}%</h5>
+                                <h5 className={"dashboard__total-stat"}>{newEdge}%</h5>
                                 <Slider disabled={this.state.lock} value={newEdge} onChange={this.onChangeEdge}/>
-
                             </EditLock>
                             </Col>
                             </ExpansionPanelDetails>

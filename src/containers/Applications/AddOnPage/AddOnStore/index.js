@@ -41,7 +41,7 @@ class AddOnStorePageContainer extends React.Component{
     isAdded = (AddOn) => {
         const { appAddOns } = this.state;
 
-        return !!Object.keys(appAddOns).find(k => k.toLowerCase() === AddOn.name.toLowerCase());
+        return !!Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().includes(k.toLowerCase()));
          
     }
 

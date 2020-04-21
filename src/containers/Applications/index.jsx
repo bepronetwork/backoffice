@@ -9,13 +9,14 @@ import DataWidget from '../DataWidget/DataWidget';
 import IntegrationsContainer from './components/IntegrationsContainer';
 import _ from 'lodash';
 import { fromCodesToServices } from '../../controllers/services/services';
-import { GamesIcon, StoreIcon, SettingsIcon, ArrowDecisionIcon, PuzzleIcon } from 'mdi-react';
+import { GamesIcon, StoreIcon, SettingsIcon, ArrowDecisionIcon, PuzzleIcon, MoneyIcon } from 'mdi-react';
 import TabsContainer from '../../shared/components/tabs/Tabs';
 import GameStorePageContainer from './GameStore/index.js';
 import CustomizationContainer from './Customization/index.js';
 import ThirdPartiesContainer from './ThirdParties/index.js';
 import HostingLink from './components/HostingLink';
 import AddOnsContainer from './AddOnPage';
+import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
@@ -27,7 +28,12 @@ class ApplicationsContainer extends React.Component{
         super(props)
     }
    
-    
+    isAdded = (AddOn) => {
+        const { appAddOns } = this.props.profile.App.addOn;
+
+        return !!Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().includes(k.toLowerCase()));
+         
+    }
 
     render = () => {
         let services = this.props.profile.getApp().getServices();
@@ -97,6 +103,14 @@ class ApplicationsContainer extends React.Component{
                                             ),
                                             icon : <PuzzleIcon/>
                                         },
+                                        {
+                                            title : 'Currencies ',
+                                            container : (
+                                                <CurrenciesContainer />
+                                                
+                                            ),
+                                            icon : <MoneyIcon/>
+                                        }
 
                                     ]
                                 : [
