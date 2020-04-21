@@ -896,6 +896,32 @@ class App{
             throw err;
 		}
     }
+
+    changeMinWithdraw = async ({amount, wallet_id}) => {
+        try{
+            let res = await ConnectionSingleton.changeMinWithdraw({
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    amount,
+                    wallet_id : wallet_id
+                },
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+            let {
+                status
+            } = res.data;
+
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
+            }
+        }catch(err){
+            console.log(err);
+            throw err;
+		}
+    }
   
     getSummaryData(type){
         return {
