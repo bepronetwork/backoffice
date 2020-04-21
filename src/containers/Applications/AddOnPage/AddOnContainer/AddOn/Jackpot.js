@@ -3,18 +3,25 @@ import React from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 import Skeleton from "@material-ui/lab/Skeleton";
 import { connect } from "react-redux";
-import { Grid, Switch, Typography, ExpansionPanelDetails, ExpansionPanelSummary, ExpansionPanel, makeStyles, Paper } from '@material-ui/core';
+import { Grid, ExpansionPanelDetails, ExpansionPanelSummary, ExpansionPanel, Paper, Dialog, DialogContent, Button } from '@material-ui/core';
 import TextInput from '../../../../../shared/components/TextInput';
 import EditLock from '../../../../Shared/EditLock';
-import { BankIcon, ExpandMoreIcon } from 'mdi-react';
+import { ExpandMoreIcon, MoneyIcon, MedalIcon } from 'mdi-react';
+import Slider from "./components/Slider"
+import UserBetsTable from './components/UserBetsTable';
+import _ from "lodash";
+import WinnersTable from './components/WinnersTable';
 
-class AutoWithdraw extends React.Component {
+class Jackpot extends React.Component {
  
     constructor() {
         super();
         this.state = {
             lock: true,
-            loading: false
+            loading: false,
+            newEdge: 0,
+            showWinnersDialog: false,
+            showBetsDialog: false
         }
     }
 
@@ -29,19 +36,19 @@ class AutoWithdraw extends React.Component {
     }
 
     projectData = (props) => {
-        const { autoWithdraw, currency } = props;
-        const { name, description, image_url, isAutoWithdraw } = autoWithdraw;
+        const { jackpot, currency } = props;
+        const { name, description, image_url, bets, winResult, edge } = jackpot;
 
-        const maxWithdrawAmountCumulative = autoWithdraw.maxWithdrawAmountCumulative.filter(w => w.currency === currency._id)[0].amount;
-        const maxWithdrawAmountPerTransaction = autoWithdraw.maxWithdrawAmountPerTransaction.filter(w => w.currency === currency._id)[0].amount;
+        const limits = jackpot.limits.find(l => l.currency === currency._id);
 
         this.setState({...this.state, 
             name,
             description,
             image_url,
-            isAutoWithdraw,
-            maxWithdrawAmountCumulative,
-            maxWithdrawAmountPerTransaction
+            bets,
+            winResult,
+            limits,
+            edge
         })
     }
 
@@ -53,48 +60,45 @@ class AutoWithdraw extends React.Component {
         this.setState({...this.state, lock: true })
     }
 
-    handleChange = () => {
-        this.setState({...this.state, isAutoWithdraw: !this.state.isAutoWithdraw })
+    onChangeEdge = (event) => {
+        this.setState({...this.state, newEdge: event.value ? parseFloat(event.value) : 0})
     }
 
-    onChangeCumulative = (value) => {
-        this.setState({...this.state, maxWithdrawAmountCumulative: value ? parseFloat(value) : 0})
+    toggleWinnersDialog = () => {
+        this.setState({...this.state, showWinnersDialog: !this.state.showWinnersDialog})
     }
 
-    onChangePerTransaction = (value) => {
-        this.setState({...this.state, maxWithdrawAmountPerTransaction: value ? parseFloat(value) : 0})
+    toggleBetsDialog = () => {
+        this.setState({...this.state, showBetsDialog: !this.state.showBetsDialog})
     }
 
-    confirmChanges = async (currency) => {
+    confirmChanges = async () => {
         const { profile } = this.props;
-        const currencyId = currency._id;
-
-        const autoWithdrawParams = {
-            isAutoWithdraw: this.state.isAutoWithdraw,
-            maxWithdrawAmountCumulative: this.state.maxWithdrawAmountCumulative,
-            maxWithdrawAmountPerTransaction: this.state.maxWithdrawAmountPerTransaction
-        }
+        const { newEdge } = this.state;
 
         this.setState({...this.state, loading: true })
 
-        await profile.getApp().editAutoWithdraw({currency: currencyId, autoWithdrawParams})
+        await profile.getApp().editJackpot({edge: newEdge})
         await profile.getApp().updateAppInfoAsync();
         await profile.update();
+
         this.setState({...this.state, loading: false })
         this.lock()
 
     }
 
     render() {
-        const { name, description, image_url, isAutoWithdraw, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction, lock } = this.state;
         const { currency, isLoading } = this.props;
+        const { name, description, image_url, bets, winResult, edge, limits, newEdge, lock, showWinnersDialog, showBetsDialog } = this.state;
+        
+        if (!limits) return null
 
         return (
             <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`}}>
                 {isLoading ? (
                 <>
                 <Card className='game-container'>
-                    <CardBody className="dashboard__card-widget" style={{ width: 320}}>
+                    <CardBody className="dashboard__card-widget" style={{ width: 320 }}>
                         <Grid container direction='row' spacing={1}>
                             <Grid item xs={9}>
                                 <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/>
@@ -114,8 +118,8 @@ class AutoWithdraw extends React.Component {
                             <ExpansionPanelSummary
                             style={{width: '320px', height: '120px', padding: 20, paddingBottom: 0, paddingTop: 0, justifyContent: 'space-between'}}
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="autowithdraw-content"
-                            id="autowithdraw-header"
+                            aria-controls="jackpot-content"
+                            id="jackpot-header"
                             >
                             <div style={{display: 'flex', justifyContent: 'space-between', width: "100%"}}>
                                     <div className="dashboard__visitors-chart text-left">
@@ -134,38 +138,47 @@ class AutoWithdraw extends React.Component {
                             <EditLock 
                                 unlockField={this.unlock} 
                                 lockField={this.lock} 
-                                confirmChanges={() => this.confirmChanges(currency)} 
+                                confirmChanges={this.confirmChanges} 
                                 isLoading={this.state.loading}
                                 locked={lock}>
-                                <h5 style={{ margin: 0 }} >AutoWithdraw</h5>
-                                <Switch
-                                    checked={isAutoWithdraw}
-                                    onChange={this.handleChange}
-                                    color="primary"
-                                    name="isAutoWithdraw"
-                                    disabled={lock}
-                                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                                />
+                                <h5 className="">Pot</h5>
+                                <div style={{ display: "flex"}}>
+                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"bold-text dashboard__total-stat"}>{limits.pot.toFixed(6)}</h3>
+                                    <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{currency.ticker}</h3>
+                                </div>
+                            
+                                <Dialog open={showWinnersDialog} onClose={this.toggleWinnersDialog} fullWidth maxWidth="lg">
+                                    <DialogContent>
+                                        <WinnersTable winners={winResult} />
+                                    </DialogContent>
+                                </Dialog>
+                                <Dialog open={showBetsDialog} onClose={this.toggleBetsDialog} fullWidth maxWidth="lg">
+                                    <DialogContent>
+                                        <UserBetsTable bets={bets} />
+                                    </DialogContent>
+                                </Dialog>
+
+                                <Button size="small" variant="outlined" disabled={_.isEmpty(winResult)}
+                                style={{ textTransform: "none", backgroundColor: "#CFB53B", color: "#ffffff", boxShadow: "none", margin: 10, marginLeft: 0}} 
+                                onClick={this.toggleWinnersDialog}>
+                                    <MedalIcon style={{marginRight: 7}}/> Winners
+                                </Button>
+
+                                <Button size="small" variant="outlined" disabled={_.isEmpty(bets)}
+                                style={{ textTransform: "none", backgroundColor: "#649B3A", color: "#ffffff", boxShadow: "none", margin: 10, marginLeft: 0}} 
+                                onClick={this.toggleBetsDialog}>
+                                    <MoneyIcon style={{marginRight: 7}}/> Bets
+                                </Button>
+
                                 <hr/>
-                                <h5 className="">Max Withdraw Amount Cumulative Per User ({maxWithdrawAmountCumulative} {currency.ticker})</h5>
-                                <TextInput
-                                    // icon={BankIcon}
-                                    name="maxWithdrawAmountCumulative"
-                                    label={<h6>Max Withdraw Amount Cumulative Per User</h6>}
-                                    type="text"
-                                    disabled={lock}
-                                    changeContent={(type, value) => this.onChangeCumulative(value)}
-                                />
-                                <hr/>
-                                <h5 className="">Max Withdraw Amount Per Transaction ({maxWithdrawAmountPerTransaction} {currency.ticker})</h5>
-                                <TextInput
-                                    // icon={BankIcon}
-                                    name="maxWithdrawAmountPerTransaction"
-                                    label={<h6>Max Withdraw Amount Per Transaction</h6>}
-                                    type="text"
-                                    disabled={lock}
-                                    changeContent={(type, value) => this.onChangePerTransaction(value)}
-                                />
+
+                                <h5 className="">Edge</h5>
+                                <h3 style={{marginTop: 20}} className={"bold-text dashboard__total-stat"}>{edge}%</h3>
+                                <br/>
+                                <h6 className="">New Edge </h6>
+                                <h5 className={"bold-text dashboard__total-stat"}>{newEdge}%</h5>
+                                <Slider disabled={this.state.lock} value={newEdge} onChange={this.onChangeEdge}/>
+
                             </EditLock>
                             </Col>
                             </ExpansionPanelDetails>
@@ -184,5 +197,5 @@ function mapStateToProps(state){
     };
 }
 
-export default connect(mapStateToProps)(AutoWithdraw);
+export default connect(mapStateToProps)(Jackpot);
 

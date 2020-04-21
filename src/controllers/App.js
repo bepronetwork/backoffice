@@ -1001,6 +1001,23 @@ class App{
         }
     }
 
+    
+    editJackpot = async ({edge}) => {
+        try{
+            return await ConnectionSingleton.editJackpot({   
+                params : {
+                    edge,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     getEcosystemGames = async () => {
         try{
             return (await ConnectionSingleton.getEcosystemGames()).data.message;
