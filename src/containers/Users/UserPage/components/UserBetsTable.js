@@ -12,10 +12,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
-import { lighten } from '@material-ui/core/styles/colorManipulator';
 import moment from 'moment';
-import { AddressConcat } from '../../../../lib/string';
-import { ETHERSCAN_URL } from '../../../../lib/etherscan';
 import UserBetsFilter from './UserBetsFilter';
 import Skeleton from '@material-ui/lab/Skeleton';
 import _ from 'lodash';
@@ -24,36 +21,13 @@ import { Button as MaterialButton } from "@material-ui/core";
 import { export2JSON } from '../../../../utils/export2JSON';
 import { TableIcon, JsonIcon } from 'mdi-react';
 
-const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
-const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
-const deposit = `${process.env.PUBLIC_URL}/img/dashboard/deposit.png`;
+function getSorting(data, order, orderBy) {
 
+    const sortedData = _.orderBy(data, [orderBy], order)
+    .map(row => ({...row, creation_timestamp: moment(row.creation_timestamp).format("lll")}));
 
-
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
+    return sortedData;
 }
-
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
-
 
 const fromDatabasetoTable = (data, currencies ) => {
 
@@ -62,18 +36,18 @@ const fromDatabasetoTable = (data, currencies ) => {
         const currency = currencies.filter(c => new String(c._id).toString() == new String(key.currency).toString())[0];
 
 		return {
-            _id :  key._id,
-            user : key.user,
-            currency : currency, 
-            app : key.app,
-            game : key.game,
-            ticker : currency ? currency.ticker : '',
-            isWon :  key.isWon,
-            winAmount : key.winAmount,
-            betAmount : key.betAmount,
-            nonce : key.nonce,
-            fee : key.fee,
-			creation_timestamp: moment(new Date(key.timestamp)).format('lll')
+            _id:  key._id,
+            user: key.user,
+            currency: currency, 
+            app: key.app,
+            game: key.game,
+            ticker: currency ? currency.ticker : '',
+            isWon:  key.isWon,
+            winAmount: key.winAmount,
+            betAmount: key.betAmount,
+            nonce: key.nonce,
+            fee: key.fee,
+			creation_timestamp: key.timestamp
 		}
 	})
 }
@@ -123,7 +97,7 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+        const { order, orderBy } = this.props;
 
         return (
             <TableHead>
@@ -168,31 +142,6 @@ EnhancedTableHead.propTypes = {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
-
-const toolbarStyles = theme => ({
-    root: {
-        paddingRight: theme.spacing.unit,
-    },
-    highlight:
-        theme.palette.type === 'light'
-        ? {
-            color: theme.palette.secondary.main,
-            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-            }
-        : {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.secondary.dark,
-            },
-    spacer: {
-        flex: '1 1 100%',
-    },
-    actions: {
-        color: theme.palette.text.secondary,
-    },
-    title: {
-        flex: '0 0 auto',
-    },
-});
 
 
 const styles = theme => ({
@@ -326,7 +275,7 @@ class UserBetsTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page, ticker } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     const isLoading = this.state.isLoading;
 
@@ -338,7 +287,7 @@ class UserBetsTable extends React.Component {
         { label: "Won", key: "isWon" },
         { label: "Win Amount", key: "winAmount" },
         { label: "Bet Amount", key: "betAmount" },
-        { label: "Created At", key: "creation_timestamp" }
+        { label: "Created At", key: "createdAt" }
     ];
 
     const csvData = data.map(row => ({...row, currency: row.currency.name, isWon: row.isWon ? 'Yes' : 'No', createdAt: moment(row.creation_timestamp).format("lll")}));
@@ -378,7 +327,7 @@ class UserBetsTable extends React.Component {
                     rowCount={data.length}
                 />
             <TableBody>
-                {stableSort(data, getSorting(order, orderBy))
+                {getSorting(data, order, orderBy)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map(n => {
                     const isSelected = this.isSelected(n.id);

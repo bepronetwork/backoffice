@@ -21,33 +21,12 @@ import { export2JSON } from "../../../utils/export2JSON";
 import { Button as MaterialButton } from "@material-ui/core";
 import Skeleton from '@material-ui/lab/Skeleton';
 
-let counter = 0;
+function getSorting(data, order, orderBy) {
 
+    const sortedData = _.orderBy(data, [orderBy], order);
 
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
+    return sortedData;
 }
-
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
-
 
 const fromDatabasetoTable = (data, otherInfo, currency) => {
 
@@ -439,7 +418,7 @@ class UsersTable extends React.Component {
                                 rowCount={dataFiltered.length}
                             />
                             <TableBody>
-                                {stableSort(dataFiltered, getSorting(order, orderBy))
+                                {getSorting(dataFiltered, order, orderBy)
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map(n => {
                                     const isSelected = this.isSelected(n.id);
