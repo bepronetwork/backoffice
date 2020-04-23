@@ -18,7 +18,7 @@ class TopBarPeriodicity extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            periodicities : ['all', 'monthly', 'weekly'],
+            periodicities : ['all', 'monthly', 'weekly', 'daily'],
             collapse: false,
             mainButtonContent: null,
         };
