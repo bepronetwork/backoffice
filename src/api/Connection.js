@@ -373,6 +373,20 @@ class Connection {
         }
     }
 
+    getAllBets = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/get/users/bets`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
 
     cancelWithdraw = async ({app, headers}) => {
         try{
