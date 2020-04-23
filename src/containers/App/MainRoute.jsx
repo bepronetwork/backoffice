@@ -26,6 +26,7 @@ import SettingsContainer from '../Settings';
 import DefaultDashboard from '../Dashboards/Default/index';
 import Developers from '../Developers';
 import TransactionsContainer from '../Transactions';
+import BetsContainer from '../Bets';
 import GamePage from '../Applications/GamePage';
 import UserPage from '../Users/UserPage';
 import { WalletContainer } from '../Wallet';
@@ -117,7 +118,8 @@ class MainRoute extends React.Component {
                     <Route path={'/users'} component={wrappedUserRoutes}/>	
                     <Route path={'/application'} component={wrappedApplicationRoutes}/>	
                     <Route path={'/developers'} component={Developers}/>	
-                    <Route path={'/transactions'} component={TransactionsContainer}/>	
+                    <Route path={'/transactions'} component={TransactionsContainer}/>
+                    <Route path={'/bets'} component={BetsContainer}/>
                     <Route path={'/stats'} component={StatsContainer}/>	
                     <Route path={'/wallet'} component={wrappedWalletRoutes}/>	
                     <Route path={'/settings'} component={SettingsContainer}/>	
