@@ -41,7 +41,10 @@ class CurrencyInfo extends PureComponent {
 
         const app = await profile.getApp();
 
-        this.setState({ currencies: app.params.addOn.balance.initialBalanceList });
+        if (app.params.addOn.hasOwnProperty('balance')) {
+            this.setState({ currencies: app.params.addOn.balance.initialBalanceList });
+        }
+
     }
 
     getCurrency = (currencyId) => {
@@ -55,8 +58,6 @@ class CurrencyInfo extends PureComponent {
     confirmChanges = async () => {
         const { profile, data } = this.props;
         const { newInitialBalance } = this.state;
-
-        console.log(newInitialBalance);
 
         this.setState({...this.state, loading: true })
 
