@@ -30,8 +30,8 @@ class CurrenciesContainer extends PureComponent {
         this.setState({ currencies: app.params.currencies });
     }
 
-    isAdded = async (AddOn) => {
-        const app = await this.props.profile.getApp();
+    isAdded = (AddOn) => {
+        const app = this.props.profile.App;
         const appAddOns = app.params.addOn;
 
         return !!Object.keys(appAddOns).find(k => AddOn.toLowerCase().includes(k.toLowerCase()));
@@ -56,7 +56,7 @@ class CurrenciesContainer extends PureComponent {
                 </Row>
             : 
             <div>
-                <h4>You have no Initial Balance AddOn and/or Currencies enabled currently</h4>
+                <h4>You have no Initial Balance Add-On enabled currently</h4>
                 <img src={image} style={{width :'30%', marginTop : 20}}/>
             </div>
         );
