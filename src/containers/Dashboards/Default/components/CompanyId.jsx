@@ -45,7 +45,7 @@ class CompanyId extends PureComponent {
 
         if(!props.data.wallet.data.wallet){return null}
         let wallets = props.data.wallet.data.wallet;
-        const wallet = wallets.find( w => compareIDS(w.currency, currency._id));
+        const wallet = wallets.find( w => compareIDS(w.currency._id, currency._id));
         const bank_address = wallet ? wallet.bank_address : null;
         const link_url = wallet ? wallet.link_url : null;
 

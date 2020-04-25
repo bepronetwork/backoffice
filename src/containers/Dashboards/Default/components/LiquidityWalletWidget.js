@@ -38,9 +38,9 @@ class LiquidityWalletWidget extends PureComponent {
     projectData = (props) => {
         const { currency } = props;
         if(emptyObject(currency)){return null};
-
+        
         let wallets = props.data.data.wallet;
-        const wallet = wallets.find( w => compareIDS(w.currency, currency._id));
+        const wallet = wallets.find(w => compareIDS(w.currency._id, currency._id));
 
         if(emptyObject(wallet)){return null};
 
