@@ -28,23 +28,27 @@ function getSorting(data, order, orderBy) {
     return sortedData;
 }
 
-const fromDatabasetoTable = (data) => {
+const fromDatabasetoTable = (data, currencies, users, games) => {
 
 	return data.map(key => {
+        
+        const currency = currencies.find(currency => currency._id === key.currency);
+        const user = users.find(user => user._id === key.user);
+        const game = games.find(game => game._id === key.game);
 
 		return {
-            _id:  key.bets._id,
-            user: key.user,
-            currency: key.currency, 
+            _id:  key._id,
+            user: user,
+            currency: currency, 
             app: key.app_id,
-            game: key.game,
-            ticker: key.currency ? key.currency.ticker : '',
-            isWon:  key.bets.isWon,
-            winAmount: key.bets.winAmount,
-            betAmount: key.bets.betAmount,
-            nonce: key.bets.nonce,
-            fee: key.bets.fee,
-			creation_timestamp: key.bets.timestamp
+            game: game,
+            ticker: currency.ticker,
+            isWon:  key.isWon,
+            winAmount: key.winAmount,
+            betAmount: key.betAmount,
+            nonce: key.nonce,
+            fee: key.fee,
+			creation_timestamp: key.timestamp
 		}
 	})
 }
@@ -220,13 +224,14 @@ class EnhancedTable extends React.Component {
             data: [],
             page: 0,
             isLoading: false,
-            ticker : 'N/A',
+            ticker: 'N/A',
             rowsPerPage: 5,
             currencyFilter: '',
             statusFilter: '',
             idFilter: null,
             userFilter: null,
-            showFilter: false
+            showFilter: false,
+            lastFilter: null
         };
     }
 
@@ -236,25 +241,32 @@ class EnhancedTable extends React.Component {
     }
 
     projectData = async (props) => {
+
         this.setLoading(true);
         
-        let app = await props.profile.getApp();
-        const variables = await app.getEcosystemVariables()
+        const app = await props.profile.getApp();
 
-        const appBets = await app.getAllBets({ filters: {}});
-        const currencies = variables.data.message.currencies;
+        const appBets = await app.getAllBets({ filters: { size: 100 }});
 
-        const bets = appBets.data.message;
+        const bets = appBets.data.message.list;
+        const currencies = app.params.currencies;
+        const users = app.params.users;
+        const games = app.params.games;
+
 
         if (bets.length > 0) {
             this.setState({...this.state, 
-                data: fromDatabasetoTable(bets, currencies),
-                currencies: currencies
+                data: fromDatabasetoTable(bets, currencies, users, games),
+                currencies: currencies,
+                users: users,
+                games: games
             })
         } else {
             this.setState({...this.state, 
                 data: [],
-                currencies: currencies
+                currencies: currencies,
+                users: users,
+                games: games
             })
         }
 
@@ -266,14 +278,17 @@ class EnhancedTable extends React.Component {
     }
 
     setData = async (data) => {
-        let app = this.props.profile.getApp();
-        const variables = await app.getEcosystemVariables()
-        
-        const currencies = variables.data.message.currencies;
+        const { currencies, users, games } = this.state;
 
         this.setState({...this.state, 
-            data : fromDatabasetoTable(data, currencies)
+            data: fromDatabasetoTable(data, currencies, users, games),
+            page: 0
         })
+
+    }
+
+    setFilter = (filter) => {
+        this.setState({ lastFilter: filter });
     }
 
     reset = async () => {
@@ -320,20 +335,34 @@ class EnhancedTable extends React.Component {
         this.setState({ selected: newSelected });
     };
 
-    allowWithdraw = async (withdrawObject) => {
-        this.setState({...this.state, isLoading : {
-            ...this.state.isLoading, [withdrawObject._id] : true
-        }})
+    handleChangePage = async (event, page) => {
+        const { data, rowsPerPage, currencies, users, games, lastFilter } = this.state;
+        const { App } = this.props.profile;
 
-        await this.props.allowWithdraw(withdrawObject);
+        if (page === Math.ceil(data.length / rowsPerPage)) {
 
-        this.setState({...this.state, isLoading : {
-            ...this.state.isLoading, [withdrawObject._id] : false
-        }})
-    }
+            this.setLoading(true);
 
-    handleChangePage = (event, page) => {
-        this.setState({ page });
+            const res = await App.getAllBets({ 
+                filters: lastFilter ? {...lastFilter, offset: data.length } 
+                : { size: 100, offset: data.length } });
+                
+            const bets = res.data.message.list;
+            
+            if (bets.length > 0) {
+                this.setState({
+                    data: data.concat(fromDatabasetoTable(bets, currencies, users, games)),
+                    page: page
+                })
+
+            }
+
+            this.setLoading(false);
+
+        } else {
+            this.setState({ page });
+        }
+
     };
 
     handleChangeRowsPerPage = event => {
@@ -360,7 +389,7 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page, userFilter, isLoading } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page, isLoading } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     const headers = [
@@ -400,7 +429,7 @@ class EnhancedTable extends React.Component {
                     <JsonIcon style={{marginRight: 7}}/> JSON
                 </MaterialButton>
             </div>
-            <UserBetsFilter setData={this.setData} reset={this.reset} setLoading={this.setLoading} loading={this.state.isLoading}/>
+            <UserBetsFilter setData={this.setData} setFilter={this.setFilter} reset={this.reset} setLoading={this.setLoading} loading={this.state.isLoading}/>
             {isLoading ? (
                 <>
                 <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 20 }}/>
@@ -438,7 +467,7 @@ class EnhancedTable extends React.Component {
                             <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
                             <TableCell align="left">
                                 <div style={{display: 'flex'}}>
-                                    <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ width : 25, height : 25}}/>
+                                    <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ marginLeft: 0, marginRight: 0, width : 25, height : 25}}/>
                                     <p className='text-small' style={{margin: 5}}>{n.user.name}</p>
                                 </div>  
                              </TableCell>
@@ -469,11 +498,12 @@ class EnhancedTable extends React.Component {
             </div>
             </>)}
             <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[5, 10, 25, 50]}
                 component="div"
-                count={data.length}
+                count={data.length + rowsPerPage}
                 rowsPerPage={rowsPerPage}
                 page={page}
+                labelDisplayedRows={() => ""}
                 backIconButtonProps={{
                     'aria-label': 'Previous Page',
                 }}

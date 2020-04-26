@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Formik, Form } from 'formik';
 import TextField from '@material-ui/core/TextField';
-import { List, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import { List, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, ClickAwayListener } from '@material-ui/core';
 import { Button as MaterialButton } from '@material-ui/core';
 import { Button, Col } from 'react-bootstrap';
 import { ExpandMoreIcon } from 'mdi-react';
@@ -14,7 +14,8 @@ class UserBetsFilter extends Component {
         super(props)
         this.state = {
             loading: false,
-            currencies: []
+            currencies: [],
+            open: false
         }
     }
 
@@ -26,10 +27,16 @@ class UserBetsFilter extends Component {
         const { profile } = props;
 
         let app = await profile.getApp();
-        const variables = await app.getEcosystemVariables()
-        const appCurrencies = variables.data.message.currencies;
 
-        this.setState(state => ({ currencies: appCurrencies}));
+        const currencies = app.params.currencies;
+        const users = app.params.users;
+        const games = app.params.games;
+
+        this.setState(state => ({ 
+            currencies: currencies,
+            users: users,
+            games: games
+        }));
 
     }
 
@@ -40,31 +47,69 @@ class UserBetsFilter extends Component {
     getCurrency = (ticker) => {
 
         const currencies = this.state.currencies;
+        
+        const currency = currencies.find(currency => currency.ticker === ticker.toUpperCase());
 
-        if (currencies.filter(currency => currency.ticker === ticker)[0]) {
-            return currencies.filter(currency => currency.ticker === ticker)[0]._id;
+        if (currency) {
+            return currency._id;
+        } else {
+            return null
+        }
+    }
+
+    getUser = (name) => {
+
+        const users = this.state.users;
+
+        const user = users.find(user => user.name.toLowerCase().includes(name.toLowerCase()));
+
+        if (user) {
+            return user._id;
+        } else {
+            return null
+        }
+    }
+
+    getGame = (name) => {
+
+        const games = this.state.games;
+
+        const game = games.find(game => game.name.toLowerCase().includes(name.toLowerCase()));
+
+        if (game) {
+            return game._id;
         } else {
             return null
         }
     }
 
     handleData = async (data) => {
-        const { setLoading, setData, profile } = this.props;
+        const { setLoading, setData, setFilter, profile } = this.props;
+
+        if (data.size && data.size > 200) {
+            data.size = 200;
+        }
 
         const formData = Object.assign({}, data);
 
         this.setLoadingStatus(true);
         setLoading(true);
 
-        if (formData.currency) {
-            formData.currency = this.getCurrency(formData.currency.toUpperCase());
-        }
+        formData.currency = formData.currency ? this.getCurrency(formData.currency) : null;
+        formData.user = formData.user ? this.getUser(formData.user) : null;
+        formData.game = formData.game ? this.getGame(formData.game) : null;
 
         const filters = _.pickBy(formData, _.identity);
-        const bets = await profile.getApp().getAllBets({ filters });
+
+        setFilter(filters);
+
+        const appBets = await profile.getApp().getAllBets({ filters });
         
-        if (bets.data.status === 200) {
-            setData(bets.data.message);
+        const bets = appBets.data.message.list;
+
+        if (bets.length > 0) {
+            setData(bets);
+
         } else {
             setData([]);
         }
@@ -75,16 +120,23 @@ class UserBetsFilter extends Component {
     }
 
     clear = async (resetForm) => {
-        const { setLoading, setData, profile } = this.props;
+        const { setLoading, setData, setFilter, profile } = this.props;
 
-        resetForm({})
+        resetForm({});
+
+        setFilter(null);
 
         setLoading(true);
 
-        const bets = await profile.getApp().getAllBets({ filters: {}});
+        const app = await profile.getApp();
 
-        if (bets.data.status === 200) {
-            setData(bets.data.message);
+        const appBets = await app.getAllBets({ filters: { size: 100 }});
+
+        const bets = appBets.data.message.list;
+
+        if (bets.length > 0) {
+            setData(bets);
+
         } else {
             setData([]);
         }
@@ -93,14 +145,21 @@ class UserBetsFilter extends Component {
 
     }
 
+    handleClickAway = () => {
+        this.setState({ open: false });
+    };
+    
+
     render() {
-        const loading = this.state.loading;
+        const { open, loading } = this.state;
 
         return (
             <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end', paddingBottom: 20}}>
-                <ExpansionPanel elevation={0} style={{position: 'absolute', zIndex: 10, width: 300, marginTop: '-40px', border: '1px solid rgba(0, 0, 0, 0.2)'}}>
+                <ClickAwayListener onClickAway={this.handleClickAway}>
+                <ExpansionPanel elevation={0} expanded={open} style={{position: 'absolute', zIndex: 10, width: 300, marginTop: '-40px', border: '1px solid rgba(0, 0, 0, 0.2)'}}>
                     <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    onClick={() => this.setState({ open: !open })}
+                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls="filters"
                     id="filter-head"
                     >
@@ -111,10 +170,10 @@ class UserBetsFilter extends Component {
                         <Formik
                         initialValues={{
                             bet: "",
+                            user: "",
                             currency: "",
                             game: "",
-                            size: 100,
-                            offset: null
+                            size: 100
                         }}
                         onSubmit={data => this.handleData(data)}
                         >
@@ -141,6 +200,17 @@ class UserBetsFilter extends Component {
                                         fullWidth
                                     />
                                     </List>
+                                    <List item key="user">
+                                    <TextField
+                                        id="user"
+                                        name="user"
+                                        type="text"
+                                        placeholder="User"
+                                        onChange={handleChange}
+                                        value={values.user}
+                                        fullWidth
+                                    />
+                                    </List>
                                     <List item key="currency">
                                     <TextField
                                         id="currency"
@@ -157,7 +227,7 @@ class UserBetsFilter extends Component {
                                         id="game"
                                         name="game"
                                         type="text"
-                                        placeholder="Game Id"
+                                        placeholder="Game"
                                         onChange={handleChange}
                                         value={values.game}
                                         fullWidth
@@ -174,18 +244,6 @@ class UserBetsFilter extends Component {
                                         fullWidth
                                     />
                                     </List>
-                                    <List item key="offset">
-                                    <TextField
-                                        id="offset"
-                                        name="offset"
-                                        type="number"
-                                        placeholder="Offset"
-                                        onChange={handleChange}
-                                        value={values.offset}
-                                        fullWidth
-                                        disabled={true}
-                                    />
-                                    </List>
                             <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
                                 <Button className="icon" size="sm" style={{ height: 40, marginLeft: 0, marginTop: 5, marginBottom: 5, alignSelf: 'end' }} onClick={handleSubmit}>
                                     {loading ? 'Searching...' : 'Search'}
@@ -199,6 +257,7 @@ class UserBetsFilter extends Component {
                         </Col>
                      </ExpansionPanelDetails>
                 </ExpansionPanel>
+                </ClickAwayListener>
             </div>
         )
     }
