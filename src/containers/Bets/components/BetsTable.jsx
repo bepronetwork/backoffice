@@ -389,7 +389,7 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page, userFilter, isLoading } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page, isLoading } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     const headers = [
@@ -498,7 +498,7 @@ class EnhancedTable extends React.Component {
             </div>
             </>)}
             <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[5, 10, 25, 50]}
                 component="div"
                 count={data.length + rowsPerPage}
                 rowsPerPage={rowsPerPage}

@@ -27,14 +27,13 @@ class UserBetsFilter extends Component {
         const { profile } = props;
 
         let app = await profile.getApp();
-        const variables = await app.getEcosystemVariables()
-        const appCurrencies = variables.data.message.currencies;
 
+        const currencies = app.params.currencies;
         const users = app.params.users;
         const games = app.params.games;
 
         this.setState(state => ({ 
-            currencies: appCurrencies,
+            currencies: currencies,
             users: users,
             games: games
         }));
