@@ -419,7 +419,7 @@ class UserBetsTable extends React.Component {
             count={data.length + rowsPerPage}
             rowsPerPage={rowsPerPage}
             page={page}
-            labelDisplayedRows={() => ""}
+            labelDisplayedRows={({ from, to, count }) => `${from}-${to > count - rowsPerPage ? count - rowsPerPage : to} of ${count - rowsPerPage}`}
             backIconButtonProps={{
                 'aria-label': 'Previous Page',
             }}
