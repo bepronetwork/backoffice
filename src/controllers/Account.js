@@ -260,14 +260,6 @@ class Account{
         return this.User.name;
     }
 
-    setTimer = () => {
-        clearTimeout(this.timer);
-        this.timer = setInterval(
-            () => {
-            this.getData();
-        }, 30*1000);
-    }
-
     getDepositReference = async (params) => {
         // TO DO : Change App to the Entity Type coming from Login
         try{
@@ -363,8 +355,6 @@ class Account{
                 this.setApp(data.app);
                 /* GET APP Stats */
                 await this.getData();
-                // Set Timer
-                this.setTimer();
             }
 
             /* SET CURRENCY */

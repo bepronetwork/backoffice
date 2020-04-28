@@ -18,6 +18,7 @@ import _ from 'lodash';
 import { AddressConcat } from '../../../lib/string';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
+import TopbarRefresh from './TopbarRefresh';
 
 const defaultProps = {
     userAddress : 'N/A',
@@ -74,6 +75,7 @@ class Topbar extends React.Component {
                     />
                 </div>
                 <div className="topbar__right">
+                    <TopbarRefresh/>
                     <TopBarMoneyType/>
                     <TopBarPeriodicity/>
                     <TopBarCurrencyView/>
