@@ -33,7 +33,7 @@ const fromDatabasetoTable = (data, currencies, users, games) => {
 	return data.map(key => {
         
         const currency = currencies.find(currency => currency._id === key.currency);
-        const user = users.find(user => user._id === key.user);
+        const user = users.find(user => user._id === key.user._id);
         const game = games.find(game => game._id === key.game);
 
 		return {
@@ -252,7 +252,6 @@ class EnhancedTable extends React.Component {
         const currencies = app.params.currencies;
         const users = app.params.users;
         const games = app.params.games;
-
 
         if (bets.length > 0) {
             this.setState({...this.state, 
