@@ -172,10 +172,10 @@ class Jackpot extends React.Component {
 
                                 <hr/>
 
-                                <h5 className="">Edge</h5>
+                                <h5 className="">Bet % that goes into the jackpot pot</h5>
                                 <h3 style={{marginTop: 20}} className={"dashboard__total-stat"}>{edge}%</h3>
                                 <br/>
-                                <h6 className="">New Edge </h6>
+                                <h6 className="">New %</h6>
                                 <h5 className={"dashboard__total-stat"}>{newEdge}%</h5>
                                 <Slider disabled={this.state.lock} value={newEdge} onChange={this.onChangeEdge}/>
                             </EditLock>
