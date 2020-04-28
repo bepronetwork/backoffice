@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import store from '../../App/store';
 import { setLoadingStatus } from '../../../redux/actions/loadingAction';
+import { ButtonBase } from '@material-ui/core';
 
 class TopbarRefresh extends PureComponent {
     state = {
@@ -27,14 +28,14 @@ class TopbarRefresh extends PureComponent {
     const { isLoading, disabled } = this.state;
 
     return (
-        <button className="topbar__btn" onClick={this.refresh} disabled={disabled}>
+        <ButtonBase style={{ height: "100%" }} onClick={this.refresh} disabled={disabled}>
           { isLoading ? (
-            <i className="fa fa-refresh fa-spin fa-sm" />
+            <i className="fa fa-refresh fa-spin fa-lg" style={{ margin: 7, color: '#646777' }}/>
           ) : (
-            <i className="fa fa-refresh fa-sm" />
+            <i className="fa fa-refresh fa-lg" style={{ margin: 7, color: '#646777' }}/>
           )}
 
-        </button>
+        </ButtonBase>
     );
   }
 }
