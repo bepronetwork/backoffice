@@ -487,6 +487,20 @@ class Connection {
         }
     }
 
+    editVirtualCurrency = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/wallet/virtualCurrency/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editAffiliateStructure = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/affiliate/edit`, {
