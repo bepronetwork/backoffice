@@ -625,6 +625,23 @@ class App{
         }
     }
 
+    editVirtualCurrency = async ({params}) => {
+        try{
+            let res = await ConnectionSingleton.editVirtualCurrency({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    ...params
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editFaviconCustomization = async ({topIcon}) => {
         try{
             let res = await ConnectionSingleton.editFaviconCustomization({   

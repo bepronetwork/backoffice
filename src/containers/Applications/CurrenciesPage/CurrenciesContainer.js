@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import {  Col, Row } from 'reactstrap';
 import { connect } from "react-redux";
 import CurrencyInfo from './CurrencyInfo';
+import VirtualCurrencyInfo from './VirtualCurrencyInfo';
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
 class CurrenciesContainer extends PureComponent {
@@ -37,22 +38,29 @@ class CurrenciesContainer extends PureComponent {
         return !!Object.keys(appAddOns).find(k => AddOn.toLowerCase().includes(k.toLowerCase()));
          
     }
+    
 
     render() {
         const { currencies } = this.state;
+
         const hasInitialBalanceAddOn = this.isAdded('Initial Balance');
+        const realCurrencies = currencies.filter(currency => currency.virtual === false);
+        const virtualCurrencies = currencies.filter(currency => currency.virtual === true);
 
         return (
-            (currencies.length > 0 && hasInitialBalanceAddOn) ? 
+
+            ((realCurrencies.length > 0 && hasInitialBalanceAddOn)||virtualCurrencies.length > 0 ) ? 
                 <Row md={12} xl={12} lg={12} xs={12}>
-                    {currencies.map(currency => {
-                        return (
+                    {virtualCurrencies.map(currency => (
+                            <Col lg={4}>
+                                <VirtualCurrencyInfo data={currency} {...this.props}/>
+                            </Col>                
+                    ))}
+                    {realCurrencies.map(currency => (
                             <Col lg={4}>
                                 <CurrencyInfo data={currency} {...this.props}/>
-                            </Col>
-
-                        )                  
-                    })}
+                            </Col>              
+                    ))}
                 </Row>
             : 
             <div>
