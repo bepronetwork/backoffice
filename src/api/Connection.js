@@ -401,6 +401,33 @@ class Connection {
         }
     }
 
+    getRestrictedCountriesLogs = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/logs/get?offset=0&limit=10&filter=ADMIN`, {
+                method : 'GET',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getDepositInfo = async ({id, headers}) => {
+        try{
+            let response = await fetch(URL+ `/api/deposit/${id}/info`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+            });
+
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
 
     cancelWithdraw = async ({app, headers}) => {
         try{

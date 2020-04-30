@@ -831,6 +831,20 @@ class App{
         }
     }
 
+    getRestrictedCountriesLogs = async () => {
+        try{
+            return await ConnectionSingleton.getRestrictedCountriesLogs({   
+                params : {
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     addCurrencyWallet = async ({currency, passphrase}) => {
         try{    
 
