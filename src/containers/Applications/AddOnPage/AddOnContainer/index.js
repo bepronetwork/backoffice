@@ -52,14 +52,15 @@ class AddOnContainer extends PureComponent {
     }
 
     render() {
-       const { isLoading, currency } = this.props;
+       const { isLoading, currency, profile } = this.props;
        const { appAddOns } = this.state;
+       const appUseVirtualCurrencies = profile.App.params.virtual;
 
         if (_.isEmpty(appAddOns)){return null}
 
         return (
             <Row md={12} xl={12} lg={12} xs={12}>
-                { this.hasAddOn('autoWithdraw') ? (
+                { this.hasAddOn('autoWithdraw') && !appUseVirtualCurrencies ? (
                 <Col lg={4}>
                     <AutoWithdraw autoWithdraw={this.getAddOnObj('autoWithdraw')} isLoading={isLoading} currency={currency}/>
                 </Col> 
