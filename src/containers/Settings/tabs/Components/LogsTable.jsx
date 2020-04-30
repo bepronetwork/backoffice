@@ -6,7 +6,6 @@ import Table from '@material-ui/core/Table';
 import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { TableIcon, JsonIcon } from 'mdi-react';
@@ -15,10 +14,11 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
 import _ from 'lodash';
 import { CSVLink } from "react-csv";
-import { export2JSON } from "../../../utils/export2JSON";
+import { export2JSON } from "../../../../utils/export2JSON";
 import { Button as MaterialButton } from "@material-ui/core";
 import Skeleton from '@material-ui/lab/Skeleton';
-import UserBetsFilter from './UserBetsFilter';
+import FlagIcon from './FlagIcon';
+import LogsFilter from './LogsFilter';
 
 function getSorting(data, order, orderBy) {
 
@@ -36,40 +36,51 @@ const rows = [
         numeric: true
     },
     {
-        id: 'user',
-        label: 'User',
-        numeric: false
-    },
-    {
-        id: 'currency',
-        label: 'Currency',
-        numeric: false
-    },
-    {
-        id: 'game',
-        label: 'Game',
+        id: 'ip',
+        label: 'IP',
         numeric: true
     },
     {
-        id: 'isWon',
-        label: 'Won',
+        id: 'process',
+        label: 'Process',
         numeric: false
     },
     {
-        id: 'winAmount',
-        label: 'Win Amount',
+        id: 'countryCode',
+        label: 'Country',
+        numeric: false
+    },
+    {
+        id: 'route',
+        label: 'Route',
+        numeric: false
+    },
+    {
+        id: 'creatorId',
+        label: 'Creator Id',
         numeric: true
     },
     {
-        id: 'betAmount',
-        label: 'Bet Amount',
-        numeric: true
+        id: 'creatorType',
+        label: 'Creator Type',
+        numeric: false
     },
     {
-        id: 'creation_timestamp',
+        id: 'code',
+        label: 'Code',
+        numeric: false
+    },
+    {
+        id: 'createdAt',
         label: 'Created At',
-        numeric: false 
+        numeric: true
+    },
+    {
+        id: 'updatedAt',
+        label: 'Updated At',
+        numeric: true
     }
+
 ];
 
 
@@ -201,10 +212,6 @@ class EnhancedTable extends React.Component {
             isLoading: false,
             ticker: 'N/A',
             rowsPerPage: 5,
-            currencyFilter: '',
-            statusFilter: '',
-            idFilter: null,
-            userFilter: null,
             showFilter: false,
             lastFilter: null
         };
@@ -216,13 +223,13 @@ class EnhancedTable extends React.Component {
     }
 
     projectData = async (props) => {
+        const { App } = props.profile;
 
         this.setLoading(true);
 
-        const logs = [
-            { _id: "0xkaghfkahd45", ip: "172.68.102.151", process: "appUserBets", countryCode: "BR", route: "/api/app/bets", creatorId: "x5sfhsfohsfoh2223", creatorType: "admin", code: 200, createdAt: "2020-03-18T19:15:10.600Z", updateAt: "2020-03-19T19:15:10.600Z" },
-            { _id: "0zkagifkahd45", ip: "172.68.102.152", process: "appUserBets", countryCode: "BR", route: "/api/app/bets", creatorId: "x5sfhsxohsfoh2223", creatorType: "admin", code: 404, createdAt: "2020-03-19T19:15:10.600Z", updateAt: "2020-03-20T19:15:10.600Z" }
-        ]
+        const appLogs = await App.getLogs({ filters: { limit: 100, offset: 0, filter: 'UNAUTHORIZED_COUNTRY' } });
+
+        const logs = appLogs.data.message.list;
 
         if (logs.length > 0) {
             this.setState({...this.state, 
@@ -299,22 +306,22 @@ class EnhancedTable extends React.Component {
     };
 
     handleChangePage = async (event, page) => {
-        const { data, rowsPerPage, currencies, users, games, lastFilter } = this.state;
+        const { data, rowsPerPage, lastFilter } = this.state;
         const { App } = this.props.profile;
 
         if (page === Math.ceil(data.length / rowsPerPage)) {
 
             this.setLoading(true);
 
-            const res = await App.getAllBets({ 
-                filters: lastFilter ? {...lastFilter, offset: data.length } 
-                : { size: 100, offset: data.length } });
+            const res = await App.getLogs({ 
+                filters: lastFilter ? {...lastFilter, offset: data.length, filter: 'UNAUTHORIZED_COUNTRY' } 
+                : { limit: 100, offset: data.length, filter: 'UNAUTHORIZED_COUNTRY' } });
                 
-            const bets = res.data.message.list;
+            const logs = res.data.message.list;
             
-            if (bets.length > 0) {
+            if (logs.length > 0) {
                 this.setState({
-                    data: data.concat(bets),
+                    data: data.concat(logs),
                     page: page
                 })
 
@@ -372,15 +379,17 @@ class EnhancedTable extends React.Component {
     let jsonData = [];
 
     if (!_.isEmpty(data)) {
-        csvData = data.map(row => ({...row, createdAt: moment(row.createdAt).format("lll")}));
+        csvData = data.map(row => ({...row, 
+            createdAt: moment(row.createdAt).format("lll"),
+            updatedAt: moment(row.updatedAt).format("lll")}));
 
-        jsonData = csvData.map(row => _.pick(row, ['_id', 'ip', 'process', 'countryCode', 'route', 'creatorId', 'creatorType', 'creation_timestamp']));
+        jsonData = csvData.map(row => _.pick(row, ['_id', 'ip', 'process', 'countryCode', 'route', 'creatorId', 'creatorType', 'code', 'createdAt', 'updatedAt']));
     }
 
     return (
-        <Paper className={classes.root} style={{ padding: 20}}>
+            <>
             <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
-            <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <div style={{ display: "flex", justifyContent: "flex-end"}}>
                 <CSVLink data={csvData} filename={"bets.csv"} headers={headers}>
                     <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
                         <TableIcon style={{marginRight: 7}}/> CSV
@@ -389,8 +398,8 @@ class EnhancedTable extends React.Component {
                 <MaterialButton onClick={() => export2JSON(jsonData, "bets")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
                     <JsonIcon style={{marginRight: 7}}/> JSON
                 </MaterialButton>
+                <LogsFilter setData={this.setData} setFilter={this.setFilter} reset={this.reset} setLoading={this.setLoading} loading={this.state.isLoading}/>
             </div>
-            <UserBetsFilter setData={this.setData} setFilter={this.setFilter} reset={this.reset} setLoading={this.setLoading} loading={this.state.isLoading}/>
             {isLoading ? (
                 <>
                 <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 20 }}/>
@@ -415,7 +424,7 @@ class EnhancedTable extends React.Component {
                             .map(n => {
                             const isSelected = this.isSelected(n.id);
                             return (
-                                <TableRow
+                        <TableRow
                             hover
                             onClick={event => this.handleClick(event, n.id)}
                             role="checkbox"
@@ -426,27 +435,21 @@ class EnhancedTable extends React.Component {
                             selected={isSelected}
                         >
                             <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
-                            <TableCell align="left">
-                                <div style={{display: 'flex'}}>
-                                    <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ marginLeft: 0, marginRight: 0, width : 25, height : 25}}/>
-                                    <p className='text-small' style={{margin: 5}}>{n.user.name}</p>
-                                </div>  
-                             </TableCell>
-                            <TableCell align="left">
-                                <img src={n.currency.image} style={{float : 'left', marginRight : 4, width : 20, height : 20}}/>
-                                <p className='text-small' style={{margin: 0}}>{n.currency.name}</p>
+                            <TableCell align="left"><p className='text-small'>{n.ip}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.process}</p></TableCell>
+                            <TableCell align="left">                                
+                            <div style={{display: 'flex'}}>
+                                <FlagIcon code={n.countryCode.toLowerCase()} size={'1x'}/>
+                                    <p className='text-small' style={{margin: 5}}>{n.countryCode}</p>
+                                </div>
                             </TableCell>
-                            <TableCell align="left">
-                                <div style={{display: 'flex'}}>
-                                <img src={n.game.image_url} style={{ width : 30, height : 30}}/>
-                                    <p className='text-small' style={{margin: 5}}>{n.game.name}</p>
-                                </div>  
-                             </TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{`${n.winAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{`${n.betAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
-                        </TableRow>
+                            <TableCell align="left"><p className='text-small'>{n.route}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.creatorId}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.creatorType}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.code}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{ moment(n.createdAt).format("lll")}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{ moment(n.updatedAt).format("lll")}</p></TableCell>
+                        </TableRow> 
                             );
                             })}
                         {emptyRows > 0 && (
@@ -474,7 +477,7 @@ class EnhancedTable extends React.Component {
                 onChangePage={this.handleChangePage}
                 onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
-        </Paper>
+        </>
     );
   }
 }

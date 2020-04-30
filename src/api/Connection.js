@@ -401,10 +401,10 @@ class Connection {
         }
     }
 
-    getRestrictedCountriesLogs = async ({params, headers}) => {
+    getLogs = async ({params, headers}) => {
         try{
-            let response = await fetch( URL + `/api/logs/get?offset=0&limit=10&filter=ADMIN`, {
-                method : 'GET',
+            let response = await fetch( URL + `/api/logs/get`, {
+                method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });

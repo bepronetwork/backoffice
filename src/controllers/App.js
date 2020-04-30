@@ -831,10 +831,12 @@ class App{
         }
     }
 
-    getRestrictedCountriesLogs = async () => {
+    getLogs = async ({ filters }) => {
         try{
-            return await ConnectionSingleton.getRestrictedCountriesLogs({   
+            return await ConnectionSingleton.getLogs({   
                 params : {
+                    ...filters,
+                    admin : this.getAdminId(),
                     app : this.getId()
                 },     
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())

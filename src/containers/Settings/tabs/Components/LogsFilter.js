@@ -9,7 +9,7 @@ import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-class UserBetsFilter extends Component {
+class LogsFilter extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -19,75 +19,16 @@ class UserBetsFilter extends Component {
         }
     }
 
-    componentDidMount(){
-        this.projectData(this.props);
-    }
-
-    projectData = async(props) => {
-        const { profile } = props;
-
-        let app = await profile.getApp();
-
-        const currencies = app.params.currencies;
-        const users = app.params.users;
-        const games = app.params.games;
-
-        this.setState(state => ({ 
-            currencies: currencies,
-            users: users,
-            games: games
-        }));
-
-    }
-
     setLoadingStatus = (status) => {
         this.setState(state => ({ loading: status }));
     }
 
-    getCurrency = (ticker) => {
-
-        const currencies = this.state.currencies;
-        
-        const currency = currencies.find(currency => currency.ticker === ticker.toUpperCase());
-
-        if (currency) {
-            return currency._id;
-        } else {
-            return null
-        }
-    }
-
-    getUser = (name) => {
-
-        const users = this.state.users;
-
-        const user = users.find(user => user.name.toLowerCase().includes(name.toLowerCase()));
-
-        if (user) {
-            return user._id;
-        } else {
-            return null
-        }
-    }
-
-    getGame = (name) => {
-
-        const games = this.state.games;
-
-        const game = games.find(game => game.name.toLowerCase().includes(name.toLowerCase()));
-
-        if (game) {
-            return game._id;
-        } else {
-            return null
-        }
-    }
 
     handleData = async (data) => {
         const { setLoading, setData, setFilter, profile } = this.props;
 
-        if (data.size && data.size > 200) {
-            data.size = 200;
+        if (data.limit && data.limit > 200) {
+            data.limit = 200;
         }
 
         const formData = Object.assign({}, data);
@@ -95,20 +36,16 @@ class UserBetsFilter extends Component {
         this.setLoadingStatus(true);
         setLoading(true);
 
-        formData.currency = formData.currency ? this.getCurrency(formData.currency) : null;
-        formData.user = formData.user ? this.getUser(formData.user) : null;
-        formData.game = formData.game ? this.getGame(formData.game) : null;
-
         const filters = _.pickBy(formData, _.identity);
 
         setFilter(filters);
 
-        const appBets = await profile.getApp().getAllBets({ filters });
+        const appLogs = await profile.getApp().getLogs({ filters: { ...filters, offset: 0, filter: 'UNAUTHORIZED_COUNTRY' } });
         
-        const bets = appBets.data.message.list;
+        const logs = appLogs.data.message.list;
 
-        if (bets.length > 0) {
-            setData(bets);
+        if (logs.length > 0) {
+            setData(logs);
 
         } else {
             setData([]);
@@ -130,12 +67,12 @@ class UserBetsFilter extends Component {
 
         const app = await profile.getApp();
 
-        const appBets = await app.getAllBets({ filters: { size: 100 }});
+        const appLogs = await app.getLogs({ filters: { limit: 100, offset: 0, filter: 'UNAUTHORIZED_COUNTRY' } });
 
-        const bets = appBets.data.message.list;
+        const logs = appLogs.data.message.list;
 
-        if (bets.length > 0) {
-            setData(bets);
+        if (logs.length > 0) {
+            setData(logs);
 
         } else {
             setData([]);
@@ -169,11 +106,7 @@ class UserBetsFilter extends Component {
                         <Col style={{padding: 0}}>
                         <Formik
                         initialValues={{
-                            bet: "",
-                            user: "",
-                            currency: "",
-                            game: "",
-                            size: 100
+                            limit: 100
                         }}
                         onSubmit={data => this.handleData(data)}
                         >
@@ -188,59 +121,16 @@ class UserBetsFilter extends Component {
                                 </MaterialButton>
                             </div>
                             <Form onSubmit={handleSubmit}>
+                            <h6>Limit</h6>
                             <List style={{width: 250, paddingTop: 0}}>
-                                    <List item key="bet">
+                                    <List item key="limit">
                                     <TextField
-                                        id="bet"
-                                        name="bet"
-                                        type="text"
-                                        placeholder="Bet Id"
-                                        onChange={handleChange}
-                                        value={values.bet}
-                                        fullWidth
-                                    />
-                                    </List>
-                                    <List item key="user">
-                                    <TextField
-                                        id="user"
-                                        name="user"
-                                        type="text"
-                                        placeholder="User"
-                                        onChange={handleChange}
-                                        value={values.user}
-                                        fullWidth
-                                    />
-                                    </List>
-                                    <List item key="currency">
-                                    <TextField
-                                        id="currency"
-                                        name="currency"
-                                        type="text"
-                                        placeholder="Currency Ticker"
-                                        onChange={handleChange}
-                                        value={values.currency}
-                                        fullWidth
-                                    />
-                                    </List>
-                                    <List item key="game">
-                                    <TextField
-                                        id="game"
-                                        name="game"
-                                        type="text"
-                                        placeholder="Game"
-                                        onChange={handleChange}
-                                        value={values.game}
-                                        fullWidth
-                                    />
-                                    </List>
-                                    <List item key="size">
-                                    <TextField
-                                        id="size"
-                                        name="size"
+                                        id="limit"
+                                        name="limit"
                                         type="number"
-                                        placeholder="Size"
+                                        placeholder="Limit"
                                         onChange={handleChange}
-                                        value={values.size}
+                                        value={values.limit}
                                         fullWidth
                                     />
                                     </List>
@@ -269,4 +159,4 @@ function mapStateToProps(state){
     };
 }
 
-export default compose(connect(mapStateToProps))(UserBetsFilter);
+export default compose(connect(mapStateToProps))(LogsFilter);

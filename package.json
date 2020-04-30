@@ -116,6 +116,7 @@
     "react-dotdotdot": "^1.2.3",
     "react-draft-wysiwyg": "^1.12.13",
     "react-dropzone": "^4.3.0",
+    "react-flag-icon-css": "^1.0.25",
     "react-google-maps": "^9.4.5",
     "react-highcharts": "^16.0.2",
     "react-highlight": "^0.12.0",
