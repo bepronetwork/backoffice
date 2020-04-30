@@ -5,6 +5,7 @@ import { setCurrencyView } from '../redux/actions/currencyReducer';
 import App from "./App";
 import { processResponse } from "../lib/errors";
 import { setAuthToCookies, getAuthFromCookies } from "./services/services";
+import _ from 'lodash';
 
 class Account{    
     constructor(params=null){
@@ -358,13 +359,18 @@ class Account{
             }
 
             /* SET CURRENCY */
-            if(data.app.wallet && data.app.wallet.length) {
-                const virtual = data.app.virtual;
-                const wallets = data.app.wallet.filter(w => (w.currency.virtual === virtual) || (virtual === false && !w.currency.hasOwnProperty('virtual')));
+            if(!_.isEmpty(data.app.wallet)) {
 
-                if(wallets.length) {
-                    const currency = wallets[0].currency;
-                    await store.dispatch(setCurrencyView(currency));
+                const appUseVirtualCurrencies = data.app.virtual;
+                const wallet = data.app.wallet;
+                
+                if (appUseVirtualCurrencies) {
+                    const currency = wallet.find(currency => currency.price != null);
+                    await store.dispatch(setCurrencyView(currency.currency));
+
+                } else {
+                    const currency = wallet[0];
+                    await store.dispatch(setCurrencyView(currency.currency));
                 }
             }
 
