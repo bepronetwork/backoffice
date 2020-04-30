@@ -42,7 +42,9 @@ class CurrenciesContainer extends PureComponent {
 
     render() {
         const { currencies } = this.state;
+        const { profile } = this.props;
 
+        const isAppWithFakeMoney = profile.App.params.virtual;
         const hasInitialBalanceAddOn = this.isAdded('Initial Balance');
         const realCurrencies = currencies.filter(currency => currency.virtual === false);
         const virtualCurrencies = currencies.filter(currency => currency.virtual === true);
@@ -56,11 +58,15 @@ class CurrenciesContainer extends PureComponent {
                                 <VirtualCurrencyInfo data={currency} {...this.props}/>
                             </Col>                
                     ))}
-                    {realCurrencies.map(currency => (
+
+                    {!isAppWithFakeMoney ? (
+                        realCurrencies.map(currency => (
                             <Col lg={4}>
                                 <CurrencyInfo data={currency} {...this.props}/>
                             </Col>              
-                    ))}
+                    ))
+                    ) : null}
+                    
                 </Row>
             : 
             <div>

@@ -45,13 +45,26 @@ class AddOnStorePageContainer extends React.Component{
          
     }
 
+    hasRestriction = (addOn, appUseVirtualCurrencies) => {
+
+        if (addOn.name.toLowerCase().includes('autowithdraw') && appUseVirtualCurrencies) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     render() {
         const { ecosystemAddOns } = this.state;
+        const { App } = this.props.profile;
+
+        const appUseVirtualCurrencies = App.params.virtual;
+        const addOns = ecosystemAddOns.filter(addOn => !this.hasRestriction(addOn, appUseVirtualCurrencies));
 
         return (
             <div>
                 <Row>
-                    {ecosystemAddOns.map(addOn => {
+                    {addOns.map(addOn => {
                         return (
                             <Col md={4}>
                                 <AddOnStoreContainer
