@@ -63,10 +63,10 @@ class AddOnStorePageContainer extends React.Component{
 
         return (
             <div>
-                <Row>
+                <Row md={12} xl={12} lg={12} xs={12}>
                     {addOns.map(addOn => {
                         return (
-                            <Col md={4}>
+                            <Col lg={5}>
                                 <AddOnStoreContainer
                                     addOn={addOn}
                                     isAdded={this.isAdded(addOn)}
