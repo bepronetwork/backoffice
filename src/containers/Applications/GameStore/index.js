@@ -60,18 +60,11 @@ class GameStorePageContainer extends React.Component{
         await this.projectData(this.props)
     }
 
-    hasRestriction(game) {
-        if (game.name.toLowerCase().includes('jackpot')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     render = () => {
         const { ecosystemGames } = this.state;
 
-        const games = ecosystemGames.filter(game => !this.hasRestriction(game));
+        const games = ecosystemGames.filter(game => game.isValid);
 
         return (
             <div>
