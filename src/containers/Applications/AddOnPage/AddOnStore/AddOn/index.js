@@ -31,7 +31,6 @@ class AddOnStoreContainer extends PureComponent {
         const { name, description, image_url } = addOn;
         
         return (
-            <Col md={12} xl={12} lg={12} xs={12}>
                 <Card className='game-container'>
                     <CardBody className="dashboard__card-widget" style={{width: '307px'}}>
                         <Row>
@@ -59,7 +58,6 @@ class AddOnStoreContainer extends PureComponent {
                         </Button>
                     </CardBody>
                 </Card>
-            </Col>
         );
     }
 }
