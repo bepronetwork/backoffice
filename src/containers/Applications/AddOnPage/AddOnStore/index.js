@@ -4,50 +4,73 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
-import _ from 'lodash';
 import AddOnStoreContainer from "./AddOn";
-
-
-const defaultState = {
-    ecosystemAddOns : [
-        { 
-          name: 'AutoWithdraw',
-          description: 'AutoWithdraw for your application',
-          image_url: 'https://cdn1.iconfinder.com/data/icons/finance-banking-11/70/withdraw__ATM__cash__money__currency-512.png'
-        }
-    ]
-}
 
 class AddOnStorePageContainer extends React.Component{
 
     constructor(props){
         super(props)
-        this.state = defaultState;
+        this.state = {
+            ecosystemAddOns: [],
+            appAddOns: []
+        };
     }
 
-    addOn = async () => {
+    componentDidMount(){
+        this.projectData(this.props);
+    }
+
+    componentWillReceiveProps(props){
+        this.projectData(props);
+    }
+
+    projectData = (props) => {
+        const { params } = props.profile.App;
+
+        this.setState({ ecosystemAddOns: params.storeAddOn, appAddOns: params.addOn });
+    }
+
+    addAddOn = async (url) => {
         const { profile } = this.props;
-        await profile.getApp().addAutoWithdraw();
+
+        await profile.getApp().addAddOn({ url: url });
         await profile.getApp().updateAppInfoAsync();
         await profile.update();
     }
 
-    render = () => {
-        const { ecosystemAddOns } = this.state;
-        const { profile } = this.props;
+    isAdded = (AddOn) => {
+        const { appAddOns } = this.state;
 
-        const isAdded = profile.getApp().params.addOn.hasOwnProperty('autoWithdraw');
+        return !!Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().includes(k.toLowerCase()));
+         
+    }
+
+    hasRestriction = (addOn, appUseVirtualCurrencies) => {
+
+        if (addOn.name.toLowerCase().includes('autowithdraw') && appUseVirtualCurrencies) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    render() {
+        const { ecosystemAddOns } = this.state;
+        const { App } = this.props.profile;
+
+        const appUseVirtualCurrencies = App.params.virtual;
+        const addOns = ecosystemAddOns.filter(addOn => !this.hasRestriction(addOn, appUseVirtualCurrencies));
 
         return (
             <div>
-                <Row>
-                    {ecosystemAddOns.map(addOn => {
+                <Row md={12} xl={12} lg={12} xs={12}>
+                    {addOns.map(addOn => {
                         return (
-                            <Col md={4}>
+                            <Col lg={5}>
                                 <AddOnStoreContainer
                                     addOn={addOn}
-                                    isAdded={isAdded}
-                                    onClick={this.addOn}
+                                    isAdded={this.isAdded(addOn)}
+                                    addAddOn={this.addAddOn}
                                 />
                             </Col>
                         )

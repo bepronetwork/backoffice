@@ -26,33 +26,13 @@ import { Button as MaterialButton } from "@material-ui/core";
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
-let counter = 0;
+function getSorting(data, order, orderBy) {
 
+    const sortedData = _.orderBy(data, [orderBy], order)
+    .map(row => ({...row, creation_timestamp: moment(row.creation_timestamp).format("lll")}));
 
-function desc(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
+    return sortedData;
 }
-
-function stableSort(array, cmp) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = cmp(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-    return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
-
 
 const fromDatabasetoTable = (data, { currencies=[] }) => {
 
@@ -68,7 +48,7 @@ const fromDatabasetoTable = (data, { currencies=[] }) => {
             ticker : currency ? currency.ticker : '',
             status :  key.status,
 			amount: key.amount,
-			creation_timestamp: moment(new Date(key.creation_timestamp)).format('lll'),
+			creation_timestamp: key.creation_timestamp,
             isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
             link_url : key.link_url,
             transactionHash : key.transactionHash
@@ -121,7 +101,7 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+        const { order, orderBy } = this.props;
 
         return (
             <TableHead>
@@ -378,7 +358,7 @@ class EnhancedTable extends React.Component {
         { label: "Id", key: "_id" },
         { label: "User", key: "user" },
         { label: "Transaction Hash", key: "transactionHash" },
-        { label: "Created At", key: "creation_timestamp" },
+        { label: "Created At", key: "createdAt" },
         { label: "Amount", key: "amount" },
         { label: "Status", key: "status" }
     ];
@@ -466,7 +446,7 @@ class EnhancedTable extends React.Component {
                         rowCount={dataFiltered.length}
                     />
                     <TableBody>
-                        {stableSort(dataFiltered, getSorting(order, orderBy))
+                        {getSorting(dataFiltered, order, orderBy)
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .filter(n => 
                                 (_.isEmpty(statusFilter) || n.status == statusFilter) && 

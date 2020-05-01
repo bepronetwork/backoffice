@@ -1,25 +1,24 @@
 import React from 'react';
-import { connect } from "react-redux";
-import { compose } from 'lodash/fp';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel } from '@material-ui/core';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
+import { lighten } from '@material-ui/core/styles/colorManipulator';
+import { TableIcon, JsonIcon } from 'mdi-react';
 import moment from 'moment';
-import UserBetsFilter from './UserBetsFilter';
-import Skeleton from '@material-ui/lab/Skeleton';
+import { connect } from "react-redux";
+import { compose } from 'lodash/fp';
 import _ from 'lodash';
 import { CSVLink } from "react-csv";
+import { export2JSON } from "../../../utils/export2JSON";
 import { Button as MaterialButton } from "@material-ui/core";
-import { export2JSON } from '../../../../utils/export2JSON';
-import { TableIcon, JsonIcon } from 'mdi-react';
+import Skeleton from '@material-ui/lab/Skeleton';
+import UserBetsFilter from './UserBetsFilter';
 
 function getSorting(data, order, orderBy) {
 
@@ -29,18 +28,19 @@ function getSorting(data, order, orderBy) {
     return sortedData;
 }
 
-const fromDatabasetoTable = (data, currencies, user, games ) => {
+const fromDatabasetoTable = (data, currencies, users, games) => {
 
-	return data.map( (key) => {
-
+	return data.map(key => {
+        
         const currency = currencies.find(currency => currency._id === key.currency);
+        const user = users.find(user => user._id === key.user._id);
         const game = games.find(game => game._id === key.game);
 
 		return {
             _id:  key._id,
             user: user,
             currency: currency, 
-            app: key.app,
+            app: key.app_id,
             game: game,
             ticker: currency.ticker,
             isWon:  key.isWon,
@@ -59,6 +59,11 @@ const rows = [
         id: '_id',
         label: 'Id',
         numeric: true
+    },
+    {
+        id: 'user',
+        label: 'User',
+        numeric: false
     },
     {
         id: 'currency',
@@ -92,6 +97,7 @@ const rows = [
     }
 ];
 
+
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
         this.props.onRequestSort(event, property);
@@ -113,17 +119,17 @@ class EnhancedTableHead extends React.Component {
                         sortDirection={orderBy === row.id ? order : false}
                     >
                         <Tooltip
-                        title="Sort"
-                        placement={row.numeric ? 'bottom-end' : 'bottom-start'}
-                        enterDelay={300}
-                        >
-                        <TableSortLabel
-                            active={orderBy === row.id}
-                            direction={order}
-                            onClick={this.createSortHandler(row.id)}
-                        >
-                            {row.label}
-                        </TableSortLabel>
+                            title="Sort"
+                            placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                            enterDelay={300}
+                            >
+                            <TableSortLabel
+                                active={orderBy === row.id}
+                                direction={order}
+                                onClick={this.createSortHandler(row.id)}
+                            >
+                                {row.label}
+                            </TableSortLabel>
                         </Tooltip>
                     </TableCell>
                     ),
@@ -144,6 +150,56 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
+const toolbarStyles = theme => ({
+    root: {
+        paddingRight: theme.spacing.unit,
+    },
+    highlight:
+        theme.palette.type === 'light'
+        ? {
+            color: theme.palette.secondary.main,
+            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+            }
+        : {
+            color: theme.palette.text.primary,
+            backgroundColor: theme.palette.secondary.dark,
+            },
+    spacer: {
+        flex: '1 1 100%',
+    },
+    actions: {
+        color: theme.palette.text.secondary, zIndex: 20
+    },
+    title: {
+        flex: '0 0 auto',
+    },
+});
+
+let EnhancedTableToolbar = props => {
+  const { numSelected, classes } = props;
+
+    return (
+        <Toolbar
+        className={classNames(classes.root, {
+            [classes.highlight]: numSelected > 0,
+        })}
+        >
+        <div className={classes.title}>
+            <Typography variant="h6" id="tableTitle">
+                Bets
+            </Typography>
+        </div>
+        <div className={classes.spacer} />
+        </Toolbar>
+    );
+};
+
+EnhancedTableToolbar.propTypes = {
+  classes: PropTypes.object.isRequired,
+  numSelected: PropTypes.number.isRequired,
+};
+
+EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
   root: {
@@ -152,14 +208,13 @@ const styles = theme => ({
   },
   table: {
     minWidth: 1020,
-    boxShadow : 'none'
   },
   tableWrapper: {
     overflowX: 'auto',
   },
 });
 
-class UserBetsTable extends React.Component {
+class EnhancedTable extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -169,8 +224,13 @@ class UserBetsTable extends React.Component {
             data: [],
             page: 0,
             isLoading: false,
-            ticker : 'N/A',
+            ticker: 'N/A',
             rowsPerPage: 5,
+            currencyFilter: '',
+            statusFilter: '',
+            idFilter: null,
+            userFilter: null,
+            showFilter: false,
             lastFilter: null
         };
     }
@@ -181,31 +241,30 @@ class UserBetsTable extends React.Component {
     }
 
     projectData = async (props) => {
-        const { user } = props;
 
         this.setLoading(true);
         
         const app = await props.profile.getApp();
 
-        const appBets = await app.getUserBets({ user: user._id, filters: { size: 100 }});
+        const appBets = await app.getAllBets({ filters: { size: 100 }});
 
         const bets = appBets.data.message.list;
         const currencies = app.params.currencies;
+        const users = app.params.users;
         const games = app.params.games;
-
 
         if (bets.length > 0) {
             this.setState({...this.state, 
-                data: fromDatabasetoTable(bets, currencies, user, games),
+                data: fromDatabasetoTable(bets, currencies, users, games),
                 currencies: currencies,
-                user: user,
+                users: users,
                 games: games
             })
         } else {
             this.setState({...this.state, 
                 data: [],
                 currencies: currencies,
-                users: user,
+                users: users,
                 games: games
             })
         }
@@ -216,7 +275,25 @@ class UserBetsTable extends React.Component {
     setLoading = (status) => {
         this.setState(state => ({ isLoading: status }));
     }
-    
+
+    setData = async (data) => {
+        const { currencies, users, games } = this.state;
+
+        this.setState({...this.state, 
+            data: fromDatabasetoTable(data, currencies, users, games),
+            page: 0
+        })
+
+    }
+
+    setFilter = (filter) => {
+        this.setState({ lastFilter: filter });
+    }
+
+    reset = async () => {
+        await this.projectData();
+    }
+
     handleRequestSort = (event, property) => {
         const orderBy = property;
         let order = 'desc';
@@ -257,33 +334,15 @@ class UserBetsTable extends React.Component {
         this.setState({ selected: newSelected });
     };
 
-    setData = async (data) => {
-        const { currencies, user, games } = this.state;
-
-        this.setState({...this.state, 
-            data: fromDatabasetoTable(data, currencies, user, games),
-            page: 0
-        })
-
-    }
-
-    setFilter = (filter) => {
-        this.setState({ lastFilter: filter });
-    }
-
-    reset = async () => {
-        await this.projectData();
-    }
-
     handleChangePage = async (event, page) => {
-        const { data, rowsPerPage, currencies, user, games, lastFilter } = this.state;
+        const { data, rowsPerPage, currencies, users, games, lastFilter } = this.state;
         const { App } = this.props.profile;
 
         if (page === Math.ceil(data.length / rowsPerPage)) {
 
             this.setLoading(true);
 
-            const res = await App.getUserBets({ user: user._id,
+            const res = await App.getAllBets({ 
                 filters: lastFilter ? {...lastFilter, offset: data.length } 
                 : { size: 100, offset: data.length } });
                 
@@ -291,7 +350,7 @@ class UserBetsTable extends React.Component {
             
             if (bets.length > 0) {
                 this.setState({
-                    data: data.concat(fromDatabasetoTable(bets, currencies, user, games)),
+                    data: data.concat(fromDatabasetoTable(bets, currencies, users, games)),
                     page: page
                 })
 
@@ -309,16 +368,32 @@ class UserBetsTable extends React.Component {
         this.setState({ rowsPerPage: event.target.value });
     };
 
+    handleChangeInputContent = (type, item) => {
+        this.setState({[type] : item});
+    }
+
+    handleChangeDropDown = event => {
+        const field = event.target.name;
+
+        this.setState({ [field]: event.target.value });
+    };
+
     isSelected = id => this.state.selected.indexOf(id) !== -1;
+
+    handleFilterClick = () => {
+        const { showFilter } = this.state;
+        this.setState({ showFilter: showFilter ? false : true });
+    }
+
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page, isLoading } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-    const isLoading = this.state.isLoading;
-    
+
     const headers = [
         { label: "Id", key: "_id" },
+        { label: "User", key: "user" },
         { label: "Currency", key: "currency" },
         { label: "Game", key: "game" },
         { label: "Won", key: "isWon" },
@@ -331,28 +406,29 @@ class UserBetsTable extends React.Component {
     let jsonData = [];
 
     if (!_.isEmpty(data)) {
-        csvData = data.map(row => ({...row,
-            game: row.game._id, 
-            currency: row.currency.name, 
+        csvData = data.map(row => ({...row, currency: row.currency.name,
+            user: row.user._id, 
             isWon: row.isWon ? 'Yes' : 'No', 
+            game: row.game._id,
             createdAt: moment(row.creation_timestamp).format("lll")}));
-        
-            jsonData = csvData.map(row => _.pick(row, ['_id', 'currency', 'game', 'isWon', 'winAmount', 'betAmount', 'creation_timestamp']));
+
+        jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'game', 'isWon', 'winAmount', 'betAmount', 'creation_timestamp']));
     }
-    
+
     return (
-      <Paper elevation={0} className={classes.root}>
+        <Paper className={classes.root} style={{ padding: 20}}>
+            <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
             <div style={{ display: "flex", justifyContent: "flex-start"}}>
-                <CSVLink data={csvData} filename={"user_bets.csv"} headers={headers}>
+                <CSVLink data={csvData} filename={"bets.csv"} headers={headers}>
                     <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
                         <TableIcon style={{marginRight: 7}}/> CSV
                     </MaterialButton>
                 </CSVLink>
-                <MaterialButton onClick={() => export2JSON(jsonData, "user_bets")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                <MaterialButton onClick={() => export2JSON(jsonData, "bets")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
                     <JsonIcon style={{marginRight: 7}}/> JSON
                 </MaterialButton>
             </div>
-            <UserBetsFilter setData={this.setData} reset={this.reset} user={this.props.user} setFilter={this.setFilter} setLoading={this.setLoading} loading={this.state.isLoading}/>
+            <UserBetsFilter setData={this.setData} setFilter={this.setFilter} reset={this.reset} setLoading={this.setLoading} loading={this.state.isLoading}/>
             {isLoading ? (
                 <>
                 <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 20 }}/>
@@ -360,24 +436,24 @@ class UserBetsTable extends React.Component {
                 {[...Array(rowsPerPage)].map((e, i) => <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>)}
                 </>
                 ) : (
+            <>
             <div className={classes.tableWrapper}>
-            <Table elevation={0} className={classes.table} aria-labelledby="tableTitle">
-                <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={this.handleSelectAllClick}
-                    onRequestSort={this.handleRequestSort}
-                    rowCount={data.length}
-                />
-            <TableBody>
-                {getSorting(data, order, orderBy)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(n => {
-                    const isSelected = this.isSelected(n.id);
-
-                    return (
-                        <TableRow
+                <Table className={classes.table} aria-labelledby="tableTitle">
+                    <EnhancedTableHead
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={this.handleSelectAllClick}
+                        onRequestSort={this.handleRequestSort}
+                        rowCount={data.length}
+                    />
+                    <TableBody>
+                        {getSorting(data, order, orderBy)
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map(n => {
+                            const isSelected = this.isSelected(n.id);
+                            return (
+                                <TableRow
                             hover
                             onClick={event => this.handleClick(event, n.id)}
                             role="checkbox"
@@ -390,6 +466,12 @@ class UserBetsTable extends React.Component {
                             <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
                             <TableCell align="left">
                                 <div style={{display: 'flex'}}>
+                                    <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ marginLeft: 0, marginRight: 0, width : 30, height : 30}}/>
+                                    <p className='text-small' style={{margin: 10}}>{n.user.name}</p>
+                                </div>  
+                             </TableCell>
+                            <TableCell align="left">
+                                <div style={{display: 'flex'}}>
                                     <img src={n.currency.image} style={{ width : 25, height : 25}}/>
                                     <p className='text-small' style={{margin: 5, alignSelf: "center" }}>{n.currency.name}</p>
                                 </div>
@@ -398,52 +480,58 @@ class UserBetsTable extends React.Component {
                                 <div style={{display: 'flex'}}>
                                 <img src={n.game.image_url} style={{ width : 50, height : 40 }}/>
                                     <p className='text-small' style={{margin: 5, marginLeft: 0, alignSelf: "center"}}>{n.game.name}</p>
-                                </div> 
-                            </TableCell>
+                                </div>  
+                             </TableCell>
                             <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.winAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.betAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
                         </TableRow>
-                    );
-                    })}
-                {emptyRows > 0 && (
-                    <TableRow style={{ height: 49 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                    </TableRow>
-                )}
-                </TableBody>
-            </Table>
-        </div>)}
-        <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={data.length + rowsPerPage}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            labelDisplayedRows={({ from, to, count }) => `${from}-${to > count - rowsPerPage ? count - rowsPerPage : to} of ${count - rowsPerPage}`}
-            backIconButtonProps={{
-                'aria-label': 'Previous Page',
-            }}
-            nextIconButtonProps={{
-                'aria-label': 'Next Page',
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
-      </Paper>
+                            );
+                            })}
+                        {emptyRows > 0 && (
+                            <TableRow style={{ height: 49 * emptyRows }}>
+                            <TableCell colSpan={6} />
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+            </>)}
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25, 50]}
+                component="div"
+                count={data.length + rowsPerPage}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                labelDisplayedRows={({ from, to, count }) => `${from}-${to > count - rowsPerPage ? count - rowsPerPage : to} of ${count - rowsPerPage}`}
+                backIconButtonProps={{
+                    'aria-label': 'Previous Page',
+                }}
+                nextIconButtonProps={{
+                    'aria-label': 'Next Page',
+                }}
+                onChangePage={this.handleChangePage}
+                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+        </Paper>
     );
   }
 }
 
-UserBetsTable.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
 function mapStateToProps(state){
     return {
-        profile : state.profile
+        profile: state.profile,
+        currency: state.currency
     };
 }
 
-export default compose(connect(mapStateToProps))( withStyles(styles)(UserBetsTable) );
+EnhancedTable.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default compose(
+    withStyles(styles),
+    connect(mapStateToProps)
+)(EnhancedTable);
+

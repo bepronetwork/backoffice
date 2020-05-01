@@ -5,6 +5,7 @@ import { setCurrencyView } from '../redux/actions/currencyReducer';
 import App from "./App";
 import { processResponse } from "../lib/errors";
 import { setAuthToCookies, getAuthFromCookies } from "./services/services";
+import _ from 'lodash';
 
 class Account{    
     constructor(params=null){
@@ -260,14 +261,6 @@ class Account{
         return this.User.name;
     }
 
-    setTimer = () => {
-        clearTimeout(this.timer);
-        this.timer = setInterval(
-            () => {
-            this.getData();
-        }, 30*1000);
-    }
-
     getDepositReference = async (params) => {
         // TO DO : Change App to the Entity Type coming from Login
         try{
@@ -363,18 +356,21 @@ class Account{
                 this.setApp(data.app);
                 /* GET APP Stats */
                 await this.getData();
-                // Set Timer
-                this.setTimer();
             }
 
             /* SET CURRENCY */
-            if(data.app.wallet && data.app.wallet.length) {
-                const virtual = data.app.virtual;
-                const wallets = data.app.wallet.filter(w => (w.currency.virtual === virtual) || (virtual === false && !w.currency.hasOwnProperty('virtual')));
+            if(!_.isEmpty(data.app.wallet)) {
 
-                if(wallets.length) {
-                    const currency = wallets[0].currency;
-                    await store.dispatch(setCurrencyView(currency));
+                const appUseVirtualCurrencies = data.app.virtual;
+                const wallet = data.app.wallet;
+                
+                if (appUseVirtualCurrencies) {
+                    const currency = wallet.find(currency => currency.price != null);
+                    await store.dispatch(setCurrencyView(currency.currency));
+
+                } else {
+                    const currency = wallet[0];
+                    await store.dispatch(setCurrencyView(currency.currency));
                 }
             }
 

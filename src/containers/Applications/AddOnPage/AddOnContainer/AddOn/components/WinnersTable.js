@@ -13,42 +13,47 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import moment from 'moment';
-import UserBetsFilter from './UserBetsFilter';
 import Skeleton from '@material-ui/lab/Skeleton';
-import _ from 'lodash';
-import { CSVLink } from "react-csv";
-import { Button as MaterialButton } from "@material-ui/core";
-import { export2JSON } from '../../../../utils/export2JSON';
-import { TableIcon, JsonIcon } from 'mdi-react';
 
-function getSorting(data, order, orderBy) {
 
-    const sortedData = _.orderBy(data, [orderBy], order)
-    .map(row => ({...row, creation_timestamp: moment(row.creation_timestamp).format("lll")}));
 
-    return sortedData;
+function desc(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
 }
 
-const fromDatabasetoTable = (data, currencies, user, games ) => {
+function stableSort(array, cmp) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = cmp(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map(el => el[0]);
+}
+
+function getSorting(order, orderBy) {
+  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+}
+
+
+const fromDatabasetoTable = (data, currencies ) => {
 
 	return data.map( (key) => {
 
-        const currency = currencies.find(currency => currency._id === key.currency);
-        const game = games.find(game => game._id === key.game);
+        const currency = currencies.filter(c => new String(c._id).toString() == new String(key.currency).toString())[0];
 
 		return {
-            _id:  key._id,
-            user: user,
-            currency: currency, 
-            app: key.app,
-            game: game,
-            ticker: currency.ticker,
-            isWon:  key.isWon,
-            winAmount: key.winAmount,
-            betAmount: key.betAmount,
-            nonce: key.nonce,
-            fee: key.fee,
-			creation_timestamp: key.timestamp
+            user : key.user,
+            bet : key.bet,
+            currency : currency, 
+            ticker : currency ? currency.ticker : '',
+            winAmount : key.winAmount
 		}
 	})
 }
@@ -56,9 +61,14 @@ const fromDatabasetoTable = (data, currencies, user, games ) => {
 const rows = [ 
 
     {
-        id: '_id',
-        label: 'Id',
-        numeric: true
+        id: 'user',
+        label: 'User',
+        numeric: false
+    },
+    {
+        id: 'bet',
+        label: 'Bet',
+        numeric: false
     },
     {
         id: 'currency',
@@ -66,29 +76,9 @@ const rows = [
         numeric: false
     },
     {
-        id: 'game',
-        label: 'Game',
-        numeric: true
-    },
-    {
-        id: 'isWon',
-        label: 'Won',
-        numeric: false
-    },
-    {
         id: 'winAmount',
         label: 'Win Amount',
         numeric: true
-    },
-    {
-        id: 'betAmount',
-        label: 'Bet Amount',
-        numeric: true
-    },
-    {
-        id: 'creation_timestamp',
-        label: 'Created At',
-        numeric: false 
     }
 ];
 
@@ -98,7 +88,7 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const { order, orderBy } = this.props;
+        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
 
         return (
             <TableHead>
@@ -159,7 +149,7 @@ const styles = theme => ({
   },
 });
 
-class UserBetsTable extends React.Component {
+class WinnersTable extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -170,8 +160,7 @@ class UserBetsTable extends React.Component {
             page: 0,
             isLoading: false,
             ticker : 'N/A',
-            rowsPerPage: 5,
-            lastFilter: null
+            rowsPerPage: 5
         };
     }
 
@@ -181,32 +170,23 @@ class UserBetsTable extends React.Component {
     }
 
     projectData = async (props) => {
-        const { user } = props;
+        const { winners } = props;
 
         this.setLoading(true);
         
         const app = await props.profile.getApp();
+        const variables = await app.getEcosystemVariables()
+        const currencies = variables.data.message.currencies;
 
-        const appBets = await app.getUserBets({ user: user._id, filters: { size: 100 }});
-
-        const bets = appBets.data.message.list;
-        const currencies = app.params.currencies;
-        const games = app.params.games;
-
-
-        if (bets.length > 0) {
+        if (winners.length > 0) {
             this.setState({...this.state, 
-                data: fromDatabasetoTable(bets, currencies, user, games),
-                currencies: currencies,
-                user: user,
-                games: games
+                data: fromDatabasetoTable(winners, currencies),
+                currencies: currencies
             })
         } else {
             this.setState({...this.state, 
                 data: [],
-                currencies: currencies,
-                users: user,
-                games: games
+                currencies: currencies
             })
         }
 
@@ -258,51 +238,22 @@ class UserBetsTable extends React.Component {
     };
 
     setData = async (data) => {
-        const { currencies, user, games } = this.state;
+        let app = this.props.profile.getApp();
+        const variables = await app.getEcosystemVariables()
+        
+        const currencies = variables.data.message.currencies;
 
         this.setState({...this.state, 
-            data: fromDatabasetoTable(data, currencies, user, games),
-            page: 0
+            data : fromDatabasetoTable(data, currencies)
         })
-
-    }
-
-    setFilter = (filter) => {
-        this.setState({ lastFilter: filter });
     }
 
     reset = async () => {
         await this.projectData();
     }
 
-    handleChangePage = async (event, page) => {
-        const { data, rowsPerPage, currencies, user, games, lastFilter } = this.state;
-        const { App } = this.props.profile;
-
-        if (page === Math.ceil(data.length / rowsPerPage)) {
-
-            this.setLoading(true);
-
-            const res = await App.getUserBets({ user: user._id,
-                filters: lastFilter ? {...lastFilter, offset: data.length } 
-                : { size: 100, offset: data.length } });
-                
-            const bets = res.data.message.list;
-            
-            if (bets.length > 0) {
-                this.setState({
-                    data: data.concat(fromDatabasetoTable(bets, currencies, user, games)),
-                    page: page
-                })
-
-            }
-
-            this.setLoading(false);
-
-        } else {
-            this.setState({ page });
-        }
-
+    handleChangePage = (event, page) => {
+        this.setState({ page });
     };
 
     handleChangeRowsPerPage = event => {
@@ -313,51 +264,20 @@ class UserBetsTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page, ticker } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     const isLoading = this.state.isLoading;
     
-    const headers = [
-        { label: "Id", key: "_id" },
-        { label: "Currency", key: "currency" },
-        { label: "Game", key: "game" },
-        { label: "Won", key: "isWon" },
-        { label: "Win Amount", key: "winAmount" },
-        { label: "Bet Amount", key: "betAmount" },
-        { label: "Created At", key: "createdAt" }
-    ];
-
-    let csvData = [{}];
-    let jsonData = [];
-
-    if (!_.isEmpty(data)) {
-        csvData = data.map(row => ({...row,
-            game: row.game._id, 
-            currency: row.currency.name, 
-            isWon: row.isWon ? 'Yes' : 'No', 
-            createdAt: moment(row.creation_timestamp).format("lll")}));
-        
-            jsonData = csvData.map(row => _.pick(row, ['_id', 'currency', 'game', 'isWon', 'winAmount', 'betAmount', 'creation_timestamp']));
-    }
-    
     return (
       <Paper elevation={0} className={classes.root}>
-            <div style={{ display: "flex", justifyContent: "flex-start"}}>
-                <CSVLink data={csvData} filename={"user_bets.csv"} headers={headers}>
-                    <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
-                        <TableIcon style={{marginRight: 7}}/> CSV
-                    </MaterialButton>
-                </CSVLink>
-                <MaterialButton onClick={() => export2JSON(jsonData, "user_bets")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
-                    <JsonIcon style={{marginRight: 7}}/> JSON
-                </MaterialButton>
-            </div>
-            <UserBetsFilter setData={this.setData} reset={this.reset} user={this.props.user} setFilter={this.setFilter} setLoading={this.setLoading} loading={this.state.isLoading}/>
             {isLoading ? (
                 <>
                 <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 20 }}/>
-
-                {[...Array(rowsPerPage)].map((e, i) => <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>)}
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
                 </>
                 ) : (
             <div className={classes.tableWrapper}>
@@ -371,7 +291,7 @@ class UserBetsTable extends React.Component {
                     rowCount={data.length}
                 />
             <TableBody>
-                {getSorting(data, order, orderBy)
+                {stableSort(data, getSorting(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map(n => {
                     const isSelected = this.isSelected(n.id);
@@ -384,26 +304,16 @@ class UserBetsTable extends React.Component {
                             style={{padding : 0}}
                             aria-checked={isSelected}
                             tabIndex={-1}
-                            key={n._id}
+                            key={n.user}
                             selected={isSelected}
                         >
-                            <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.bet}</p></TableCell>
                             <TableCell align="left">
-                                <div style={{display: 'flex'}}>
-                                    <img src={n.currency.image} style={{ width : 25, height : 25}}/>
-                                    <p className='text-small' style={{margin: 5, alignSelf: "center" }}>{n.currency.name}</p>
-                                </div>
+                                <img src={n.currency.image} style={{float : 'left', marginRight : 4, width : 20, height : 20}}/>
+                                <p className='text-small' style={{margin: 0}}>{n.currency.name}</p>
                             </TableCell>
-                            <TableCell align="left">
-                                <div style={{display: 'flex'}}>
-                                <img src={n.game.image_url} style={{ width : 50, height : 40 }}/>
-                                    <p className='text-small' style={{margin: 5, marginLeft: 0, alignSelf: "center"}}>{n.game.name}</p>
-                                </div> 
-                            </TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.winAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{`${n.betAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
                         </TableRow>
                     );
                     })}
@@ -418,10 +328,9 @@ class UserBetsTable extends React.Component {
         <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={data.length + rowsPerPage}
+            count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            labelDisplayedRows={({ from, to, count }) => `${from}-${to > count - rowsPerPage ? count - rowsPerPage : to} of ${count - rowsPerPage}`}
             backIconButtonProps={{
                 'aria-label': 'Previous Page',
             }}
@@ -436,7 +345,7 @@ class UserBetsTable extends React.Component {
   }
 }
 
-UserBetsTable.propTypes = {
+WinnersTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -446,4 +355,4 @@ function mapStateToProps(state){
     };
 }
 
-export default compose(connect(mapStateToProps))( withStyles(styles)(UserBetsTable) );
+export default compose(connect(mapStateToProps))( withStyles(styles)(WinnersTable));

@@ -13,46 +13,54 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import moment from 'moment';
-import _ from 'lodash';
-import { CSVLink } from "react-csv";
-import { Button as MaterialButton } from "@material-ui/core";
-import { AddressConcat } from '../../../../lib/string';
-import { export2JSON } from '../../../../utils/export2JSON';
-import { TableIcon, JsonIcon } from 'mdi-react';
+import Skeleton from '@material-ui/lab/Skeleton';
 
-const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
-const withdraw = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
-const deposit = `${process.env.PUBLIC_URL}/img/dashboard/deposit.png`;
 
-function getSorting(data, order, orderBy) {
 
-    const sortedData = _.orderBy(data, [orderBy], order)
-    .map(row => ({...row, creation_timestamp: moment(row.creation_timestamp).format("lll")}));
-
-    return sortedData;
+function desc(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
 }
 
-const fromDatabasetoTable = (data, { currencies=[] }) => {
+function stableSort(array, cmp) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = cmp(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map(el => el[0]);
+}
+
+function getSorting(order, orderBy) {
+  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+}
+
+
+const fromDatabasetoTable = (data, currencies ) => {
 
 	return data.map( (key) => {
 
-        const currency = currencies.find(c => new String(c._id).toString() == new String(key.currency).toString());
+        const currency = currencies.filter(c => new String(c._id).toString() == new String(key.currency).toString())[0];
 
 		return {
             _id :  key._id,
             user : key.user,
             currency : currency, 
-            address: key.address,
+            app : key.app,
+            game : key.game,
             ticker : currency ? currency.ticker : '',
-            status :  key.status,
-            amount: key.amount,
-            transactionHash : key.transactionHash,
-			creation_timestamp: key.creation_timestamp,
-            isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
-            typeIcon: key.isWithdraw ? withdraw : deposit,
-            type: key.isWithdraw ? 'Withdraw' : 'Deposit',
-            link_url: key.link_url,
-            confirmed : key.confirmed
+            isWon :  key.isWon,
+            winAmount : key.winAmount,
+            betAmount : key.betAmount,
+            nonce : key.nonce,
+            fee : key.fee,
+			creation_timestamp: moment(new Date(key.timestamp)).format('lll')
 		}
 	})
 }
@@ -65,37 +73,36 @@ const rows = [
         numeric: true
     },
     {
-        id: 'type',
-        label: 'Transaction',
+        id: 'currency',
+        label: 'Currency',
+        numeric: false
+    },
+    {
+        id: 'game',
+        label: 'Game',
         numeric: true
     },
     {
-        id: 'transactionHash',
-        label: 'Transaction Hash',
+        id: 'isWon',
+        label: 'Won',
+        numeric: false
+    },
+    {
+        id: 'winAmount',
+        label: 'Win Amount',
+        numeric: true
+    },
+    {
+        id: 'betAmount',
+        label: 'Bet Amount',
         numeric: true
     },
     {
         id: 'creation_timestamp',
         label: 'Created At',
         numeric: false 
-    },
-    {
-        id: 'isAffiliate',
-        label: 'Type',
-        numeric: false 
-    },
-    {
-        id: 'amount',
-        label: 'Amount',
-        numeric: true
-    },
-    {
-        id: 'status',
-        label: 'Status',
-        numeric: true
-    },
+    }
 ];
-
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
@@ -103,7 +110,7 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const { order, orderBy } = this.props;
+        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
 
         return (
             <TableHead>
@@ -149,6 +156,7 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
+
 const styles = theme => ({
   root: {
     width: '100%',
@@ -163,16 +171,16 @@ const styles = theme => ({
   },
 });
 
-class UserTransactionsTable extends React.Component {
+class UserBetsTable extends React.Component {
     constructor(props){
         super(props)
         this.state = {
             order: 'asc',
             orderBy: 'id',
             selected: [],
-            data: fromDatabasetoTable(props.data, {currencies : []}),
+            data: [],
             page: 0,
-            isLoading : {},
+            isLoading: false,
             ticker : 'N/A',
             rowsPerPage: 5
         };
@@ -183,18 +191,34 @@ class UserTransactionsTable extends React.Component {
         this.projectData(this.props)
     }
 
-    componentWillReceiveProps(props){
-        this.projectData(props);
+    projectData = async (props) => {
+        const { bets } = props;
+
+        this.setLoading(true);
+        
+        const app = await props.profile.getApp();
+        const variables = await app.getEcosystemVariables()
+        const currencies = variables.data.message.currencies;
+
+        if (bets.length > 0) {
+            this.setState({...this.state, 
+                data: fromDatabasetoTable(bets, currencies),
+                currencies: currencies
+            })
+        } else {
+            this.setState({...this.state, 
+                data: [],
+                currencies: currencies
+            })
+        }
+
+        this.setLoading(false);
     }
 
-    projectData = async (props) => {
-        let app = props.profile.getApp();
-        const { currencies } = (await app.getEcosystemVariables()).data.message;
-        this.setState({...this.state, 
-            data : fromDatabasetoTable(props.data, { currencies }),
-            ticker : props.ticker,
-        })
+    setLoading = (status) => {
+        this.setState(state => ({ isLoading: status }));
     }
+    
     handleRequestSort = (event, property) => {
         const orderBy = property;
         let order = 'desc';
@@ -235,16 +259,19 @@ class UserTransactionsTable extends React.Component {
         this.setState({ selected: newSelected });
     };
 
-    allowWithdraw = async (withdrawObject) => {
-        this.setState({...this.state, isLoading : {
-            ...this.state.isLoading, [withdrawObject._id] : true
-        }})
+    setData = async (data) => {
+        let app = this.props.profile.getApp();
+        const variables = await app.getEcosystemVariables()
+        
+        const currencies = variables.data.message.currencies;
 
-        await this.props.allowWithdraw(withdrawObject);
+        this.setState({...this.state, 
+            data : fromDatabasetoTable(data, currencies)
+        })
+    }
 
-        this.setState({...this.state, isLoading : {
-            ...this.state.isLoading, [withdrawObject._id] : false
-        }})
+    reset = async () => {
+        await this.projectData();
     }
 
     handleChangePage = (event, page) => {
@@ -261,32 +288,20 @@ class UserTransactionsTable extends React.Component {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page, ticker } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
-    const headers = [
-        { label: "Id", key: "_id" },
-        { label: "Transaction", key: "type" },
-        { label: "Transaction Hash", key: "transactionHash" },
-        { label: "Created At", key: "createdAt" },
-        { label: "Type", key: "isAffiliate"},
-        { label: "Amount", key: "amount" },
-        { label: "Status", key: "status" }
-    ];
-
-    const csvData = data.map(row => ({...row, createdAt: moment(row.creation_timestamp).format("lll")}));
-    const jsonData = csvData.map(row => _.pick(row, ['_id', 'type', 'transactionHash', 'creation_timestamp', 'isAffiliate', 'amount', 'status']));
-
+    const isLoading = this.state.isLoading;
+    
     return (
       <Paper elevation={0} className={classes.root}>
-            <div style={{ display: "flex", justifyContent: "flex-end"}}>
-                <CSVLink data={csvData} filename={"user_transactions.csv"} headers={headers}>
-                    <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
-                       <TableIcon style={{marginRight: 7}}/> CSV
-                    </MaterialButton>
-                </CSVLink>
-                <MaterialButton onClick={() => export2JSON(jsonData, "user_transactions")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
-                    <JsonIcon style={{marginRight: 7}}/> JSON
-                </MaterialButton>
-            </div>
+            {isLoading ? (
+                <>
+                <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 20 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 10 }}/>
+                </>
+                ) : (
             <div className={classes.tableWrapper}>
             <Table elevation={0} className={classes.table} aria-labelledby="tableTitle">
                 <EnhancedTableHead
@@ -298,7 +313,7 @@ class UserTransactionsTable extends React.Component {
                     rowCount={data.length}
                 />
             <TableBody>
-                {getSorting(data, order, orderBy)
+                {stableSort(data, getSorting(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map(n => {
                     const isSelected = this.isSelected(n.id);
@@ -311,51 +326,19 @@ class UserTransactionsTable extends React.Component {
                             style={{padding : 0}}
                             aria-checked={isSelected}
                             tabIndex={-1}
-                            key={n.id}
+                            key={n._id}
                             selected={isSelected}
                         >
                             <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
-                            <TableCell align="left"> 
-                                <p className={`text-small text-${n.isAffiliate.toLowerCase()}`} style={{float : 'left', marginRight : 4}}>{n.type}</p>
-                                <img src={n.typeIcon} style={{width : 20, height : 20}}/>
-                            </TableCell>
                             <TableCell align="left">
-                                { 
-                                    n.transactionHash ? 
-                                        n.link_url ?
-                                            <a target={'__blank'} href={`${n.link_url}`}>
-                                                <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
-                                            </a>
-                                        :
-                                            <p className='text-small'>{AddressConcat(n.transactionHash)}</p>
-                                    : 'N/A'
-                                }
+                                <img src={n.currency.image} style={{float : 'left', marginRight : 4, width : 20, height : 20}}/>
+                                <p className='text-small' style={{margin: 0}}>{n.currency.name}</p>
                             </TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.game}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{`${n.winAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{`${n.betAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
-                            <TableCell align="left">
-                                <p className={`text-small text-${n.isAffiliate.toLowerCase()}`}>{n.isAffiliate}</p>
-                            </TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.amount} {n.ticker}</p></TableCell>
-                            <TableCell align="left">
-                                {n.status == 'Queue'
-                                    ?
-                                        <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover ${this.state.isLoading[n._id] ? 'background-grey' : ''}`} onClick={ () => this.allowWithdraw(n)}> 
-                                            {
-                                                !this.state.isLoading[n._id] ? 
-                                                    <p className='text-small text-white'>To Confirm</p>
-                                                : <img src={loading} style={{width : 20, height : 20}}/>
-                                            }
-                                        </button>
-                                    :  
-                                        n.status ?
-                                            <p className='text-small background-green text-white'>{n.status}</p>
-                                        :
-                                            n.confirmed || n.type === 'Deposit'?
-                                                <p className='text-small background-green text-white'>Confirmed</p>
-                                            :
-                                                <p className='text-small background-red text-white'>Not Confirmed</p>
-                                }
-                            </TableCell>
                         </TableRow>
                     );
                     })}
@@ -366,7 +349,7 @@ class UserTransactionsTable extends React.Component {
                 )}
                 </TableBody>
             </Table>
-        </div>
+        </div>)}
         <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
@@ -387,7 +370,7 @@ class UserTransactionsTable extends React.Component {
   }
 }
 
-UserTransactionsTable.propTypes = {
+UserBetsTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -397,5 +380,4 @@ function mapStateToProps(state){
     };
 }
 
-export default compose(connect(mapStateToProps))( withStyles(styles)(UserTransactionsTable) );
-// export default withStyles(styles)(UserTransactionsTable);
+export default compose(connect(mapStateToProps))( withStyles(styles)(UserBetsTable) );

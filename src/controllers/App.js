@@ -625,6 +625,23 @@ class App{
         }
     }
 
+    editVirtualCurrency = async ({params}) => {
+        try{
+            let res = await ConnectionSingleton.editVirtualCurrency({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    ...params
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editFaviconCustomization = async ({topIcon}) => {
         try{
             let res = await ConnectionSingleton.editFaviconCustomization({   
@@ -798,6 +815,38 @@ class App{
         }
     }
 
+    getAllBets = async ({ filters }) => {
+        try{
+            return await ConnectionSingleton.getAllBets({   
+                params : {
+                    ...filters,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getLogs = async ({ filters }) => {
+        try{
+            return await ConnectionSingleton.getLogs({   
+                params : {
+                    ...filters,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     addCurrencyWallet = async ({currency, passphrase}) => {
         try{    
 
@@ -896,6 +945,32 @@ class App{
             throw err;
 		}
     }
+
+    changeMinWithdraw = async ({amount, wallet_id}) => {
+        try{
+            let res = await ConnectionSingleton.changeMinWithdraw({
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    amount,
+                    wallet_id : wallet_id
+                },
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+            let {
+                status
+            } = res.data;
+
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
+            }
+        }catch(err){
+            console.log(err);
+            throw err;
+		}
+    }
   
     getSummaryData(type){
         return {
@@ -968,9 +1043,10 @@ class App{
         }
     }
 
-    addAutoWithdraw = async () => {
+    addAddOn = async ({url}) => {
         try{
-            return await ConnectionSingleton.addAutoWithdraw({   
+            return await ConnectionSingleton.addAddOn({   
+                url: url,
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId()
@@ -989,6 +1065,56 @@ class App{
                 params : {
                     currency,
                     autoWithdrawParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
+    editJackpot = async ({edge}) => {
+        try{
+            return await ConnectionSingleton.editJackpot({   
+                params : {
+                    edge,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editInitialBalance = async ({balance, currency}) => {
+        try{
+            return await ConnectionSingleton.editInitialBalance({   
+                params : {
+                    balance,
+                    currency,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editRestrictedCountries = async ({countries}) => {
+        try{
+            return await ConnectionSingleton.editRestrictedCountries({   
+                params : {
+                    countries,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     

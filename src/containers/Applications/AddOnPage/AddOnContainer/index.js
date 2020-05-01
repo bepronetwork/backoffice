@@ -2,16 +2,17 @@
 import React, { PureComponent } from 'react';
 import {  Col, Row } from 'reactstrap';
 import { connect } from "react-redux";
-import AutoWithdraw from './AddOn/AutoWithdraw';
 import _ from 'lodash';
-const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
+import AutoWithdraw from './AddOn/AutoWithdraw';
+import Jackpot from './AddOn/Jackpot';
 
 class AddOnContainer extends PureComponent {
  
     constructor() {
         super();
         this.state = {
-            autoWithdraw: {}
+            ecosystemAddOns: [],
+            appAddOns: []
         };
     }
 
@@ -23,26 +24,53 @@ class AddOnContainer extends PureComponent {
         this.projectData(props);
     }
 
-    projectData = (props) => {
-
+    projectData = async (props) => {
         const { profile } = props;
 
-        const app = profile.getApp();
+        const app = await profile.getApp();
 
-        this.setState({...this.state, autoWithdraw: app.params.addOn.autoWithdraw})
+        this.setState({ ecosystemAddOns: app.params.storeAddOn, appAddOns: app.params.addOn });
+    }
+
+    hasAddOn = (addOn) => {
+        const { appAddOns } = this.state;
+
+        return !!Object.keys(appAddOns).find(k => k.toLowerCase() === addOn.toLowerCase());
+         
+    }
+
+    getAddOnObj = (addOn) => {
+        const { ecosystemAddOns, appAddOns } = this.state;
+
+        const addOnInfo = ecosystemAddOns.find(addon => addon.name.toLowerCase().includes(addOn.toLowerCase()));
+        const addOnData = appAddOns[Object.keys(appAddOns).find(k => k.toLowerCase() === addOn.toLowerCase())];
+
+        const addOnObj = _.merge({}, addOnInfo, addOnData);
+
+        return addOnObj;
+
     }
 
     render() {
-       const { isLoading, currency } = this.props;
-       const { autoWithdraw } = this.state;
+       const { isLoading, currency, profile } = this.props;
+       const { appAddOns } = this.state;
+       const appUseVirtualCurrencies = profile.App.params.virtual;
 
-        if (_.isEmpty(autoWithdraw)){return null}
+        if (_.isEmpty(appAddOns)){return null}
 
         return (
             <Row md={12} xl={12} lg={12} xs={12}>
-                <Col lg={4}>
-                    <AutoWithdraw autoWithdraw={autoWithdraw} isLoading={isLoading} currency={currency}/>
-                </Col>               
+                { this.hasAddOn('autoWithdraw') && !appUseVirtualCurrencies ? (
+                <Col lg={5}>
+                    <AutoWithdraw autoWithdraw={this.getAddOnObj('autoWithdraw')} isLoading={isLoading} currency={currency}/>
+                </Col> 
+                ) : null}
+
+                { this.hasAddOn('jackpot') ? (
+                <Col lg={5}>
+                    <Jackpot jackpot={this.getAddOnObj('jackpot')} isLoading={isLoading} currency={currency}/>
+                </Col>  
+                ) : null}         
             </Row>
         );
     }

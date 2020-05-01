@@ -37,14 +37,24 @@ class GamesContainer extends PureComponent {
             })
     }
 
+    hasRestriction(game) {
+        if (game.name.toLowerCase().includes('jackpot')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     render() {
        const { wallet, games } = this.state;
        const { isLoading } = this.props;
+
+       const myGames = games.filter(game => !this.hasRestriction(game));
         
         return (
-            (games.length > 0) ? 
+            (myGames.length > 0) ? 
                 <Row md={12} xl={12} lg={12} xs={12}>
-                    {games.map(game => {
+                    {myGames.map(game => {
                         return (
                             <Col lg={4}>
                                 <GameInfo game={game} isLoading={isLoading} wallet={wallet} {...this.props}/>

@@ -148,6 +148,20 @@ class Connection {
         }
     }
 
+    editRestrictedCountries = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/restrictedCountries/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getTransactions =  async ({admin, app, filters, headers}) => {
         try{
             let response = await fetch(URL + '/api/app/transactions', {
@@ -287,6 +301,22 @@ class Connection {
         }
     }
 
+    changeMinWithdraw = async ({params, headers}) => {
+        try{
+            params.amount = parseFloat(params.amount)
+            let response = await fetch( API_URL_WITHDRAW + `/api/withdraw/min/set`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            console.log(err);
+            throw err;
+        }
+    }
+
     requestWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( API_URL_WITHDRAW + `/api/app/requestWithdraw`, {
@@ -357,6 +387,47 @@ class Connection {
         }
     }
 
+    getAllBets = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/get/users/bets`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getLogs = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/logs/get`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getDepositInfo = async ({id, headers}) => {
+        try{
+            let response = await fetch(URL+ `/api/deposit/${id}/info`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+            });
+
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
 
     cancelWithdraw = async ({app, headers}) => {
         try{
@@ -400,9 +471,9 @@ class Connection {
         }
     }
 
-    addAutoWithdraw = async ({params, headers}) => {
+    addAddOn = async ({url, params, headers}) => {
         try{
-            let response = await fetch( URL + `/api/app/autoWithdraw/add`, {
+            let response = await fetch( URL + `/api${url}`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -417,6 +488,49 @@ class Connection {
     editAutoWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/autoWithdraw/editAutoWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editJackpot = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/jackpot/edge/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
+    editInitialBalance = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/balance/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editVirtualCurrency = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/wallet/virtualCurrency/edit`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

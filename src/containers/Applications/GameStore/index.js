@@ -60,12 +60,16 @@ class GameStorePageContainer extends React.Component{
         await this.projectData(this.props)
     }
 
+
     render = () => {
         const { ecosystemGames } = this.state;
+
+        const games = ecosystemGames.filter(game => game.isValid);
+
         return (
             <div>
                 <Row>
-                    {ecosystemGames.map( game => {
+                    {games.map(game => {
                         return (
                             <Col md={4}>
                                 <GameStoreContainer
