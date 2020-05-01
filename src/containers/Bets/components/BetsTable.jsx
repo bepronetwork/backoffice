@@ -466,18 +466,20 @@ class EnhancedTable extends React.Component {
                             <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
                             <TableCell align="left">
                                 <div style={{display: 'flex'}}>
-                                    <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ marginLeft: 0, marginRight: 0, width : 25, height : 25}}/>
-                                    <p className='text-small' style={{margin: 5}}>{n.user.name}</p>
+                                    <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ marginLeft: 0, marginRight: 0, width : 30, height : 30}}/>
+                                    <p className='text-small' style={{margin: 10}}>{n.user.name}</p>
                                 </div>  
                              </TableCell>
                             <TableCell align="left">
-                                <img src={n.currency.image} style={{float : 'left', marginRight : 4, width : 20, height : 20}}/>
-                                <p className='text-small' style={{margin: 0}}>{n.currency.name}</p>
+                                <div style={{display: 'flex'}}>
+                                    <img src={n.currency.image} style={{ width : 25, height : 25}}/>
+                                    <p className='text-small' style={{margin: 5, alignSelf: "center" }}>{n.currency.name}</p>
+                                </div>
                             </TableCell>
                             <TableCell align="left">
                                 <div style={{display: 'flex'}}>
-                                <img src={n.game.image_url} style={{ width : 30, height : 30}}/>
-                                    <p className='text-small' style={{margin: 5}}>{n.game.name}</p>
+                                <img src={n.game.image_url} style={{ width : 50, height : 40 }}/>
+                                    <p className='text-small' style={{margin: 5, marginLeft: 0, alignSelf: "center"}}>{n.game.name}</p>
                                 </div>  
                              </TableCell>
                             <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
