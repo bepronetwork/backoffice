@@ -212,7 +212,7 @@ class Banners extends Component {
                             >
                                 <div style={{width : '96%', margin : 'auto'}}>
                                     <div className={classes.root}>
-                                        <GridList className={classes.gridList} cols={2.5}>
+                                        <GridList className={classes.gridList} cols={2.5} style={{ minHeight: '410px' }}>
                                         {banners.map((i, index) => {
                                             return (
                                                 <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 580, width: 300, margin: 20, padding : "0px 30px 30px 30px"}}>
