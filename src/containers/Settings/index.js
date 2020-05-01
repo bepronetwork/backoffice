@@ -5,12 +5,13 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import _ from 'lodash';
-import { AccountIcon, CashMultipleIcon, FinanceIcon, ExitToAppIcon, AccessibilityIcon, UpdateIcon, CurrencyEthIcon, CurrencySignIcon, SettingsIcon} from 'mdi-react';
+import { AccountIcon, CashMultipleIcon, FinanceIcon, ExitToAppIcon, AccessibilityIcon, UpdateIcon, CurrencyEthIcon, CurrencySignIcon, SettingsIcon, FilesIcon} from 'mdi-react';
 import { Tab, Nav, Sonnet } from 'react-bootstrap';
 import { SettingsRiskContainer, AddAdminContainer, SettingsAccountContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
 // import { SettingsAccountContainer, SettingsRiskContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
 import TabsContainer from '../../shared/components/tabs/Tabs.js';
 import ComplianceContainer from './tabs/ComplianceContainer';
+import LogsContainer from './tabs/LogsContainer';
 
 const defaultState = {
 }
@@ -56,6 +57,11 @@ class SettingsContainer extends React.Component{
                                 title : 'Compliance',
                                 container : <ComplianceContainer/>,
                                 icon : <SettingsIcon size={20}/>
+                            },
+                            {
+                                title : 'Logs',
+                                container : <LogsContainer/>,
+                                icon : <FilesIcon size={20}/>
                             }
                             /*,
                             {

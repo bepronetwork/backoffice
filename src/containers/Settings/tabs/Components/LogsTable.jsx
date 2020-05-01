@@ -166,13 +166,14 @@ let EnhancedTableToolbar = props => {
 
     return (
         <Toolbar
+        style={{ paddingLeft: 0 }}
         className={classNames(classes.root, {
             [classes.highlight]: numSelected > 0,
         })}
         >
         <div className={classes.title}>
-            <Typography variant="h6" id="tableTitle">
-                Logs
+            <Typography style={{ fontSize: '15px' }}variant="h6" id="tableTitle">
+                Restricted Countries
             </Typography>
         </div>
         <div className={classes.spacer} />
@@ -477,6 +478,7 @@ class EnhancedTable extends React.Component {
                 onChangePage={this.handleChangePage}
                 onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
+            <br/>
         </>
     );
   }
