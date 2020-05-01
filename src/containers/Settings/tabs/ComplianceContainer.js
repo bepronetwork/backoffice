@@ -8,7 +8,6 @@ import CountryMap from './Components/CountryMap';
 import ReactTooltip from 'react-tooltip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import EditLock from './Components/EditLock';
-import LogsTable from './Components/LogsTable';
 
 const countries = require("i18n-iso-countries");
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
@@ -190,9 +189,6 @@ class ComplianceContainer extends React.Component{
                     </Grid>
                 </Paper>
                 <br/>
-                <Paper style={{ boxShadow: "0 10px 30px 1px rgba(0, 0, 0, 0.06)", padding: 25 }} >
-                    <LogsTable/>
-                </Paper>
           </div>
         )
     }

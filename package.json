@@ -79,7 +79,7 @@
     "material-table": "^1.52.0",
     "mdi-react": "^4.4.0",
     "mini-css-extract-plugin": "0.4.3",
-    "moment": "^2.24.0",
+    "moment": "2.18.1",
     "node-2fa": "^1.1.2",
     "node-sass": "^4.9.3",
     "optimize-css-assets-webpack-plugin": "5.0.1",
