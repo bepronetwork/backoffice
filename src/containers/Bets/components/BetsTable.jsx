@@ -429,8 +429,6 @@ class EnhancedTable extends React.Component {
         jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'game', 'isJackpot', 'isWon', 'winAmount', 'betAmount', 'fee', 'creation_timestamp']));
     }
 
-    console.log(data);
-
     return (
         <Paper className={classes.root} style={{ padding: 20}}>
             <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
