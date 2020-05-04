@@ -1,4 +1,4 @@
-const initialState = 'all';
+const initialState = 'weekly';
 
 export default function (state = initialState, action) {
     switch (action.type) {
