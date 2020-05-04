@@ -17,9 +17,10 @@ import { compose } from 'lodash/fp'
 import DataWidget from '../../DataWidget/DataWidget';
 import _ from 'lodash';
 import NoData from '../../NoData';
-import TimePicker from './components/TimePicker';
+
 import store from '../../App/store';
 import { setLoadingStatus } from '../../../redux/actions/loadingAction';
+
 
 class DefaultDashboard extends React.Component{
 
@@ -33,7 +34,12 @@ class DefaultDashboard extends React.Component{
     }
 
     componentDidMount(){
-        this.asyncCalls();
+        const { history } = this.props;
+
+        if (history && history.action === "POP") {
+            this.asyncCalls();
+        }
+        
         this.projectData(this.props);
     }
 
@@ -42,8 +48,8 @@ class DefaultDashboard extends React.Component{
     }
 
     projectData(props){
-        
-        const { profile, periodicity, currency } = props;
+        const { profile, periodicity } = props;
+
         const app = profile.getApp();
         let isDeployed  =  !_.isUndefined(app.isDeployed());
 
