@@ -43,6 +43,7 @@ const fromDatabasetoTable = (data, currencies, users, games) => {
             app: key.app_id,
             game: game,
             ticker: currency.ticker,
+            isJackpot: key.isJackpot,
             isWon:  key.isWon,
             winAmount: key.winAmount,
             betAmount: key.betAmount,
@@ -76,6 +77,11 @@ const rows = [
         numeric: true
     },
     {
+        id: 'isJackpot',
+        label: 'Jackpot',
+        numeric: true
+    },
+    {
         id: 'isWon',
         label: 'Won',
         numeric: false
@@ -88,6 +94,11 @@ const rows = [
     {
         id: 'betAmount',
         label: 'Bet Amount',
+        numeric: true
+    },
+    {
+        id: 'fee',
+        label: 'Fee',
         numeric: true
     },
     {
@@ -396,9 +407,11 @@ class EnhancedTable extends React.Component {
         { label: "User", key: "user" },
         { label: "Currency", key: "currency" },
         { label: "Game", key: "game" },
+        { label: "Jackpot", key: "isJackpot"},
         { label: "Won", key: "isWon" },
         { label: "Win Amount", key: "winAmount" },
         { label: "Bet Amount", key: "betAmount" },
+        { label: "Fee", key: "fee" },
         { label: "Created At", key: "createdAt" }
     ];
 
@@ -408,11 +421,12 @@ class EnhancedTable extends React.Component {
     if (!_.isEmpty(data)) {
         csvData = data.map(row => ({...row, currency: row.currency.name,
             user: row.user._id, 
-            isWon: row.isWon ? 'Yes' : 'No', 
+            isWon: row.isWon ? 'Yes' : 'No',
+            isJackpot: row.isJackpot ? 'Yes' : 'No', 
             game: row.game._id,
             createdAt: moment(row.creation_timestamp).format("lll")}));
 
-        jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'game', 'isWon', 'winAmount', 'betAmount', 'creation_timestamp']));
+        jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'game', 'isJackpot', 'isWon', 'winAmount', 'betAmount', 'fee', 'creation_timestamp']));
     }
 
     return (
@@ -482,9 +496,11 @@ class EnhancedTable extends React.Component {
                                     <p className='text-small' style={{margin: 5, marginLeft: 0, alignSelf: "center"}}>{n.game.name}</p>
                                 </div>  
                              </TableCell>
+                            <TableCell align="left"><p className='text-small'>{n.isJackpot ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.winAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.betAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
+                            <TableCell align="left"><p className='text-small'>{`${n.fee.toFixed(6)} ${n.ticker}`}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{n.creation_timestamp}</p></TableCell>
                         </TableRow>
                             );
