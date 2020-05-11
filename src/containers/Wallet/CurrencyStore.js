@@ -54,8 +54,17 @@ class CurrencyStore extends React.Component{
         })
     }
 
+    hasRestriction = (appUseVirtualCurrencies, currency) => {
+        return appUseVirtualCurrencies && currency._id === "5e108498049eba079930ae1c";
+    }
+
     render = () => {
         const { ecosystemCurrencies } = this.state;
+        const { profile } = this.props;
+
+        const appUseVirtualCurrencies = profile.App.params.virtual;
+
+        const currencies = ecosystemCurrencies.filter(currency => !this.hasRestriction(appUseVirtualCurrencies, currency));
 
         return (
             <Container className="dashboard">
@@ -67,7 +76,7 @@ class CurrencyStore extends React.Component{
                 </div>
                 <div style={{marginTop : 20}}>
                     <Row>
-                        {ecosystemCurrencies.map( c => {
+                        {currencies.map( c => {
                             return (
                                 <Col md={5} style={{marginBottom : 30}} key={c._id}>
                                     <CurrencyStoreContainer onClick={this.addCurrency} currency={c} isAdded={c.isAdded}/>
