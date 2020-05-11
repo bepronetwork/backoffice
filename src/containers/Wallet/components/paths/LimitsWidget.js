@@ -17,16 +17,20 @@ const defaultState = {
     new_maxWithdrawal : 0,
     minWithdrawal: 0,
     new_minWithdrawal: 0,
+    affiliateMinWithdrawal: 0,
+    new_affiliateMinWithdrawal: 0,
     currencyTicker : 'N/A',
     locks : {
         maxWithdrawal: true,
         maxDeposit: true,
-        minWithdrawal: true
+        minWithdrawal: true,
+        affiliateMinWithdrawal: true
     },
     isLoading : {
         maxWithdrawal: false,
         maxDeposit: false,
-        minWithdrawal: false
+        minWithdrawal: false,
+        affiliateMinWithdrawal: false
     }
 }
 
@@ -48,21 +52,23 @@ class LimitsWidget extends React.Component{
     projectData = async (props) => {
         let { wallet } = props;
 
-        let currencyTicker, maxDeposit, maxWithdrawal, minWithdrawal;
+        let currencyTicker, maxDeposit, maxWithdrawal, minWithdrawal, affiliateMinWithdrawal;
         currencyTicker = wallet.currency.ticker;
         await props.profile.getApp().getSummary();
         wallet = props.profile.getApp().getSummaryData('walletSimple').data.find(c => {return c.currency.ticker === currencyTicker });
-
+        
         currencyTicker = wallet.currency.ticker;
         maxDeposit = wallet.max_deposit;
         maxWithdrawal = wallet.max_withdraw;
         minWithdrawal = wallet.min_withdraw;
+        affiliateMinWithdrawal = wallet.affiliate_min_withdraw;
 
         this.setState({...this.state,
             currencyTicker,
             maxDeposit,
             maxWithdrawal,
             minWithdrawal,
+            affiliateMinWithdrawal,
             wallet
         });
     }
@@ -117,6 +123,15 @@ class LimitsWidget extends React.Component{
                 await profile.getApp().changeMinWithdraw({ amount: this.state[`new_${field}`], wallet_id: wallet._id });
                 this.state.locks[field] = true;
                 this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : false}, minWithdrawal: this.state.new_minWithdrawal});
+
+                break;
+            }
+
+            case 'affiliateMinWithdrawal' : {
+
+                await profile.getApp().changeAffiliateMinWithdraw({ amount: this.state[`new_${field}`], wallet_id: wallet._id });
+                this.state.locks[field] = true;
+                this.setState({...this.state, isLoading : {...this.state.isLoading, [field] : false}, affiliateMinWithdrawal: this.state.new_affiliateMinWithdrawal});
 
                 break;
             }
@@ -183,6 +198,23 @@ class LimitsWidget extends React.Component{
                            value={this.state.minWithdrawal}
                            isLoading={this.state.isLoading.minWithdrawal}
                            new_value={this.state.new_minWithdrawal} 
+                           unlockField={this.unlockField} 
+                           lockField={this.lockField} 
+                           onChange={this.onChange} 
+                           confirmChanges={this.confirmChanges} 
+                        />
+                    </Col>
+                    <Col lg={5}>
+                        <LimitsBox
+                           title={'Affiliate Min Withdrawal'}
+                           inputIcon={ArrowExpandDownIcon}
+                           currencyTicker={this.state.currencyTicker}
+                           image={withdrawal}
+                           lock={this.state.locks.affiliateMinWithdrawal}
+                           type={'affiliateMinWithdrawal'} 
+                           value={this.state.affiliateMinWithdrawal}
+                           isLoading={this.state.isLoading.affiliateMinWithdrawal}
+                           new_value={this.state.new_affiliateMinWithdrawal} 
                            unlockField={this.unlockField} 
                            lockField={this.lockField} 
                            onChange={this.onChange} 
