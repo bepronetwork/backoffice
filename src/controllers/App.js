@@ -682,6 +682,26 @@ class App{
         }
     }
 
+    editThemeCustomization = async ({theme}) => {
+        try{
+            let res = await ConnectionSingleton.editThemeCustomization({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    theme
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editColorsCustomization = async ({colors}) => {
         try{
             /* Cancel Withdraw Response */ 
