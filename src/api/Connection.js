@@ -689,6 +689,19 @@ class Connection {
         }
     }
 
+    editThemeCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/theme`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editGameImage = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/games/editImage`, {
