@@ -30,9 +30,9 @@ class TopbarRefresh extends PureComponent {
     return (
         <ButtonBase style={{ height: "100%" }} onClick={this.refresh} disabled={disabled}>
           { isLoading ? (
-            <i className="fa fa-refresh fa-spin fa-lg" style={{ margin: 7, color: '#646777' }}/>
+            <i className="fas fa-sync fa-spin fa-lg"style={{ margin: 7, color: '#646777' }}/>
           ) : (
-            <i className="fa fa-refresh fa-lg" style={{ margin: 7, color: '#646777' }}/>
+            <i className="fas fa-sync fa-lg" style={{ margin: 7, color: '#646777' }}/>
           )}
 
         </ButtonBase>
