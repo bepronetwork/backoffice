@@ -101,7 +101,7 @@ class ApplicationsContainer extends React.Component{
                 return [tabs.customization];
             
             case permission.financials:
-                return [tabs.myGames];
+                return [tabs.myGames, tabs.addOns, tabs.currencies];
             
             default:
                 return [];

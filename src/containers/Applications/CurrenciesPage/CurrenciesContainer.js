@@ -4,6 +4,7 @@ import {  Col, Row } from 'reactstrap';
 import { connect } from "react-redux";
 import CurrencyInfo from './CurrencyInfo';
 import VirtualCurrencyInfo from './VirtualCurrencyInfo';
+import { LockWrapper } from '../../../shared/components/LockWrapper';
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
 class CurrenciesContainer extends PureComponent {
@@ -48,6 +49,7 @@ class CurrenciesContainer extends PureComponent {
         const hasInitialBalanceAddOn = this.isAdded('Initial Balance');
         const realCurrencies = currencies.filter(currency => currency.virtual === false);
         const virtualCurrencies = currencies.filter(currency => currency.virtual === true);
+        const isSuperAdmin = profile.User.permission.super_admin;
 
         return (
 
@@ -55,14 +57,18 @@ class CurrenciesContainer extends PureComponent {
                 <Row md={12} xl={12} lg={12} xs={12}>
                     {virtualCurrencies.map(currency => (
                             <Col lg={4}>
-                                <VirtualCurrencyInfo data={currency} {...this.props}/>
+                                <LockWrapper hasPermission={isSuperAdmin}>
+                                    <VirtualCurrencyInfo data={currency} {...this.props}/>
+                                </LockWrapper>
                             </Col>                
                     ))}
 
                     {!isAppWithFakeMoney ? (
                         realCurrencies.map(currency => (
                             <Col lg={4}>
-                                <CurrencyInfo data={currency} {...this.props}/>
+                                <LockWrapper hasPermission={isSuperAdmin}>
+                                    <CurrencyInfo data={currency} {...this.props}/>
+                                </LockWrapper>
                             </Col>              
                     ))
                     ) : null}

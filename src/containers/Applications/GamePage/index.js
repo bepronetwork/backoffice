@@ -11,6 +11,7 @@ import TextInput from '../../../shared/components/TextInput';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import EditLock from '../../Shared/EditLock';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { LockWrapper } from '../../../shared/components/LockWrapper';
 const image2base64 = require('image-to-base64');
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
@@ -214,15 +215,18 @@ class GamePageContainer extends React.Component{
 
 
     render = () => {
-        const { loading } = this.props;
+        const { loading, profile } = this.props;
         const { imageItem, backgroundItem } = this.state; 
         let game_image = game_images[new String(this.state.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
+
+        const isSuperAdmin = profile.User.permission.super_admin;
 
         return (
             <Container className="dashboard">
                 <Row>
                     <Col lg={4}>
+                    <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
                             <CardBody>
                                 <Row>
@@ -238,8 +242,10 @@ class GamePageContainer extends React.Component{
                                
                             </CardBody>
                         </Card>
+                        </LockWrapper>
                     </Col>
                     <Col lg={8}>
+                    <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
                             <CardBody>
                                 <Row>
@@ -276,12 +282,14 @@ class GamePageContainer extends React.Component{
                                 </Row>
                             </CardBody>
                         </Card>
+                        </LockWrapper>
                     </Col>
 
                 </Row>
                 <Row>
                     <Col lg={4}>
-                        <Card>
+                        <LockWrapper hasPermission={isSuperAdmin}>
+                        <Card >
                             <CardBody>
                                 <Row>
                                     <Col md={4}>
@@ -312,8 +320,11 @@ class GamePageContainer extends React.Component{
                                 </Row>
                             </CardBody>
                         </Card>
+                        </LockWrapper>
+
                     </Col>
                     <Col lg={4}>
+                        <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
                             <CardBody>
                                 <Row>
@@ -352,8 +363,10 @@ class GamePageContainer extends React.Component{
                                 </Row>
                             </CardBody>
                         </Card>
+                    </LockWrapper>
                     </Col>
                     <Col lg={4}>
+                    <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
                             <CardBody>
                                 <Row>
@@ -386,8 +399,10 @@ class GamePageContainer extends React.Component{
                                 </Row>
                             </CardBody>
                         </Card>
+                    </LockWrapper>
                     </Col>
                     <Col lg={4}>
+                    <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
                             <CardBody>
                                 <Row>
@@ -420,6 +435,7 @@ class GamePageContainer extends React.Component{
                                 </Row>
                             </CardBody>
                         </Card>
+                        </LockWrapper>
                     </Col>
                 </Row>
           </Container>
