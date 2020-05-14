@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select, Button, SvgIcon } from '@material-ui/core';
+import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select, Button, SvgIcon, Dialog, DialogTitle, Divider, DialogContent, DialogActions, FormLabel, RadioGroup } from '@material-ui/core';
 import { Col, Row } from 'reactstrap';
 import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -23,6 +23,7 @@ import _ from 'lodash';
 import { CSVLink } from "react-csv";
 import { export2JSON } from "../../../utils/export2JSON";
 import { Button as MaterialButton } from "@material-ui/core";
+import CancelWithdrawDialog from './CancelWithdrawDialog';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -206,6 +207,7 @@ EnhancedTableToolbar.propTypes = {
 
 EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
+
 const styles = theme => ({
   root: {
     width: '100%',
@@ -229,12 +231,15 @@ class EnhancedTable extends React.Component {
             data: fromDatabasetoTable(props.data.withdraws.data, {currencies : []}),
             page: 0,
             isLoading : {},
+            isLoadingCancel : {},
             rowsPerPage: 10,
             currencyFilter: '',
             statusFilter: '',
             idFilter: null,
             userFilter: null,
-            showFilter: false
+            showFilter: false,
+            open: false,
+            withdraw: null
         };
     }
 
@@ -275,6 +280,19 @@ class EnhancedTable extends React.Component {
         this.setState({ selected: [] });
     };
 
+    openDialog = (withdrawObj) => {
+        this.setState({ 
+            open: true,
+            withdraw: withdrawObj
+        })
+    }
+
+    closeDialog = () => {
+        this.setState({ 
+            open: false
+        })
+    }
+
     handleClick = (event, id) => {
         const { selected } = this.state;
         const selectedIndex = selected.indexOf(id);
@@ -308,6 +326,22 @@ class EnhancedTable extends React.Component {
         }})
     }
 
+    cancelWithdraw = async (reason) => {
+        const withdrawObject = this.state.withdraw;
+
+        this.setState({...this.state, isLoadingCancel : {
+            ...this.state.isLoadingCancel, [withdrawObject._id] : true
+        }})
+
+        await this.props.cancelWithdraw({ withdraw: withdrawObject, reason });
+
+        this.setState({...this.state, isLoadingCancel : {
+            ...this.state.isLoadingCancel, [withdrawObject._id] : false
+        }})
+
+        this.closeDialog();
+    }
+
     handleChangePage = (event, page) => {
         this.setState({ page });
     };
@@ -336,7 +370,7 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
+    const { open, showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
     const dataFiltered = data.filter(n => 
         (_.isEmpty(statusFilter) || n.status == statusFilter) && 
         (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
@@ -446,6 +480,7 @@ class EnhancedTable extends React.Component {
                         rowCount={dataFiltered.length}
                     />
                     <TableBody>
+                    <CancelWithdrawDialog open={open} onClose={this.closeDialog} cancelWithdraw={this.cancelWithdraw}/>
                         {getSorting(dataFiltered, order, orderBy)
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .filter(n => 
@@ -487,17 +522,29 @@ class EnhancedTable extends React.Component {
                                     </TableCell>
                                     <TableCell align="left"><p className='text-small'>{n.amount} {n.ticker}</p></TableCell>
                                     <TableCell align="left">
-                                        {n.status == 'Queue'
+                                        {n.status === 'Queue'
                                             ?
-                                                <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover ${this.state.isLoading[n._id] ? 'background-grey' : ''}`} onClick={ () => this.allowWithdraw(n)}> 
+                                            <div>
+                                                <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover`} style={{ height: "24px", backgroundColor: this.state.isLoading[n._id] ? "grey" : "#63c965" }} onClick={ () => this.allowWithdraw(n)}> 
                                                     {
                                                         !this.state.isLoading[n._id] ? 
-                                                            <p className='text-small text-white'>{n.status}</p>
+                                                            <p className='text-small text-white'>Confirm</p>
                                                         : <img src={loading} style={{width : 20, height : 20}}/>
                                                     }
                                                 </button>
-                                            :  <p className='text-small background-green text-white'>{n.status}</p>
-                                        }
+
+                                                <button disabled={this.state.isLoadingCancel[n._id]} className={`clean_button button-normal button-hover`} style={{ height: "24px", backgroundColor: this.state.isLoadingCancel[n._id] ? "grey" : "#e6536e", marginTop: "10px" }}onClick={ () => this.openDialog(n)}> 
+                                                    {
+                                                        !this.state.isLoadingCancel[n._id] ? 
+                                                            <p className='text-small text-white'>Cancel</p>
+                                                        : <img src={loading} style={{width : 20, height : 20}}/>
+                                                    }
+                                                </button>
+                                            
+
+                                            </div>
+                                                
+                                        :  <p className={`text-small ${n.status === "Canceled" ? "background-red" : "background-green"} text-white`}>{n.status}</p> }
                                     </TableCell>
                                 </TableRow>
                             );
