@@ -42,17 +42,12 @@ class Colors extends Component {
 
     onChangeTheme = async ({type, value}) => {
         const { theme } = this.state;
-        const App = this.props.profile.getApp();
 
         const newTheme = theme === 'dark' ? 'light' : 'dark';
 
-        this.setState({ isLoading: true });
-
         this.setState({ theme: newTheme });
-        await App.editThemeCustomization({ theme: newTheme });
-
-        this.setState({ isLoading: false });
     }
+
 
     unlockField = () => {
         this.setState({...this.state, locked : false})
@@ -63,11 +58,16 @@ class Colors extends Component {
     }
 
     confirmChanges = async () => {
-        var { profile } = this.props;
+        const { App } = this.props.profile;
+        const { theme, colors } = this.state;
+        
         this.setState({...this.state, isLoading : true});
-        const { colors } = this.state;
-        await profile.getApp().editColorsCustomization({colors});
+
+        await App.editThemeCustomization({ theme: theme });
+        await App.editColorsCustomization({colors});
+
         this.setState({...this.state, isLoading : false, locked: true})
+
         this.projectData(this.props);
     }
 
@@ -97,12 +97,20 @@ class Colors extends Component {
                 </Card>
                 <Card>
                     <CardBody>
-                        <h4 style={{ fontSize: 16 }}>Theme</h4>
-                        <FormControlLabel
+                        <EditLock 
+                            isLoading={isLoading} 
+                            unlockField={this.unlockField} 
+                            lockField={this.lockField} 
+                            confirmChanges={this.confirmChanges} 
+                            type={'color'} 
+                            locked={locked}
+                        >
+                            <h4 style={{ fontSize: 16 }}>Theme</h4>
+                                <FormControlLabel
                                 style={{margin: 0, marginBottom: 30, padding: 0}}
                                 control={
                                     <BooleanInput
-                                        disabled={isLoading}
+                                        disabled={isLoading || locked}
                                         checked={theme === 'light'} 
                                         onChange={this.onChangeTheme}
                                         type={'theme'}
@@ -114,14 +122,6 @@ class Colors extends Component {
                                 labelPlacement="right"
                                 />
 
-                        <EditLock 
-                            isLoading={isLoading} 
-                            unlockField={this.unlockField} 
-                            lockField={this.lockField} 
-                            confirmChanges={this.confirmChanges} 
-                            type={'color'} 
-                            locked={locked}
-                        >
                             <Row>
                                 {colors.map ( c => { 
                                     return (
