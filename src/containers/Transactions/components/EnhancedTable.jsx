@@ -24,6 +24,7 @@ import { CSVLink } from "react-csv";
 import { export2JSON } from "../../../utils/export2JSON";
 import { Button as MaterialButton } from "@material-ui/core";
 import CancelWithdrawDialog from './CancelWithdrawDialog';
+import ConfirmWithdrawDialog from './ConfirmWithdrawDialog';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -239,6 +240,7 @@ class EnhancedTable extends React.Component {
             userFilter: null,
             showFilter: false,
             open: false,
+            openConfirm: false,
             withdraw: null
         };
     }
@@ -287,9 +289,22 @@ class EnhancedTable extends React.Component {
         })
     }
 
+    openConfirmDialog = (withdrawObj) => {
+        this.setState({ 
+            openConfirm: true,
+            withdraw: withdrawObj
+        })
+    }
+
     closeDialog = () => {
         this.setState({ 
             open: false
+        })
+    }
+
+    closeConfirmDialog = () => {
+        this.setState({ 
+            openConfirm: false
         })
     }
 
@@ -315,6 +330,7 @@ class EnhancedTable extends React.Component {
     };
 
     allowWithdraw = async (withdrawObject) => {
+
         this.setState({...this.state, isLoading : {
             ...this.state.isLoading, [withdrawObject._id] : true
         }})
@@ -324,6 +340,8 @@ class EnhancedTable extends React.Component {
         this.setState({...this.state, isLoading : {
             ...this.state.isLoading, [withdrawObject._id] : false
         }})
+
+        this.closeConfirmDialog();
     }
 
     cancelWithdraw = async (reason) => {
@@ -370,7 +388,7 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { open, showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
+    const { withdraw, open, openConfirm, showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
     const dataFiltered = data.filter(n => 
         (_.isEmpty(statusFilter) || n.status == statusFilter) && 
         (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
@@ -480,6 +498,7 @@ class EnhancedTable extends React.Component {
                         rowCount={dataFiltered.length}
                     />
                     <TableBody>
+                    <ConfirmWithdrawDialog open={openConfirm} onClose={this.closeConfirmDialog} allowWithdraw={this.allowWithdraw} withdraw={withdraw}/>
                     <CancelWithdrawDialog open={open} onClose={this.closeDialog} cancelWithdraw={this.cancelWithdraw}/>
                         {getSorting(dataFiltered, order, orderBy)
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -524,8 +543,8 @@ class EnhancedTable extends React.Component {
                                     <TableCell align="left">
                                         {n.status === 'Queue'
                                             ?
-                                            <div>
-                                                <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover`} style={{ height: "24px", backgroundColor: this.state.isLoading[n._id] ? "grey" : "#63c965" }} onClick={ () => this.allowWithdraw(n)}> 
+                                            <div style={{ display: "flex" }}>
+                                                <button disabled={this.state.isLoading[n._id]} className={`clean_button button-normal button-hover`} style={{ height: "24px", margin: "5px", backgroundColor: this.state.isLoading[n._id] ? "grey" : "#63c965" }} onClick={ () => this.openConfirmDialog(n)}> 
                                                     {
                                                         !this.state.isLoading[n._id] ? 
                                                             <p className='text-small text-white'>Confirm</p>
@@ -533,18 +552,16 @@ class EnhancedTable extends React.Component {
                                                     }
                                                 </button>
 
-                                                <button disabled={this.state.isLoadingCancel[n._id]} className={`clean_button button-normal button-hover`} style={{ height: "24px", backgroundColor: this.state.isLoadingCancel[n._id] ? "grey" : "#e6536e", marginTop: "10px" }}onClick={ () => this.openDialog(n)}> 
+                                                <button disabled={this.state.isLoadingCancel[n._id]} className={`clean_button button-normal button-hover`} style={{ height: "24px", margin: "5px", backgroundColor: this.state.isLoadingCancel[n._id] ? "grey" : "#e6536e" }} onClick={ () => this.openDialog(n)}> 
                                                     {
                                                         !this.state.isLoadingCancel[n._id] ? 
                                                             <p className='text-small text-white'>Cancel</p>
                                                         : <img src={loading} style={{width : 20, height : 20}}/>
                                                     }
                                                 </button>
-                                            
-
                                             </div>
                                                 
-                                        :  <p className={`text-small ${n.status === "Canceled" ? "background-red" : "background-green"} text-white`}>{n.status}</p> }
+                                        :  <p className={`text-small ${n.status === "Canceled" ? "background-white-red text-red" : "background-white-green text-green"} `}>{n.status}</p> }
                                     </TableCell>
                                 </TableRow>
                             );
