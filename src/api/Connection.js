@@ -361,6 +361,20 @@ class Connection {
         }
     }
 
+    cancelUserWithdraw = async ({params, headers}) => {
+        try{
+            let response = await fetch( API_URL_WITHDRAW + `/api/users/cancelWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     finalizeWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( API_URL_WITHDRAW + `/api/app/finalizeWithdraw`, {

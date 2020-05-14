@@ -27,6 +27,17 @@ class TransactionsContainer extends React.Component{
         await profile.update();
     }
 
+    cancelWithdraw = async ({ withdraw, reason }) => {
+        const { profile } = this.props;
+
+        /** Do Withdraw to User */
+        await profile.getApp().cancelUserWithdraw({ withdraw, note: reason });
+
+        /** Update Info */
+        await profile.getApp().getWithdrawsAsync({});
+        await profile.update();
+    }
+
     render = () => {
         return (
             <Container className="dashboard">
@@ -54,6 +65,7 @@ class TransactionsContainer extends React.Component{
                         <DataWidget> 
                             <EnhancedTable
                                 allowWithdraw={this.allowWithdraw}
+                                cancelWithdraw={this.cancelWithdraw}
                                 data={{
                                     withdraws : this.props.profile.getApp().getSummaryData('withdraws'),
                                     wallet : this.props.profile.getApp().getSummaryData('wallet')

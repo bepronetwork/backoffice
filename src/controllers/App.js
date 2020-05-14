@@ -457,6 +457,24 @@ class App{
         }
     }
 
+    cancelUserWithdraw = async ({withdraw, note}) => {
+        const { user, _id, currency } = withdraw;
+
+        try{
+            let res = await ConnectionSingleton.cancelUserWithdraw({
+                params : {
+                    admin : this.getAdminId(), user, app : this.getId(), transactionHash : null, withdraw_id : _id, note: note, currency : currency._id
+                },
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+
     approveWithdrawsBatch = async (items) => {
         try{
 
