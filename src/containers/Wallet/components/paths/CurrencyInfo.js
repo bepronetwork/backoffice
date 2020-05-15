@@ -3,24 +3,9 @@ import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 import EditLock from '../../../Shared/EditLock';
 import TextInput from '../../../../shared/components/TextInput';
-import { Switch, withStyles } from '@material-ui/core';
-import { purple } from '@material-ui/core/colors';
+import BooleanInput from './components/utils/BooleanInput';
 const deposit = `${process.env.PUBLIC_URL}/img/dashboard/deposit.png`;
 const withdrawal = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
-
-const PurpleSwitch = withStyles({
-    switchBase: {
-      color: purple[300],
-      '&$checked': {
-        color: purple[500],
-      },
-      '&$checked + $track': {
-        backgroundColor: purple[500],
-      },
-    },
-    checked: {},
-    track: {},
-  })(Switch);
 
 class CurrencyInfo extends PureComponent {
  
@@ -117,8 +102,8 @@ class CurrencyInfo extends PureComponent {
                                 isLoading={this.state.loading}
                                 locked={lock}>
                             <h4 style={{ margin: 0 }} >Tx Fee</h4>
-                                <PurpleSwitch
-                                    checked={isTxFee}
+                                <BooleanInput
+                                    checked={isTxFee === true}
                                     onChange={this.onChangeIsTxFee}
                                     color="primary"
                                     name="isTxFee"
