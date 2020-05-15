@@ -36,14 +36,16 @@ export default class CancelWithdrawDialog extends Component {
     onSubmit = () => {
         const { cancelWithdraw } = this.props;
         const { reason } = this.state;
-        
+
         cancelWithdraw(reason);
 
     }
 
     render() {
         const { value, reason } = this.state;
-        const { open, onClose } = this.props;
+        const { open, onClose, withdraw, isLoading } = this.props;
+
+        if(!withdraw) {return null}
 
         return (
             <Dialog
@@ -72,8 +74,10 @@ export default class CancelWithdrawDialog extends Component {
                    
                 </DialogContent>
                 <DialogActions>
-                <button disabled={!reason} className={`clean_button button-normal button-hover`} style={{ height: "35px", backgroundColor: "#e6536e", margin: "25px", pointerEvents: !reason ? 'none' : 'all' }} onClick={this.onSubmit}> 
+                <button disabled={!reason || isLoading[withdraw._id]} className={`clean_button button-normal button-hover`} style={{ height: "35px", backgroundColor: "#e6536e", margin: "25px", pointerEvents: !reason || isLoading[withdraw._id] ? 'none' : 'all' }} onClick={this.onSubmit}> 
+                    { !isLoading[withdraw._id]? 
                     <p className='text-small text-white'>Yes, cancel withdraw</p>
+                    : <p className='text-small text-white'>Canceling...</p> }
                 </button>
                 </DialogActions>
             </Dialog> 
