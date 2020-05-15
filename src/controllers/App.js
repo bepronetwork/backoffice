@@ -1141,6 +1141,24 @@ class App{
     }
 
     
+    editTxFee = async ({currency, txFeeParams}) => {
+        try{
+            return await ConnectionSingleton.editTxFee({   
+                params : {
+                    currency,
+                    txFeeParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
     editJackpot = async ({edge}) => {
         try{
             return await ConnectionSingleton.editJackpot({   
