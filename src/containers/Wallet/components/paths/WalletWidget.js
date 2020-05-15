@@ -8,16 +8,28 @@ import TabsContainer  from '../../../../shared/components/tabs/Tabs'
 import DepositWidget from './DepositWidget';
 import WithdrawWidget from './WithdrawWidget';
 import LimitsWidget from './LimitsWidget';
-import { ArrowDownIcon, ArrowCollapseUpIcon, CurrencyUsdIcon } from 'mdi-react';
+import { ArrowDownIcon, ArrowCollapseUpIcon, CurrencyUsdIcon, MoneyIcon } from 'mdi-react';
+import FeesWidget from './FeesWidget';
 
 class WalletWidget extends React.Component{
 
     constructor(props){
         super(props)
     }
+
+    isAdded = (AddOn) => {
+        const app = this.props.profile.App;
+        const appAddOns = app.params.addOn;
+
+        return !!Object.keys(appAddOns).find(k => AddOn.toLowerCase().includes(k.toLowerCase()));
+         
+    }
     
     render = () => {
         const { profile, wallet } = this.props;
+
+        const hasTxFeeAddOn = this.isAdded('TxFee');
+
         const { virtual } = profile.getApp().getParams();
         let disabled = false;
 
@@ -52,7 +64,14 @@ class WalletWidget extends React.Component{
                                     <LimitsWidget/>
                                 ),
                                 icon : <CurrencyUsdIcon/>
-                            }
+                            },
+                            hasTxFeeAddOn ? {
+                                title : 'Fees',
+                                container : (
+                                    <FeesWidget/>
+                                ),
+                                icon : <MoneyIcon/>
+                            } : {}
                         ]
                     }
                 />
