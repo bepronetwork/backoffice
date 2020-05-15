@@ -44,7 +44,9 @@ function getSorting(order, orderBy) {
 
 const fromDatabasetoTable = (data, currencies, users, games ) => {
 
-	return data.map((key) => {
+    const filteredData = data.filter(bet => bet.isJackpot);
+
+	return filteredData.map((key) => {
 
         const currency = currencies.find(currency => currency._id === key.currency);
         const user = users.find(user => user._id === key.user._id);
