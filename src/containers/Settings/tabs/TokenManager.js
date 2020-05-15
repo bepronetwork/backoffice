@@ -155,7 +155,7 @@ class TokenManager extends React.Component{
         if(!token){return null}
         return (
             <div>               
-                <p className="dashboard__visitors-chart-title text-left text-red" style={{fontSize : 18, marginBottom : 10}}> Current Token Bank </p>
+                <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Current Token Bank </p>
                 <p className='text-grey'> Your Bank token works as the cold storage currency behind all the ecosystem, after the change you should manipulate the trade of the bank tokens manually to the new ones </p>
                 <p> ALERT : Change at your own risk, please contact our team if you do have any questions, don´t do anything without understanding the full protocol </p>
                 <hr></hr>

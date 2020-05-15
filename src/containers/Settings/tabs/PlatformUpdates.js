@@ -190,7 +190,7 @@ class PlatformUpdates extends React.Component{
 
         return (
             <div>               
-                <p className="dashboard__visitors-chart-title text-left text-red" style={{fontSize : 18, marginBottom : 10}}> Platform Updates </p>
+                <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Platform Updates </p>
                 <hr></hr>
                 <Row>
                     <Col md={6}>
