@@ -11,7 +11,7 @@ export default class ConfirmWithdrawDialog extends Component {
     }
 
     render() {
-        const { open, onClose, withdraw } = this.props;
+        const { open, onClose, withdraw, isLoading } = this.props;
 
         if (!withdraw) {return null};
 
@@ -26,8 +26,10 @@ export default class ConfirmWithdrawDialog extends Component {
                     <h4>{`Are you sure you want to confirm the withdraw of ${amount} ${currency.ticker} to ${address} ?`}</h4>
                 </DialogContent>
                 <DialogActions>
-                <button className={`clean_button button-normal button-hover`} style={{ height: "35px", backgroundColor: "#63c965", margin: "25px" }} onClick={this.onSubmit}> 
+                <button disabled={isLoading[withdraw._id]}className={`clean_button button-normal button-hover`} style={{ height: "35px", backgroundColor: "#63c965", margin: "25px", pointerEvents: isLoading[withdraw._id] ? 'none' : 'all' }} onClick={this.onSubmit}> 
+                    { !isLoading[withdraw._id] ?
                     <p className='text-small text-white'>Yes, confirm withdraw</p>
+                    : <p className='text-small text-white'>Confirming...</p> }
                 </button>
                 </DialogActions>
             </Dialog> 

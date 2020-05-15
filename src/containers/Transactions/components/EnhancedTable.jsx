@@ -388,7 +388,7 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { withdraw, open, openConfirm, showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
+    const { withdraw, isLoadingCancel, isLoading, open, openConfirm, showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
     const dataFiltered = data.filter(n => 
         (_.isEmpty(statusFilter) || n.status == statusFilter) && 
         (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
@@ -498,8 +498,8 @@ class EnhancedTable extends React.Component {
                         rowCount={dataFiltered.length}
                     />
                     <TableBody>
-                    <ConfirmWithdrawDialog open={openConfirm} onClose={this.closeConfirmDialog} allowWithdraw={this.allowWithdraw} withdraw={withdraw}/>
-                    <CancelWithdrawDialog open={open} onClose={this.closeDialog} cancelWithdraw={this.cancelWithdraw}/>
+                    <ConfirmWithdrawDialog open={openConfirm} onClose={this.closeConfirmDialog} allowWithdraw={this.allowWithdraw} withdraw={withdraw} isLoading={isLoading}/>
+                    <CancelWithdrawDialog open={open} onClose={this.closeDialog} cancelWithdraw={this.cancelWithdraw} withdraw={withdraw} isLoading={isLoadingCancel}/>
                         {getSorting(dataFiltered, order, orderBy)
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .filter(n => 
@@ -522,7 +522,7 @@ class EnhancedTable extends React.Component {
                                     selected={isSelected}
                                 >
                                     <TableCell align="left"> <p className='text-small'>{n._id}</p></TableCell>
-                                    <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell>
+                                    <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell> 
                                     <TableCell align="left">
                                         { 
                                             n.transactionHash ? 
