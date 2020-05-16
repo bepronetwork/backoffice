@@ -217,7 +217,7 @@ class UserBetsFilter extends Component {
                                     />
                                     </List>
                             <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
-                                <Button className="icon" size="sm" style={{ height: 40, marginLeft: 0, marginTop: 5, marginBottom: 5, alignSelf: 'end' }} onClick={handleSubmit}>
+                                <Button disabled={loading} className="icon" size="sm" style={{ height: 40, marginLeft: 0, marginTop: 5, marginBottom: 5, alignSelf: 'end' }} onClick={handleSubmit}>
                                     {loading ? 'Searching...' : 'Search'}
                                 </Button>
                             </div>
