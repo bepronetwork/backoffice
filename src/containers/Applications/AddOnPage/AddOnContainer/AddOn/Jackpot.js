@@ -161,18 +161,19 @@ class Jackpot extends React.Component {
                                             <UserBetsTable bets={bets} />
                                         </DialogContent>
                                     </Dialog>
+                                    <LockWrapper hasPermission={true}>
+                                        <Button size="small" variant="outlined" disabled={_.isEmpty(winResult)}
+                                        style={{ textTransform: "none", backgroundColor: "#CFB53B", color: "#ffffff", boxShadow: "none", margin: 10, marginLeft: 0}} 
+                                        onClick={this.toggleWinnersDialog}>
+                                            <MedalIcon style={{marginRight: 7}}/> Winners
+                                        </Button>
 
-                                    <Button size="small" variant="outlined" disabled={_.isEmpty(winResult)}
-                                    style={{ textTransform: "none", backgroundColor: "#CFB53B", color: "#ffffff", boxShadow: "none", margin: 10, marginLeft: 0}} 
-                                    onClick={this.toggleWinnersDialog}>
-                                        <MedalIcon style={{marginRight: 7}}/> Winners
-                                    </Button>
-
-                                    <Button size="small" variant="outlined" disabled={_.isEmpty(bets)}
-                                    style={{ textTransform: "none", backgroundColor: "#649B3A", color: "#ffffff", boxShadow: "none", margin: 10, marginLeft: 0}} 
-                                    onClick={this.toggleBetsDialog}>
-                                        <MoneyIcon style={{marginRight: 7}}/> Bets
-                                    </Button>
+                                        <Button size="small" variant="outlined" disabled={_.isEmpty(bets)}
+                                        style={{ textTransform: "none", backgroundColor: "#649B3A", color: "#ffffff", boxShadow: "none", margin: 10, marginLeft: 0}} 
+                                        onClick={this.toggleBetsDialog}>
+                                            <MoneyIcon style={{marginRight: 7}}/> Bets
+                                        </Button>
+                                    </LockWrapper>
 
                                     <hr/>
 
