@@ -16,7 +16,6 @@ import moment from 'moment';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 
-
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -44,9 +43,7 @@ function getSorting(order, orderBy) {
 
 const fromDatabasetoTable = (data, currencies, users, games ) => {
 
-    const filteredData = data.filter(bet => bet.isJackpot);
-
-	return filteredData.map((key) => {
+	return data.map((key) => {
 
         const currency = currencies.find(currency => currency._id === key.currency);
         const user = users.find(user => user._id === key.user._id);
@@ -114,7 +111,7 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+        const { order, orderBy } = this.props;
 
         return (
             <TableHead>
@@ -199,7 +196,7 @@ class UserBetsTable extends React.Component {
         
         const app = await props.profile.getApp();
 
-        const appBets = await app.getAllBets({ filters: { size: 100 }});
+        const appBets = await app.getAllBets({ filters: { size: 100, isJackpot: true }});
 
         const bets = appBets.data.message.list;
         const currencies = app.params.currencies;
@@ -293,7 +290,7 @@ class UserBetsTable extends React.Component {
             this.setLoading(true);
 
             const res = await App.getAllBets({ 
-                filters: { size: 100, offset: data.length } });
+                filters: { size: 100, offset: data.length, isJackpot: true } });
                 
             const bets = res.data.message.list;
             

@@ -103,7 +103,7 @@ class UserBetsFilter extends Component {
 
         setFilter(filters);
 
-        const appBets = await profile.getApp().getAllBets({ filters });
+        const appBets = await profile.getApp().getAllBets({ filters: {...filters, isJackpot: false } });
         
         const bets = appBets.data.message.list;
 
@@ -130,7 +130,7 @@ class UserBetsFilter extends Component {
 
         const app = await profile.getApp();
 
-        const appBets = await app.getAllBets({ filters: { size: 100 }});
+        const appBets = await app.getAllBets({ filters: { size: 100, isJackpot: false }});
 
         const bets = appBets.data.message.list;
 

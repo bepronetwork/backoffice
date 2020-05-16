@@ -43,7 +43,6 @@ const fromDatabasetoTable = (data, currencies, users, games) => {
             app: key.app_id,
             game: game,
             ticker: currency.ticker,
-            isJackpot: key.isJackpot,
             isWon:  key.isWon,
             winAmount: key.winAmount,
             betAmount: key.betAmount,
@@ -74,11 +73,6 @@ const rows = [
     {
         id: 'game',
         label: 'Game',
-        numeric: true
-    },
-    {
-        id: 'isJackpot',
-        label: 'Jackpot',
         numeric: true
     },
     {
@@ -257,7 +251,7 @@ class EnhancedTable extends React.Component {
         
         const app = await props.profile.getApp();
 
-        const appBets = await app.getAllBets({ filters: { size: 100 }});
+        const appBets = await app.getAllBets({ filters: { size: 100, isJackpot: false }});
 
         const bets = appBets.data.message.list;
         const currencies = app.params.currencies;
@@ -354,8 +348,8 @@ class EnhancedTable extends React.Component {
             this.setLoading(true);
 
             const res = await App.getAllBets({ 
-                filters: lastFilter ? {...lastFilter, offset: data.length } 
-                : { size: 100, offset: data.length } });
+                filters: lastFilter ? {...lastFilter, offset: data.length, isJackpot: false } 
+                : { size: 100, offset: data.length, isJackpot: false } });
                 
             const bets = res.data.message.list;
             
@@ -407,7 +401,6 @@ class EnhancedTable extends React.Component {
         { label: "User", key: "user" },
         { label: "Currency", key: "currency" },
         { label: "Game", key: "game" },
-        { label: "Jackpot", key: "isJackpot"},
         { label: "Won", key: "isWon" },
         { label: "Win Amount", key: "winAmount" },
         { label: "Bet Amount", key: "betAmount" },
@@ -422,11 +415,10 @@ class EnhancedTable extends React.Component {
         csvData = data.map(row => ({...row, currency: row.currency.name,
             user: row.user._id, 
             isWon: row.isWon ? 'Yes' : 'No',
-            isJackpot: row.isJackpot ? 'Yes' : 'No', 
             game: row.game._id,
             createdAt: moment(row.creation_timestamp).format("lll")}));
 
-        jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'game', 'isJackpot', 'isWon', 'winAmount', 'betAmount', 'fee', 'creation_timestamp']));
+        jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'game', 'isWon', 'winAmount', 'betAmount', 'fee', 'creation_timestamp']));
     }
 
     return (
@@ -496,7 +488,6 @@ class EnhancedTable extends React.Component {
                                     <p className='text-small' style={{margin: 5, marginLeft: 0, alignSelf: "center"}}>{n.game.name}</p>
                                 </div>  
                              </TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.isJackpot ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.winAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.betAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
