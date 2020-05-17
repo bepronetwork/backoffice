@@ -317,6 +317,22 @@ class Connection {
         }
     }
 
+    changeAffiliateMinWithdraw = async ({params, headers}) => {
+        try{
+            params.amount = parseFloat(params.amount)
+            let response = await fetch( API_URL_WITHDRAW + `/api/affiliate/withdraw/min/set`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            console.log(err);
+            throw err;
+        }
+    }
+
     requestWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( API_URL_WITHDRAW + `/api/app/requestWithdraw`, {
@@ -334,6 +350,20 @@ class Connection {
     finalizeUserWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( API_URL_WITHDRAW + `/api/users/finalizeWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    cancelUserWithdraw = async ({params, headers}) => {
+        try{
+            let response = await fetch( API_URL_WITHDRAW + `/api/users/cancelWithdraw`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -488,6 +518,20 @@ class Connection {
     editAutoWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/autoWithdraw/editAutoWithdraw`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editTxFee = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/txFee/editTxFee`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -663,6 +707,19 @@ class Connection {
     editLoadingGifCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/loadinggif`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editThemeCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/theme`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

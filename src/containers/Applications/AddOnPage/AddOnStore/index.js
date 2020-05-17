@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import AddOnStoreContainer from "./AddOn";
+import { LockWrapper } from "../../../../shared/components/LockWrapper";
 
 class AddOnStorePageContainer extends React.Component{
 
@@ -41,7 +42,7 @@ class AddOnStorePageContainer extends React.Component{
     isAdded = (AddOn) => {
         const { appAddOns } = this.state;
 
-        return !!Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().includes(k.toLowerCase()));
+        return !!Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().replace(/\s+/g, '').includes(k.toLowerCase()));
          
     }
 
@@ -56,10 +57,11 @@ class AddOnStorePageContainer extends React.Component{
 
     render() {
         const { ecosystemAddOns } = this.state;
-        const { App } = this.props.profile;
+        const { App, User } = this.props.profile;
 
         const appUseVirtualCurrencies = App.params.virtual;
         const addOns = ecosystemAddOns.filter(addOn => !this.hasRestriction(addOn, appUseVirtualCurrencies));
+        const isSuperAdmin = User.permission.super_admin;
 
         return (
             <div>
@@ -67,11 +69,14 @@ class AddOnStorePageContainer extends React.Component{
                     {addOns.map(addOn => {
                         return (
                             <Col lg={5}>
-                                <AddOnStoreContainer
-                                    addOn={addOn}
-                                    isAdded={this.isAdded(addOn)}
-                                    addAddOn={this.addAddOn}
-                                />
+                                <LockWrapper hasPermission={isSuperAdmin}>
+                                    <AddOnStoreContainer
+                                        addOn={addOn}
+                                        isAdded={this.isAdded(addOn)}
+                                        addAddOn={this.addAddOn}
+                                    />
+                                </LockWrapper>
+                               
                             </Col>
                         )
                     })}

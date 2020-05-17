@@ -35,12 +35,86 @@ class ApplicationsContainer extends React.Component{
          
     }
 
+    getTabsPerPermission(permission) {
+
+        const tabs = {
+            myGames: {
+                title : 'My Games',
+                container : (
+                    <GamesContainer  data={{
+                        games : this.props.profile.getApp().getSummaryData('games'),
+                        wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                    }} {...this.props}/>
+                ),
+                icon : <GamesIcon/>
+            },
+            gameStore: {
+                title : 'Game Store',
+                container : (
+                    <GameStorePageContainer/>
+                    
+                ),
+                icon : <StoreIcon/>
+            },
+            customization: {
+                title : 'Customization ',
+                container : (
+                    <CustomizationContainer/>
+                    
+                ),
+                icon : <SettingsIcon/>
+            },
+            thirdParties: {
+                title : 'Third-Parties ',
+                container : (
+                    <ThirdPartiesContainer/>
+                    
+                ),
+                icon : <ArrowDecisionIcon/>
+            },
+            addOns: {
+                title : 'Add-Ons ',
+                container : (
+                    <AddOnsContainer/>
+                    
+                ),
+                icon : <PuzzleIcon/>
+            },
+            currencies: {
+                title : 'Currencies ',
+                container : (
+                    <CurrenciesContainer />
+                    
+                ),
+                icon : <MoneyIcon/>
+            }
+        }
+
+        switch (true) {
+            case permission.super_admin:
+                return [tabs.myGames, tabs.gameStore, tabs.customization, tabs.thirdParties, tabs.addOns, tabs.currencies];
+            
+            case permission.customization && permission.financials:
+                return [tabs.myGames, tabs.customization, tabs.addOns, tabs.currencies];
+
+            case permission.customization:
+                return [tabs.customization];
+            
+            case permission.financials:
+                return [tabs.myGames, tabs.addOns, tabs.currencies];
+            
+            default:
+                return [];
+            
+        }
+    }
+
     render = () => {
         let services = this.props.profile.getApp().getServices();
         let servicesCodes = fromCodesToServices(services);
 
         const permission = this.props.profile.User.permission;
-    
+        
         return (
             <Container className="dashboard">
                 <Row>
@@ -59,70 +133,9 @@ class ApplicationsContainer extends React.Component{
                                 </Col>
                             </Row>
                             <TabsContainer 
-                                items={ permission.super_admin ?
-                                    [
-                                        {
-                                            title : 'My Games',
-                                            container : (
-                                                <GamesContainer  data={{
-                                                    games : this.props.profile.getApp().getSummaryData('games'),
-                                                    wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                                }} {...this.props}/>
-                                            ),
-                                            icon : <GamesIcon/>
-                                        },
-                                        {
-                                            title : 'Game Store',
-                                            container : (
-                                                <GameStorePageContainer/>
-                                                
-                                            ),
-                                            icon : <StoreIcon/>
-                                        },
-                                        {
-                                            title : 'Customization ',
-                                            container : (
-                                                <CustomizationContainer/>
-                                                
-                                            ),
-                                            icon : <SettingsIcon/>
-                                        },
-                                        {
-                                            title : 'Third-Parties ',
-                                            container : (
-                                                <ThirdPartiesContainer/>
-                                                
-                                            ),
-                                            icon : <ArrowDecisionIcon/>
-                                        },
-                                        {
-                                            title : 'Add-Ons ',
-                                            container : (
-                                                <AddOnsContainer/>
-                                                
-                                            ),
-                                            icon : <PuzzleIcon/>
-                                        },
-                                        {
-                                            title : 'Currencies ',
-                                            container : (
-                                                <CurrenciesContainer />
-                                                
-                                            ),
-                                            icon : <MoneyIcon/>
-                                        }
-
-                                    ]
-                                : [
-                                    {
-                                        title : 'Customization ',
-                                        container : (
-                                            <CustomizationContainer/>
-                                            
-                                        ),
-                                        icon : <SettingsIcon/>
-                                    }
-                                ]}
+                                items={
+                                    this.getTabsPerPermission(permission)
+                                }
                             />
                                 
                         </div>   

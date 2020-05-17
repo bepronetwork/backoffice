@@ -50,7 +50,7 @@ class SidebarContent extends Component {
 
         let newState = {
             home        : User.permission.super_admin || User.permission.financials,
-            application : User.permission.super_admin || User.permission.customization,
+            application : User.permission.super_admin || User.permission.customization || User.permission.financials,
             users       : this.hasData(props.profile.hasAppStats('usersInfoSummary')) && 
                           (User.permission.super_admin || User.permission.financials),
             stats       : this.hasData(props.profile.hasAppStats('revenue')) &&

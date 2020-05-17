@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
-import TextInput from '../../../../shared/components/TextInput';
-import BooleanInput from '../../../../shared/components/BooleanInput';
 import ColorPickerInput from '../../../../shared/components/color_picker_input/ColorPickerInput';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
+import { FormControlLabel } from '@material-ui/core';
+import BooleanInput from "./utils/BooleanInput";
 
 
 const defaultState = {
@@ -25,9 +25,11 @@ class Colors extends Component {
     }
 
     projectData = async (props) => {
-        const { colors } = props.profile.getApp().getCustomization();
+        const { colors, theme } = await props.profile.getApp().getCustomization();
+
         this.setState({...this.state, 
             colors,
+            theme
         })
     }
 
@@ -38,6 +40,15 @@ class Colors extends Component {
         this.setState({...this.state, colors})
     }
 
+    onChangeTheme = async ({type, value}) => {
+        const { theme } = this.state;
+
+        const newTheme = theme === 'dark' ? 'light' : 'dark';
+
+        this.setState({ theme: newTheme });
+    }
+
+
     unlockField = () => {
         this.setState({...this.state, locked : false})
     }
@@ -47,11 +58,16 @@ class Colors extends Component {
     }
 
     confirmChanges = async () => {
-        var { profile } = this.props;
+        const { App } = this.props.profile;
+        const { theme, colors } = this.state;
+        
         this.setState({...this.state, isLoading : true});
-        const { colors } = this.state;
-        await profile.getApp().editColorsCustomization({colors});
+
+        await App.editThemeCustomization({ theme: theme });
+        await App.editColorsCustomization({colors});
+
         this.setState({...this.state, isLoading : false, locked: true})
+
         this.projectData(this.props);
     }
 
@@ -72,7 +88,7 @@ class Colors extends Component {
 
 
     render() {
-        const { isLoading, locked, colors } = this.state; 
+        const { isLoading, locked, colors, theme } = this.state; 
 
         return (
             <>
@@ -89,6 +105,23 @@ class Colors extends Component {
                             type={'color'} 
                             locked={locked}
                         >
+                            <h4 style={{ fontSize: 16 }}>Theme</h4>
+                                <FormControlLabel
+                                style={{margin: 0, marginBottom: 30, padding: 0}}
+                                control={
+                                    <BooleanInput
+                                        disabled={isLoading || locked}
+                                        checked={theme === 'light'} 
+                                        onChange={this.onChangeTheme}
+                                        type={'theme'}
+                                        id={'check-theme'}
+                                    />
+                                }
+                                label={theme === 'dark' ? <h4 style={{ fontSize: 14 }}>Dark</h4> 
+                                : <h4 style={{ fontSize: 14 }}>Light</h4>}
+                                labelPlacement="right"
+                                />
+
                             <Row>
                                 {colors.map ( c => { 
                                     return (

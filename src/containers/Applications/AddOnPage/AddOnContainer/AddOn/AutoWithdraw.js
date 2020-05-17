@@ -7,6 +7,7 @@ import { Grid, Switch, Typography, ExpansionPanelDetails, ExpansionPanelSummary,
 import TextInput from '../../../../../shared/components/TextInput';
 import EditLock from '../../../../Shared/EditLock';
 import { BankIcon, ExpandMoreIcon } from 'mdi-react';
+import { LockWrapper } from '../../../../../shared/components/LockWrapper';
 
 class AutoWithdraw extends React.Component {
  
@@ -87,7 +88,9 @@ class AutoWithdraw extends React.Component {
 
     render() {
         const { name, description, image_url, isAutoWithdraw, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction, lock } = this.state;
-        const { currency, isLoading } = this.props;
+        const { currency, isLoading, profile } = this.props;
+
+        const isSuperAdmin = profile.User.permission.super_admin;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`}}>
@@ -124,6 +127,7 @@ class AutoWithdraw extends React.Component {
                                     <img className='application__game__image' style={{width: '60px', margin: 0, padding: 0}} src={image_url}/>
                             </div>
                             </ExpansionPanelSummary>
+                            <LockWrapper hasPermission={isSuperAdmin}>
                             <ExpansionPanelDetails style={{padding: 0}}>
                             <Col>
                                 <div className="dashboard__visitors-chart text-left" style={{marginTop : 10}}>
@@ -169,6 +173,9 @@ class AutoWithdraw extends React.Component {
                             </EditLock>
                             </Col>
                             </ExpansionPanelDetails>
+
+                            </LockWrapper>
+                            
                             </ExpansionPanel>
                         </Paper>
                     </Card> )}

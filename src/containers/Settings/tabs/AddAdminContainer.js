@@ -57,6 +57,8 @@ class AddAdminContainer extends React.Component{
     }
     render = () => {
         const { authorizedAddAdmin } = this.state;
+        const filteredAdmins = authorizedAddAdmin.filter(admin => admin.hasOwnProperty("permission"));
+
         const { profile } = this.props;
 
         const headers = [
@@ -66,7 +68,7 @@ class AddAdminContainer extends React.Component{
             { label: "Type", key: "type" }
         ];
 
-        const csvData = authorizedAddAdmin.map(row => ({...row, type: row.permission.super_admin ? 'Super admin' : 'Collaborator' }));
+        const csvData =filteredAdmins.map(row => ({...row, type: row.permission.super_admin ? 'Super admin' : 'Collaborator' }));
         const jsonData = csvData.map(row => _.pick(row, ['id', 'name', 'email', 'type']));
 
         return (
@@ -95,8 +97,8 @@ class AddAdminContainer extends React.Component{
                                 { title: 'Status', field: 'status', editable : 'never'},
                                 { title: 'Type', field: 'adminType', editable : 'never'}
                             ]}
-                            rawData={authorizedAddAdmin}
-                            data={authorizedAddAdmin.map( v => {
+                            rawData={filteredAdmins}
+                            data={filteredAdmins.map( v => {
                                 return {
                                     email: this.renderEmail(v),
                                     status: ((v.registered === true) ? 'Registered' : 'Pending'),

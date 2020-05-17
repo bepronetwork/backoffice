@@ -16,7 +16,6 @@ import moment from 'moment';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 
-
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -42,18 +41,20 @@ function getSorting(order, orderBy) {
 }
 
 
-const fromDatabasetoTable = (data, currencies ) => {
+const fromDatabasetoTable = (data, currencies, users, games ) => {
 
-	return data.map( (key) => {
+	return data.map((key) => {
 
-        const currency = currencies.filter(c => new String(c._id).toString() == new String(key.currency).toString())[0];
+        const currency = currencies.find(currency => currency._id === key.currency);
+        const user = users.find(user => user._id === key.user._id);
+        const game = games.find(game => game._id === key.game);
 
 		return {
             _id :  key._id,
-            user : key.user,
+            user : user._id,
             currency : currency, 
             app : key.app,
-            game : key.game,
+            game : game._id,
             ticker : currency ? currency.ticker : '',
             isWon :  key.isWon,
             winAmount : key.winAmount,
@@ -110,7 +111,7 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+        const { order, orderBy } = this.props;
 
         return (
             <TableHead>
@@ -186,29 +187,35 @@ class UserBetsTable extends React.Component {
         };
     }
 
-
     componentDidMount(){
         this.projectData(this.props)
     }
 
     projectData = async (props) => {
-        const { bets } = props;
-
         this.setLoading(true);
         
         const app = await props.profile.getApp();
-        const variables = await app.getEcosystemVariables()
-        const currencies = variables.data.message.currencies;
+
+        const appBets = await app.getAllBets({ filters: { size: 100, isJackpot: true }});
+
+        const bets = appBets.data.message.list;
+        const currencies = app.params.currencies;
+        const users = app.params.users;
+        const games = app.params.games;
 
         if (bets.length > 0) {
             this.setState({...this.state, 
-                data: fromDatabasetoTable(bets, currencies),
-                currencies: currencies
+                data: fromDatabasetoTable(bets, currencies, users, games),
+                currencies: currencies,
+                users: users,
+                games: games
             })
         } else {
             this.setState({...this.state, 
                 data: [],
-                currencies: currencies
+                currencies: currencies,
+                users: users,
+                games: games
             })
         }
 
@@ -274,8 +281,33 @@ class UserBetsTable extends React.Component {
         await this.projectData();
     }
 
-    handleChangePage = (event, page) => {
-        this.setState({ page });
+    handleChangePage = async (event, page) => {
+        const { data, rowsPerPage, currencies, users, games } = this.state;
+        const { App } = this.props.profile;
+
+        if (page === Math.ceil(data.length / rowsPerPage)) {
+
+            this.setLoading(true);
+
+            const res = await App.getAllBets({ 
+                filters: { size: 100, offset: data.length, isJackpot: true } });
+                
+            const bets = res.data.message.list;
+            
+            if (bets.length > 0) {
+                this.setState({
+                    data: data.concat(fromDatabasetoTable(bets, currencies, users, games)),
+                    page: page
+                })
+
+            }
+
+            this.setLoading(false);
+
+        } else {
+            this.setState({ page });
+        }
+
     };
 
     handleChangeRowsPerPage = event => {
@@ -286,7 +318,7 @@ class UserBetsTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page, ticker } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     const isLoading = this.state.isLoading;
     
@@ -351,11 +383,12 @@ class UserBetsTable extends React.Component {
             </Table>
         </div>)}
         <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
-            count={data.length}
+            count={data.length + rowsPerPage}
             rowsPerPage={rowsPerPage}
             page={page}
+            labelDisplayedRows={({ from, to, count }) => `${from}-${to > count - rowsPerPage ? count - rowsPerPage : to} of ${count - rowsPerPage}`}
             backIconButtonProps={{
                 'aria-label': 'Previous Page',
             }}

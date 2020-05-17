@@ -457,6 +457,24 @@ class App{
         }
     }
 
+    cancelUserWithdraw = async ({withdraw, note}) => {
+        const { user, _id, currency } = withdraw;
+
+        try{
+            let res = await ConnectionSingleton.cancelUserWithdraw({
+                params : {
+                    admin : this.getAdminId(), user, app : this.getId(), transactionHash : null, withdraw_id : _id, note: note, currency : currency._id
+                },
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+
     approveWithdrawsBatch = async (items) => {
         try{
 
@@ -669,6 +687,26 @@ class App{
                     admin : this.getAdminId(),
                     app : this.getId(),
                     loadingGif
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editThemeCustomization = async ({theme}) => {
+        try{
+            let res = await ConnectionSingleton.editThemeCustomization({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    theme
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -971,6 +1009,32 @@ class App{
             throw err;
 		}
     }
+
+    changeAffiliateMinWithdraw = async ({amount, wallet_id}) => {
+        try{
+            let res = await ConnectionSingleton.changeAffiliateMinWithdraw({
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    amount,
+                    wallet_id : wallet_id
+                },
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+            let {
+                status
+            } = res.data;
+
+            if(parseInt(status) == 200){
+                return true;
+            }else{
+                throw new Error(res.data.message);
+            }
+        }catch(err){
+            console.log(err);
+            throw err;
+		}
+    }
   
     getSummaryData(type){
         return {
@@ -1065,6 +1129,24 @@ class App{
                 params : {
                     currency,
                     autoWithdrawParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
+    editTxFee = async ({currency, txFeeParams}) => {
+        try{
+            return await ConnectionSingleton.editTxFee({   
+                params : {
+                    currency,
+                    txFeeParams,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     
