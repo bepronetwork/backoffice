@@ -132,7 +132,7 @@ class GamePageContainer extends React.Component{
     removeImage = (src, field) => {
         switch(field){
             case 'image' : {
-                this.setState({imageItem : null})
+                this.setState({imageItem : ""})
                 break;
             };
             case 'background' : {
@@ -221,6 +221,7 @@ class GamePageContainer extends React.Component{
         const image = game_image ? game_image : game_images.default;
 
         const isSuperAdmin = profile.User.permission.super_admin;
+
 
         return (
             <Container className="dashboard">
