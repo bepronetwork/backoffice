@@ -4,6 +4,7 @@ import { Grid, FormControl, FormGroup, FormControlLabel, Checkbox, createMuiThem
 import { CheckBoxOutlineBlankIcon, CheckBoxIcon } from 'mdi-react';
 import BooleanInput from "./BooleanInput";
 import LockAdmin from './LockAdmin';
+import { connect } from 'react-redux';
 
 const theme = createMuiTheme({
     palette: {
@@ -13,7 +14,7 @@ const theme = createMuiTheme({
     },
   });
 
-export default class AdminCard extends Component {
+class AdminCard extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -59,8 +60,15 @@ export default class AdminCard extends Component {
     }
 
     confirmChanges = async () => {
-        console.log("Confirm");
-    
+        const { id, permission } = this.state;
+        const { profile } = this.props;
+
+        this.setState({...this.state, loading: true });
+
+        await profile.editAdminType({ adminToModify: id, permission: permission });
+
+        this.setState({...this.state, loading: false });
+        this.lock();
     }
 
     render() {
@@ -72,7 +80,7 @@ export default class AdminCard extends Component {
 
         return (
             <Card className='game-container'>
-            <CardBody className="dashboard__card-widget" style={{ width: 300, padding: 20 }}>
+            <CardBody className="dashboard__card-widget" style={{ width: 305, padding: 20 }}>
                 <div style={{ display: "flex" }}>
                     <h5 className="bold-text">{name}</h5>
                     <p className={`text-small ${registered ? "text-green" : "text-red"} `} style={{ margin: 0, marginLeft: 5 }} >
@@ -85,7 +93,7 @@ export default class AdminCard extends Component {
                     unlockField={this.unlock} 
                     lockField={this.lock} 
                     confirmChanges={this.confirmChanges} 
-                    isLoading={this.loading}
+                    isLoading={loading}
                     locked={lock}>
                         <FormControlLabel
                         style={{margin: 0, marginTop: 10 }}
@@ -113,7 +121,7 @@ export default class AdminCard extends Component {
                                         color="primary"
                                         icon={<CheckBoxOutlineBlankIcon style={{ fontSize: 20 }} />}
                                         checkedIcon={<CheckBoxIcon style={{ fontSize: 20 }} />}
-                                        checked={customization} onChange={(e) => this.handleChange(e)} name="customization" />}
+                                        checked={customization || super_admin } onChange={(e) => this.handleChange(e)} name="customization" />}
                                     label={<span style={{ fontSize: "13px" }}>Customization</span>}
                                     style={{ margin: 0 }}
                                 />
@@ -124,7 +132,7 @@ export default class AdminCard extends Component {
                                         color="primary"
                                         icon={<CheckBoxOutlineBlankIcon style={{ fontSize: 20 }} />}
                                         checkedIcon={<CheckBoxIcon style={{ fontSize: 20 }} />}
-                                        checked={withdraw} onChange={(e) => this.handleChange(e)} name="withdraw" />}
+                                        checked={withdraw || super_admin } onChange={(e) => this.handleChange(e)} name="withdraw" />}
                                     label={<span style={{ fontSize: "13px" }}>Withdraw</span>}
                                     style={{ margin: 0 }}
                                 />
@@ -135,7 +143,7 @@ export default class AdminCard extends Component {
                                         color="primary"
                                         icon={<CheckBoxOutlineBlankIcon style={{ fontSize: 20 }} />}
                                         checkedIcon={<CheckBoxIcon style={{ fontSize: 20 }} />}
-                                        checked={user_withdraw} onChange={(e) => this.handleChange(e)} name="user_withdraw" />}
+                                        checked={user_withdraw || super_admin } onChange={(e) => this.handleChange(e)} name="user_withdraw" />}
                                     label={<span style={{ fontSize: "13px" }}>User withdraw</span>}
                                     style={{ margin: 0 }}
                                 />
@@ -146,7 +154,7 @@ export default class AdminCard extends Component {
                                         color="primary"
                                         icon={<CheckBoxOutlineBlankIcon style={{ fontSize: 20 }} />}
                                         checkedIcon={<CheckBoxIcon style={{ fontSize: 20 }} />}
-                                        checked={financials} onChange={(e) => this.handleChange(e)} name="financials" />}
+                                        checked={financials || super_admin } onChange={(e) => this.handleChange(e)} name="financials" />}
                                     label={<span style={{ fontSize: "13px" }}>Financials</span>}
                                     style={{ margin: 0 }}
                                 />
@@ -159,3 +167,11 @@ export default class AdminCard extends Component {
         )
     }
 }
+
+function mapStateToProps(state){
+    return {
+        profile: state.profile
+    };
+}
+
+export default connect(mapStateToProps)(AdminCard);

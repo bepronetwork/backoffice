@@ -50,7 +50,7 @@ class SettingsContainer extends React.Component{
                             },
                             {
                                 title : 'Admins',
-                                container : <AddAdminContainer/>,
+                                container : <AdminContainer/>,
                                 icon : <AccessibilityIcon size={20}/>
                             },
                             {
@@ -63,11 +63,11 @@ class SettingsContainer extends React.Component{
                                 container : <LogsContainer/>,
                                 icon : <FilesIcon size={20}/>
                             },
-                            {
-                                title : 'Admins (New)',
-                                container : <AdminContainer/>,
-                                icon : <AccessibilityIcon size={20}/>
-                            }
+                            // {
+                            //     title : 'Admins (New)',
+                            //     container : <AdminContainer/>,
+                            //     icon : <AccessibilityIcon size={20}/>
+                            // }
                             /*,
                             {
                                 title : 'Finance',

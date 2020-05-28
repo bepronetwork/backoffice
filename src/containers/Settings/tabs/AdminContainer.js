@@ -8,12 +8,14 @@ import { Button as MaterialButton } from "@material-ui/core";
 import { CSVLink } from 'react-csv';
 import { TableIcon, JsonIcon } from 'mdi-react';
 import { export2JSON } from '../../../utils/export2JSON';
+import AddAdminCard from './Components/AddAdminCard';
 
 class AdminContainer extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            admins: []
+            admins: [],
+            filter: null
         };
     }
 
@@ -30,12 +32,26 @@ class AdminContainer extends React.Component{
         const admins = await profile.getAdminByApp();
 
         this.setState({
-            admins: admins
+            admins: admins.reverse()
         })
     }
 
+    setAdmins = (admins) => {
+        this.setState({ admins: admins });
+    }
+
+    onChangeFilter = _.debounce((filter) => {
+
+        if (filter) {
+            this.setState({ filter: filter.replace(/\s/g, "").toLowerCase() })
+        } else {
+            this.setState({ filter: null })
+        }
+
+    }, 300);
+
     render() {
-        const { admins } = this.state;
+        const { admins, filter } = this.state;
 
         const headers = [
             { label: "Id", key: "id" },
@@ -44,8 +60,17 @@ class AdminContainer extends React.Component{
             { label: "Type", key: "type" }
         ];
 
-        const csvData = admins.map(row => ({...row, type: row.permission.super_admin ? 'Super admin' : 'Collaborator' }));
-        const jsonData = csvData.map(row => _.pick(row, ['id', 'name', 'email', 'type']));
+        let filteredAdmins;
+        
+        if (filter) {
+            filteredAdmins = admins.filter(admin => admin.name.includes(filter) || admin.email.includes(filter));
+        } else {
+            filteredAdmins = admins;
+        }
+        
+
+        const csvData = filteredAdmins.map(row => ({...row, type: row.permission.super_admin ? 'Super admin' : 'Collaborator' }));
+        const jsonData = filteredAdmins.map(row => _.pick(row, ['id', 'name', 'email', 'type']));
 
         return (
             <div>
@@ -55,6 +80,7 @@ class AdminContainer extends React.Component{
                     label="Search..."
                     id="search-admin"
                     size="small"
+                    onChange={event => this.onChangeFilter(event.target.value)}
                     />
                     <CSVLink data={csvData} filename={"admins.csv"} headers={headers}>
                         <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
@@ -67,7 +93,10 @@ class AdminContainer extends React.Component{
                 </div>
                 <hr/>
                 <Row>
-                    {admins.map(admin => (
+                    <Col>
+                        <AddAdminCard setAdmins={this.setAdmins}/>
+                    </Col>
+                    {filteredAdmins.map(admin => (
                         <Col>
                             <AdminCard data={admin}/>
                         </Col>
