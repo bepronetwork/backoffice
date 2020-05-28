@@ -1178,7 +1178,23 @@ class App{
         }
     }
 
-    
+    editDepositBonus = async ({currency, depositBonusParams}) => {
+        try{
+            return await ConnectionSingleton.editDepositBonus({   
+                params : {
+                    currency,
+                    depositBonusParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     editJackpot = async ({edge}) => {
         try{
             return await ConnectionSingleton.editJackpot({   
