@@ -7,7 +7,7 @@ import { compose } from 'lodash/fp'
 import _ from 'lodash';
 import { AccountIcon, CashMultipleIcon, FinanceIcon, ExitToAppIcon, AccessibilityIcon, UpdateIcon, CurrencyEthIcon, CurrencySignIcon, SettingsIcon, FilesIcon} from 'mdi-react';
 import { Tab, Nav, Sonnet } from 'react-bootstrap';
-import { SettingsRiskContainer, AddAdminContainer, SettingsAccountContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
+import { SettingsRiskContainer, AddAdminContainer, AdminContainer, SettingsAccountContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
 // import { SettingsAccountContainer, SettingsRiskContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
 import TabsContainer from '../../shared/components/tabs/Tabs.js';
 import ComplianceContainer from './tabs/ComplianceContainer';
@@ -50,7 +50,7 @@ class SettingsContainer extends React.Component{
                             },
                             {
                                 title : 'Admins',
-                                container : <AddAdminContainer/>,
+                                container : <AdminContainer/>,
                                 icon : <AccessibilityIcon size={20}/>
                             },
                             {
@@ -62,7 +62,12 @@ class SettingsContainer extends React.Component{
                                 title : 'Logs',
                                 container : <LogsContainer/>,
                                 icon : <FilesIcon size={20}/>
-                            }
+                            },
+                            // {
+                            //     title : 'Admins (New)',
+                            //     container : <AdminContainer/>,
+                            //     icon : <AccessibilityIcon size={20}/>
+                            // }
                             /*,
                             {
                                 title : 'Finance',

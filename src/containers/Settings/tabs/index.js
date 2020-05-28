@@ -5,6 +5,7 @@ import AddressManagementContainer from './AddressManagementContainer';
 import PlatformUpdates from './PlatformUpdates';
 import TokenManager from './TokenManager';
 import AddAdminContainer from './AddAdminContainer';
+import AdminContainer from './AdminContainer';
 
 export {
     SettingsTransactionContainer,
@@ -13,5 +14,6 @@ export {
     TokenManager,
     AddressManagementContainer,
     PlatformUpdates,
-    AddAdminContainer
+    AddAdminContainer,
+    AdminContainer
 }
