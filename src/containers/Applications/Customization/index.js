@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { AnnouncementTab, Banners, Logo, Footer, Colors, Fonts } from './components';
 import TabsContainer from '../../../shared/components/tabs/Tabs';
-import { LayersOutlineIcon, AnnouncementIcon, BrandingWatermarkIcon, ColorizeIcon, PageLayoutFooterIcon, FormatFontIcon } from 'mdi-react';
+import { LayersOutlineIcon, AnnouncementIcon, BrandingWatermarkIcon, ColorizeIcon, PageLayoutFooterIcon, FormatFontIcon, ImageIcon } from 'mdi-react';
+import Background from './components/Background';
 
 export default class CustomizationContainer extends Component {
     render() {
@@ -19,6 +20,11 @@ export default class CustomizationContainer extends Component {
                                 title : 'Logo',
                                 container : <Logo/>,
                                 icon : <BrandingWatermarkIcon/>
+                            },
+                            {
+                                title : 'Background',
+                                container : <Background/>,
+                                icon : <ImageIcon/>
                             },
                             {
                                 title : 'Banners',
