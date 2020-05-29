@@ -6,6 +6,21 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import _ from 'lodash';
 import { Tab, Nav } from 'react-bootstrap';
+import { Bet } from '../../../components/Icons'
+import styled from 'styled-components';
+
+const Icon = styled.section`
+    padding-top: 3px;
+    height: 24px;
+    width: 24px;
+`;
+
+const Title = styled.span`
+    margin-left: 7px;
+    font-family: Poppins;
+    font-size: 20px;
+    color: #a4a1a1;
+`;
 
 const defaultState = {}
 
@@ -25,15 +40,17 @@ class TabsContainer extends React.Component{
             <div>
                 <Tab.Container id="left-tabs-example" defaultActiveKey={"item-0"}>
                     <Row>
-                        <Col md={2}>
+                        <Col md={2} style={{ paddingLeft: 0, backgroundColor: "white", minWidth: 289, borderRadius: "6px", paddingBottom: "30px" }}>
                             <Nav variant="pills" className="flex-column">
                                 {filteredItems.map( (item, index) => {
                                     return (
                                         <Row>
-                                            <Col md={12} style={{maxWidth: `220px`, minWidth: `190px`}}>
-                                                <Nav.Item key={index}>
-                                                    <Nav.Link eventKey={`item-${index}`}>
-                                                        {item.icon} &nbsp; {item.title}
+                                            <Col md={12} style={{maxWidth: `258px`, minWidth: `190px`}}>
+                                                <Nav.Item key={index} style={{ margin: 7 }}>
+                                                    <Nav.Link eventKey={`item-${index}`} style={{ width: "258px", height: "50px" }}>
+                                                        <div style={{ display: "flex" }}>
+                                                            {<Icon>{item.icon}</Icon>} &nbsp; <Title>{item.title}</Title>
+                                                        </div>
                                                     </Nav.Link>
                                                 </Nav.Item>
                                             </Col>
@@ -42,7 +59,7 @@ class TabsContainer extends React.Component{
                                 })}
                             </Nav>
                         </Col>
-                        <Col md={10}>
+                        <Col md={9}>
                             <Tab.Content>
                                 {filteredItems.map( (item, index) => {
                                     return (

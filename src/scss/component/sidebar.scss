@@ -5,8 +5,8 @@
   z-index: 99;
   height: 100vh;
   width: 240px;
-  box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
-  padding-top: 60px;
+  // box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
+  padding-top: 80px;
   transition: transform 0.3s, width 0.3s;
   transform: translateX(calc(-100% - 20px));
 
@@ -37,12 +37,17 @@
 }
 
 .sidebar__link-active {
+  background-color: #814c941a !important;
 
   .sidebar__link {
 
     &:before {
       opacity: 1;
     }
+
+      p {
+        color: #814c94 !important;
+      }
   }
 }
 
@@ -87,7 +92,8 @@
 }
 
 .sidebar__block {
-  padding: 15px 0;
+  padding-left: 0px;
+  width: 254px;
 
   @include themify($themes) {
     border-bottom: 1px solid themed('colorBorder');
@@ -100,7 +106,7 @@
 
 
 .sidebar__link__not_active{
-    height: 36px;
+    height: 50px;
     width: 100%;
     transition: all 0.3s;
     position: relative;
@@ -113,7 +119,7 @@
 }
 
 .sidebar__link {
-    height: 36px;
+    height: 50px;
     width: 240px;
     transition: all 0.3s;
     position: relative;
@@ -134,10 +140,14 @@
         left: 0;
         top: 0;
         height: 100%;
-        width: 2px;
+        width: 4px;
         background: $color-accent;
         opacity: 0;
         transition: all 0.3s;
+
+        .sidebar__link-active {
+          background-color: #814c941a !important;
+        }
     }
 
     p {
@@ -148,6 +158,8 @@
         top: 50%;
         transform: translateY(-50%);
     }
+
+
 
     &:hover {
         text-decoration: none;
@@ -289,7 +301,7 @@
     }
 
     &.sidebar--collapse {
-      width: 60px;
+      width: 281px;
       overflow: visible;
 
       .sidebar__scroll, .sidebar__content {
@@ -355,13 +367,15 @@
 
       .sidebar__link {
         overflow: hidden;
-        width: 55px;
+        width: 254px;
         background-color: transparent;
 
         p {
           position: absolute;
-          left: 70px;
+          left: 60px;
           width: 160px;
+          font-size: 20px;
+          color: #a4a1a1;
         }
 
         &:hover {

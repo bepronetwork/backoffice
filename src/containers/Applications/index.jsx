@@ -17,10 +17,54 @@ import ThirdPartiesContainer from './ThirdParties/index.js';
 import HostingLink from './components/HostingLink';
 import AddOnsContainer from './AddOnPage';
 import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
+import { Bet, Reward, Settings, Rewards, AddOn, Wallet, Casino, CasinoWhite } from '../../components/Icons';
+import styled from 'styled-components';
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
 const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
+
+const CasinoCard = styled.section`
+  display: flex;
+  width: 493px;
+  height: 85px;
+  max-height: 550px;
+  z-index: 100;
+  padding: 25px;
+  margin: 30px 15px;
+  background: #814c94;
+  border-radius: 6px;
+  transition: transform 0.2s;
+  overflow: hidden;
+
+    span {
+        font-family: Poppins;
+        font-size: 20px;
+        color: #ffffff;
+    }
+`;
+
+const CasinoContainer = styled.section`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+`;
+
+const Icon = styled.section`
+    height: 200px;
+    width: 200px;
+    opacity: 0.56;
+`
+
+const Link = styled.h1`
+    margin-bottom: 10px;
+    font-family: Poppins;
+    font-size: 24px;
+    font-weight: 500;
+    color: #463e3e;
+`;
 
 class ApplicationsContainer extends React.Component{
 
@@ -46,7 +90,7 @@ class ApplicationsContainer extends React.Component{
                         wallet : this.props.profile.getApp().getSummaryData('wallet'),
                     }} {...this.props}/>
                 ),
-                icon : <GamesIcon/>
+                icon : <Bet/>
             },
             gameStore: {
                 title : 'Game Store',
@@ -54,7 +98,7 @@ class ApplicationsContainer extends React.Component{
                     <GameStorePageContainer/>
                     
                 ),
-                icon : <StoreIcon/>
+                icon : <Reward/>
             },
             customization: {
                 title : 'Customization ',
@@ -62,7 +106,7 @@ class ApplicationsContainer extends React.Component{
                     <CustomizationContainer/>
                     
                 ),
-                icon : <SettingsIcon/>
+                icon : <Settings/>
             },
             thirdParties: {
                 title : 'Third-Parties ',
@@ -70,7 +114,7 @@ class ApplicationsContainer extends React.Component{
                     <ThirdPartiesContainer/>
                     
                 ),
-                icon : <ArrowDecisionIcon/>
+                icon : <Rewards/>
             },
             addOns: {
                 title : 'Add-Ons ',
@@ -78,7 +122,7 @@ class ApplicationsContainer extends React.Component{
                     <AddOnsContainer/>
                     
                 ),
-                icon : <PuzzleIcon/>
+                icon : <AddOn/>
             },
             currencies: {
                 title : 'Currencies ',
@@ -86,7 +130,7 @@ class ApplicationsContainer extends React.Component{
                     <CurrenciesContainer />
                     
                 ),
-                icon : <MoneyIcon/>
+                icon : <Wallet/>
             }
         }
 
@@ -121,14 +165,15 @@ class ApplicationsContainer extends React.Component{
                     <Col lg={12}>
                         <div>
                             <Row>
-                                <Col md={8}>
+                                <Col md={4}>
                                     <Row>
                                         {servicesCodes.map( (key) => {
                                             return widgets[key] ? widgets[key]() : null;
                                         })}
                                     </Row>
                                 </Col>
-                                <Col md={4}>
+                                <Col md={8} style={{ paddingBottom: 30 }}>
+                                    <Link>Application link</Link>
                                     <HostingLink/>
                                 </Col>
                             </Row>
@@ -150,16 +195,21 @@ class ApplicationsContainer extends React.Component{
 const widgets = {
     casino : () => {
         return (
-            <Col md={3}>
-                <Card>
-                    <button className='button-hover box-small landing__product__widget__small' style={{marginLeft : 0}}>
-                        <div className='description'>
-                            <h5 style={{margin : 0}}> Casino</h5>
-                        </div>
-                        <img className='image_widget'src={casino}></img>
-                    </button>
-                </Card>
-            </Col>        
+            <CasinoCard>
+                <CasinoContainer>
+                    <span>Casino</span>
+                    <Icon>
+                        <CasinoWhite/>
+                    </Icon>
+                </CasinoContainer>
+                
+                {/* <button className='button-hover box-small landing__product__widget__small' style={{marginLeft : 0, backgroundColor: "#814c94" }}>
+                    <div className='description'>
+                        <h5 style={{margin : 0, color: "white", fontFamily: "Poppins", fontSize: "20px" }}> Casino</h5>
+                    </div>
+                    <img className='image_widget'src={Casino}></img>
+                </button> */}
+            </CasinoCard>       
         )
     }
 } 

@@ -12,6 +12,7 @@ import { SettingsRiskContainer, AddAdminContainer, AdminContainer, SettingsAccou
 import TabsContainer from '../../shared/components/tabs/Tabs.js';
 import ComplianceContainer from './tabs/ComplianceContainer';
 import LogsContainer from './tabs/LogsContainer';
+import { User, Settings, Chat } from '../../components/Icons';
 
 const defaultState = {
 }
@@ -46,22 +47,22 @@ class SettingsContainer extends React.Component{
                             {
                                 title : 'Account',
                                 container : <SettingsAccountContainer/>,
-                                icon : <AccountIcon size={20}/>
+                                icon : <User/>
                             },
                             {
                                 title : 'Admins',
                                 container : <AdminContainer/>,
-                                icon : <AccessibilityIcon size={20}/>
+                                icon : <User/>
                             },
                             {
                                 title : 'Compliance',
                                 container : <ComplianceContainer/>,
-                                icon : <SettingsIcon size={20}/>
+                                icon : <Settings/>
                             },
                             {
                                 title : 'Logs',
                                 container : <LogsContainer/>,
-                                icon : <FilesIcon size={20}/>
+                                icon : <Chat/>
                             },
                             // {
                             //     title : 'Admins (New)',
