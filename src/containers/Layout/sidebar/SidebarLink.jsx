@@ -19,7 +19,7 @@ const SidebarLink = ({
         activeClassName={disabled ? "" : "sidebar__link-active"}
     >
 
-        <li style={{opacity : disabled ? 0.4 : 1}} className={disabled ? "sidebar__link__not_active" : "sidebar__link"}>
+        <li style={{opacity : disabled ? 0.4 : 1 }} className={disabled ? "sidebar__link__not_active" : "sidebar__link"}>
             {/* {icon ? <span className={`sidebar__link-icon lnr lnr-${icon}`} /> : ''} */}
             <Icon>
                 {icon}

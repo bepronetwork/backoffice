@@ -10,6 +10,13 @@ import Settings from './Settings';
 import Reward from './Reward';
 import LogOut from './LogOut';
 import Backoffice from './Backoffice';
+import Rewards from './Rewards';
+import AddOn from './AddOn';
+import Withdraw from './Withdraw';
+import CasinoWhite from './CasinoWhite';
+import Cash from './Cash';
+import Email from './Email';
+import Chat from './Chat';
 
 export { 
     Casino, 
@@ -23,5 +30,12 @@ export {
     Settings,
     Reward,
     LogOut,
-    Backoffice
+    Backoffice,
+    Rewards,
+    AddOn,
+    Withdraw,
+    CasinoWhite,
+    Cash,
+    Email,
+    Chat
 };

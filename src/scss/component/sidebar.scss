@@ -37,12 +37,17 @@
 }
 
 .sidebar__link-active {
+  background-color: #814c941a !important;
 
   .sidebar__link {
 
     &:before {
       opacity: 1;
     }
+
+      p {
+        color: #814c94 !important;
+      }
   }
 }
 
@@ -139,6 +144,10 @@
         background: $color-accent;
         opacity: 0;
         transition: all 0.3s;
+
+        .sidebar__link-active {
+          background-color: #814c941a !important;
+        }
     }
 
     p {
@@ -149,6 +158,8 @@
         top: 50%;
         transform: translateY(-50%);
     }
+
+
 
     &:hover {
         text-decoration: none;

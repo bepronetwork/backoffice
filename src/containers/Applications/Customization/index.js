@@ -3,6 +3,7 @@ import { AnnouncementTab, Banners, Logo, Footer, Colors, Fonts } from './compone
 import TabsContainer from '../../../shared/components/tabs/Tabs';
 import { LayersOutlineIcon, AnnouncementIcon, BrandingWatermarkIcon, ColorizeIcon, PageLayoutFooterIcon, FormatFontIcon, ImageIcon } from 'mdi-react';
 import Background from './components/Background';
+import { Bet, Reward, Phone, Settings, Rewards, AddOn, Withdraw } from '../../../components/Icons';
 
 export default class CustomizationContainer extends Component {
     render() {
@@ -14,37 +15,37 @@ export default class CustomizationContainer extends Component {
                             {
                                 title : 'Announc. Tab',
                                 container :  <AnnouncementTab />,
-                                icon : <AnnouncementIcon/>
+                                icon : <Bet/>
                             },
                             {
                                 title : 'Logo',
                                 container : <Logo/>,
-                                icon : <BrandingWatermarkIcon/>
+                                icon : <Reward/>
                             },
                             {
                                 title : 'Background',
                                 container : <Background/>,
-                                icon : <ImageIcon/>
+                                icon : <Phone/>
                             },
                             {
                                 title : 'Banners',
                                 container : <Banners/>,
-                                icon : <LayersOutlineIcon/>
+                                icon : <Settings/>
                             },
                             {
                                 title : 'Colors',
                                 container : <Colors/>,
-                                icon : <ColorizeIcon/>
+                                icon : <Rewards/>
                             },
                             {
                                 title : 'Font',
                                 container : <Fonts/>,
-                                icon : <FormatFontIcon/>
+                                icon : <AddOn/>
                             },
                             {
                                 title : 'Footer',
                                 container : <Footer/>,
-                                icon : <PageLayoutFooterIcon/>
+                                icon : <Withdraw/>
                             },
                          
                         ]
