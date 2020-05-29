@@ -2,6 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
+import styled from 'styled-components';
+
+
+const Icon = styled.section`
+    height: 27px;
+    width: 27px;
+`;
 
 const SidebarLink = ({
   title, icon, newLink, route, onClick, disabled
@@ -11,8 +18,12 @@ const SidebarLink = ({
         onClick={onClick}
         activeClassName={disabled ? "" : "sidebar__link-active"}
     >
+
         <li style={{opacity : disabled ? 0.4 : 1}} className={disabled ? "sidebar__link__not_active" : "sidebar__link"}>
-            {icon ? <span className={`sidebar__link-icon lnr lnr-${icon}`} /> : ''}
+            {/* {icon ? <span className={`sidebar__link-icon lnr lnr-${icon}`} /> : ''} */}
+            <Icon>
+                {icon}
+            </Icon>
             {!disabled ? 
                 <p className={"sidebar__link-title"}>
                 {title}

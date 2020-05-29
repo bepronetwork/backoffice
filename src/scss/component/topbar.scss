@@ -2,8 +2,9 @@
   width: 100%;
   position: fixed;
   top: 0;
-  height: 60px;
+  height: 82px;
   z-index: 101;
+  border: solid 1px rgba(164, 161, 161, 0.35);
 
   @include themify($themes) {
     background: themed('colorBackground');
@@ -13,7 +14,7 @@
 .topbar__wrapper {
   position: relative;
   display: flex;
-  height: 60px;
+  height: 82px;
 }
 
 .topbar__button {
@@ -22,8 +23,8 @@
   display: flex;
   background: transparent;
   border: none;
-  border-right: 1px solid #f3f3f3;
-  border-bottom: 1px solid #f3f3f3;
+  // border-right: 1px solid #f3f3f3;
+  // border-bottom: 1px solid #f3f3f3;
   cursor: pointer;
   transition: 0.3s;
 
