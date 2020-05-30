@@ -3,7 +3,7 @@ import { Row, Col } from 'reactstrap';
 import { connect } from "react-redux";
 import _ from 'lodash';
 import AdminCard from './Components/AdminCard';
-import { TextField } from '@material-ui/core';
+import { TextField, Grid } from '@material-ui/core';
 import { Button as MaterialButton } from "@material-ui/core";
 import { CSVLink } from 'react-csv';
 import { TableIcon, JsonIcon } from 'mdi-react';
@@ -92,16 +92,16 @@ class AdminContainer extends React.Component{
                     </MaterialButton>
                 </div>
                 <hr/>
-                <Row>
-                    <Col>
+                <Grid container spacing={6}>
+                    <Grid item>
                         <AddAdminCard setAdmins={this.setAdmins}/>
-                    </Col>
+                    </Grid>
                     {filteredAdmins.map(admin => (
-                        <Col>
+                        <Grid item>
                             <AdminCard data={admin}/>
-                        </Col>
+                        </Grid>
                     ))}
-                </Row>
+                </Grid>
             </div>
         )
     }

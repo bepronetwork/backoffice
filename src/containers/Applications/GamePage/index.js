@@ -136,7 +136,7 @@ class GamePageContainer extends React.Component{
                 break;
             };
             case 'background' : {
-                this.setState({backgroundItem : null})
+                this.setState({backgroundItem : ""})
                 break;
             }
         }
