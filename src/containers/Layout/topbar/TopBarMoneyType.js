@@ -1,6 +1,15 @@
 import React from 'react';
 import { connect } from "react-redux";
 import _ from 'lodash';
+import styled from 'styled-components';
+
+const MobileWrapper = styled.section`
+
+  @media (max-width: 578px) {
+   display: none !important;
+  }
+
+`;
 
 class TopBarMoneyType extends React.Component {
 
@@ -13,13 +22,13 @@ class TopBarMoneyType extends React.Component {
         const { virtual } = profile.getApp().getParams();
 
         return (
-            <div className="topbar__collapse topbar__collapse--language">
+            <MobileWrapper>
                 <button className="topbar__btn" onClick={this.toggle}>
-                    <span className="topbar__virutal-btn-title" style={{height : 20}}>
-                        <p style={{marginTop : -3}}>{ virtual === true ? 'Fake Money' : 'Real Money' }</p>
+                    <span className="topbar__virutal-btn-title" style={{height : 44}}>
+                        <p>{ virtual === true ? 'Fake Money' : 'Real Money' }</p>
                     </span>
                 </button>
-            </div>
+            </MobileWrapper>
         );
     }
 }

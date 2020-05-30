@@ -4,7 +4,8 @@
   top: 0;
   height: 82px;
   z-index: 101;
-  border: solid 1px rgba(164, 161, 161, 0.35);
+  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
+  // border: solid 1px rgba(164, 161, 161, 0.35);
 
   @include themify($themes) {
     background: themed('colorBackground');
@@ -18,8 +19,8 @@
 }
 
 .topbar__button {
-  width: 60px;
-  height: 60px;
+  // width: 60px;
+  height: 100%;
   display: flex;
   background: transparent;
   border: none;
@@ -82,7 +83,6 @@
   right: 0;
   display: flex;
   height: 100%;
-  margin-right: 15px;
 }
 
 .topbar__left {
@@ -102,7 +102,6 @@
   border: none;
   transition: all 0.3s;
   box-shadow: none;
-  padding: 0 15px;
   background-color: transparent;
 
   &:hover, &:focus, &:active, &:focus:active {
@@ -126,27 +125,25 @@
 
 .topbar__avatar-img {
   border-radius: 50%;
-  height: 36px;
-  width: 36px;
+  height: 44px;
+  width: 44px;
 }
 
 .topbar__avatar-name {
-  font-size: 13px;
-  line-height: 18px;
+  font-family: Poppins;
+  font-size: 20px;
+  line-height: 30px;
   font-weight: 400;
   display: none;
   margin-left: 10px;
-
-  @include themify($themes) {
-    color: themed('colorText');
-  }
+  color: #a4a1a1 !important;
 }
 
 .topbar__icon {
   margin-left: 8px;
-  height: 18px;
+  height: 24px;
   margin-top: auto;
-  fill: #b1c3c8;
+  fill: #a4a1a1;
 }
 
 .topbar__menu {
@@ -189,10 +186,11 @@
   display: flex;
   padding: 9px 20px;
   transition: all 0.3s;
-  height: 32px;
+  height: 40px;
   width: 100%;
   position: relative;
   cursor: pointer;
+  align-items: center;
 
   @include themify($themes) {
     color: themed('colorText');
@@ -204,7 +202,7 @@
     left: 0;
     top: 0;
     height: 100%;
-    width: 2px;
+    width: 4px;
     background: $color-accent;
     opacity: 0;
     transition: all 0.3s;
@@ -223,14 +221,15 @@
 
 .topbar__link-title {
   margin: 0;
-  font-size: 14px;
+  font-size: 18px;
   line-height: 16px;
+  color: #a4a1a1 !important;
 }
 
 .topbar__link-icon {
   margin-right: 10px;
-  font-size: 13px;
-  line-height: 13px;
+  font-size: 20px;
+  line-height: 20px;
 
   @include themify($themes) {
     color: themed('colorIcon');
@@ -295,13 +294,13 @@
   }
 
   &.topbar__collapse-content--language {
-    max-width: 70px;
+    max-width: 120px;
     padding: 10px 0;
     width: 100%;
   }
 
   &.topbar__collapse-content--periodicity {
-    max-width: 80px;
+    max-width: 120px;
     padding: 10px 0;
     width: 100%;
   }
@@ -334,13 +333,10 @@
 
 .topbar__language-btn-title {
   display: flex;
-  font-size: 11px;
+  font-size: 15px;
   align-items: center;
   margin: auto 0;
-
-  @include themify($themes) {
-    color: themed('colorText');
-  }
+  color: #a4a1a1 !important;
 
   &:not(:last-child) {
     margin-right: 5px;
@@ -355,13 +351,10 @@
 
 .topbar__currency-btn-title {
   display: flex;
-  font-size: 11px;
+  font-size: 15px !important;
   align-items: center;
   margin: auto 0;
-
-  @include themify($themes) {
-    color: themed('colorText');
-  }
+  color: #a4a1a1 !important;
 
   &:not(:last-child) {
     margin-right: 5px;
@@ -374,6 +367,7 @@
   }
 
   p {
+    font-size: 15px;
     background-color: #c7c7c7;
     color: #fff;
     padding: 4px 6px;
@@ -403,9 +397,11 @@
 
   p {
     background-color: #894798;
-    color: #fff;
-    padding: 4px 6px;
-    border-radius: 3px;
+    height: 44px;
+    color: white !important;
+    padding: 13px 31px;
+    padding-top: 8px;
+    border-radius: 6px;
   }
 }
 
@@ -428,13 +424,10 @@
 
 .topbar__periodicity-btn-title {
   display: flex;
-  font-size: 11px;
+  font-size: 15px;
   align-items: center;
   margin: auto 0;
-
-  @include themify($themes) {
-    color: themed('colorText');
-  }
+  color: #a4a1a1 !important;
 
   &:not(:last-child) {
     margin-right: 5px;
@@ -566,9 +559,17 @@
   cursor: pointer;
   position: relative;
   display: flex;
+  align-items: center;
   border: none;
   background: transparent;
   transition: all 0.3s;
+
+  p {
+    font-family: Poppins;
+    font-size: 16px;
+    line-height: 25px;
+    color: #a4a1a1;
+  }
 
   @include themify($themes) {
     color: themed('colorText');
@@ -583,9 +584,8 @@
 
   svg {
     margin: auto;
-    height: 18px;
-    width: 18px;
-    fill: #b1c3c8;
+    height: 35px;
+    width: 35px;
   }
 
   &.topbar__btn--new {
@@ -741,7 +741,11 @@
   &:hover {
 
     .topbar__submenu {
-      opacity: 1;
+      opacity: 1;font-family: Poppins;
+      font-size: 20px;
+      line-height: 30px;
+      text-align: left;
+      color: #a4a1a1;
       width: auto;
       height: auto;
     }

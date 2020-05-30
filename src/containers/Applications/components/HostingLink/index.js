@@ -9,28 +9,33 @@ import styled from 'styled-components';
 const ApplicationLink = styled.section`
     display: flex;
     height: 85px;
-    width: 784px;
+    max-width: 784px;
     background-color: white;
+    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
     border-radius: 6px;
     justify-content: space-between;
     align-items: center;
-    padding-left: 46px;
+    padding-left: 25px;
 
     h6 {
         font-family: Poppins;
         font-size: 20px;
         color: #a4a1a1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 `;
 
 const OpenAppButton = styled(Button)`
     margin: 0px;
+    margin-left: 10px;
     height: 100%;
     border-radius: 6px;
     background-color: #814c94;
     min-width: 150px;
 
-    &.box.icon {
+    &.btn.icon {
         padding-top: 20px;   
     }
 

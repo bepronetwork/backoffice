@@ -29,13 +29,13 @@ const CasinoCard = styled.section`
   width: 493px;
   height: 85px;
   max-height: 550px;
-  z-index: 100;
   padding: 25px;
   margin: 30px 15px;
   background: #814c94;
   border-radius: 6px;
   transition: transform 0.2s;
   overflow: hidden;
+  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
 
     span {
         font-family: Poppins;
@@ -172,7 +172,7 @@ class ApplicationsContainer extends React.Component{
                                         })}
                                     </Row>
                                 </Col>
-                                <Col md={8} style={{ paddingBottom: 30 }}>
+                                <Col md={8} style={{ paddingBottom: 30, marginTop: -27 }}>
                                     <Link>Application link</Link>
                                     <HostingLink/>
                                 </Col>
