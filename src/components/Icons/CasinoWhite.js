@@ -21,7 +21,6 @@ export default class CasinoWhie extends Component {
         return (
             <Theme>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.4 86.62">
-                <title>CasinoWhite</title>
                     <path class="a" d="M40.83,13.48A29.53,29.53,0,0,0,21.9,21.3l5.37,5.37a22,22,0,0,1,13.56-5.59Z" />
                     <path class="a" d="M25.61,57.83A21.91,21.91,0,0,1,20,44.2h-7.6a29.48,29.48,0,0,0,7.88,19Z" />
                     <path class="a" d="M63.67,23,58.3,28.32A22,22,0,0,1,64,42h7.59A29.52,29.52,0,0,0,63.67,23Z" />

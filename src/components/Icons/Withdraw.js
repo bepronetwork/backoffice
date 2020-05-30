@@ -33,7 +33,6 @@ export default class Reward extends Component {
         return (
             <Theme>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.4 86.62">
-                <title>Withdraw</title>
                 <polyline class="a" points="17.74 33.32 17.74 22.73 65.35 22.73 65.35 68.4 17.74 68.4 17.74 56.66" />
                 <rect class="b" x="61.41" y="22.92" width="3.42" height="45.03" />
                 <rect class="c" x="18.03" y="23.73" width="46.61" height="1.2" />

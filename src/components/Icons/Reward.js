@@ -33,7 +33,6 @@ export default class Reward extends Component {
         return (
             <Theme>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.4 86.62">
-                <title>Reward</title>
                 <path class="a" d="M29.52,37.3h.35l0-4.47h-.63c-6.67-.5-6.91-9.16-6.91-9.16H30l0-4H17.52S17.29,36.34,29.52,37.3Z" />
                 <path class="b" d="M57.42,69.76,29.55,70v0l23.08-.17s0-6.64,0-7.4-1.33-.75-1.33-.75h4.79s1.31,0,1.33.75S57.42,69.76,57.42,69.76Z" />
                 <path class="a" d="M52.63,69.76l-23.08.17V62.5l.39-.42.54-.26,20.65-.21h.17s1.3,0,1.33.75S52.63,69.76,52.63,69.76Z" />

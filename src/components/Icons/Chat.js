@@ -33,7 +33,6 @@ export default class Chat extends Component {
         return (
             <Theme>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.4 86.62">
-                <title>Chat</title>
                 <path class="a" d="M72,61c-1.73,0-.77,0-4.72,0l1.58,0c0-1.86,0,1.49,0-24.8H72C72,62.47,72,59.12,72,61Z" />
                 <path class="b" d="M68.87,61l-1.58,0v10.6l-3.14-3.39L57.48,61H42.38c-6.18,0-7.08,0-7.19,0V36.18H68.87C68.87,62.47,68.86,59.12,68.87,61Z" />
                 <path class="c" d="M39.47,37.08v1.16H70.09a1.31,1.31,0,0,1,1.35,1.28V38.36a1.31,1.31,0,0,0-1.35-1.28Z" />
