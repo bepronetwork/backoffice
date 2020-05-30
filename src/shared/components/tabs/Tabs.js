@@ -40,7 +40,7 @@ class TabsContainer extends React.Component{
             <div>
                 <Tab.Container id="left-tabs-example" defaultActiveKey={"item-0"}>
                     <Row>
-                        <Col md={2} style={{ paddingLeft: 0, backgroundColor: "white", minWidth: 289, borderRadius: "6px", paddingBottom: "30px" }}>
+                        <Col md={2} style={{ paddingLeft: 0, backgroundColor: "white", boxShadow: "0 2px 15px 0 rgba(0, 0, 0, 0.05)", minWidth: 289, borderRadius: "6px", paddingBottom: "30px" }}>
                             <Nav variant="pills" className="flex-column">
                                 {filteredItems.map( (item, index) => {
                                     return (
@@ -60,7 +60,7 @@ class TabsContainer extends React.Component{
                             </Nav>
                         </Col>
                         <Col md={9}>
-                            <Tab.Content>
+                            <Tab.Content style={{ marginTop: 30 }}>
                                 {filteredItems.map( (item, index) => {
                                     return (
                                         <Tab.Pane eventKey={`item-${index}`} key={index}>

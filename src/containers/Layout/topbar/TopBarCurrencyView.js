@@ -9,7 +9,7 @@ import store from '../../App/store';
 
 const renderCurrency = ({currency}) => (
     <span className="topbar__language-btn-title" style={{height : 20}}>
-        <img src={currency.image} style={{width : 15, height : 'auto'}} alt="image" />
+        <img src={currency.image} style={{width : 25, height : 'auto', marginRight: 14 }} alt="image" />
         <p style={{marginTop : -3}}>{currency.ticker}</p>
     </span>
 )
