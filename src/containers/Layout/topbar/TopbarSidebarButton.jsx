@@ -6,9 +6,9 @@ import { Backoffice } from '../../../components/Icons'
 const logo = `${process.env.PUBLIC_URL}/img/landing/logo-only.png`;
 
 const Logo = styled.section`
-    padding: 24px;
-    height: 45px;
-    width: 200px;
+    padding: 10px;
+    height: 35px;
+    width: 150px;
 `;
 
 class TopbarSidebarButton extends PureComponent {

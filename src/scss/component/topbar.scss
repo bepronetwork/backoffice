@@ -2,7 +2,7 @@
   width: 100%;
   position: fixed;
   top: 0;
-  height: 82px;
+  height: 65px;
   z-index: 101;
   box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
   // border: solid 1px rgba(164, 161, 161, 0.35);
@@ -82,14 +82,14 @@
   position: absolute;
   right: 0;
   display: flex;
-  height: 100%;
+  height: 65px;
 }
 
 .topbar__left {
   position: absolute;
   left: 0;
   display: flex;
-  height: 100%;
+  height: 65px;
   width: 50%;
 }
 
@@ -125,13 +125,13 @@
 
 .topbar__avatar-img {
   border-radius: 50%;
-  height: 44px;
-  width: 44px;
+  height: 35px;
+  width: 35px;
 }
 
 .topbar__avatar-name {
   font-family: Poppins;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 30px;
   font-weight: 400;
   display: none;
@@ -141,7 +141,7 @@
 
 .topbar__icon {
   margin-left: 8px;
-  height: 24px;
+  height: 16px;
   margin-top: auto;
   fill: #a4a1a1;
 }
@@ -221,14 +221,14 @@
 
 .topbar__link-title {
   margin: 0;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 16px;
   color: #a4a1a1 !important;
 }
 
 .topbar__link-icon {
   margin-right: 10px;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 20px;
 
   @include themify($themes) {
@@ -333,7 +333,7 @@
 
 .topbar__language-btn-title {
   display: flex;
-  font-size: 15px;
+  font-size: 13px;
   align-items: center;
   margin: auto 0;
   color: #a4a1a1 !important;
@@ -351,7 +351,7 @@
 
 .topbar__currency-btn-title {
   display: flex;
-  font-size: 15px !important;
+  font-size: 13px !important;
   align-items: center;
   margin: auto 0;
   color: #a4a1a1 !important;
@@ -367,7 +367,7 @@
   }
 
   p {
-    font-size: 15px;
+    font-size: 13px;
     background-color: #c7c7c7;
     color: #fff;
     padding: 4px 6px;
@@ -397,10 +397,10 @@
 
   p {
     background-color: #894798;
-    height: 44px;
+    height: 35px;
     color: white !important;
-    padding: 13px 31px;
-    padding-top: 8px;
+    padding: 13px 25px;
+    padding-top: 5px;
     border-radius: 6px;
   }
 }
@@ -424,7 +424,7 @@
 
 .topbar__periodicity-btn-title {
   display: flex;
-  font-size: 15px;
+  font-size: 13px;
   align-items: center;
   margin: auto 0;
   color: #a4a1a1 !important;
@@ -553,7 +553,7 @@
 }
 
 .topbar__btn {
-  font-size: 18px;
+  font-size: 13px;
   height: 100%;
   padding: 0 10px;
   cursor: pointer;
@@ -566,7 +566,7 @@
 
   p {
     font-family: Poppins;
-    font-size: 16px;
+    font-size: 13px;
     line-height: 25px;
     color: #a4a1a1;
   }
@@ -584,8 +584,8 @@
 
   svg {
     margin: auto;
-    height: 35px;
-    width: 35px;
+    height: 24px;
+    width: 24px;
   }
 
   &.topbar__btn--new {
@@ -677,8 +677,8 @@
   svg {
     fill: $color-additional;
     margin-left: 3px;
-    height: 16px;
-    width: 16px;
+    height: 20px;
+    width: 20px;
     margin-right: 0;
   }
 }
@@ -742,7 +742,7 @@
 
     .topbar__submenu {
       opacity: 1;font-family: Poppins;
-      font-size: 20px;
+      font-size: 16px;
       line-height: 30px;
       text-align: left;
       color: #a4a1a1;

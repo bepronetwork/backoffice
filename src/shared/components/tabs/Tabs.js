@@ -18,7 +18,7 @@ const Icon = styled.section`
 const Title = styled.span`
     margin-left: 7px;
     font-family: Poppins;
-    font-size: 20px;
+    font-size: 17px;
     color: #a4a1a1;
 `;
 
@@ -47,7 +47,7 @@ class TabsContainer extends React.Component{
                                         <Row>
                                             <Col md={12} style={{maxWidth: `258px`, minWidth: `190px`}}>
                                                 <Nav.Item key={index} style={{ margin: 7 }}>
-                                                    <Nav.Link eventKey={`item-${index}`} style={{ width: "258px", height: "50px" }}>
+                                                    <Nav.Link eventKey={`item-${index}`} style={{ width: "258px", height: "45px" }}>
                                                         <div style={{ display: "flex" }}>
                                                             {<Icon>{item.icon}</Icon>} &nbsp; <Title>{item.title}</Title>
                                                         </div>
