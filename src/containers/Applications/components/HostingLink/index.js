@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 const ApplicationLink = styled.section`
     display: flex;
-    height: 85px;
+    height: 65px;
     max-width: 784px;
     background-color: white;
     box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
@@ -19,7 +19,7 @@ const ApplicationLink = styled.section`
 
     h6 {
         font-family: Poppins;
-        font-size: 20px;
+        font-size: 17px;
         color: #a4a1a1;
         white-space: nowrap;
         overflow: hidden;
@@ -36,13 +36,12 @@ const OpenAppButton = styled(Button)`
     min-width: 150px;
 
     &.btn.icon {
-        padding-top: 20px;   
+        padding-top: 18px;   
     }
 
     span {
-        margin-top: 20px;
         font-family: Poppins;
-        font-size: 24px;
+        font-size: 17px;
         font-weight: 500;
         color: #ffffff;
         overflow: hidden;

@@ -29,7 +29,6 @@ export default class Email extends Component {
         return (
             <Theme>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.4 86.62">
-                <title>Email</title>
                 <rect class="a" x="10.52" y="20.34" width="65.42" height="45.38" rx="3.49" ry="3.49" />
                 <path class="b" d="M75.94,56.08V63a2.74,2.74,0,0,1-2.73,2.74h-60A2.73,2.73,0,0,1,10.52,63V56.08a5.68,5.68,0,0,0,5.68,5.68H70.26A5.68,5.68,0,0,0,75.94,56.08Z" />
                 <path class="c" d="M11,24.36,41.86,49.71s2.83,2.2,5.79-1S75.7,25.08,75.7,25.08s2-6.15-5.44-4.74H16.2C14.44,20.25,9.63,19,11,24.36Z" />

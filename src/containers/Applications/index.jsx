@@ -27,7 +27,7 @@ const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
 const CasinoCard = styled.section`
   display: flex;
   width: 493px;
-  height: 85px;
+  height: 65px;
   max-height: 550px;
   padding: 25px;
   margin: 30px 15px;
@@ -39,7 +39,7 @@ const CasinoCard = styled.section`
 
     span {
         font-family: Poppins;
-        font-size: 20px;
+        font-size: 17px;
         color: #ffffff;
     }
 `;
@@ -61,7 +61,7 @@ const Icon = styled.section`
 const Link = styled.h1`
     margin-bottom: 10px;
     font-family: Poppins;
-    font-size: 24px;
+    font-size: 17px;
     font-weight: 500;
     color: #463e3e;
 `;

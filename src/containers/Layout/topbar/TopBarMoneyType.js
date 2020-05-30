@@ -24,7 +24,7 @@ class TopBarMoneyType extends React.Component {
         return (
             <MobileWrapper>
                 <button className="topbar__btn" onClick={this.toggle}>
-                    <span className="topbar__virutal-btn-title" style={{height : 44}}>
+                    <span className="topbar__virutal-btn-title" style={{height : 35}}>
                         <p>{ virtual === true ? 'Fake Money' : 'Real Money' }</p>
                     </span>
                 </button>
