@@ -55,7 +55,7 @@ class Background extends Component {
 
         switch(field){
             case 'background' : {
-                this.setState({backgroundItem : null})
+                this.setState({backgroundItem : ""})
                 break;
             };
         }
