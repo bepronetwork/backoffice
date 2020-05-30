@@ -13,6 +13,18 @@ const defaultState = {
     isLoading: false
 }
 
+const COLORS = Object.freeze({
+    backgroundColor: { name: "Background Color", locked: false },
+    primaryColor: { name: "Boxes", locked: false },
+    secondaryColor: { name: "Buttons", locked: false },
+    thirdColor: { name: "", locked: true },
+    forthColor: { name: "", locked: true },
+    fifthColor: { name: "Title/Tab Text", locked: false },
+    sixthColor: { name: "Overall Text", locked: false }, 
+    seventhColor: { name: "1st Color Icons", locked: false },
+    heightColor: { name: "2nd Color Icons", locked: false }
+})
+
 class Colors extends Component {
     constructor(props){
         super(props);
@@ -71,15 +83,14 @@ class Colors extends Component {
         this.projectData(this.props);
     }
 
-    renderColor = ({hex, type, locked}) => {
+    renderColor = ({name, hex, type, locked, colorLock}) => {
         return (
             <>
-                <p>{type}</p>
                 <ColorPickerInput 
-                    label={type}
+                    label={name}
                     name={type}
                     color={hex}
-                    disabled={locked}
+                    disabled={ locked || colorLock }
                     onChange={this.onChange}
                 />
             </>
@@ -126,7 +137,7 @@ class Colors extends Component {
                                 {colors.map ( c => { 
                                     return (
                                         <Col md={4}>
-                                            {this.renderColor({type : c.type, hex : c.hex, locked})}
+                                            {this.renderColor({ name: COLORS[c.type].name, type: c.type, hex: c.hex, locked: locked, colorLock: COLORS[c.type].locked })}
                                         </Col>
                                     )
                                 })}
