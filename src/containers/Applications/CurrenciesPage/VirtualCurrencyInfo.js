@@ -70,13 +70,13 @@ class VirtualCurrencyInfo extends PureComponent {
 
     confirmChanges = async () => {
         const { profile, data } = this.props;
-        
+
         const app = profile.getApp();
 
         this.setState({...this.state, loading: true })
 
         if (this.state.newInitialBalance) {
-            await app.editInitialBalance({balance: this.state.newInitialBalance, currency: data._id });
+            await app.editInitialBalance({ balance: this.state.newInitialBalance, currency: data._id });
         }
 
         if (this.state.newImage) {
@@ -87,7 +87,7 @@ class VirtualCurrencyInfo extends PureComponent {
             await app.editVirtualCurrency({ params: { price: this.state.newBTC, currency: "5e710b90f6e2b0765fac2304" } });
         }
 
-        if (this.state.newEHT !== null) {
+        if (this.state.newEHT) {
             await app.editVirtualCurrency({ params: { price: this.state.newETH, currency: "5e108498049eba079930ae1c" } });
         }
 
