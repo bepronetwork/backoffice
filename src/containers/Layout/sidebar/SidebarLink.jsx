@@ -6,8 +6,8 @@ import styled from 'styled-components';
 
 
 const Icon = styled.section`
-    height: 27px;
-    width: 27px;
+    height: 24px;
+    width: 24px;
 `;
 
 const SidebarLink = ({

@@ -61,13 +61,13 @@ class AddOnContainer extends PureComponent {
         return (
             <Row md={12} xl={12} lg={12} xs={12}>
                 { this.hasAddOn('autoWithdraw') && !appUseVirtualCurrencies ? (
-                <Col lg={5}>
+                <Col>
                     <AutoWithdraw autoWithdraw={this.getAddOnObj('autoWithdraw')} isLoading={isLoading} currency={currency}/>
                 </Col> 
                 ) : null}
 
                 { this.hasAddOn('jackpot') ? (
-                <Col lg={5}>
+                <Col>
                     <Jackpot jackpot={this.getAddOnObj('jackpot')} isLoading={isLoading} currency={currency}/>
                 </Col>  
                 ) : null}         

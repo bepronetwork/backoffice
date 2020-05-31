@@ -68,7 +68,7 @@ class AddOnStorePageContainer extends React.Component{
                 <Row md={12} xl={12} lg={12} xs={12}>
                     {addOns.map(addOn => {
                         return (
-                            <Col lg={5}>
+                            <Col>
                                 <LockWrapper hasPermission={isSuperAdmin}>
                                     <AddOnStoreContainer
                                         addOn={addOn}

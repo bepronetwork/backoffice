@@ -27,10 +27,11 @@ const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
 const CasinoCard = styled.section`
   display: flex;
   width: 493px;
-  height: 65px;
+  height: 60px;
   max-height: 550px;
   padding: 25px;
-  margin: 30px 15px;
+  margin: 70px 15px;
+  margin-top: 0px;
   background: #814c94;
   border-radius: 6px;
   transition: transform 0.2s;
@@ -39,7 +40,7 @@ const CasinoCard = styled.section`
 
     span {
         font-family: Poppins;
-        font-size: 17px;
+        font-size: 14px;
         color: #ffffff;
     }
 `;
@@ -59,9 +60,9 @@ const Icon = styled.section`
 `
 
 const Link = styled.h1`
-    margin-bottom: 10px;
+    margin-bottom: 22px;
     font-family: Poppins;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 500;
     color: #463e3e;
 `;
@@ -172,7 +173,7 @@ class ApplicationsContainer extends React.Component{
                                         })}
                                     </Row>
                                 </Col>
-                                <Col md={8} style={{ paddingBottom: 30, marginTop: -27 }}>
+                                <Col md={8} style={{ paddingBottom: 30, marginTop: -70 }}>
                                     <Link>Application link</Link>
                                     <HostingLink/>
                                 </Col>

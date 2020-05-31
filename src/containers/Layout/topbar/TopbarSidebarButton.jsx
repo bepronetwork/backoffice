@@ -11,6 +11,12 @@ const Logo = styled.section`
     width: 150px;
 `;
 
+const MobileLogo = styled.section`
+    padding: 10px;
+    padding-top: 20px;
+    height: 30px;
+    width: 110px;
+`;
 class TopbarSidebarButton extends PureComponent {
     static propTypes = {
         changeMobileSidebarVisibility: PropTypes.func.isRequired,
@@ -28,7 +34,9 @@ class TopbarSidebarButton extends PureComponent {
                 </Logo>
             </button>
             <button className="topbar__button topbar__button--mobile" onClick={changeMobileSidebarVisibility}>
-            <img src={logo} alt="" className="topbar__button-icon" />
+                <MobileLogo>
+                    <Backoffice/>
+                </MobileLogo>
             </button>
         </div>
         );
