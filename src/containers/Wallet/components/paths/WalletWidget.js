@@ -11,6 +11,7 @@ import LimitsWidget from './LimitsWidget';
 import { ArrowDownIcon, ArrowCollapseUpIcon, CurrencyUsdIcon, MoneyIcon, WalletIcon } from 'mdi-react';
 import FeesWidget from './FeesWidget';
 import BonusWidget from './BonusWidget';
+import { Withdraw, Bet, Cash, Wallet, Deposit } from '../../../../components/Icons';
 
 class WalletWidget extends React.Component{
 
@@ -49,7 +50,7 @@ class WalletWidget extends React.Component{
                                 container : (
                                     <DepositWidget/>
                                 ),
-                                icon : <ArrowCollapseUpIcon/>,
+                                icon : <Deposit/>,
                                 disabled : disabled
                             },
                             {
@@ -57,7 +58,7 @@ class WalletWidget extends React.Component{
                                 container : (
                                     <WithdrawWidget/>
                                 ),
-                                icon : <ArrowDownIcon/>,
+                                icon : <Withdraw/>,
                                 disabled : disabled
                             },
                             {
@@ -65,21 +66,21 @@ class WalletWidget extends React.Component{
                                 container : (
                                     <LimitsWidget/>
                                 ),
-                                icon : <CurrencyUsdIcon/>
+                                icon : <Bet/>
                             },
                             hasTxFeeAddOn ? {
                                 title : 'Fees',
                                 container : (
                                     <FeesWidget/>
                                 ),
-                                icon : <MoneyIcon/>
+                                icon : <Cash/>
                             } : {},
                             hasDepositBonusAddOn ? {
                                 title : 'Bonus',
                                 container : (
                                     <BonusWidget/>
                                 ),
-                                icon : <WalletIcon/>
+                                icon : <Wallet/>
                             } : {}
                         ]
                     }
