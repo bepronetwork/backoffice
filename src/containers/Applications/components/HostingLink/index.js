@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 const ApplicationLink = styled.section`
     display: flex;
-    height: 60px;
+    height: 40px;
     max-width: 784px;
     background-color: white;
     box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
@@ -33,10 +33,10 @@ const OpenAppButton = styled(Button)`
     height: 100%;
     border-radius: 6px;
     background-color: #814c94;
-    min-width: 150px;
+    min-width: 100px;
 
     &.btn.icon {
-        padding-top: 18px;   
+        padding-top: 8px;   
     }
 
     span {

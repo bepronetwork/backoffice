@@ -32,7 +32,7 @@ class GameInfo extends PureComponent {
         let game_image = game_images[new String(game.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
         return (
-            <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`}}>
+            <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`, minWidth: 290 }}>
                 {isLoading ? (
                 <>
                 <Card className='game-container'>
@@ -51,7 +51,7 @@ class GameInfo extends PureComponent {
                 </Card>
                 </>   
                 ) : (
-                <button className='clean_button' onClick={ () => this.goToGamePage()} style={{width: `100%`, height: `100%`}}>
+                <button className='clean_button' onClick={ () => this.goToGamePage()} style={{width: `100%`, height: `100%` }}>
                     <Card className='game-container'>
                         <CardBody className="dashboard__card-widget">
                             <Row>

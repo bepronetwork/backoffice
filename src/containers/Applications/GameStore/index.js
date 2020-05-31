@@ -7,6 +7,7 @@ import { compose } from 'lodash/fp'
 import _ from 'lodash';
 import { ArrowExpandRightIcon, LockIcon, BankIcon } from 'mdi-react';
 import GameStoreContainer from './Game';
+import { Grid } from '@material-ui/core';
 
 
 const defaultState = {
@@ -68,19 +69,19 @@ class GameStorePageContainer extends React.Component{
 
         return (
             <div>
-                <Row>
+                <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                     {games.map(game => {
                         return (
-                            <Col md={4}>
+                            <Grid item xs>
                                 <GameStoreContainer
                                     game={game}
                                     isAdded={game.isAdded}
                                     onClick={this.addGame}
                                 />
-                            </Col>
+                            </Grid>
                         )
                     })}
-                </Row>
+                </Grid>
             </div>
         )
     }

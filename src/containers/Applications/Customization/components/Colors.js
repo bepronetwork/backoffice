@@ -110,11 +110,11 @@ class Colors extends Component {
 
         return (
             <>
-                <Card>
+                <Card style={{ margin: "0px 15px" }}>
                     <h5> Note : Change of Colors will require a rebuild of the app, so expect a 5-20 min delay for the changes to take effect</h5>
                 </Card>
                 <Card>
-                    <CardBody>
+                    <CardBody style={{ margin: "0px 15px" }}>
                         <EditLock 
                             isLoading={isLoading} 
                             unlockField={this.unlockField} 

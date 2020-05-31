@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import AddOnStoreContainer from "./AddOn";
 import { LockWrapper } from "../../../../shared/components/LockWrapper";
+import { Grid } from '@material-ui/core';
 
 class AddOnStorePageContainer extends React.Component{
 
@@ -65,10 +66,10 @@ class AddOnStorePageContainer extends React.Component{
 
         return (
             <div>
-                <Row md={12} xl={12} lg={12} xs={12}>
+                <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                     {addOns.map(addOn => {
                         return (
-                            <Col>
+                            <Grid item style={{ margin: 15, marginTop: 0 }}>
                                 <LockWrapper hasPermission={isSuperAdmin}>
                                     <AddOnStoreContainer
                                         addOn={addOn}
@@ -77,10 +78,10 @@ class AddOnStorePageContainer extends React.Component{
                                     />
                                 </LockWrapper>
                                
-                            </Col>
+                            </Grid>
                         )
                     })}
-                </Row>
+                </Grid>
             </div>
         )
     }

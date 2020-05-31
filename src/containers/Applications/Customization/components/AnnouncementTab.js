@@ -72,7 +72,7 @@ class AnnouncementTab extends Component {
         const { isLoading, locked, isActive, textColor, backgroundColor, text } = this.state; 
         return (
             <Card>
-                <CardBody>
+                <CardBody style={{ margin: "0px 15px" }}>
                     <Row>
                         <Col md={12}>
                             <EditLock 

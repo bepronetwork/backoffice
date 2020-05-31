@@ -158,74 +158,72 @@ class VirtualCurrencyInfo extends PureComponent {
         if(!data || !currency || !wallet){return null}
         
         return (
-            <Col>
-                <Card className='game-container'>
-                    <CardBody className="dashboard__card-widget dashboard_borderTop" style={{width: '370px', paddingBottom: 10}}>
-                            <EditLock 
-                                unlockField={this.unlock} 
-                                lockField={this.lock} 
-                                confirmChanges={this.confirmChanges} 
-                                isLoading={this.state.loading}
-                                locked={lock}>
-                        <Row>
-                            <Col lg={4} >  
-                                <img className='application__game__image' 
-                                style={{display: 'block', width: '60px'}} 
-                                src={newImage ? this.renderImage(newImage) : this.getCurrencyImage(_id)}/>
-                                <div className="dashboard__visitors-chart text-center">
-                                    <p className="dashboard__visitors-chart-title text-center" style={{fontSize: 26}}> {name} </p>
-                                </div>
-                                <Dropzone onDrop={this.onAddedFile} style={{ width: '100%', marginTop: 7, marginBottom: 15 }} ref={(el) => (this.dropzoneRef = el)} disabled={this.state.lock}>
-                                    <Button className="icon" style={{ padding: 2, margin: 0}} disabled={this.state.lock}>
-                                        <p style={{ fontSize: '12px' }}><UploadIcon className="deposit-icon"/> New Logo </p>
-                                    </Button>
-                                </Dropzone>
-                            </Col>
+            <Card className='game-container' style={{ width: 307 }}>
+                <CardBody className="dashboard__card-widget dashboard_borderTop" style={{ width: 370 , paddingBottom: 10 }}>
+                        <EditLock 
+                            unlockField={this.unlock} 
+                            lockField={this.lock} 
+                            confirmChanges={this.confirmChanges} 
+                            isLoading={this.state.loading}
+                            locked={lock}>
+                    <Row>
+                        <Col lg={4} >  
+                            <img className='application__game__image' 
+                            style={{display: 'block', width: '60px'}} 
+                            src={newImage ? this.renderImage(newImage) : this.getCurrencyImage(_id)}/>
+                            <div className="dashboard__visitors-chart text-center">
+                                <p className="dashboard__visitors-chart-title text-center" style={{fontSize: 26}}> {name} </p>
+                            </div>
+                            <Dropzone onDrop={this.onAddedFile} style={{ width: '100%', marginTop: 7, marginBottom: 15 }} ref={(el) => (this.dropzoneRef = el)} disabled={this.state.lock}>
+                                <Button className="icon" style={{ padding: 2, margin: 0}} disabled={this.state.lock}>
+                                    <p style={{ fontSize: '12px' }}><UploadIcon className="deposit-icon"/> New Logo </p>
+                                </Button>
+                            </Dropzone>
+                        </Col>
 
-                            { hasInitialBalanceAddOn ? (
-                                <Col lg={8} >
-                                <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Inital Balance</h3>
-    
-                                <div style={{ display: "flex"}}>
-                                        <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{currency.initialBalance.toFixed(6)}</h3>
-                                        <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{ticker}</h3>
-                                </div>
-                                    <TextInput
-                                        icon={BankIcon}
-                                        name="initialBalance"
-                                        label={<h6 style={{ fontSize: 11 }}>New Intial Balance</h6>}
-                                        type="text"
-                                        disabled={lock}
-                                        changeContent={(type, value) => this.onChangeInitialBalance(value)}
-                                    />
-    
-                                </Col>
+                        { hasInitialBalanceAddOn ? (
+                            <Col lg={8} >
+                            <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Inital Balance</h3>
 
-                            ) : null}
-                     
-                            <Col lg={8}>
-                            <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Price</h3>
-                            {wallet.price.map(p => (
-                                <>
-                                <br/>
-                                <img src={this.getCurrencyInfo(p.currency).image} style={{float : 'left', marginRight : 4, width : 25, height : 25}}/>
-                            <p className='bold-text' style={{margin: 0}}>{p.amount} {this.getCurrencyInfo(p.currency).name}</p>
+                            <div style={{ display: "flex"}}>
+                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{currency.initialBalance.toFixed(6)}</h3>
+                                    <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{ticker}</h3>
+                            </div>
                                 <TextInput
-                                style={{ margin: 0}}
-                                name={this.getCurrencyInfo(p.currency).name}
-                                label={<h6 style={{ fontSize: 11 }}>{`New ${this.getCurrencyInfo(p.currency).name} price`}</h6>}
-                                type="text"
-                                disabled={lock}
-                                changeContent={(type, value) => this.onChange(type, value)}
+                                    icon={BankIcon}
+                                    name="initialBalance"
+                                    label={<h6 style={{ fontSize: 11 }}>New Intial Balance</h6>}
+                                    type="text"
+                                    disabled={lock}
+                                    changeContent={(type, value) => this.onChangeInitialBalance(value)}
                                 />
-                                </>
-                            ))}
+
                             </Col>
-                        </Row>
-                        </EditLock>
-                    </CardBody>
-                </Card>
-            </Col>
+
+                        ) : null}
+                    
+                        <Col lg={8}>
+                        <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Price</h3>
+                        {wallet.price.map(p => (
+                            <>
+                            <br/>
+                            <img src={this.getCurrencyInfo(p.currency).image} style={{float : 'left', marginRight : 4, width : 25, height : 25}}/>
+                        <p className='bold-text' style={{margin: 0}}>{p.amount} {this.getCurrencyInfo(p.currency).name}</p>
+                            <TextInput
+                            style={{ margin: 0}}
+                            name={this.getCurrencyInfo(p.currency).name}
+                            label={<h6 style={{ fontSize: 11 }}>{`New ${this.getCurrencyInfo(p.currency).name} price`}</h6>}
+                            type="text"
+                            disabled={lock}
+                            changeContent={(type, value) => this.onChange(type, value)}
+                            />
+                            </>
+                        ))}
+                        </Col>
+                    </Row>
+                    </EditLock>
+                </CardBody>
+            </Card>
         );
     }
 }

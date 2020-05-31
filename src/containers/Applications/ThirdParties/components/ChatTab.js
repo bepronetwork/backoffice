@@ -65,10 +65,10 @@ class ChatTab extends Component {
     render() {
         const { isLoading, locked, privateKey } = this.state; 
         return (
-            <Card>
+            <Card style={{ marginLeft: 15 }}>
                 <CardBody>
                     <Row>
-                        <Col md={12}>
+                        <Col md={6}>
                             <EditLock 
                                 isLoading={isLoading} 
                                 unlockField={this.unlockField} 

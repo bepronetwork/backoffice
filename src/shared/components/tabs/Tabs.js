@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { Tab, Nav } from 'react-bootstrap';
 import { Bet } from '../../../components/Icons'
 import styled from 'styled-components';
+import { Grid } from '@material-ui/core';
 
 const Icon = styled.section`
     padding-top: 3px;
@@ -40,13 +41,13 @@ class TabsContainer extends React.Component{
         return (
             <div>
                 <Tab.Container id="left-tabs-example" defaultActiveKey={"item-0"}>
-                    <Row>
-                        <Col md={2} style={{ paddingLeft: 0, backgroundColor: "white", boxShadow: "0 2px 15px 0 rgba(0, 0, 0, 0.05)", minWidth: 240, maxWidth: 240, borderRadius: "6px", paddingBottom: "30px" }}>
+                    <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+                        <Grid item xs style={{ paddingLeft: 0, backgroundColor: "white", boxShadow: "0 2px 15px 0 rgba(0, 0, 0, 0.05)", minWidth: 240, maxWidth: 240, borderRadius: "6px", paddingBottom: "30px" }}>
                             <Nav variant="pills" className="flex-column">
                                 {filteredItems.map( (item, index) => {
                                     return (
-                                        <Row>
-                                            <Col md={12} style={{maxWidth: `258px`, minWidth: `190px`}}>
+                                        <Grid>
+                                            <Grid item style={{maxWidth: `258px`, minWidth: `190px`}}>
                                                 <Nav.Item key={index} style={{ margin: 7 }}>
                                                     <Nav.Link eventKey={`item-${index}`} style={{ width: "220px", height: "40px" }}>
                                                         <div style={{ display: "flex" }}>
@@ -54,14 +55,14 @@ class TabsContainer extends React.Component{
                                                         </div>
                                                     </Nav.Link>
                                                 </Nav.Item>
-                                            </Col>
-                                        </Row>
+                                            </Grid>
+                                        </Grid>
                                     )
                                 })}
                             </Nav>
-                        </Col>
-                        <Col>
-                            <Tab.Content style={{ marginTop: 20 }}>
+                        </Grid>
+                        <Grid item xs>
+                            <Tab.Content style={{ padding: 20, paddingTop: 10, paddingLeft: 15 }}>
                                 {filteredItems.map( (item, index) => {
                                     return (
                                         <Tab.Pane eventKey={`item-${index}`} key={index}>
@@ -70,8 +71,8 @@ class TabsContainer extends React.Component{
                                     )
                                 })}
                             </Tab.Content>
-                        </Col>
-                    </Row>
+                        </Grid>
+                    </Grid>
                 </Tab.Container>
           </div>
         )
