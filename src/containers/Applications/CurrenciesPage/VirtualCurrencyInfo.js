@@ -48,9 +48,7 @@ class VirtualCurrencyInfo extends PureComponent {
 
         const app = await profile.getApp();
 
-        if (app.params.addOn.hasOwnProperty('balance')) {
-            this.setState({ currencies: app.params.addOn.balance.initialBalanceList });
-        }
+        this.setState({ currencies: app.params.currencies });
 
         if (app.params.wallet.length > 0) {
             this.setState({
@@ -61,7 +59,9 @@ class VirtualCurrencyInfo extends PureComponent {
     }
 
     getCurrency = (currencyId) => {
-        const { currencies } = this.state;
+        const { App } = this.props.profile;
+        
+        const currencies = App.params.addOn.balance.initialBalanceList;
 
         const currency = currencies.find(c => c.currency === currencyId);
 
@@ -123,7 +123,9 @@ class VirtualCurrencyInfo extends PureComponent {
 
         const wallet = profile.App.params.wallet;
 
-        return wallet.find(c => c.currency._id === currencyId).currency;
+        const currency = wallet.find(c => c.currency._id === currencyId);
+
+        return currency.image;
     }
 
     renderImage = (src) => {
@@ -152,6 +154,7 @@ class VirtualCurrencyInfo extends PureComponent {
         const hasInitialBalanceAddOn = this.isAdded('Initial Balance');
         const currency = this.getCurrency(data._id);
 
+
         if(!data || !currency || !wallet){return null}
         
         return (
@@ -168,7 +171,7 @@ class VirtualCurrencyInfo extends PureComponent {
                             <Col lg={4} >  
                                 <img className='application__game__image' 
                                 style={{display: 'block', width: '60px'}} 
-                                src={newImage ? this.renderImage(newImage) : this.getCurrencyImage(_id).image}/>
+                                src={newImage ? this.renderImage(newImage) : this.getCurrencyImage(_id)}/>
                                 <div className="dashboard__visitors-chart text-center">
                                     <p className="dashboard__visitors-chart-title text-center" style={{fontSize: 26}}> {name} </p>
                                 </div>
