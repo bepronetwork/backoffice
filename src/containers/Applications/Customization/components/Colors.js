@@ -83,16 +83,23 @@ class Colors extends Component {
         this.projectData(this.props);
     }
 
-    renderColor = ({name, hex, type, locked, colorLock}) => {
+    renderColor = ({ name, hex, type, locked, colorLock }) => {
+        
+        if (colorLock) {
+            return null
+        }
+
         return (
             <>
-                <ColorPickerInput 
-                    label={name}
-                    name={type}
-                    color={hex}
-                    disabled={ locked || colorLock }
-                    onChange={this.onChange}
-                />
+                <Col md={4}>
+                    <ColorPickerInput 
+                        label={name}
+                        name={type}
+                        color={hex}
+                        disabled={ locked }
+                        onChange={this.onChange}
+                    />
+                </Col>
             </>
         )
     }
@@ -136,9 +143,7 @@ class Colors extends Component {
                             <Row>
                                 {colors.map ( c => { 
                                     return (
-                                        <Col md={4}>
-                                            {this.renderColor({ name: COLORS[c.type].name, type: c.type, hex: c.hex, locked: locked, colorLock: COLORS[c.type].locked })}
-                                        </Col>
+                                        this.renderColor({ name: COLORS[c.type].name, type: c.type, hex: c.hex, locked: locked, colorLock: COLORS[c.type].locked })
                                     )
                                 })}
                             </Row>
