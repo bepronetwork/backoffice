@@ -81,7 +81,7 @@ class SidebarContent extends Component {
                     <SidebarLink disabled={!this.state.affiliates} title="Affiliates" icon={<Hand/>} route="/affiliates" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.settings} title="Settings" icon={<Settings/>} route="/settings" onClick={this.hideSidebar} />
                     <SidebarLink disabled={!this.state.developers} title="Developers" icon={<Reward/>} route="/developers" onClick={this.hideSidebar} />
-                    <SidebarLink title="Log Out" icon={<LogOut/>} route="/login" />
+                    {/* <SidebarLink title="Log Out" icon={<LogOut/>} route="/login" /> */}
                 </ul>
             </div>
         );

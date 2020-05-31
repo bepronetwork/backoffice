@@ -56,7 +56,7 @@ class CurrenciesContainer extends PureComponent {
             ((realCurrencies.length > 0 && hasInitialBalanceAddOn)||virtualCurrencies.length > 0 ) ? 
                 <Row md={12} xl={12} lg={12} xs={12}>
                     {virtualCurrencies.map(currency => (
-                            <Col lg={4}>
+                            <Col>
                                 <LockWrapper hasPermission={isSuperAdmin}>
                                     <VirtualCurrencyInfo data={currency} {...this.props}/>
                                 </LockWrapper>
@@ -65,7 +65,7 @@ class CurrenciesContainer extends PureComponent {
 
                     {!isAppWithFakeMoney ? (
                         realCurrencies.map(currency => (
-                            <Col lg={4}>
+                            <Col>
                                 <LockWrapper hasPermission={isSuperAdmin}>
                                     <CurrencyInfo data={currency} {...this.props}/>
                                 </LockWrapper>

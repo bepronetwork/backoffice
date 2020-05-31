@@ -97,7 +97,7 @@ class Jackpot extends React.Component {
         if (!limits) return null
 
         return (
-            <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`}}>
+            <Col style={{height: `100%`}}>
                 {isLoading ? (
                 <>
                 <Card className='game-container'>

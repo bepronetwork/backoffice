@@ -158,7 +158,7 @@ class VirtualCurrencyInfo extends PureComponent {
         if(!data || !currency || !wallet){return null}
         
         return (
-            <Col md={12} xl={12} lg={12} xs={12}>
+            <Col>
                 <Card className='game-container'>
                     <CardBody className="dashboard__card-widget dashboard_borderTop" style={{width: '370px', paddingBottom: 10}}>
                             <EditLock 
