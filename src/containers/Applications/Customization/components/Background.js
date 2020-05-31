@@ -119,36 +119,32 @@ class Background extends Component {
         
         return (
             <Card>
-                <CardBody>
-                    <Row>
-                        <Col md={6}>
-                            <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 410, marginBottom : 30, padding : 30}}>
-                                <EditLock 
-                                isLoading={isLoading} 
-                                unlockField={this.unlockField} 
-                                lockField={this.lockField} 
-                                confirmChanges={this.confirmChanges} 
-                                type={'background'} 
-                                locked={this.state.locks.background}>
-                                    <div style={{paddingBottom : 20}}>
-                                        <h5 className={"bold-text dashboard__total-stat"}>Background</h5>
-                                        <h6>Upload your background image</h6>
-                                    </div>
-
-                                    <div style={{margin : 'auto'}}>
-                                        {
-                                            backgroundItem ? 
-                                            /* Background is Set */
-                                            this.renderImage(backgroundItem, 'background')
-                                            : 
-                                            /* Background is not Set */
-                                            this.renderBackgroundAddImage()
-                                        }
-                                    </div>
-                                </EditLock>
+                <CardBody style={{ margin: "0px 15px" }}>
+                    <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 410, marginBottom : 30, padding : 30, maxWidth: 293 }}>
+                        <EditLock 
+                        isLoading={isLoading} 
+                        unlockField={this.unlockField} 
+                        lockField={this.lockField} 
+                        confirmChanges={this.confirmChanges} 
+                        type={'background'} 
+                        locked={this.state.locks.background}>
+                            <div style={{paddingBottom : 20}}>
+                                <h5 className={"bold-text dashboard__total-stat"}>Background</h5>
+                                <h6>Upload your background image</h6>
                             </div>
-                        </Col>
-                    </Row>
+
+                            <div style={{margin : 'auto'}}>
+                                {
+                                    backgroundItem ? 
+                                    /* Background is Set */
+                                    this.renderImage(backgroundItem, 'background')
+                                    : 
+                                    /* Background is not Set */
+                                    this.renderBackgroundAddImage()
+                                }
+                            </div>
+                        </EditLock>
+                    </div>
                 </CardBody>
             </Card>
             )

@@ -25,7 +25,7 @@ class GameStoreContainer extends PureComponent {
         if(!game){return null}
         const { name, description, image_url } = game;
         return (
-            <Col md={12} xl={12} lg={12} xs={12}>
+            <Col md={12} xl={12} lg={12} xs={12} style={{ minWidth: 288, maxWidth: 415 }}>
                 <Card className='game-container'>
                     <CardBody className="dashboard__card-widget">
                         <Row>

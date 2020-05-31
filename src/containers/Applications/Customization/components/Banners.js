@@ -199,7 +199,7 @@ class Banners extends Component {
         
         return (
             <Card>
-                <CardBody>
+                <CardBody style={{ margin: "0px 15px" }}>
                     <Row>
                         <Col md={12}>
                             <EditLock 

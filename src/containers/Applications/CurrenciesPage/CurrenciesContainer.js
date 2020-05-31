@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import CurrencyInfo from './CurrencyInfo';
 import VirtualCurrencyInfo from './VirtualCurrencyInfo';
 import { LockWrapper } from '../../../shared/components/LockWrapper';
+import { Grid } from '@material-ui/core';
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
 class CurrenciesContainer extends PureComponent {
@@ -54,26 +55,26 @@ class CurrenciesContainer extends PureComponent {
         return (
 
             ((realCurrencies.length > 0 && hasInitialBalanceAddOn)||virtualCurrencies.length > 0 ) ? 
-                <Row md={12} xl={12} lg={12} xs={12}>
+                <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                     {virtualCurrencies.map(currency => (
-                            <Col>
+                            <Grid item style={{ margin: "0px 15px" }}>
                                 <LockWrapper hasPermission={isSuperAdmin}>
                                     <VirtualCurrencyInfo data={currency} {...this.props}/>
                                 </LockWrapper>
-                            </Col>                
+                            </Grid>                
                     ))}
 
                     {!isAppWithFakeMoney ? (
                         realCurrencies.map(currency => (
-                            <Col>
+                            <Grid item style={{ margin: "0px 15px" }}>
                                 <LockWrapper hasPermission={isSuperAdmin}>
                                     <CurrencyInfo data={currency} {...this.props}/>
                                 </LockWrapper>
-                            </Col>              
+                            </Grid>              
                     ))
                     ) : null}
                     
-                </Row>
+                </Grid>
             : 
             <div>
                 <h4>You have no Initial Balance Add-On enabled currently</h4>

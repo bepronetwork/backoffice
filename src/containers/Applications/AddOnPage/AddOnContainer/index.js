@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import _ from 'lodash';
 import AutoWithdraw from './AddOn/AutoWithdraw';
 import Jackpot from './AddOn/Jackpot';
+import { Grid } from '@material-ui/core';
 
 class AddOnContainer extends PureComponent {
  
@@ -59,19 +60,19 @@ class AddOnContainer extends PureComponent {
         if (_.isEmpty(appAddOns)){return null}
 
         return (
-            <Row md={12} xl={12} lg={12} xs={12}>
+            <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                 { this.hasAddOn('autoWithdraw') && !appUseVirtualCurrencies ? (
-                <Col>
+                <Grid item style={{ margin: 15, marginTop: 0 }}>
                     <AutoWithdraw autoWithdraw={this.getAddOnObj('autoWithdraw')} isLoading={isLoading} currency={currency}/>
-                </Col> 
+                </Grid> 
                 ) : null}
 
                 { this.hasAddOn('jackpot') ? (
-                <Col>
+                <Grid item style={{ margin: 15, marginTop: 0 }}>
                     <Jackpot jackpot={this.getAddOnObj('jackpot')} isLoading={isLoading} currency={currency}/>
-                </Col>  
+                </Grid>  
                 ) : null}         
-            </Row>
+            </Grid>
         );
     }
 }

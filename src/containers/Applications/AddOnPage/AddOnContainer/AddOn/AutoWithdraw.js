@@ -93,7 +93,7 @@ class AutoWithdraw extends React.Component {
         const isSuperAdmin = profile.User.permission.super_admin;
 
         return (
-            <Col style={{height: `100%`}}>
+            <>
                 {isLoading ? (
                 <>
                 <Card className='game-container'>
@@ -179,7 +179,7 @@ class AutoWithdraw extends React.Component {
                             </ExpansionPanel>
                         </Paper>
                     </Card> )}
-            </Col>
+            </>
         );
     }
 }

@@ -19,18 +19,27 @@ import AddOnsContainer from './AddOnPage';
 import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
 import { Bet, Reward, Settings, Rewards, AddOn, Wallet, Casino, CasinoWhite } from '../../components/Icons';
 import styled from 'styled-components';
+import { Grid } from '@material-ui/core';
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
 const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
 
+const MobileWrapper = styled.section`
+
+  @media (max-width: 768px) {
+   display: none !important;
+  }
+
+`;
+
 const CasinoCard = styled.section`
   display: flex;
-  width: 493px;
-  height: 60px;
+  width: 100%;
+  height: 40px;
+  padding: 15px;
   max-height: 550px;
-  padding: 25px;
-  margin: 70px 15px;
+  margin: 15px;
   margin-top: 0px;
   background: #814c94;
   border-radius: 6px;
@@ -60,6 +69,7 @@ const Icon = styled.section`
 `
 
 const Link = styled.h1`
+    margin-top: -70px;
     margin-bottom: 22px;
     font-family: Poppins;
     font-size: 14px;
@@ -173,8 +183,10 @@ class ApplicationsContainer extends React.Component{
                                         })}
                                     </Row>
                                 </Col>
-                                <Col md={8} style={{ paddingBottom: 30, marginTop: -70 }}>
-                                    <Link>Application link</Link>
+                                <Col md={8} style={{ paddingBottom: 20, height: 70 }}>
+                                    <MobileWrapper>
+                                        <Link>Application link</Link>
+                                    </MobileWrapper>
                                     <HostingLink/>
                                 </Col>
                             </Row>
