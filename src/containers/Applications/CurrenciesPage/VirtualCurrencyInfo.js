@@ -5,7 +5,13 @@ import { BankIcon, UploadIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
 import EditLock from '../../Shared/EditLock';
 import Dropzone from 'react-dropzone'
+import _ from 'lodash';
 const image2base64 = require('image-to-base64');
+
+const currenciesEnum = Object.freeze({
+    BTC: "5e710b90f6e2b0765fac2304",
+    ETH: "5e108498049eba079930ae1c"
+})
 
 class VirtualCurrencyInfo extends PureComponent {
  
@@ -48,7 +54,9 @@ class VirtualCurrencyInfo extends PureComponent {
 
         const app = await profile.getApp();
 
-        this.setState({ currencies: app.params.currencies });
+        if (this.isAdded('Initial Balance')) {
+            this.setState({ currencies: app.params.addOn.balance.initialBalanceList });
+        }
 
         if (app.params.wallet.length > 0) {
             this.setState({
@@ -59,9 +67,7 @@ class VirtualCurrencyInfo extends PureComponent {
     }
 
     getCurrency = (currencyId) => {
-        const { App } = this.props.profile;
-        
-        const currencies = App.params.addOn.balance.initialBalanceList;
+        const { currencies } = this.state;
 
         const currency = currencies.find(c => c.currency === currencyId);
 
@@ -84,11 +90,11 @@ class VirtualCurrencyInfo extends PureComponent {
         }
 
         if (this.state.newBTC) {
-            await app.editVirtualCurrency({ params: { price: this.state.newBTC, currency: "5e710b90f6e2b0765fac2304" } });
+            await app.editVirtualCurrency({ params: { price: this.state.newBTC, currency: currenciesEnum.BTC, image: this.state.newImage ? this.state.newImage : this.getCurrencyImage(data._id) } });
         }
 
-        if (this.state.newEHT) {
-            await app.editVirtualCurrency({ params: { price: this.state.newETH, currency: "5e108498049eba079930ae1c" } });
+        if (this.state.newETH) {
+            await app.editVirtualCurrency({ params: { price: this.state.newETH, currency: currenciesEnum.ETH, image: this.state.newImage ? this.state.newImage : this.getCurrencyImage(data._id) } });
         }
 
         await profile.getApp().updateAppInfoAsync();
@@ -152,10 +158,8 @@ class VirtualCurrencyInfo extends PureComponent {
         const { lock, wallet, newImage } = this.state;
 
         const hasInitialBalanceAddOn = this.isAdded('Initial Balance');
-        const currency = this.getCurrency(data._id);
 
-
-        if(!data || !currency || !wallet){return null}
+        if(!data || !wallet){return null};
         
         return (
             <Card className='game-container' style={{ width: 307 }}>
@@ -181,12 +185,12 @@ class VirtualCurrencyInfo extends PureComponent {
                             </Dropzone>
                         </Col>
 
-                        { hasInitialBalanceAddOn ? (
+                        { hasInitialBalanceAddOn && (this.getCurrency(_id) !== undefined) ? (
                             <Col lg={8} >
                             <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Inital Balance</h3>
 
                             <div style={{ display: "flex"}}>
-                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{currency.initialBalance.toFixed(6)}</h3>
+                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{this.getCurrency(_id).initialBalance.toFixed(6)}</h3>
                                     <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{ticker}</h3>
                             </div>
                                 <TextInput
@@ -203,7 +207,7 @@ class VirtualCurrencyInfo extends PureComponent {
                         ) : null}
                     
                         <Col lg={8}>
-                        <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Price</h3>
+                        { !_.isEmpty(wallet.price) ? <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Price</h3> : null }
                         {wallet.price.map(p => (
                             <>
                             <br/>
