@@ -48,7 +48,18 @@
 
       p {
         color: #814c94 !important;
+        display: flex;
+        align-items: center;
       }
+
+    section:last-child {
+
+      svg {
+        display: inline !important;
+      }
+
+    }
+
   }
 }
 
@@ -161,7 +172,13 @@
         transform: translateY(-50%);
     }
 
+    section:last-child {
 
+      svg {
+        display: none;
+      }
+
+    }
 
     &:hover {
         text-decoration: none;

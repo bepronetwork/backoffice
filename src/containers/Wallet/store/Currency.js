@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row, Button } from 'reactstrap';
 import { AddIcon } from 'mdi-react';
+import { CurrencyStoreCard, CardHeader, CardContent } from './styles';
 
 class CurrencyStoreContainer extends PureComponent {
  
@@ -26,37 +27,31 @@ class CurrencyStoreContainer extends PureComponent {
         const { image, _id, ticker, name } = currency;
 
         return (
-            <div>
-                <CardBody className="dashboard__card-widget box-content">
-                    <div className="flex-container">
-                        <div style={{flexGrow: 5}} >
-                            <img className='application__game__image' style={{display: 'block', marginLeft: `0px`}} src={image}/>
-                        </div>
-                        <div style={{flexGrow: 5}} >
-                            <div className="dashboard__visitors-chart text-left">
-                                <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 25}}> {ticker} </p>
-                                <p className="text-left secondary-text"> {name} </p>
-                            </div>
-                        </div>
+            <CurrencyStoreCard>
+                <CardHeader>
+                    <img className='application__game__image' style={{display: 'block', marginLeft: `0px`, height: 83, width: 83 }} src={image}/>
+                </CardHeader>
+                <CardContent>
+                    <h1>{ticker}</h1>
+                </CardContent>
+                <div className="flex-container">
+                    <div style={{flexGrow: 5}} >
+                        <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.onClick()} >
+                            {   
+                                isLoading ?
+                                    "Adding"
+                                : isAdded ? 
+                                    "Added"
+                                : 
+                                    <p><AddIcon className="deposit-icon"/> Add </p>
+                            }
+                        </Button>
                     </div>
-                    <div className="flex-container">
-                        <div style={{flexGrow: 5}} >
-                            <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.onClick()} >
-                                {   
-                                    isLoading ?
-                                        "Adding"
-                                    : isAdded ? 
-                                        "Added"
-                                    : 
-                                        <p><AddIcon className="deposit-icon"/> Add </p>
-                                }
-                            </Button>
-                        </div>
-                        <div style={{flexGrow: 5}} >
-                        </div>
+                    <div style={{flexGrow: 5}} >
                     </div>
-                </CardBody>
-            </div>
+                </div>
+            </CurrencyStoreCard>
+
         );
     }
 }
