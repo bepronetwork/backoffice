@@ -45,11 +45,10 @@ export const CurrenciesTabContainer = styled.section`
 export const TabsContainer = styled.section`
     height: 100%;
     width: 70%;
-
-    background-color: yellow;
 `;
 
 export const StyledNavLink = styled(NavLink)`
+    cursor: pointer;
     filter: grayscale(1);
     opacity: 0.7;
     padding: 0;
@@ -94,4 +93,11 @@ export const WalletDetails = styled.section`
         color: #828282 !important;
     }
 
+`;
+
+export const Paragraph = styled.p`
+    margin: 0;
+    font-size: 14px;
+    line-height: 27px;
+    color: #a4a1a1;
 `;

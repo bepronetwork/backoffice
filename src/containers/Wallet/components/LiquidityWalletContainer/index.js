@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Container, Header, Content, CurrenciesTabContainer, TabsContainer, StyledNavLink, WalletContainer, WalletDetails } from './styles'
-import { Nav, NavItem } from 'reactstrap';
+import { Nav, NavItem, TabContent, TabPane } from 'reactstrap';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import WalletTabs from '../WalletTabs';
 
 
 const Wallet = ({ data }) => {
@@ -46,7 +47,7 @@ class LiquidityWalletContainer extends Component {
                 activeTab: wallets[0]._id
             })
         }
-    };
+    }
     
     toggle = (tab) => {
         if (this.state.activeTab !== tab) {
@@ -88,6 +89,14 @@ class LiquidityWalletContainer extends Component {
                                 ))}
                             </Nav>
                         </CurrenciesTabContainer>
+                        <TabsContainer>
+                            <TabContent activeTab={this.state.activeTab}>
+                                {wallets.map(wallet => (
+                                <TabPane tabId={wallet._id}>
+                                    <WalletTabs wallet={wallet}/>
+                                </TabPane>))}
+                            </TabContent>
+                        </TabsContainer>
                     </Content>
                 </Container>
             </>
