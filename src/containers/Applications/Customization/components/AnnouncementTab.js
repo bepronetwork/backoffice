@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
 import TextInput from '../../../../shared/components/TextInput';
 import BooleanInput from '../../../../shared/components/BooleanInput';
-import ColorPickerInput from '../../../../shared/components/color_picker_input/ColorPickerInput';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
 import { FormControlLabel } from '@material-ui/core';
+import ColorPicker from '../../../../shared/components/color_picker_input/ColorPicker.js';
 
 
 const defaultState = {
@@ -92,14 +92,14 @@ class AnnouncementTab extends Component {
                                     disabled={locked}
                                     changeContent={(type, value) => this.onChange({type, value})}
                                 />
-                                <ColorPickerInput 
+                                <ColorPicker 
                                     label={'Text Color'}
                                     name={'textColor'}
                                     color={textColor}
                                     disabled={locked}
                                     onChange={this.onChange}
                                 />
-                                <ColorPickerInput 
+                                <ColorPicker
                                     label={'Background Color'}
                                     name={'backgroundColor'}
                                     color={backgroundColor}
