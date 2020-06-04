@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import { Collapse } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import NotificationsIcon from 'mdi-react/NotificationsIcon';
+import { Confirmed } from '../../../components/Icons';
 
 const notifications = [
   {
@@ -30,7 +31,7 @@ export default class TopbarNotification extends PureComponent {
     return (
       <div className="topbar__collapse">
         <button className="topbar__btn" onClick={this.toggle}>
-          <NotificationsIcon />
+          <Confirmed />
         </button>
         {this.state.collapse && <button className="topbar__back" onClick={this.toggle} />}
         <Collapse

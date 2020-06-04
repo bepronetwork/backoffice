@@ -7,11 +7,12 @@ import { compose } from 'lodash/fp'
 import _ from 'lodash';
 import { AccountIcon, CashMultipleIcon, FinanceIcon, ExitToAppIcon, AccessibilityIcon, UpdateIcon, CurrencyEthIcon, CurrencySignIcon, SettingsIcon, FilesIcon} from 'mdi-react';
 import { Tab, Nav, Sonnet } from 'react-bootstrap';
-import { SettingsRiskContainer, AddAdminContainer, SettingsAccountContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
+import { SettingsRiskContainer, AddAdminContainer, AdminContainer, SettingsAccountContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
 // import { SettingsAccountContainer, SettingsRiskContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
 import TabsContainer from '../../shared/components/tabs/Tabs.js';
 import ComplianceContainer from './tabs/ComplianceContainer';
 import LogsContainer from './tabs/LogsContainer';
+import { User, Settings, Chat } from '../../components/Icons';
 
 const defaultState = {
 }
@@ -46,23 +47,28 @@ class SettingsContainer extends React.Component{
                             {
                                 title : 'Account',
                                 container : <SettingsAccountContainer/>,
-                                icon : <AccountIcon size={20}/>
+                                icon : <User/>
                             },
                             {
                                 title : 'Admins',
-                                container : <AddAdminContainer/>,
-                                icon : <AccessibilityIcon size={20}/>
+                                container : <AdminContainer/>,
+                                icon : <User/>
                             },
                             {
                                 title : 'Compliance',
                                 container : <ComplianceContainer/>,
-                                icon : <SettingsIcon size={20}/>
+                                icon : <Settings/>
                             },
                             {
                                 title : 'Logs',
                                 container : <LogsContainer/>,
-                                icon : <FilesIcon size={20}/>
-                            }
+                                icon : <Chat/>
+                            },
+                            // {
+                            //     title : 'Admins (New)',
+                            //     container : <AdminContainer/>,
+                            //     icon : <AccessibilityIcon size={20}/>
+                            // }
                             /*,
                             {
                                 title : 'Finance',

@@ -192,7 +192,14 @@
 }
 
 .nav-link.active{
-    background-color: #894798 !important;
+    background-color: #8947981a !important;
+    border-left: 4px solid #814c94;
+
+    span {
+      font-family: Poppins;
+      font-size: 14px;
+      color: #814c94;
+    }
 }
 
 

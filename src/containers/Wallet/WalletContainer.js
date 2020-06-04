@@ -9,6 +9,7 @@ import LiquidityWalletWidget from './components/LiquidityWalletWidget';
 import { WalletIcon, StoreIcon } from 'mdi-react';
 import TabsContainer  from '../../shared/components/tabs/Tabs'
 import CurrencyStore from './CurrencyStore';
+import { Wallet, Cash } from '../../components/Icons';
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
 class WalletContainer extends React.Component{
@@ -57,14 +58,14 @@ class WalletContainer extends React.Component{
                                         </Row>
                                     </>
                                 ),
-                                icon : <WalletIcon/>
+                                icon : <Wallet/>
                             },
                             {
                                 title : 'Currency Store',
                                 container : (
                                     <CurrencyStore/>
                                 ),
-                                icon : <StoreIcon/>
+                                icon : <Cash/>
                             }
                         ]
                     }

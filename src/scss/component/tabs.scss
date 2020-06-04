@@ -14,6 +14,7 @@
       .nav-link {
         padding: 10px 20px;
         margin-right: 0;
+        border-radius: 6px;
         transition: background-color 0.3s;
         cursor: pointer;
 
@@ -25,9 +26,10 @@
           outline: none;
 
           @include themify($themes) {
-            background-color: themed('colorHover');
+            background-color: #8947981a !important;
             border-color: themed('colorHover');
             border-bottom-color: #dddddd;
+            border-left: 4px solid #814c94;
           }
         }
       }

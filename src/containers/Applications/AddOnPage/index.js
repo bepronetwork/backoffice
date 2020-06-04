@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import TabsContainer from '../../../shared/components/tabs/Tabs';
 import AddOnStorePageContainer from './AddOnStore';
-import { StoreIcon, PuzzleIcon } from 'mdi-react';
 import AddOnContainer from './AddOnContainer';
+import { AddOn, Cash } from '../../../components/Icons';
 
 export default class AddOnsContainer extends Component {
     render() {
@@ -14,12 +14,12 @@ export default class AddOnsContainer extends Component {
                             {
                                 title : 'Add-Ons Store',
                                 container :  <AddOnStorePageContainer />,
-                                icon : <StoreIcon/>
+                                icon : <Cash/>
                             },
                             {
                                 title : 'My Add-Ons',
                                 container :  <AddOnContainer />,
-                                icon : <PuzzleIcon/>
+                                icon : <AddOn/>
                             }  
                         ]
                     }

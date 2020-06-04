@@ -1,8 +1,22 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { Backoffice } from '../../../components/Icons'
 
 const logo = `${process.env.PUBLIC_URL}/img/landing/logo-only.png`;
 
+const Logo = styled.section`
+    padding: 10px;
+    height: 35px;
+    width: 150px;
+`;
+
+const MobileLogo = styled.section`
+    padding: 10px;
+    padding-top: 20px;
+    height: 30px;
+    width: 110px;
+`;
 class TopbarSidebarButton extends PureComponent {
     static propTypes = {
         changeMobileSidebarVisibility: PropTypes.func.isRequired,
@@ -15,10 +29,14 @@ class TopbarSidebarButton extends PureComponent {
         return (
         <div>
             <button disabled={true} className="topbar__button topbar__button--desktop" onClick={changeSidebarVisibility}>
-            <img src={logo} alt="" className="topbar__button-icon" />
+                <Logo>
+                    <Backoffice/>
+                </Logo>
             </button>
             <button className="topbar__button topbar__button--mobile" onClick={changeMobileSidebarVisibility}>
-            <img src={logo} alt="" className="topbar__button-icon" />
+                <MobileLogo>
+                    <Backoffice/>
+                </MobileLogo>
             </button>
         </div>
         );

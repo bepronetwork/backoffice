@@ -76,7 +76,7 @@ class Footer extends Component {
 
         return (
             <Card>
-                <CardBody>
+                <CardBody style={{ margin: "0px 15px" }}>
                     {/* <Row> */}
                         
                         <Row>

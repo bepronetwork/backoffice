@@ -56,7 +56,7 @@ class GamesContainer extends PureComponent {
                 <Row md={12} xl={12} lg={12} xs={12}>
                     {myGames.map(game => {
                         return (
-                            <Col lg={4}>
+                            <Col lg={4} style={{ minWidth: 290 }}>
                                 <GameInfo game={game} isLoading={isLoading} wallet={wallet} {...this.props}/>
                             </Col>
 

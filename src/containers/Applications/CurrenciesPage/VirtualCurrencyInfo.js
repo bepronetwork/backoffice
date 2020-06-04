@@ -5,7 +5,13 @@ import { BankIcon, UploadIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
 import EditLock from '../../Shared/EditLock';
 import Dropzone from 'react-dropzone'
+import _ from 'lodash';
 const image2base64 = require('image-to-base64');
+
+const currenciesEnum = Object.freeze({
+    BTC: "5e710b90f6e2b0765fac2304",
+    ETH: "5e108498049eba079930ae1c"
+})
 
 class VirtualCurrencyInfo extends PureComponent {
  
@@ -48,7 +54,7 @@ class VirtualCurrencyInfo extends PureComponent {
 
         const app = await profile.getApp();
 
-        if (app.params.addOn.hasOwnProperty('balance')) {
+        if (this.isAdded('Initial Balance')) {
             this.setState({ currencies: app.params.addOn.balance.initialBalanceList });
         }
 
@@ -70,13 +76,13 @@ class VirtualCurrencyInfo extends PureComponent {
 
     confirmChanges = async () => {
         const { profile, data } = this.props;
-        
+
         const app = profile.getApp();
 
         this.setState({...this.state, loading: true })
 
         if (this.state.newInitialBalance) {
-            await app.editInitialBalance({balance: this.state.newInitialBalance, currency: data._id });
+            await app.editInitialBalance({ balance: this.state.newInitialBalance, currency: data._id });
         }
 
         if (this.state.newImage) {
@@ -84,11 +90,11 @@ class VirtualCurrencyInfo extends PureComponent {
         }
 
         if (this.state.newBTC) {
-            await app.editVirtualCurrency({ params: { price: this.state.newBTC, currency: "5e710b90f6e2b0765fac2304" } });
+            await app.editVirtualCurrency({ params: { price: this.state.newBTC, currency: currenciesEnum.BTC, image: this.state.newImage ? this.state.newImage : this.getCurrencyImage(data._id) } });
         }
 
-        if (this.state.newEHT !== null) {
-            await app.editVirtualCurrency({ params: { price: this.state.newETH, currency: "5e108498049eba079930ae1c" } });
+        if (this.state.newETH) {
+            await app.editVirtualCurrency({ params: { price: this.state.newETH, currency: currenciesEnum.ETH, image: this.state.newImage ? this.state.newImage : this.getCurrencyImage(data._id) } });
         }
 
         await profile.getApp().updateAppInfoAsync();
@@ -123,7 +129,9 @@ class VirtualCurrencyInfo extends PureComponent {
 
         const wallet = profile.App.params.wallet;
 
-        return wallet.find(c => c.currency._id === currencyId).currency;
+        const currency = wallet.find(c => c.currency._id === currencyId);
+
+        return currency.image;
     }
 
     renderImage = (src) => {
@@ -150,79 +158,76 @@ class VirtualCurrencyInfo extends PureComponent {
         const { lock, wallet, newImage } = this.state;
 
         const hasInitialBalanceAddOn = this.isAdded('Initial Balance');
-        const currency = this.getCurrency(data._id);
 
-        if(!data || !currency || !wallet){return null}
+        if(!data || !wallet){return null};
         
         return (
-            <Col md={12} xl={12} lg={12} xs={12}>
-                <Card className='game-container'>
-                    <CardBody className="dashboard__card-widget dashboard_borderTop" style={{width: '370px', paddingBottom: 10}}>
-                            <EditLock 
-                                unlockField={this.unlock} 
-                                lockField={this.lock} 
-                                confirmChanges={this.confirmChanges} 
-                                isLoading={this.state.loading}
-                                locked={lock}>
-                        <Row>
-                            <Col lg={4} >  
-                                <img className='application__game__image' 
-                                style={{display: 'block', width: '60px'}} 
-                                src={newImage ? this.renderImage(newImage) : this.getCurrencyImage(_id).image}/>
-                                <div className="dashboard__visitors-chart text-center">
-                                    <p className="dashboard__visitors-chart-title text-center" style={{fontSize: 26}}> {name} </p>
-                                </div>
-                                <Dropzone onDrop={this.onAddedFile} style={{ width: '100%', marginTop: 7, marginBottom: 15 }} ref={(el) => (this.dropzoneRef = el)} disabled={this.state.lock}>
-                                    <Button className="icon" style={{ padding: 2, margin: 0}} disabled={this.state.lock}>
-                                        <p style={{ fontSize: '12px' }}><UploadIcon className="deposit-icon"/> New Logo </p>
-                                    </Button>
-                                </Dropzone>
-                            </Col>
+            <Card className='game-container' style={{ width: 307 }}>
+                <CardBody className="dashboard__card-widget dashboard_borderTop" style={{ width: 370 , paddingBottom: 10 }}>
+                        <EditLock 
+                            unlockField={this.unlock} 
+                            lockField={this.lock} 
+                            confirmChanges={this.confirmChanges} 
+                            isLoading={this.state.loading}
+                            locked={lock}>
+                    <Row>
+                        <Col lg={4} >  
+                            <img className='application__game__image' 
+                            style={{display: 'block', width: '60px'}} 
+                            src={newImage ? this.renderImage(newImage) : this.getCurrencyImage(_id)}/>
+                            <div className="dashboard__visitors-chart text-center">
+                                <p className="dashboard__visitors-chart-title text-center" style={{fontSize: 26}}> {name} </p>
+                            </div>
+                            <Dropzone onDrop={this.onAddedFile} style={{ width: '100%', marginTop: 7, marginBottom: 15 }} ref={(el) => (this.dropzoneRef = el)} disabled={this.state.lock}>
+                                <Button className="icon" style={{ padding: 2, margin: 0}} disabled={this.state.lock}>
+                                    <p style={{ fontSize: '12px' }}><UploadIcon className="deposit-icon"/> New Logo </p>
+                                </Button>
+                            </Dropzone>
+                        </Col>
 
-                            { hasInitialBalanceAddOn ? (
-                                <Col lg={8} >
-                                <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Inital Balance</h3>
-    
-                                <div style={{ display: "flex"}}>
-                                        <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{currency.initialBalance.toFixed(6)}</h3>
-                                        <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{ticker}</h3>
-                                </div>
-                                    <TextInput
-                                        icon={BankIcon}
-                                        name="initialBalance"
-                                        label={<h6 style={{ fontSize: 11 }}>New Intial Balance</h6>}
-                                        type="text"
-                                        disabled={lock}
-                                        changeContent={(type, value) => this.onChangeInitialBalance(value)}
-                                    />
-    
-                                </Col>
+                        { hasInitialBalanceAddOn && (this.getCurrency(_id) !== undefined) ? (
+                            <Col lg={8} >
+                            <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Inital Balance</h3>
 
-                            ) : null}
-                     
-                            <Col lg={8}>
-                            <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Price</h3>
-                            {wallet.price.map(p => (
-                                <>
-                                <br/>
-                                <img src={this.getCurrencyInfo(p.currency).image} style={{float : 'left', marginRight : 4, width : 25, height : 25}}/>
-                            <p className='bold-text' style={{margin: 0}}>{p.amount} {this.getCurrencyInfo(p.currency).name}</p>
+                            <div style={{ display: "flex"}}>
+                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{this.getCurrency(_id).initialBalance.toFixed(6)}</h3>
+                                    <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{ticker}</h3>
+                            </div>
                                 <TextInput
-                                style={{ margin: 0}}
-                                name={this.getCurrencyInfo(p.currency).name}
-                                label={<h6 style={{ fontSize: 11 }}>{`New ${this.getCurrencyInfo(p.currency).name} price`}</h6>}
-                                type="text"
-                                disabled={lock}
-                                changeContent={(type, value) => this.onChange(type, value)}
+                                    icon={BankIcon}
+                                    name="initialBalance"
+                                    label={<h6 style={{ fontSize: 11 }}>New Intial Balance</h6>}
+                                    type="text"
+                                    disabled={lock}
+                                    changeContent={(type, value) => this.onChangeInitialBalance(value)}
                                 />
-                                </>
-                            ))}
+
                             </Col>
-                        </Row>
-                        </EditLock>
-                    </CardBody>
-                </Card>
-            </Col>
+
+                        ) : null}
+                    
+                        <Col lg={8}>
+                        { !_.isEmpty(wallet.price) ? <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Price</h3> : null }
+                        {wallet.price.map(p => (
+                            <>
+                            <br/>
+                            <img src={this.getCurrencyInfo(p.currency).image} style={{float : 'left', marginRight : 4, width : 25, height : 25}}/>
+                        <p className='bold-text' style={{margin: 0}}>{p.amount} {this.getCurrencyInfo(p.currency).name}</p>
+                            <TextInput
+                            style={{ margin: 0}}
+                            name={this.getCurrencyInfo(p.currency).name}
+                            label={<h6 style={{ fontSize: 11 }}>{`New ${this.getCurrencyInfo(p.currency).name} price`}</h6>}
+                            type="text"
+                            disabled={lock}
+                            changeContent={(type, value) => this.onChange(type, value)}
+                            />
+                            </>
+                        ))}
+                        </Col>
+                    </Row>
+                    </EditLock>
+                </CardBody>
+            </Card>
         );
     }
 }

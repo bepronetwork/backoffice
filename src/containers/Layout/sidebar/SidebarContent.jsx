@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SidebarLink from './SidebarLink';
-import SidebarCategory from './SidebarCategory';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
 import _ from 'lodash';
+import { Casino, Wallet, Phone, User, Arrow, Confirmed, Bet, Hand, Settings, Reward, LogOut } from '../../../components/Icons';
 
 class SidebarContent extends Component {
     static propTypes = {
@@ -71,21 +71,18 @@ class SidebarContent extends Component {
         return (
             <div className="sidebar__content">
                 <ul className="sidebar__block">
-                    <SidebarLink disabled={!this.state.home} title="Home" icon="home" route="/home" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.application} title="Application" icon="laptop-phone" route="/application" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.users} title="Users" icon="users" route="/users" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.bets} title="Bets" icon="list" route="/bets" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.transactions} title="Transactions" icon="cart" route="/transactions" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.stats} title="Stats" icon="chart-bars" route="/stats" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.wallet} title="Wallet" icon="store" route="/wallet" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.affiliates} title="Affiliates" icon="gift" route="/affiliates" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.settings} title="Settings" icon="cog" route="/settings" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.developers} title="Developers" icon="code" route="/developers" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.home} title="Home" icon={<Casino/>} route="/home" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.application} title="Application" icon={<Phone/>} route="/application" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.users} title="Users" icon={<User/>} route="/users" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.bets} title="Bets" icon={<Bet/>} route="/bets" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.transactions} title="Transactions" icon={<Arrow/>} route="/transactions" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.stats} title="Stats" icon={<Confirmed/>} route="/stats" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.wallet} title="Wallet" icon={<Wallet/>} route="/wallet" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.affiliates} title="Affiliates" icon={<Hand/>} route="/affiliates" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.settings} title="Settings" icon={<Settings/>} route="/settings" onClick={this.hideSidebar} />
+                    <SidebarLink disabled={!this.state.developers} title="Developers" icon={<Reward/>} route="/developers" onClick={this.hideSidebar} />
+                    {/* <SidebarLink title="Log Out" icon={<LogOut/>} route="/login" /> */}
                 </ul>
-                <ul className="sidebar__block">
-                    <SidebarLink title="Log Out" icon="exit" route="/login" />
-                </ul>
-            
             </div>
         );
     }

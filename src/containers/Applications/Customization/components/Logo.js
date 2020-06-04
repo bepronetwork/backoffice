@@ -182,7 +182,7 @@ class Logo extends Component {
         
         return (
             <Card>
-                <CardBody>
+                <CardBody style={{ margin: "0px 15px", minWidth: 345 }}>
                     <Row>
                         <Col md={6}>
                             <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 410, marginBottom : 30, padding : 30}}>

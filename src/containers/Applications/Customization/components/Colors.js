@@ -13,6 +13,18 @@ const defaultState = {
     isLoading: false
 }
 
+const COLORS = Object.freeze({
+    backgroundColor: { name: "Background Color", locked: false },
+    primaryColor: { name: "Boxes", locked: false },
+    secondaryColor: { name: "Buttons", locked: false },
+    thirdColor: { name: "", locked: true },
+    forthColor: { name: "", locked: true },
+    fifthColor: { name: "Title/Tab Text", locked: false },
+    sixthColor: { name: "Overall Text", locked: false }, 
+    seventhColor: { name: "1st Color Icons", locked: false },
+    heightColor: { name: "2nd Color Icons", locked: false }
+})
+
 class Colors extends Component {
     constructor(props){
         super(props);
@@ -71,17 +83,23 @@ class Colors extends Component {
         this.projectData(this.props);
     }
 
-    renderColor = ({hex, type, locked}) => {
+    renderColor = ({ name, hex, type, locked, colorLock }) => {
+        
+        if (colorLock) {
+            return null
+        }
+
         return (
             <>
-                <p>{type}</p>
-                <ColorPickerInput 
-                    label={type}
-                    name={type}
-                    color={hex}
-                    disabled={locked}
-                    onChange={this.onChange}
-                />
+                <Col md={4}>
+                    <ColorPickerInput 
+                        label={name}
+                        name={type}
+                        color={hex}
+                        disabled={ locked }
+                        onChange={this.onChange}
+                    />
+                </Col>
             </>
         )
     }
@@ -92,11 +110,11 @@ class Colors extends Component {
 
         return (
             <>
-                <Card>
+                <Card style={{ margin: "0px 15px" }}>
                     <h5> Note : Change of Colors will require a rebuild of the app, so expect a 5-20 min delay for the changes to take effect</h5>
                 </Card>
                 <Card>
-                    <CardBody>
+                    <CardBody style={{ margin: "0px 15px" }}>
                         <EditLock 
                             isLoading={isLoading} 
                             unlockField={this.unlockField} 
@@ -125,9 +143,7 @@ class Colors extends Component {
                             <Row>
                                 {colors.map ( c => { 
                                     return (
-                                        <Col md={4}>
-                                            {this.renderColor({type : c.type, hex : c.hex, locked})}
-                                        </Col>
+                                        this.renderColor({ name: COLORS[c.type].name, type: c.type, hex: c.hex, locked: locked, colorLock: COLORS[c.type].locked })
                                     )
                                 })}
                             </Row>

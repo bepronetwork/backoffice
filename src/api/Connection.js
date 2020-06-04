@@ -543,6 +543,20 @@ class Connection {
         }
     }
 
+    editDepositBonus = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/depositBonus/editDepositBonus`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editJackpot = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/jackpot/edge/edit`, {
@@ -681,6 +695,19 @@ class Connection {
     editLogoCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/logo`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editBackgroundCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/background`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

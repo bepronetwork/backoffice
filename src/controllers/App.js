@@ -643,6 +643,26 @@ class App{
         }
     }
 
+    editBackgroundCustomization = async ({background}) => {
+        try{
+            let res = await ConnectionSingleton.editBackgroundCustomization({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    background
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editVirtualCurrency = async ({params}) => {
         try{
             let res = await ConnectionSingleton.editVirtualCurrency({   
@@ -1158,7 +1178,23 @@ class App{
         }
     }
 
-    
+    editDepositBonus = async ({currency, depositBonusParams}) => {
+        try{
+            return await ConnectionSingleton.editDepositBonus({   
+                params : {
+                    currency,
+                    depositBonusParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     editJackpot = async ({edge}) => {
         try{
             return await ConnectionSingleton.editJackpot({   

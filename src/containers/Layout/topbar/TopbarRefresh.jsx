@@ -4,6 +4,15 @@ import { connect } from 'react-redux';
 import store from '../../App/store';
 import { setLoadingStatus } from '../../../redux/actions/loadingAction';
 import { ButtonBase } from '@material-ui/core';
+import styled from "styled-components";
+
+const MobileWrapper = styled.section`
+
+  @media (max-width: 578px) {
+   display: none !important;
+  }
+
+`;
 
 class TopbarRefresh extends PureComponent {
     state = {
@@ -28,6 +37,7 @@ class TopbarRefresh extends PureComponent {
     const { isLoading, disabled } = this.state;
 
     return (
+      <MobileWrapper>
         <ButtonBase style={{ height: "100%" }} onClick={this.refresh} disabled={disabled}>
           { isLoading ? (
             <i className="fas fa-sync fa-spin fa-lg" style={{ margin: 7, color: '#646777' }}/>
@@ -37,6 +47,8 @@ class TopbarRefresh extends PureComponent {
           )}
 
         </ButtonBase>
+      </MobileWrapper>
+        
     );
   }
 }

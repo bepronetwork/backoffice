@@ -6,7 +6,7 @@
   height: 100vh;
   width: 240px;
   box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
-  padding-top: 60px;
+  padding-top: 50px;
   transition: transform 0.3s, width 0.3s;
   transform: translateX(calc(-100% - 20px));
 
@@ -37,12 +37,18 @@
 }
 
 .sidebar__link-active {
+  background-color: #814c941a !important;
+  border-radius: 6px;
 
   .sidebar__link {
 
     &:before {
       opacity: 1;
     }
+
+      p {
+        color: #814c94 !important;
+      }
   }
 }
 
@@ -87,7 +93,8 @@
 }
 
 .sidebar__block {
-  padding: 15px 0;
+  padding-left: 0px;
+  width: 230px;
 
   @include themify($themes) {
     border-bottom: 1px solid themed('colorBorder');
@@ -100,26 +107,26 @@
 
 
 .sidebar__link__not_active{
-    height: 36px;
+    height: 40px;
     width: 100%;
     transition: all 0.3s;
     position: relative;
     cursor: pointer;
     display: flex;
-    padding: 11px 20px;
+    padding: 8px 20px;
     overflow: hidden;
     background: transparent;
     border: none;
 }
 
 .sidebar__link {
-    height: 36px;
+    height: 40px;
     width: 240px;
     transition: all 0.3s;
     position: relative;
     cursor: pointer;
     display: flex;
-    padding: 11px 20px;
+    padding: 8px 20px;
     overflow: hidden;
     background: transparent;
     border: none;
@@ -134,20 +141,27 @@
         left: 0;
         top: 0;
         height: 100%;
-        width: 2px;
+        width: 4px;
         background: $color-accent;
         opacity: 0;
         transition: all 0.3s;
+
+        .sidebar__link-active {
+          background-color: #814c941a !important;
+        }
     }
 
     p {
         position: absolute;
         left: 43px;
+        padding-left: 20px;
         width: 160px;
         transition: left 0.3s;
         top: 50%;
         transform: translateY(-50%);
     }
+
+
 
     &:hover {
         text-decoration: none;
@@ -289,7 +303,7 @@
     }
 
     &.sidebar--collapse {
-      width: 60px;
+      width: 250px;
       overflow: visible;
 
       .sidebar__scroll, .sidebar__content {
@@ -341,6 +355,15 @@
             left: 0;
             animation: none;
           }
+
+          .sidebar__link-title {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 16px;
+            position: relative;
+            display: flex;
+          }
         }
 
         .sidebar__submenu-wrap {
@@ -355,13 +378,16 @@
 
       .sidebar__link {
         overflow: hidden;
-        width: 55px;
+        width: 250px;
         background-color: transparent;
 
         p {
           position: absolute;
-          left: 70px;
+          padding-left: 20px;
+          // left: 60px;
           width: 160px;
+          font-size: 14px;
+          color: #a4a1a1;
         }
 
         &:hover {

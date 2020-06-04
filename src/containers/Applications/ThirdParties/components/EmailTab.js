@@ -100,7 +100,7 @@ class EmailTab extends Component {
     render() {
         const { isLoading, locked, apiKey, templateIds } = this.state; 
         return (
-            <Card>
+            <Card style={{ marginLeft: 15 }}>
                 <CardBody>
                 <EditLock 
                                 isLoading={isLoading} 
