@@ -99,76 +99,74 @@ class DepositBonus extends PureComponent {
         
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
-                <Card className='game-container'>
-                    <CardBody className="dashboard__card-widget dashboard_borderTop" style={{width: '450px', paddingBottom: 10}}>
-                        <EditLock 
-                            unlockField={this.unlock} 
-                            lockField={this.lock} 
-                            confirmChanges={this.confirmChanges} 
-                            isLoading={this.state.loading}
-                            locked={lock}>
-                            <h4 style={{ margin: 0 }}>Deposit Bonus</h4>
-                            <BooleanInput
-                                checked={isDepositBonus === true}
-                                onChange={this.onChangeIsDepositBonus}
-                                color="primary"
-                                name="isDepositBonus"
-                                disabled={lock}
-                                inputProps={{ 'aria-label': 'primary checkbox' }}
-                            />
-                            <hr/>
-                        <Row>
-                            <Col lg={6}>
-                                <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Min Deposit</h3>
-
-                                <div style={{ display: "flex"}}>
-                                        <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{minDeposit.toFixed(6)}</h3>
-                                        <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{data.ticker}</h3>
-                                </div>
-                                    <TextInput
-                                        name="minDeposit"
-                                        label={<h6 style={{ fontSize: 11 }}>New Min Deposit</h6>}
-                                        type="text"
-                                        disabled={lock}
-                                        changeContent={(type, value) => this.onChangeMinDeposit(value)}
-                                    />
-
-                                <br/>
-
-                                <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Max Deposit</h3>
-
-                                <div style={{ display: "flex"}}>
-                                        <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{maxDeposit.toFixed(6)}</h3>
-                                        <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{data.ticker}</h3>
-                                </div>
-                                    <TextInput
-                                        name="maxDeposit"
-                                        label={<h6 style={{ fontSize: 11 }}>New Max Deposit</h6>}
-                                        type="text"
-                                        disabled={lock}
-                                        changeContent={(type, value) => this.onChangeMaxDeposit(value)}
-                                    />
-                            </Col>
-                            
-                            <Col lg={5}>
-                            <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Percentage</h3>
+                <CardBody className="dashboard__card-widget" style={{width: '450px', paddingBottom: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#f8f8f8", boxShadow: "none" }}>
+                    <EditLock 
+                        unlockField={this.unlock} 
+                        lockField={this.lock} 
+                        confirmChanges={this.confirmChanges} 
+                        isLoading={this.state.loading}
+                        locked={lock}>
+                        <h4 style={{ margin: 0 }}>Deposit Bonus</h4>
+                        <BooleanInput
+                            checked={isDepositBonus === true}
+                            onChange={this.onChangeIsDepositBonus}
+                            color="primary"
+                            name="isDepositBonus"
+                            disabled={lock}
+                            inputProps={{ 'aria-label': 'primary checkbox' }}
+                        />
+                        <hr/>
+                    <Row>
+                        <Col lg={6}>
+                            <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Min Deposit</h3>
 
                             <div style={{ display: "flex"}}>
-                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{`${percentage.toFixed(2)} % `}</h3>
+                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{minDeposit.toFixed(6)}</h3>
+                                    <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{data.ticker}</h3>
                             </div>
                                 <TextInput
-                                    name="percentage"
-                                    label={<h6 style={{ fontSize: 11 }}>New Percentage</h6>}
+                                    name="minDeposit"
+                                    label={<h6 style={{ fontSize: 11 }}>New Min Deposit</h6>}
                                     type="text"
                                     disabled={lock}
-                                    changeContent={(type, value) => this.onChangePercentage(value)}
+                                    changeContent={(type, value) => this.onChangeMinDeposit(value)}
                                 />
 
-                            </Col>
-                        </Row>
-                        </EditLock>
-                    </CardBody>
-                </Card>
+                            <br/>
+
+                            <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Max Deposit</h3>
+
+                            <div style={{ display: "flex"}}>
+                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{maxDeposit.toFixed(6)}</h3>
+                                    <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{data.ticker}</h3>
+                            </div>
+                                <TextInput
+                                    name="maxDeposit"
+                                    label={<h6 style={{ fontSize: 11 }}>New Max Deposit</h6>}
+                                    type="text"
+                                    disabled={lock}
+                                    changeContent={(type, value) => this.onChangeMaxDeposit(value)}
+                                />
+                        </Col>
+                        
+                        <Col lg={5}>
+                        <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Percentage</h3>
+
+                        <div style={{ display: "flex"}}>
+                                <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{`${percentage.toFixed(2)} % `}</h3>
+                        </div>
+                            <TextInput
+                                name="percentage"
+                                label={<h6 style={{ fontSize: 11 }}>New Percentage</h6>}
+                                type="text"
+                                disabled={lock}
+                                changeContent={(type, value) => this.onChangePercentage(value)}
+                            />
+
+                        </Col>
+                    </Row>
+                    </EditLock>
+                </CardBody>
             </Col>
         );
     }

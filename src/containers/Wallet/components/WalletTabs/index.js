@@ -5,15 +5,16 @@ import { StyledNavLink, TabsContainer, TabContainer } from './styles';
 import classnames from 'classnames';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
+import LimitsWidget from '../../components/paths/LimitsWidget';
+import FeesWidget from '../../components/paths/FeesWidget';
+import BonusWidget from '../../components/paths/BonusWidget';
 
 const tabs = [
     { name: "Deposit", container: (wallet) => <Deposit data={wallet}/> },
     { name: "Withdraw", container: (wallet) => <Withdraw data={wallet}/> },
-    // { name: "Limits", container: (wallet) => <Deposit data={wallet}/> },
-    // { name: "Fees", container: (wallet) => <Deposit data={wallet}/> },
-    // { name: "Bonus", container: (wallet) => <Deposit data={wallet}/> },
-    // { name: "Withdraw" },
-    // { name: "Limits" }    
+    { name: "Limits", container: (wallet) => <LimitsWidget data={wallet}/> },
+    { name: "Fees", container: (wallet) => <FeesWidget data={wallet}/> },
+    { name: "Bonus", container: (wallet) => <BonusWidget data={wallet}/> }  
 ]
 
 class WalletTabs extends Component {

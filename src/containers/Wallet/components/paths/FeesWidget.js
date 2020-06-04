@@ -6,29 +6,26 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import CurrencyInfo from './CurrencyInfo';
 import { LockWrapper } from '../../../../shared/components/LockWrapper';
+import { TabContainer } from '../WalletTabs/styles';
+import { Paragraph } from '../LiquidityWalletContainer/styles';
 
 class FeesWidget extends React.Component{
 
     render = () => {
         const { profile } = this.props;
-        const { currency } = this.props.wallet;
+        const { currency } = this.props.data.wallet;
 
         const isSuperAdmin = profile.User.permission.super_admin;
 
         return (
-            <Container className="dashboard">
-                <Col lg={12}>
-                    <h3 style={{marginTop : 20 }} className={"bold-text dashboard__total-stat"}>Fees</h3>
-                    <p className="" style={{marginBottom : 50 }}>
-                        Choose the fees to deposit and withdraw of your wallet.
-                    </p>
-                </Col>
+            <TabContainer>
+                <Paragraph style={{ marginBottom: 15 }}>Choose the fees to deposit and withdraw of your wallet</Paragraph>
                 <Row>
                 <LockWrapper hasPermission={isSuperAdmin}>
                     <CurrencyInfo profile={profile} data={currency}/>
                 </LockWrapper>
                 </Row>
-            </Container>
+            </TabContainer>
         )
     }
 
