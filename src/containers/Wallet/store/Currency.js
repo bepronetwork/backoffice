@@ -29,7 +29,7 @@ class CurrencyStoreContainer extends PureComponent {
         return (
             <CurrencyStoreCard>
                 <CardHeader>
-                    <img className='application__game__image' style={{display: 'block', marginLeft: `0px`, height: 83, width: 83 }} src={image}/>
+                    <img className='application__game__image' style={{display: 'block', marginLeft: `0px`, height: 60, width: 60 }} src={image}/>
                 </CardHeader>
                 <CardContent>
                     <h1>{ticker}</h1>

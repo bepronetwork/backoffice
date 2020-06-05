@@ -5,6 +5,7 @@ import store from '../App/store';
 import { setCurrencyView } from '../../redux/actions/currencyReducer';
 import { addCurrencyWallet } from '../../redux/actions/addCurrencyWallet';
 import CurrencyStoreContainer from './store/Currency';
+import { Header } from './components/LiquidityWalletContainer/styles';
 
 
 class CurrencyStore extends React.Component{
@@ -67,26 +68,23 @@ class CurrencyStore extends React.Component{
         const currencies = ecosystemCurrencies.filter(currency => !this.hasRestriction(appUseVirtualCurrencies, currency));
 
         return (
-            <Container className="dashboard">
-                <div className="dashboard__visitors-chart">
-                    <h4 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}> Currency Store </h4>
-                    <p>
-                       Available Currencies to Integrate
-                    </p>
-                </div>
-                <div style={{marginTop : 20}}>
+            <>
+                <Header style={{ paddingLeft: 10 }}>
+                    <h3>Currency Store</h3>
+                    <p>Available Currencies to Integrate</p>
+                </Header>
+                <div style={{marginTop: 20}}>
                     <Row>
                         {currencies.map( c => {
                             return (
-                                <Col md={5} style={{marginBottom : 30}} key={c._id}>
+                                <Col lg={4} key={c._id} style={{ minWidth: 250 }}>
                                     <CurrencyStoreContainer onClick={this.addCurrency} currency={c} isAdded={c.isAdded}/>
                                 </Col>
                             )
                         })}
                     </Row>
                 </div>
-                
-            </Container>
+            </>
         )
     }
 

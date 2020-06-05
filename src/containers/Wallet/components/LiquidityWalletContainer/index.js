@@ -59,10 +59,7 @@ class LiquidityWalletContainer extends Component {
     }
 
     render() {
-
         const { wallets } = this.state;
-
-        console.log(this.state);
 
         if (!wallets) return null;
 
