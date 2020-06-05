@@ -24,8 +24,6 @@ class WalletContainer extends React.Component{
         
         const wallets = (profile.getApp().getSummaryData('walletSimple')).data;
 
-        console.log(wallets);
-
         return (
             <Container className="dashboard">
                 <TabsContainer 

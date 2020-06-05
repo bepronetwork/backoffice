@@ -50,15 +50,38 @@ class WalletTabs extends Component {
         }
     }
 
+    isAdded = (AddOn) => {
+        const app = this.props.profile.App;
+        const appAddOns = app.params.addOn;
+
+        return !!Object.keys(appAddOns).find(k => AddOn.toLowerCase().includes(k.toLowerCase()));
+         
+    }
+
+    hasPermission = tab => {
+
+        switch (tab) {
+            case 'Fees':
+                return this.isAdded('TxFee');
+            case 'Bonus':
+                return this.isAdded('DepositBonus');
+            default:
+                return true;
+        }
+    }
+
     render() {
         const { wallet } = this.state;
 
         if (!wallet) return null
 
+        const isAppWithFakeMoney = wallet.currency.name === 'Gold';
+        const filteredTabs = !isAppWithFakeMoney ? tabs.filter(tab => this.hasPermission(tab.name)) : tabs.filter(tab => tab.name === 'Limits');
+
         return (
            <>
            <Nav pills>
-                {tabs.map(tab => (
+                {filteredTabs.map(tab => (
                     <NavItem style={{ height: 80, margin: "0px 20px", marginTop: "20px" }}>
                         <StyledNavLink
                             className={classnames({ active: this.state.activeTab === tab.name })}
@@ -73,7 +96,7 @@ class WalletTabs extends Component {
             </Nav>
             <TabsContainer>
                 <TabContent activeTab={this.state.activeTab}>
-                    {tabs.map(tab => (
+                    {filteredTabs.map(tab => (
                     <TabPane tabId={tab.name}>
                         {tab.container({ wallet })}
                     </TabPane>))}
