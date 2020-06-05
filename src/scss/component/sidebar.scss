@@ -5,7 +5,8 @@
   z-index: 99;
   height: 100vh;
   width: 240px;
-  box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
+  // box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
+  border: solid 1px rgba(164, 161, 161, 0.35);
   padding-top: 50px;
   transition: transform 0.3s, width 0.3s;
   transform: translateX(calc(-100% - 20px));

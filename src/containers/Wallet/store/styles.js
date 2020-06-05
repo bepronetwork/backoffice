@@ -6,7 +6,7 @@ export const CurrencyStoreCard = styled.div`
     padding: 33px;
     border-radius: 10px;
     border: solid 1px rgba(164, 161, 161, 0.35);
-    background-color: #f8f8f8;
+    background-color: #fafcff;
 `;
 
 export const CardHeader = styled.section`

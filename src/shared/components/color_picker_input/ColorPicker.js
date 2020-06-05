@@ -36,7 +36,6 @@ class ColorPicker extends React.Component {
             <div disabled={this.props.disabled} className='colorContainer' >
             <h4 className='title'>{this.props.label}</h4>
             <Twitter
-                width="600px"
                 color={ this.state.background }
                 onChangeComplete={this.onChange}
             />

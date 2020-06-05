@@ -75,7 +75,7 @@ class AdminContainer extends React.Component{
         return (
             <div>
                 <h4>Application Admins</h4>
-                <div className='landing__product__widget__small' style={{ marginRight: 15, height : 60, width: 410, padding: 5, textAlign: "right", borderRadius: "5px" }}>
+                <div className='landing__product__widget__small' style={{ marginRight: 15, height : 60, width: 410, padding: 5, textAlign: "right", borderRadius: "5px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <TextField
                     label="Search..."
                     id="search-admin"

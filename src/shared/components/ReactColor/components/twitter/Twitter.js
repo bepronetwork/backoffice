@@ -12,8 +12,8 @@ export const Twitter = ({ onChange, onSwatchHover, hex, colors, width, triangle,
   const styles = reactCSS(merge({
     'default': {
       card: {
-        width,
-        background: '#fff',
+        width: '100%',
+        background: '#fafcff',
         // border: '0 solid rgba(0,0,0,0.25)',
         // boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
         borderRadius: '4px',

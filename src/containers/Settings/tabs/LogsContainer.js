@@ -11,7 +11,7 @@ export default class LogsContainer extends React.Component{
             <div>               
                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Logs </p>
                 <hr/>
-                <Paper style={{ boxShadow: "0 10px 30px 1px rgba(0, 0, 0, 0.06)", padding: 25 }} >
+                <Paper style={{ padding: 25, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }} >
                     <LogsTable/>
                 </Paper>
           </div>

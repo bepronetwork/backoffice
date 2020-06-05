@@ -17,7 +17,7 @@ class TableKey extends PureComponent {
 		return (
 		<Col md={12} lg={12}>
 			<Card>
-                <CardBody>
+                <CardBody style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <div className="card__title">
                         <h5 className="bold-text">{type}</h5>
                     </div>

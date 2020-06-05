@@ -199,7 +199,7 @@ class Banners extends Component {
         
         return (
             <Card>
-                <CardBody style={{ margin: "0px 15px" }}>
+                <CardBody style={{ margin: "0px 15px", borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <Row>
                         <Col md={12}>
                             <EditLock 
@@ -215,14 +215,14 @@ class Banners extends Component {
                                         <GridList className={classes.gridList} cols={2.5} style={{ minHeight: '410px' }}>
                                         {banners.map((i, index) => {
                                             return (
-                                                <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 580, width: 300, margin: 20, padding : "0px 30px 30px 30px"}}>
+                                                <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, height : 580, width: 300, margin: 20, padding : "0px 30px 30px 30px"}}>
                                                     {this.renderImage(i.image_url, index)}
                                                 </div>
                                             )
                                         })}
                                         <div>
                                             <h4 style={{padding: 20}}>Add Banner</h4> 
-                                            <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 8, height : 270, width: 230, margin: "0px 20px 20px 20px"}}> 
+                                            <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, height : 270, width: 230, margin: "0px 20px 20px 20px"}}> 
                                                 {this.renderAddImage(banners.length)}
                                             </div>
                                         </div>

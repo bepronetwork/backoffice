@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
 import TextInput from '../../../../shared/components/TextInput';
 import BooleanInput from '../../../../shared/components/BooleanInput';
-import { Col, Row, Card, CardBody } from 'reactstrap';
+import { Col, Row, Card, CardBody, CustomInput, Form } from 'reactstrap';
 import { connect } from "react-redux";
 import { FormControlLabel } from '@material-ui/core';
 import ColorPicker from '../../../../shared/components/color_picker_input/ColorPicker.js';
-
+import { TextField, Label } from './styles';
+import Switch from '../../../../shared/components/Switch.js';
 
 const defaultState = {
     isActive: false,
@@ -47,6 +48,12 @@ class AnnouncementTab extends Component {
         })
     }
 
+    onChangeText = (value) => {
+        this.setState({
+            text: value ? value : ""
+        })
+    }
+
     onChange = ({type, value}) => {
         this.setState({...this.state, [type] : value })
     }
@@ -70,9 +77,11 @@ class AnnouncementTab extends Component {
 
     render() {
         const { isLoading, locked, isActive, textColor, backgroundColor, text } = this.state; 
+
+        console.log(text);
         return (
             <Card>
-                <CardBody style={{ margin: "0px 15px" }}>
+                <CardBody style={{ margin: "0px 15px", borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <Row>
                         <Col md={12}>
                             <EditLock 
@@ -83,7 +92,7 @@ class AnnouncementTab extends Component {
                                 type={'announcementTab'} 
                                 locked={locked}
                             >
-                                <TextInput
+                                {/* <TextInput
                                     label={'Announcement Text'}
                                     name={'text'}
                                     type={'text'} 
@@ -91,7 +100,9 @@ class AnnouncementTab extends Component {
                                     defaultValue={text}
                                     disabled={locked}
                                     changeContent={(type, value) => this.onChange({type, value})}
-                                />
+                                /> */}
+                                <Label>Announcement Text</Label>
+                                <TextField placeholder="Type here" disabled={locked} value={text} onChange={(e) => this.onChangeText(e.target.value)}/>
                                 <ColorPicker 
                                     label={'Text Color'}
                                     name={'textColor'}
@@ -120,7 +131,7 @@ class AnnouncementTab extends Component {
                                 label={isActive ? <h4 style={{fontSize: 16}}>Active</h4> 
                                 : <h4 style={{ fontSize: 16}}>Inactive</h4>}
                                 labelPlacement="top"
-                                />
+                                />  
                             </EditLock>
                         </Col>
                     </Row>

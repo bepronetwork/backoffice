@@ -97,7 +97,7 @@ class AutoWithdraw extends React.Component {
                 {isLoading ? (
                 <>
                 <Card className='game-container'>
-                    <CardBody className="dashboard__card-widget" style={{ width: 320}}>
+                    <CardBody className="dashboard__card-widget" style={{ width: 320, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <Grid container direction='row' spacing={1}>
                             <Grid item xs={9}>
                                 <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/>
@@ -112,7 +112,7 @@ class AutoWithdraw extends React.Component {
                 </>   
                 ) : (                  
                     <Card className='game-container'>
-                        <Paper elevation={0} style={{width: '320px', padding: 5, boxShadow: "0 10px 30px 1px rgba(0, 0, 0, 0.06)"}}>
+                        <Paper elevation={0} style={{width: '320px', padding: 5, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                             <ExpansionPanel elevation={0}>
                             <ExpansionPanelSummary
                             style={{width: '320px', height: '120px', padding: 20, paddingBottom: 0, paddingTop: 0, justifyContent: 'space-between'}}

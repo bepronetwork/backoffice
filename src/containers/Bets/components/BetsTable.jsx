@@ -422,7 +422,7 @@ class EnhancedTable extends React.Component {
     }
 
     return (
-        <Paper className={classes.root} style={{ padding: 20}}>
+        <Paper className={classes.root} style={{ padding: 20, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none"}}>
             <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
             <div style={{ display: "flex", justifyContent: "flex-start"}}>
                 <CSVLink data={csvData} filename={"bets.csv"} headers={headers}>

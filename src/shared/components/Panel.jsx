@@ -77,7 +77,7 @@ export default class AlertComponent extends PureComponent {
             className={`panel${this.props.color ? ` panel--${color}` : '', !naked ? '' : 'panel__naked'}
             ${divider ? ' panel--divider' : ''}${this.state.collapse ? '' : ' panel--collapse'}`}
           >
-            <CardBody className="panel__body">
+            <CardBody className="panel__body" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
               {this.state.refresh ? <div className="panel__refresh"><LoadingIcon /></div> : ''}
               <div className="panel__btns">
                 <button className="panel__btn" onClick={this.onCollapse}><MinusIcon /></button>

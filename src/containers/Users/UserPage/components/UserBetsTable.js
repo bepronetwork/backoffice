@@ -355,7 +355,7 @@ class UserBetsTable extends React.Component {
     }
     
     return (
-      <Paper elevation={0} className={classes.root}>
+      <Paper elevation={0} className={classes.root} style={{ backgroundColor: "#fafcff" }}>
             <div style={{ display: "flex", justifyContent: "flex-start"}}>
                 <CSVLink data={csvData} filename={"user_bets.csv"} headers={headers}>
                     <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>

@@ -10,15 +10,15 @@ const EditLock = (props) => {
             </div>
             <div style={{marginTop : 20}}>
                 {props.locked ?
-                    <Button onClick={() => props.unlockField({field : props.type})} className="icon" outline>
+                    <Button onClick={() => props.unlockField({field : props.type})} className="icon" outline style={{ backgroundColor: "white" }}>
                         <p><LockIcon className="deposit-icon"/> Unlock</p>
                     </Button>
                 :
                     <div>
-                        <Button onClick={() => props.lockField({field : props.type})} className="icon" outline>
+                        <Button onClick={() => props.lockField({field : props.type})} className="icon" outline style={{ backgroundColor: "white" }}>
                             <p><LockIcon className="deposit-icon"/> Lock </p>
                         </Button>
-                        <Button disabled={props.isLoading} onClick={() => props.confirmChanges({field : props.type})} className="icon" outline>
+                        <Button disabled={props.isLoading} onClick={() => props.confirmChanges({field : props.type})} className="icon" outline style={{ backgroundColor: "white" }}>
                             <p><ArrowExpandRightIcon className="deposit-icon"/>
                                 {props.isLoading ? 'Updating..' : 'Confirm'}
                             </p>

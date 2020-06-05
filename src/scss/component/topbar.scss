@@ -4,8 +4,8 @@
   top: 0;
   height: 60px;
   z-index: 101;
-  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
-  // border: solid 1px rgba(164, 161, 161, 0.35);
+  // box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
+  border: solid 1px rgba(164, 161, 161, 0.35);
 
   @include themify($themes) {
     background: themed('colorBackground');

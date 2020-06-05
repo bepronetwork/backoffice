@@ -59,7 +59,7 @@ export const DepositAddress = styled.section`
     height: 40px;
     width: 100%;
     border: solid 1px rgba(164, 161, 161, 0.35);
-    background-color: #f8f8f8;
+    background-color: #fafcff;
     border-radius: 6px;
     justify-content: space-between;
     align-items: center;
@@ -112,7 +112,7 @@ export const AddressInput = styled(Input)`
     margin: 12px 0px;
     border-radius: 6px;
     border: solid 1px rgba(164, 161, 161, 0.35);
-    background-color: #f8f8f8;
+    background-color: #fafcff;
     font-family: Poppins;
     font-size: 14px;
     line-height: 24px;
@@ -123,7 +123,7 @@ export const AmountInput = styled(Input)`
     margin: 12px 0px;
     border-radius: 6px;
     border: solid 1px rgba(164, 161, 161, 0.35);
-    background-color: #f8f8f8;
+    background-color: #fafcff;
     font-family: Poppins;
     font-size: 14px;
     line-height: 24px;
@@ -134,7 +134,7 @@ export const InputAddOn = styled(InputGroupText)`
     margin: 12px 0px;
     border-radius: 6px;
     border: solid 1px rgba(164, 161, 161, 0.35);
-    background-color: #f8f8f8;
+    background-color: #fafcff;
     height: 35px;
     border-right: none;
 

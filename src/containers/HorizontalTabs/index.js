@@ -65,10 +65,10 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3),
   },
   demo1: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: "#fafcff",
   },
   demo2: {
-    backgroundColor: 'white',
+    backgroundColor: "#fafcff",
   },
 }));
 
@@ -87,7 +87,7 @@ export default function HorizontalTabs({tabs}) {
     };
 
     return (
-        <div className={classes.root}>
+        <div className={classes.root} style={{ backgroundColor: "#fafcff" }}>
             <div className={classes.demo2}>
                 <StyledTabs value={value} onChange={handleChange} aria-label="styled tabs example">
                 {tabs.map( t => <StyledTab label={t.label} />) }
