@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import WalletTabs from '../WalletTabs';
+import { Grid } from '@material-ui/core';
 
 
 const Wallet = ({ data }) => {
@@ -73,30 +74,36 @@ class LiquidityWalletContainer extends Component {
                         <p>Current Liquidity</p>
                     </Header>
                     <Content>
-                        <CurrenciesTabContainer>
-                            <Nav vertical pills>
-                                {wallets.map(wallet => (
-                                    <NavItem style={{ height: 80, margin: "20px 0px" }}>
-                                        <StyledNavLink
-                                            className={classnames({ active: this.state.activeTab === wallet._id })}
-                                            onClick={() => {
-                                            this.toggle(wallet._id);
-                                            }}
-                                        >
-                                            <Wallet data={wallet}/>
-                                        </StyledNavLink>
-                                    </NavItem>
-                                ))}
-                            </Nav>
-                        </CurrenciesTabContainer>
-                        <TabsContainer>
-                            <TabContent activeTab={this.state.activeTab}>
-                                {wallets.map(wallet => (
-                                <TabPane tabId={wallet._id}>
-                                    <WalletTabs wallet={wallet}/>
-                                </TabPane>))}
-                            </TabContent>
-                        </TabsContainer>
+                    <Grid container direction="row" spacing={6}>
+                        <Grid item xs={3}>
+                            <CurrenciesTabContainer>
+                                <Nav vertical pills>
+                                    {wallets.map(wallet => (
+                                        <NavItem style={{ height: 80, margin: "20px 0px" }}>
+                                            <StyledNavLink
+                                                className={classnames({ active: this.state.activeTab === wallet._id })}
+                                                onClick={() => {
+                                                this.toggle(wallet._id);
+                                                }}
+                                            >
+                                                <Wallet data={wallet}/>
+                                            </StyledNavLink>
+                                        </NavItem>
+                                    ))}
+                                </Nav>
+                            </CurrenciesTabContainer>
+                        </Grid>
+                        <Grid item xs>
+                            <TabsContainer>
+                                <TabContent activeTab={this.state.activeTab}>
+                                    {wallets.map(wallet => (
+                                    <TabPane tabId={wallet._id}>
+                                        <WalletTabs wallet={wallet}/>
+                                    </TabPane>))}
+                                </TabContent>
+                            </TabsContainer>
+                        </Grid>
+                    </Grid>
                     </Content>
                 </Container>
             </>

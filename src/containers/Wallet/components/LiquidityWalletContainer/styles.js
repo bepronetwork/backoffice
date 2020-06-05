@@ -39,12 +39,13 @@ export const Content = styled.section`
 
 export const CurrenciesTabContainer = styled.section`
     height: 100%;
-    width: 30%;
+    width: 100%;
+    min-width: 176px;
 `;
 
 export const TabsContainer = styled.section`
     height: 100%;
-    width: 70%;
+    width: 100%;
 `;
 
 export const StyledNavLink = styled(NavLink)`
