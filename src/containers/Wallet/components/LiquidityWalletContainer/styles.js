@@ -38,6 +38,7 @@ export const Content = styled.section`
 `;
 
 export const CurrenciesTabContainer = styled.section`
+    margin-left: 15px;
     height: 100%;
     width: 100%;
     min-width: 176px;
