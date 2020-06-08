@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import BoxDownIcon from 'mdi-react/BoxDownIcon';
 import { connect } from "react-redux";
 import _ from 'lodash';
-import { Chat } from '../../../components/Icons';
+import { Chat, Withdraw } from '../../../components/Icons';
 
 class TopbarWithdrawNotice extends Component {
 
@@ -40,7 +40,7 @@ class TopbarWithdrawNotice extends Component {
             <div className="topbar__collapse">
 
                 <Link to={'/transactions'} className={`topbar__btn button-hover`}>
-                    <Chat />
+                    <Withdraw />
                     <p className='notification-icon-value'>{openWithdraws}</p>
                 </Link>
                 {this.state.collapse && <button className="topbar__back" onClick={this.toggle} />}
