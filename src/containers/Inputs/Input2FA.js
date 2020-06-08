@@ -2,7 +2,13 @@ import ReactCodeInput from 'react-code-input';
 import React from 'react';
 import { Container, Button } from 'reactstrap';
 import { reduxForm } from 'redux-form';
+import styled from 'styled-components';
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
+
+const Message = styled.h5`
+    font-family: Poppins;
+    font-size: 16px;
+`;
 
 class Input2FA extends React.Component{
 
@@ -17,11 +23,11 @@ class Input2FA extends React.Component{
     render = () => {
         return (
             <form className="form" onSubmit={(e) => e.preventDefault()}>
-                <Container className="dashboard">
+                <Container className="dashboard" style={{ padding: 0 }}>
                     <ReactCodeInput autoFocus={true} type='number' fields={6} onChange={(e) => this.onChange(e)} />
-                    <h5 style={{marginTop : 20, marginBottom : 20}}>Insert the Code that Appears in the Auth App</h5>
+                    <Message style={{marginTop : 20, marginBottom : 20}}>Insert the Code that Appears in the Auth App</Message>
                     <div style={{marginTop : 20}}>
-                        <Button color="primary" type="submit" onClick={() => this.props.confirm({token : this.state.input})}>
+                        <Button color="primary" type="submit" onClick={() => this.props.confirm({token : this.state.input})} style={{ marginLeft: 0 }}>
                             {  
                                 !this.props.isLoading ?
                                 'Confirm'

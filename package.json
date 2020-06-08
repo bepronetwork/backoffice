@@ -142,6 +142,7 @@
     "react-sticky": "^6.0.3",
     "react-swipeable-views": "^0.13.3",
     "react-syntax-highlighter": "^8.0.1",
+    "react-text-loop": "^2.3.0",
     "react-text-mask": "^5.4.3",
     "react-tooltip": "^3.10.0",
     "react-vis": "^1.11.2",
