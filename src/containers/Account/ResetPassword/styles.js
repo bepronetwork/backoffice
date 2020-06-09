@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ReactComponent as BetProtocol } from '../../../assets/img/login/icon_white.svg';
+import BetProtocol from '../../../assets/img/login/icon_white';
 import BackOfficeLogo from '../../../assets/img/login/backoffice_logo_purple.svg';
 import BackgroundTop from '../../../assets/img/login/login_background_top.svg';
 import BackgroundBottom from '../../../assets/img/login/login_background_bottom.svg';
