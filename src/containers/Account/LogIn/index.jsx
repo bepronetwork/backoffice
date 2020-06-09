@@ -193,31 +193,8 @@ class LogIn extends React.Component{
                 </VerticalSection>
              </BackgroundBox>
             </>
-			
 		)
 	}
 };
-
-{/* <div className={'container__all'}>
-				<Row className={'container__all'} style={{marginTop : '10%'}}>
-					<Col lg={6} className={'login_background'}>
-						<img className="login_background" src={Back} />
-					</Col>
-					<Col lg={6}>
-						<div className="account__wrapper">
-							<div className="account__card">
-							<h3 className="account__title" style={{marginBottom : '20%'}}> Login
-							</h3>
-                                <StepWizard
-                                    instance={this.setInstance}
-                                >
-                                    <LogInForm isLoading={this.state.isLoading} login={this.login} changeContent={this.changeContent} query={parsed} SW={SW} handleSubmit={(e) => e.preventDefault()} showNotification={this.showNotification} {...this.props} onSubmit={false} />
-                                    <Input2FA  isLoading={this.state.isLoading} SW={SW} confirm={this.login2FA}/>
-                                </StepWizard>
-							</div>
-						</div>
-					</Col>
-				</Row>
-			</div> */}
 
 export default LogIn;

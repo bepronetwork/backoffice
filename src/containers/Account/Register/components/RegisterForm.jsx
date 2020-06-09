@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import Account from '../../../../controllers/Account';
 import TextField from '@material-ui/core/TextField';
 import TextInput from '../../../../shared/components/TextInput';
+import { FormGroup } from 'reactstrap';
+import { InputLabel, EmailInput, PasswordInput } from '../styles';
 const queryString = require('query-string');
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -83,9 +85,54 @@ class RegisterForm extends PureComponent {
         });
     }
 
-    changeContent = (type, item) => {
-        this.setState({[type] : item});
+    onChangeUsername = value => {
+        if (value) {
+            this.setState({
+                username: value
+            })
+        } else {
+            this.setState({
+                username: null
+            })
+        }
     }
+
+    onChangeName = value => {
+        if (value) {
+            this.setState({
+                name: value
+            })
+        } else {
+            this.setState({
+                name: null
+            })
+        }
+    }
+
+    onChangeEmail = value => {
+        if (value) {
+            this.setState({
+                email: value
+            })
+        } else {
+            this.setState({
+                email: null
+            })
+        }
+    }
+
+    onChangePassword = value => {
+        if (value) {
+            this.setState({
+                password: value
+            })
+        } else {
+            this.setState({
+                password: null
+            })
+        }
+    }
+
 
     register = async () => {
         try{
@@ -110,44 +157,50 @@ class RegisterForm extends PureComponent {
         return (
         <form className="form" onSubmit={handleSubmit}>
             <div className="form__form-group">
-            <h3 className="account__title" style={{marginBottom : '20%'}}>Register
-							</h3>
-                <TextInput
-                    icon={CheckboxMultipleBlankCircleIcon}
-                    name="username"
+                <FormGroup>
+                        <InputLabel for="username">Username</InputLabel>
+                <EmailInput
                     label="Username"
+                    name="username"
                     type="text"
-                    placeholder="James2345"
-                    changeContent={this.changeContent}
+                    // defaultValue={this.state.username}
+                    onChange={(e) => this.onChangeUsername(e.target.value)}
                 />
-                 <TextInput
-                    icon={AccountIcon}
-                    name="name"
+                </FormGroup>
+                <FormGroup>
+                        <InputLabel for="name">Name</InputLabel>
+                <EmailInput
                     label="Name"
+                    name="name"
                     type="text"
-                    placeholder="James"
-                    changeContent={this.changeContent}
+                    // defaultValue={this.state.name}
+                    onChange={(e) => this.onChangeName(e.target.value)}
                 />
+                </FormGroup>
                 {/* Admin Registered via email */}
                 {!this.state.queryEmail ?
-                    <TextInput
-                        icon={MailRuIcon}
-                        name="email"
-                        label="Email"
-                        defaultValue={this.state.queryEmail}
-                        type="text"
-                        placeholder="example@email.com"
-                        changeContent={this.changeContent}
-                    />
+                <FormGroup>
+                    <InputLabel for="email">E-mail</InputLabel>
+                <EmailInput
+                    label="E-mail"
+                    name="email"
+                    type="text"
+                    defaultValue={this.state.queryEmail}
+                    onChange={(e) => this.onChangeEmail(e.target.value)}
+                />
+                </FormGroup>
                 : null}
-                <TextInput
-                    icon={KeyVariantIcon}
+                <FormGroup>
+                    <InputLabel for="password">Password</InputLabel>
+                <PasswordInput
+                    // icon={KeyVariantIcon}
                     name="password"
                     label="Password"
                     type="password"
                     placeholder="**********"
-                    changeContent={this.changeContent}
+                    onChange={(e) => this.onChangePassword(e.target.value)}
                 />
+                </FormGroup>
             </div>            
             <div className="account__btns">
                 <button onClick={ () => this.register() }className="btn btn-primary account__btn" to="/dashboard_default">                {
