@@ -101,7 +101,7 @@ class EmailTab extends Component {
         const { isLoading, locked, apiKey, templateIds } = this.state; 
         return (
             <Card style={{ marginLeft: 15 }}>
-                <CardBody>
+                <CardBody style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                 <EditLock 
                                 isLoading={isLoading} 
                                 unlockField={this.unlockField} 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Formik, Form } from 'formik';
 import TextField from '@material-ui/core/TextField';
-import { List, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, ClickAwayListener } from '@material-ui/core';
+import { List, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, ClickAwayListener, Select, FormControl, InputLabel, MenuItem } from '@material-ui/core';
 import { Button as MaterialButton } from '@material-ui/core';
 import { Button, Col } from 'react-bootstrap';
 import { ExpandMoreIcon } from 'mdi-react';
@@ -151,7 +151,9 @@ class UserBetsFilter extends Component {
     
 
     render() {
-        const { open, loading } = this.state;
+        const { open, loading, currencies, games } = this.state;
+
+        if (!currencies || !games) return null
 
         return (
             <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end', paddingBottom: 20}}>
@@ -171,8 +173,8 @@ class UserBetsFilter extends Component {
                         initialValues={{
                             bet: "",
                             user: "",
-                            currency: "",
-                            game: "",
+                            currency: "Currency",
+                            game: "Game",
                             size: 100
                         }}
                         onSubmit={data => this.handleData(data)}
@@ -212,26 +214,40 @@ class UserBetsFilter extends Component {
                                     />
                                     </List>
                                     <List item key="currency">
-                                    <TextField
+                                        <Select
+                                        labelId="currency"
                                         id="currency"
-                                        name="currency"
-                                        type="text"
-                                        placeholder="Currency Ticker"
-                                        onChange={handleChange}
                                         value={values.currency}
+                                        onChange={handleChange("currency")}
+                                        placeholder="Currency"
                                         fullWidth
-                                    />
+                                        MenuProps={{ disablePortal: true }}
+                                        >
+                                        <MenuItem value="Currency">
+                                            Currency
+                                        </MenuItem>
+                                        { currencies.map(currency => (
+                                            <MenuItem value={currency.ticker}>{currency.ticker}</MenuItem>
+                                        ))}
+                                        </Select>
                                     </List>
                                     <List item key="game">
-                                    <TextField
-                                        id="game"
-                                        name="game"
-                                        type="text"
-                                        placeholder="Game"
-                                        onChange={handleChange}
-                                        value={values.game}
-                                        fullWidth
-                                    />
+                                        <Select
+                                            labelId="game"
+                                            id="game"
+                                            value={values.game}
+                                            onChange={handleChange("game")}
+                                            placeholder="Game"
+                                            fullWidth
+                                            MenuProps={{ disablePortal: true }}
+                                            >
+                                            <MenuItem value="Game">
+                                                Game
+                                            </MenuItem>
+                                            { games.map(game => (
+                                                <MenuItem value={game.name}>{game.name}</MenuItem>
+                                            ))}
+                                        </Select>
                                     </List>
                                     <List item key="size">
                                     <TextField

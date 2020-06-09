@@ -5,10 +5,8 @@ import PropTypes from 'prop-types';
 
 import Wizard from './components/WizardForm';
 
-const CreateAppWizard = (props) => (
-    <Container>     
-        <Wizard {...props}/>
-    </Container>
+const CreateAppWizard = (props) => (   
+    <Wizard {...props}/>
 );
 
 CreateAppWizard.propTypes = {

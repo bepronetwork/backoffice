@@ -9,6 +9,8 @@ import renderCheckBoxField from '../../../../shared/components/form/CheckBox';
 import Account from '../../../../controllers/Account';
 import { CheckboxMultipleBlankCircleIcon } from 'mdi-react';
 import TextInput from '../../../../shared/components/TextInput';
+import { EmailInput, InputAddOn, InputLabel, PasswordInput } from '../styles';
+import { InputGroup, InputGroupText, FormGroup, Label } from 'reactstrap';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -46,31 +48,37 @@ class LogInForm extends React.Component {
     }
 
     render() {
-        const { handleSubmit } = this.props;
+        const { handleSubmit, onChangeUsername, onChangePassword } = this.props;
+
         return (
         <form className="form" onSubmit={handleSubmit}>
             <div className="form__form-group">
-                <TextInput
+                <FormGroup>
+                    <InputLabel for="username">Username or E-mail</InputLabel>
+                <EmailInput
+                    label="Username or E-mail"
                     icon={CheckboxMultipleBlankCircleIcon}
                     name="username"
-                    label="Username"
-                    autoFocus={true}
                     type="text"
-                    placeholder="James2345"
                     defaultValue={this.state.username}
-                    changeContent={this.props.changeContent}
+                    onChange={(e) => onChangeUsername(e.target.value)}
                 />
-                <TextInput
+                </FormGroup>
+                <br/>
+                <FormGroup>
+                    <InputLabel for="password">Password</InputLabel>
+                <PasswordInput
                     icon={KeyVariantIcon}
                     name="password"
                     label="Password"
                     type="password"
                     defaultValue={this.state.password}
                     placeholder="**********"
-                    changeContent={this.props.changeContent}
+                    onChange={(e) => onChangePassword(e.target.value)}
                 />
+                </FormGroup>
                   <div className="account__forgot-password" >
-                <a href="/">Forgot a password?</a>
+                <a href="/password/reset" >Forgot a password?</a>
             </div>    
             </div>
                  

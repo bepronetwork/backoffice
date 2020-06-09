@@ -19,6 +19,7 @@ import { export2JSON } from "../../../utils/export2JSON";
 import { Button as MaterialButton } from "@material-ui/core";
 import Skeleton from '@material-ui/lab/Skeleton';
 import UserBetsFilter from './UserBetsFilter';
+import UserContainer from '../../../shared/components/UserContainer';
 
 function getSorting(data, order, orderBy) {
 
@@ -422,7 +423,7 @@ class EnhancedTable extends React.Component {
     }
 
     return (
-        <Paper className={classes.root} style={{ padding: 20}}>
+        <Paper className={classes.root} style={{ padding: 20, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none"}}>
             <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
             <div style={{ display: "flex", justifyContent: "flex-start"}}>
                 <CSVLink data={csvData} filename={"bets.csv"} headers={headers}>
@@ -460,8 +461,8 @@ class EnhancedTable extends React.Component {
                             const isSelected = this.isSelected(n.id);
                             return (
                                 <TableRow
-                            hover
-                            onClick={event => this.handleClick(event, n.id)}
+                            // hover
+                            // onClick={event => this.handleClick(event, n.id)}
                             role="checkbox"
                             style={{padding : 0}}
                             aria-checked={isSelected}
@@ -471,10 +472,12 @@ class EnhancedTable extends React.Component {
                         >
                             <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
                             <TableCell align="left">
+                                {/* <UserContainer user={n.user._id}> */}
                                 <div style={{display: 'flex'}}>
                                     <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ marginLeft: 0, marginRight: 0, width : 30, height : 30}}/>
                                     <p className='text-small' style={{margin: 10}}>{n.user.name}</p>
-                                </div>  
+                                </div> 
+                                {/* </UserContainer>  */}
                              </TableCell>
                             <TableCell align="left">
                                 <div style={{display: 'flex'}}>

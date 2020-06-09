@@ -42,7 +42,7 @@ class TabsContainer extends React.Component{
             <div>
                 <Tab.Container id="left-tabs-example" defaultActiveKey={"item-0"}>
                     <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-                        <Grid item xs style={{ paddingLeft: 0, backgroundColor: "white", boxShadow: "0 2px 15px 0 rgba(0, 0, 0, 0.05)", minWidth: 240, maxWidth: 240, borderRadius: "6px", paddingBottom: "30px" }}>
+                        <Grid item xs style={{ paddingLeft: 0, backgroundColor: "#fafcff",  border: "solid 1px rgba(164, 161, 161, 0.35)", minWidth: 240, maxWidth: 240, borderRadius: "6px", paddingBottom: "30px" }}>
                             <Nav variant="pills" className="flex-column">
                                 {filteredItems.map( (item, index) => {
                                     return (

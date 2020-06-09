@@ -71,7 +71,7 @@ class CompanyId extends PureComponent {
                 <Card>
                     <Row>
                         <Col lg={6}>
-                            <CardBody className="dashboard__card-widget">
+                            <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                 <img className="company-logo-card" src={Ava} alt="avatar" />
                             </CardBody>
                         </Col>

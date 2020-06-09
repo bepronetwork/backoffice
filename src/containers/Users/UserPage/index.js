@@ -74,7 +74,7 @@ class UserPage extends React.Component{
 
         return (
             <Card>
-                <CardBody className="dashboard__card-widget">
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <p className='text-small pink-text'> {title} </p>
                     {loading ? (
                         <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
@@ -116,7 +116,7 @@ class UserPage extends React.Component{
                     <Col md={4}>
                         <div className='user-page-top'>
                             <Card>
-                                <CardBody className="dashboard__card-widget">
+                                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                     <Row>
                                         <Col sd={12} md={12} lg={4}>
                                             {/* Avatar */}
@@ -167,7 +167,7 @@ class UserPage extends React.Component{
                     </Col>
                 </Row>
                 <Card>
-                    <CardBody className="dashboard__card-widget">
+                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <HorizontalTabs
                             tabs={[
                                 {

@@ -59,7 +59,7 @@ class LiquidityWalletWidget extends PureComponent {
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
-                    <CardBody className="dashboard__card-widget dashboard_borderTop">
+                    <CardBody className="dashboard__card-widget dashboard_borderTop" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <Row>
                             <Col lg={4}>
                                 <img style={{borderRadius : 0}} className="company-logo-card" src={Ava} alt="avatar" />

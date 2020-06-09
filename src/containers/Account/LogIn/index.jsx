@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import FacebookIcon from 'mdi-react/FacebookIcon';
 import GooglePlusIcon from 'mdi-react/GooglePlusIcon';
 import LogInForm from './components/LogInForm';
-import { Col, Container, Row } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 import { BasicNotification } from '../../../shared/components/Notification';
 import NotificationSystem from 'rc-notification';
 import * as qs from 'query-string';
@@ -11,6 +11,8 @@ import StepWizard from 'react-step-wizard';
 import Input2FA from '../../Inputs/Input2FA';
 import ConnectionSingleton from '../../../api/Connection';
 import Account from '../../../controllers/Account';
+import { BackgroundBox, VerticalSection, BetProtocolLogo, Container, Card, CardHeader, CardContent, Footer } from './styles';
+import TextLoop from 'react-text-loop';
 
 const Back = `${process.env.PUBLIC_URL}/img/dashboard/background-login.png`;
 
@@ -33,6 +35,25 @@ const defaultState = {
     SW : {}
 }
 
+const words = [
+    { id: 0, text: 'BetProtocol' },
+    { id: 1, text: 'Scalable' },
+    { id: 2, text: 'Secure & Audited' },
+    { id: 3, text: 'No Coding Required' },
+  ];
+  
+  const Description = (props) => {
+    const { wordList } = props;
+  
+    return (
+      <TextLoop>
+        {wordList.map((word) => (
+          <span key={word.id}>{word.text}</span>
+        ))}
+      </TextLoop>
+    );
+  };
+
 class LogIn extends React.Component{
 
 	constructor(props){super(props); this.state = defaultState}
@@ -49,9 +70,28 @@ class LogIn extends React.Component{
 		showNotification(message)
     }
 
-    
-    changeContent = (type, item) => {
-        this.setState({[type] : item});
+    onChangeUsername = value => {
+        if (value) {
+            this.setState({
+                username: value
+            })
+        } else {
+            this.setState({
+                username: null
+            })
+        }
+    }
+
+    onChangePassword = value => {
+        if (value) {
+            this.setState({
+                password: value
+            })
+        } else {
+            this.setState({
+                password: null
+            })
+        }
     }
 
     getInitialRoute = (permission) => {
@@ -120,31 +160,41 @@ class LogIn extends React.Component{
 	render = () => {
         const { SW } = this.state;
         const parsed = qs.parse(this.props.location.search);
+
 		return (
-			<div className={'container__all'}>
-				<Row className={'container__all'} style={{marginTop : '10%'}}>
-					<Col lg={6} className={'login_background'}>
-						<img className="login_background" src={Back} />
-					</Col>
-					<Col lg={6}>
-						<div className="account__wrapper">
-							<div className="account__card">
-							<h3 className="account__title" style={{marginBottom : '20%'}}> Login
-							</h3>
+            <>
+             <BackgroundBox>
+                <VerticalSection>
+                    <ul>
+                        <BetProtocolLogo />
+                        <Description wordList={words} />
+                    </ul>
+                    <Container>
+                        <Card>
+                        <CardHeader />
+                            <CardContent>
+                                <h1>Login</h1>
                                 <StepWizard
                                     instance={this.setInstance}
                                 >
-                                    <LogInForm isLoading={this.state.isLoading} login={this.login} changeContent={this.changeContent} query={parsed} SW={SW} handleSubmit={(e) => e.preventDefault()} showNotification={this.showNotification} {...this.props} onSubmit={false} />
-                                    <Input2FA  isLoading={this.state.isLoading} SW={SW} confirm={this.login2FA}/>
+                                <LogInForm isLoading={this.state.isLoading} login={this.login} onChangeUsername={this.onChangeUsername} onChangePassword={this.onChangePassword} query={parsed} SW={SW} handleSubmit={(e) => e.preventDefault()} showNotification={this.showNotification} {...this.props} onSubmit={false} />
+                                <Input2FA  isLoading={this.state.isLoading} SW={SW} confirm={this.login2FA}/>
                                 </StepWizard>
-							</div>
-						</div>
-					</Col>
-				</Row>
-			</div>
+                            </CardContent>
+                        </Card>
+                        <Footer>
+                            <span>
+                                <b>@BetProtocol</b> Technology is a SaaS Platform that provides
+                                infrastructure for Gaming Applications
+                            </span>
+                        </Footer>
+                    </Container>
+
+                </VerticalSection>
+             </BackgroundBox>
+            </>
 		)
 	}
 };
-  
 
 export default LogIn;

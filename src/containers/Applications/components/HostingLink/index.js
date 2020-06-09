@@ -10,8 +10,9 @@ const ApplicationLink = styled.section`
     display: flex;
     height: 40px;
     max-width: 784px;
-    background-color: white;
-    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
+    background-color: #fafcff;
+    border: solid 1px rgba(164, 161, 161, 0.35);
+    /* box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05); */
     border-radius: 6px;
     justify-content: space-between;
     align-items: center;

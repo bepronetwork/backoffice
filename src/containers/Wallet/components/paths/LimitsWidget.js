@@ -7,6 +7,8 @@ import { compose } from 'lodash/fp'
 import _ from 'lodash';
 import { ArrowExpandDownIcon, WalletProductIcon } from 'mdi-react';
 import LimitsBox from './limits/LimitsBox';
+import { TabContainer } from '../WalletTabs/styles';
+import { Paragraph } from '../LiquidityWalletContainer/styles';
 const deposit = `${process.env.PUBLIC_URL}/img/dashboard/deposit.png`;
 const withdrawal = `${process.env.PUBLIC_URL}/img/dashboard/withdrawal.png`;
 
@@ -50,7 +52,7 @@ class LimitsWidget extends React.Component{
     }
 
     projectData = async (props) => {
-        let { wallet } = props;
+        let { wallet } = props.data;
 
         let currencyTicker, maxDeposit, maxWithdrawal, minWithdrawal, affiliateMinWithdrawal;
         currencyTicker = wallet.currency.ticker;
@@ -143,86 +145,83 @@ class LimitsWidget extends React.Component{
     render = () => {
 
         return (
-            <Container className="dashboard">
-                <Col lg={12}>
-                    <h3 style={{marginTop : 20 }} className={"bold-text dashboard__total-stat"}>Financial Limits</h3>
-                    <p className="" style={{marginBottom : 50 }}>
-                        Choose the limits to deposit and withdraw of your wallet.
-                    </p>
+            <>
+            <TabContainer>
+                <Paragraph style={{ marginBottom: 15 }}>Choose the limits to deposit and withdraw of your wallet</Paragraph>
+            <Row>
+                <Col lg={5}>
+                    <LimitsBox
+                        title={'Max Deposit'}
+                        inputIcon={ArrowExpandDownIcon}
+                        currencyTicker={this.state.currencyTicker}
+                        image={deposit}
+                        lock={this.state.locks.maxDeposit}
+                        type={'maxDeposit'} 
+                        value={this.state.maxDeposit}
+                        new_value={this.state.new_maxDeposit} 
+                        /* Functions */
+                        unlockField={this.unlockField} 
+                        isLoading={this.state.isLoading.maxDeposit}
+                        lockField={this.lockField}
+                        onChange={this.onChange} 
+                        confirmChanges={this.confirmChanges} 
+                    />
                 </Col>
-                <Row>
-                    <Col lg={5}>
-                        <LimitsBox
-                           title={'Max Deposit'}
-                           inputIcon={ArrowExpandDownIcon}
-                           currencyTicker={this.state.currencyTicker}
-                           image={deposit}
-                           lock={this.state.locks.maxDeposit}
-                           type={'maxDeposit'} 
-                           value={this.state.maxDeposit}
-                           new_value={this.state.new_maxDeposit} 
-                           /* Functions */
-                           unlockField={this.unlockField} 
-                           isLoading={this.state.isLoading.maxDeposit}
-                           lockField={this.lockField}
-                           onChange={this.onChange} 
-                           confirmChanges={this.confirmChanges} 
-                        />
-                    </Col>
-                    <Col lg={5}>
-                        <LimitsBox
-                           title={'Max Withdrawal'}
-                           inputIcon={ArrowExpandDownIcon}
-                           currencyTicker={this.state.currencyTicker}
-                           image={withdrawal}
-                           lock={this.state.locks.maxWithdrawal}
-                           type={'maxWithdrawal'} 
-                           value={this.state.maxWithdrawal}
-                           isLoading={this.state.isLoading.maxWithdrawal}
-                           new_value={this.state.new_maxWithdrawal} 
-                           /* Functions */
-                           unlockField={this.unlockField} 
-                           lockField={this.lockField} 
-                           onChange={this.onChange} 
-                           confirmChanges={this.confirmChanges} 
-                        />
-                    </Col>
-                    <Col lg={5}>
-                        <LimitsBox
-                           title={'Min Withdrawal'}
-                           inputIcon={ArrowExpandDownIcon}
-                           currencyTicker={this.state.currencyTicker}
-                           image={withdrawal}
-                           lock={this.state.locks.minWithdrawal}
-                           type={'minWithdrawal'} 
-                           value={this.state.minWithdrawal}
-                           isLoading={this.state.isLoading.minWithdrawal}
-                           new_value={this.state.new_minWithdrawal} 
-                           unlockField={this.unlockField} 
-                           lockField={this.lockField} 
-                           onChange={this.onChange} 
-                           confirmChanges={this.confirmChanges} 
-                        />
-                    </Col>
-                    <Col lg={5}>
-                        <LimitsBox
-                           title={'Affiliate Min Withdrawal'}
-                           inputIcon={ArrowExpandDownIcon}
-                           currencyTicker={this.state.currencyTicker}
-                           image={withdrawal}
-                           lock={this.state.locks.affiliateMinWithdrawal}
-                           type={'affiliateMinWithdrawal'} 
-                           value={this.state.affiliateMinWithdrawal}
-                           isLoading={this.state.isLoading.affiliateMinWithdrawal}
-                           new_value={this.state.new_affiliateMinWithdrawal} 
-                           unlockField={this.unlockField} 
-                           lockField={this.lockField} 
-                           onChange={this.onChange} 
-                           confirmChanges={this.confirmChanges} 
-                        />
-                    </Col>
-                </Row>
-            </Container>
+                <Col lg={5}>
+                    <LimitsBox
+                        title={'Max Withdrawal'}
+                        inputIcon={ArrowExpandDownIcon}
+                        currencyTicker={this.state.currencyTicker}
+                        image={withdrawal}
+                        lock={this.state.locks.maxWithdrawal}
+                        type={'maxWithdrawal'} 
+                        value={this.state.maxWithdrawal}
+                        isLoading={this.state.isLoading.maxWithdrawal}
+                        new_value={this.state.new_maxWithdrawal} 
+                        /* Functions */
+                        unlockField={this.unlockField} 
+                        lockField={this.lockField} 
+                        onChange={this.onChange} 
+                        confirmChanges={this.confirmChanges} 
+                    />
+                </Col>
+                <Col lg={5}>
+                    <LimitsBox
+                        title={'Min Withdrawal'}
+                        inputIcon={ArrowExpandDownIcon}
+                        currencyTicker={this.state.currencyTicker}
+                        image={withdrawal}
+                        lock={this.state.locks.minWithdrawal}
+                        type={'minWithdrawal'} 
+                        value={this.state.minWithdrawal}
+                        isLoading={this.state.isLoading.minWithdrawal}
+                        new_value={this.state.new_minWithdrawal} 
+                        unlockField={this.unlockField} 
+                        lockField={this.lockField} 
+                        onChange={this.onChange} 
+                        confirmChanges={this.confirmChanges} 
+                    />
+                </Col>
+                <Col lg={5}>
+                    <LimitsBox
+                        title={'Affiliate Min Withdrawal'}
+                        inputIcon={ArrowExpandDownIcon}
+                        currencyTicker={this.state.currencyTicker}
+                        image={withdrawal}
+                        lock={this.state.locks.affiliateMinWithdrawal}
+                        type={'affiliateMinWithdrawal'} 
+                        value={this.state.affiliateMinWithdrawal}
+                        isLoading={this.state.isLoading.affiliateMinWithdrawal}
+                        new_value={this.state.new_affiliateMinWithdrawal} 
+                        unlockField={this.unlockField} 
+                        lockField={this.lockField} 
+                        onChange={this.onChange} 
+                        confirmChanges={this.confirmChanges} 
+                    />
+                </Col>
+            </Row>
+            </TabContainer>
+        </>
         )
     }
 
