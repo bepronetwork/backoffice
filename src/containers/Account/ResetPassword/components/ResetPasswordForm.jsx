@@ -6,6 +6,8 @@ import Account from '../../../../controllers/Account';
 import TextField from '@material-ui/core/TextField';
 import TextInput from '../../../../shared/components/TextInput';
 import _ from 'lodash';
+import { FormGroup } from 'reactstrap';
+import { EmailInput, InputLabel } from '../styles';
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 const queryString = require('query-string');
 
@@ -70,10 +72,41 @@ class ResetPasswordForm extends PureComponent {
             })
         }
     }
+    
+    onChangeUsername = value => {
+        if (value) {
+            this.setState({
+                username_or_email: value
+            })
+        } else {
+            this.setState({
+                username_or_email: null
+            })
+        }
+    }
 
+    onChangePassword = value => {
+        if (value) {
+            this.setState({
+                password: value
+            })
+        } else {
+            this.setState({
+                password: null
+            })
+        }
+    }
 
-    changeContent = (type, item) => {
-        this.setState({[type] : item});
+    onChangeConfirmPassword = value => {
+        if (value) {
+            this.setState({
+                confirmPassword: value
+            })
+        } else {
+            this.setState({
+                confirmPassword: null
+            })
+        }
     }
 
     sendRecoveryEmail = async () => {
@@ -121,24 +154,26 @@ class ResetPasswordForm extends PureComponent {
             !_.isEmpty(adminId) && !_.isEmpty(token) ? (
                 <form className="form" onSubmit={handleSubmit}>
                 <div className="form__form-group">
-                <h3 className="account__title" style={{marginBottom : '20%'}}>New Password</h3>
-                    <TextInput
-                        icon={KeyVariantIcon}
-                        name="password"
+                    <FormGroup>
+                        <InputLabel for="password">Password</InputLabel>
+                    <EmailInput
                         label="Password"
+                        name="password"
                         type="password"
-                        placeholder="**********"
-                        changeContent={this.changeContent}
-                        />
-
-                    <TextInput
-                        icon={KeyVariantIcon}
-                        name="confirmPassword"
+                        // defaultValue={this.state.username}
+                        onChange={(e) => this.onChangePassword(e.target.value)}
+                    />
+                    </FormGroup>
+                    <FormGroup>
+                        <InputLabel for="confirmPassword"> Confirm Password</InputLabel>
+                    <EmailInput
                         label="Confirm Password"
+                        name="confirmPassword"
                         type="password"
-                        placeholder="**********"
-                        changeContent={this.changeContent}
-                        />
+                        // defaultValue={this.state.username}
+                        onChange={(e) => this.onChangeConfirmPassword(e.target.value)}
+                    />
+                    </FormGroup>
                 </div>            
                 <div className="account__btns">
                     <button disabled={ password !== confirmPassword || _.isEmpty(password) || this.state.isLoading } onClick={ () => this.confirmNewAdminPassword() }className="btn btn-primary account__btn" to="/"> {
@@ -153,16 +188,17 @@ class ResetPasswordForm extends PureComponent {
             ) : (
             <form className="form" onSubmit={handleSubmit}>
                 <div className="form__form-group">
-                <h3 className="account__title" style={{marginBottom : '20%'}}>Reset your password</h3>
                     { !sent ? (
-                        <TextInput
-                        icon={CheckboxMultipleBlankCircleIcon}
-                        name="username_or_email"
+                    <FormGroup>
+                        <InputLabel for="username_or_email">Username or E-mail</InputLabel>
+                    <EmailInput
                         label="Username or E-mail"
+                        name="username_or_email"
                         type="text"
-                        placeholder="James2345"
-                        changeContent={this.changeContent}
+                        // defaultValue={this.state.username}
+                        onChange={(e) => this.onChangeUsername(e.target.value)}
                     />
+                    </FormGroup>
                     ) : <h5 className="account__title">Sent, please check your inbox</h5> }
                     
                 </div>            

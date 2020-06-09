@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ResetPasswordForm from './components/ResetPasswordForm';
-import { Col, Container, Row } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 import { BasicNotification } from '../../../shared/components/Notification';
 import NotificationSystem from 'rc-notification';
+import { BackgroundBox, VerticalSection, Container, BetProtocolLogo, Card, CardHeader, CardContent } from './styles';
+import TextLoop from 'react-text-loop';
 
 const Back = `${process.env.PUBLIC_URL}/img/dashboard/background-login.png`;
 let notification = null;
@@ -20,6 +22,26 @@ const showNotification = (message) => {
 		className: 'right-up',
 	});
 };
+
+const words = [
+    { id: 0, text: 'BetProtocol' },
+    { id: 1, text: 'Scalable' },
+    { id: 2, text: 'Secure & Audited' },
+    { id: 3, text: 'No Coding Required' },
+  ];
+  
+  const Description = (props) => {
+    const { wordList } = props;
+  
+    return (
+      <TextLoop>
+        {wordList.map((word) => (
+          <span key={word.id}>{word.text}</span>
+        ))}
+      </TextLoop>
+    );
+  };
+  
 class ResetPassword extends React.Component{
 
 	constructor(props){super(props)}
@@ -38,24 +60,29 @@ class ResetPassword extends React.Component{
 
 	render = () => {
 		return (
-			<div className={'container__all'}>
-				<Row className={'container__all'} style={{marginTop : '10%'}}>
-					<Col lg={6} className={'login_background'}>
-						<img className="login_background" src={Back} />
-					</Col>
-					<Col lg={6}>
-						<div className="account__wrapper">
-							<div className="account__card">
-							
+			<>
+			<BackgroundBox>
+			   <VerticalSection>
+				   <ul>
+					   <BetProtocolLogo />
+					   <Description wordList={words} />
+				   </ul>
+				   <Container>
+					   <Card>
+					   <CardHeader />
+						   <CardContent>
+								<h1>Reset your Password</h1>
 							<ResetPasswordForm showNotification={this.showNotification} handleSubmit={(e) => e.preventDefault()} {...this.props} onSubmit={false} />
 								<div className="account__have-account">
 									<p>Back to <Link to="/login">Login</Link></p>
 								</div>
-							</div>
-						</div>
-					</Col>
-				</Row>
-			</div>
+							</CardContent>
+						</Card>
+					</Container>
+				</VerticalSection>
+			</BackgroundBox>
+		</>
+		
 		)
 	}
 };
