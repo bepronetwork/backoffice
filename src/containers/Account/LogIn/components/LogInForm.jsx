@@ -78,7 +78,7 @@ class LogInForm extends React.Component {
                 />
                 </FormGroup>
                   <div className="account__forgot-password" >
-                <a href="/">Forgot a password?</a>
+                <a href="/password/reset" >Forgot a password?</a>
             </div>    
             </div>
                  

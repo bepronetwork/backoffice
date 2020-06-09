@@ -93,6 +93,31 @@ class Account{
 		}
     }
 
+    resetAdminPassword  = async () => {
+        try{
+            await ConnectionSingleton.resetAdminPassword({
+                username_or_email: this.params.username_or_email
+            });
+        }catch(err){
+            throw err;
+		}
+    }
+
+    confirmResetAdminPassword  = async () => {
+        try{
+            const res = await ConnectionSingleton.confirmResetAdminPassword({
+                token: this.params.token,
+                password: this.params.password,
+                admin_id: this.params.adminId
+            });
+
+            return res;
+            
+        }catch(err){
+            throw err;
+		}
+    }
+
     setGameDataAsync = async () => {
         await this.getApp().setGamesAsync();
         await this.update();
