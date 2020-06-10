@@ -11,6 +11,7 @@ import UserTransactionsTable from './components/UserTransactionsTable';
 import AffiliateInfo from './components/AffiliateInfo';
 import { compareIDS } from '../../../lib/string';
 import UserBetsTable from './components/UserBetsTable';
+import TopUpBalance from './components/TopUpBalance';
 
 const defaultProps = {
     ticker : 'No Currency Chosen'
@@ -86,6 +87,27 @@ class UserPage extends React.Component{
         )
     }
 
+    renderBalanceData = ({title, data, span, loading, decimals}) => {
+        const { user } = this.state;
+
+        return (
+            <Card>
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", paddingBottom: 10, paddingRight: 10 }}>
+                    <p className='text-small pink-text'> {title} </p>
+                    {loading ? (
+                        <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    ) : (
+                        <>
+                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={decimals} font={'11pt'} number={data}/> <span className='text-x-small'>{span}</span></h4>
+                        <hr style={{ margin: "5px 0px" }}/>
+                        <TopUpBalance user={user}/>
+                        </>
+                    )}
+                </CardBody>
+            </Card>
+        )
+    }
+
     render = () => {
         const { user, currencyTicker } = this.state;
         if(!user || _.isEmpty(user)){return null};
@@ -97,7 +119,6 @@ class UserPage extends React.Component{
             _id,
             winAmount,
             withdraws,
-            playBalance,
             deposits,
             affiliate,
             profit,
@@ -105,6 +126,10 @@ class UserPage extends React.Component{
             betAmount,
             register_timestamp
         } = this.state.user;
+
+        const wallet = user.wallet.find(wallet => wallet.currency._id === currency._id);
+
+        const playBalance = wallet.playBalance;
 
         const transactions = withdraws.map( w => {return {...w, isWithdraw : true}}).concat(deposits);
         const bets = this.props.user.bets;
@@ -140,7 +165,7 @@ class UserPage extends React.Component{
                     <Col md={8}>
                         <Row>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Gaming Wallet', data : playBalance ? parseFloat(playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
+                                {this.renderBalanceData({title : 'Balance', data : playBalance ? parseFloat(playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'TurnOver', data :  betAmount ? parseFloat(betAmount).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}

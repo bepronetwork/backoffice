@@ -295,6 +295,20 @@ class Connection {
         }
     }
 
+    modifyUserBalance = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/balance/modify`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     changeMaxDeposit = async ({params, headers}) => {
         try{
             params.amount = parseFloat(params.amount)
