@@ -1228,6 +1228,24 @@ class App{
         }
     }
 
+    modifyUserBalance = async ({ user, wallet, newBalance }) => {
+        try{
+            return await ConnectionSingleton.modifyUserBalance({   
+                params : {
+                    user,
+                    wallet,
+                    newBalance,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     editRestrictedCountries = async ({countries}) => {
         try{
             return await ConnectionSingleton.editRestrictedCountries({   

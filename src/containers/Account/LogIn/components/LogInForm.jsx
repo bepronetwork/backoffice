@@ -73,7 +73,6 @@ class LogInForm extends React.Component {
                     label="Password"
                     type="password"
                     defaultValue={this.state.password}
-                    placeholder="**********"
                     onChange={(e) => onChangePassword(e.target.value)}
                 />
                 </FormGroup>
