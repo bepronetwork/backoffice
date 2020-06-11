@@ -78,7 +78,6 @@ class AnnouncementTab extends Component {
     render() {
         const { isLoading, locked, isActive, textColor, backgroundColor, text } = this.state; 
 
-        console.log(text);
         return (
             <Card>
                 <CardBody style={{ margin: "0px 15px", borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
