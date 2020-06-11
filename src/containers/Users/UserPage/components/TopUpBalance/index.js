@@ -140,7 +140,7 @@ class UserContainer extends React.Component {
                                     </InputGroupAddon>
                                     <AmountInput name="amount" onChange={(e) => this.onChangeAmount(e.target.value)}/>
                                 </InputGroup>
-                                <ConfirmButton disabled={!amount} onClick={this.confirmChanges}>
+                                <ConfirmButton disabled={ !amount || isLoading } onClick={this.confirmChanges}>
                                     { isLoading ? <img src={loading} className={'loading_gif'} alt="Confirming..."/> : <span>Confirm</span> } 
                                 </ConfirmButton>
                             </CardContent>
