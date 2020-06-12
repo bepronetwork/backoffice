@@ -36,12 +36,11 @@ const fromDatabasetoTable = (data, currencies, users, games) => {
 	return data.map(key => {
         
         const currency = currencies.find(currency => currency._id === key.currency);
-        const user = users.find(user => user._id === key.user._id);
         const game = games.find(game => game._id === key.game);
 
 		return {
             _id:  key._id,
-            user: user,
+            user: key.user,
             currency: currency, 
             app: key.app_id,
             game: game,
@@ -484,7 +483,7 @@ class EnhancedTable extends React.Component {
                                 {/* <UserContainer user={n.user._id}> */}
                                 <div style={{display: 'flex'}}>
                                     <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ marginLeft: 0, marginRight: 0, width : 30, height : 30}}/>
-                                    <p className='text-small' style={{margin: 10}}>{n.user.name}</p>
+                                    <p className='text-small' style={{margin: 10}}>{n.user.username}</p>
                                 </div> 
                                 {/* </UserContainer>  */}
                              </TableCell>

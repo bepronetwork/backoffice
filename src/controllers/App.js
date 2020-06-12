@@ -108,6 +108,7 @@ class App{
                 withdraws : res[9]
             } 
             this.params = serverApiInfo.app;
+            this.params.users = serverApiInfo.usersInfoSummary;
 
             this.data = {
                 ...this.data,
