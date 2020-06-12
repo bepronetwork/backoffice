@@ -106,7 +106,7 @@ class Link extends React.Component {
         } else {
             const index = links.findIndex(l => l._id === id);
             const newLinks = [...links];
-            newLinks[index].name = null;
+            newLinks[index].name = "";
     
             setLinks({
                 newLinks: newLinks
@@ -129,7 +129,7 @@ class Link extends React.Component {
         } else {
             const index = links.findIndex(l => l._id === id);
             const newLinks = [...links];
-            newLinks[index].href = null;
+            newLinks[index].href = "";
     
             setLinks({
                 newLinks: newLinks
@@ -190,7 +190,7 @@ class Link extends React.Component {
             <Col md={3} style={{ minWidth: 178, margin: 5 }}>
                 <LinkCard>
                     <LinkCardContent>
-                        { image_url ? 
+                        { !_.isEmpty(image_url) ? 
                         <>  
                             <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: -10, marginBottom: -30 }}>
                                 <button
