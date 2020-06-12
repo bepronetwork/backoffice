@@ -86,8 +86,6 @@ class CurrencyContainer extends React.Component {
     render() {
         const { open, currency, wallet } = this.state;
 
-        console.log(currency);
-
         return(
             <>
             <ButtonBase onClick={this.setOpen}>
