@@ -89,7 +89,7 @@ class App{
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
                 this.getGamesAsync({currency : currency._id}),
-                this.getUsersAsync({size : 1000, currency : currency._id}),
+                this.getUsersAsync({size: 100, offset: 0 }),
                 this.getWithdrawsAsync({size : 1000, currency : currency._id})
             ]);
 
@@ -407,7 +407,7 @@ class App{
         })).data.message;
     }
 
-    getUsersAsync = async ({size=1000, offset=0}) => {
+    getUsersAsync = async ({ size, offset }) => {
         try{
             /* Get App Users  */
             this.data.summary.usersInfoSummary = (await ConnectionSingleton.getAppUsers({
