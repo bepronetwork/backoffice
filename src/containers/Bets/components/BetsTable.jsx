@@ -480,12 +480,12 @@ class EnhancedTable extends React.Component {
                                 </BetContainer>
                             </TableCell>
                             <TableCell align="left">
-                                {/* <UserContainer user={n.user._id}> */}
+                                <UserContainer user={n.user._id}>
                                 <div style={{display: 'flex'}}>
                                     <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ marginLeft: 0, marginRight: 0, width : 30, height : 30}}/>
                                     <p className='text-small' style={{margin: 10}}>{n.user.username}</p>
                                 </div> 
-                                {/* </UserContainer>  */}
+                                </UserContainer> 
                              </TableCell>
                             <TableCell align="left">
                                 <CurrencyContainer id={n.currency._id}>

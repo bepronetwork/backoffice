@@ -28,17 +28,15 @@ class UserContainer extends React.Component {
     }
 
     projectData = async (props) => {
-        const { user, currency, profile } = props;
+        const { user } = props;
 
         if (!_.isEmpty(this.state.user)) {
 
-            const userInfo = await this.getUserInfo({ user_id: user });
-            const affiliateWallet = userInfo.affiliate.wallet.filter(w => w.currency._id === currency._id);
-            const userInfoAsync = await profile.getApp().getUserAsync({ user: user });
+            const userData = await this.getUserInfo({ user_id: user });
 
-            if (!_.isEmpty(userInfo)) {
+            if (!_.isEmpty(userData)) {
                 this.setState({
-                    user: { ...userInfo, ...userInfoAsync, affiliateWallet }
+                    user: userData
                 })
             } else {
                 this.setState({
@@ -49,16 +47,14 @@ class UserContainer extends React.Component {
     }
 
     setOpen = async () => {
-        const { user, currency, profile } = this.props;
+        const { user } = this.props;
 
         if (_.isEmpty(this.state.user)) {
 
-            const userInfo = await this.getUserInfo({ user_id: user });
-            const userInfoAsync = await profile.getApp().getUserAsync({ user: user });
-            const affiliateWallet = userInfo[0].affiliate.wallet.filter(w => w.currency._id === currency._id);
+            const userData = await this.getUserInfo({ user_id: user });
 
             this.setState({
-                user: { ...userInfo[0], ...userInfoAsync, affiliateWallet },
+                user: userData,
                 open: true
             })
         }
@@ -73,18 +69,19 @@ class UserContainer extends React.Component {
     }
 
     getUserInfo = async ({ user_id }) => {
-        const { profile } = this.props;
+        const { profile, currency } = this.props;
 
         this.setState({ isLoading: true });
 
-        const users = await profile.getApp().getSummaryData('usersInfoSummary');
-        const otherInfo = await profile.getApp().getSummaryData('users');
-        const user = users.data.filter(user => user._id === user_id);
-        const info = otherInfo.data.filter(info => info._id === user[0]._id);
+        const user = await profile.getApp().getUserAsync({ user: user_id });
+        const summary = await profile.getApp().getSummaryData('users');
+        
+        const userSummary = summary.data ? summary.data.find(user => user._id === user_id) : undefined;
+        const affiliateWallet = user.affiliate.wallet.filter(w => w.currency._id === currency._id);
         
         this.setState({ isLoading: false });
 
-        return {...info, ...user};
+        return userSummary ? {...user, ...userSummary, affiliateWallet } : { ...user, affiliateWallet };
     }
 
     renderDataTitle = ({title, data, span, loading, decimals}) => {
@@ -109,7 +106,8 @@ class UserContainer extends React.Component {
 
         if (!user || !currency) return null;
 
-        const { username, email, _id, winAmount, withdraws, playBalance, deposits, affiliate, profit, address, betAmount, register_timestamp, affiliateWallet } = user;
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, wallet, affiliateWallet } = user;
+        const playBalance = wallet ? wallet.find(wallet => wallet.currency._id === currency._id).playBalance : undefined;
 
         return(
             <>
@@ -157,7 +155,7 @@ class UserContainer extends React.Component {
                             <Col md={8}>
                                 <Row>
                                     <Col sd={12} md={4} lg={3}>
-                                        {this.renderDataTitle({title : 'Gaming Wallet', data : playBalance ? parseFloat(playBalance).toFixed(6) : 0, span : currency.ticker, loading: isLoading, decimals: 6})}
+                                        {this.renderDataTitle({title : 'Balance', data : playBalance ? parseFloat(playBalance).toFixed(6) : 0, span : currency.ticker, loading: isLoading, decimals: 6})}
                                     </Col>
                                     <Col sd={12} md={4} lg={3}>
                                         {this.renderDataTitle({title : 'TurnOver', data :  betAmount ? parseFloat(betAmount).toFixed(6) : 0, span : currency.ticker, loading: isLoading, decimals: 6})}
