@@ -80,9 +80,9 @@ class WalletTabs extends Component {
 
         return (
            <>
-           <Nav pills>
+           <Nav pills style={{ justifyContent: "space-around" }}>
                 {filteredTabs.map(tab => (
-                    <NavItem style={{ height: 80, margin: "0px 20px", marginTop: "20px" }}>
+                    <NavItem style={{ height: 80, marginTop: "20px" }}>
                         <StyledNavLink
                             className={classnames({ active: this.state.activeTab === tab.name })}
                             onClick={() => {
