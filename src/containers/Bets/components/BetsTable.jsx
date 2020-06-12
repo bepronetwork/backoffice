@@ -20,6 +20,8 @@ import { Button as MaterialButton } from "@material-ui/core";
 import Skeleton from '@material-ui/lab/Skeleton';
 import UserBetsFilter from './UserBetsFilter';
 import UserContainer from '../../../shared/components/UserContainer';
+import CurrencyContainer from '../../../shared/components/CurrencyContainer';
+import BetContainer from '../../../shared/components/BetContainer';
 
 function getSorting(data, order, orderBy) {
 
@@ -34,12 +36,11 @@ const fromDatabasetoTable = (data, currencies, users, games) => {
 	return data.map(key => {
         
         const currency = currencies.find(currency => currency._id === key.currency);
-        const user = users.find(user => user._id === key.user._id);
         const game = games.find(game => game._id === key.game);
 
 		return {
             _id:  key._id,
-            user: user,
+            user: key.user,
             currency: currency, 
             app: key.app_id,
             game: game,
@@ -49,7 +50,10 @@ const fromDatabasetoTable = (data, currencies, users, games) => {
             betAmount: key.betAmount,
             nonce: key.nonce,
             fee: key.fee,
-			creation_timestamp: key.timestamp
+            creation_timestamp: key.timestamp,
+            clientSeed: key.clientSeed,
+            serverSeed: key.serverSeed,
+            serverHashedSeed: key.serverHashedSeed
 		}
 	})
 }
@@ -469,21 +473,27 @@ class EnhancedTable extends React.Component {
                             tabIndex={-1}
                             key={n._id}
                             selected={isSelected}
-                        >
-                            <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
+                        >   
+                            <TableCell align="left">
+                                <BetContainer bet={n} id={n.currency._id}>
+                                    <p className='text-small'>{n._id}</p>
+                                </BetContainer>
+                            </TableCell>
                             <TableCell align="left">
                                 {/* <UserContainer user={n.user._id}> */}
                                 <div style={{display: 'flex'}}>
                                     <img src={`https://avatars.dicebear.com/v2/avataaars/${n.user._id}.svg`} className={'avatar-image-small'} style={{ marginLeft: 0, marginRight: 0, width : 30, height : 30}}/>
-                                    <p className='text-small' style={{margin: 10}}>{n.user.name}</p>
+                                    <p className='text-small' style={{margin: 10}}>{n.user.username}</p>
                                 </div> 
                                 {/* </UserContainer>  */}
                              </TableCell>
                             <TableCell align="left">
+                                <CurrencyContainer id={n.currency._id}>
                                 <div style={{display: 'flex'}}>
                                     <img src={n.currency.image} style={{ width : 25, height : 25}}/>
                                     <p className='text-small' style={{margin: 5, alignSelf: "center" }}>{n.currency.name}</p>
                                 </div>
+                                </CurrencyContainer>
                             </TableCell>
                             <TableCell align="left">
                                 <div style={{display: 'flex'}}>

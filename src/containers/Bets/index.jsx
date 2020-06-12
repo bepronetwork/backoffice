@@ -57,6 +57,7 @@ class BetsContainer extends React.Component{
 
 
 function mapStateToProps(state){
+    console.log(state)
     return {
         profile: state.profile,
         periodicity: state.periodicity,

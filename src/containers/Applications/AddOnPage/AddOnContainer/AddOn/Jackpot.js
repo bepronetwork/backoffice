@@ -168,7 +168,7 @@ class Jackpot extends React.Component {
                                             <MedalIcon style={{marginRight: 7}}/> Winners
                                         </Button>
 
-                                        <Button size="small" variant="outlined" disabled={_.isEmpty(bets)}
+                                        <Button size="small" variant="outlined"
                                         style={{ textTransform: "none", backgroundColor: "#649B3A", color: "#ffffff", boxShadow: "none", margin: 10, marginLeft: 0}} 
                                         onClick={this.toggleBetsDialog}>
                                             <MoneyIcon style={{marginRight: 7}}/> Bets

@@ -3,7 +3,7 @@ import { NavLink, Input, InputGroupText } from 'reactstrap';
 import { Button } from 'react-bootstrap';
 
 export const StyledNavLink = styled(NavLink)`
-    margin: 0px 20px;
+    /* margin: 0px 20px; */
     cursor: pointer;
 
     span {
