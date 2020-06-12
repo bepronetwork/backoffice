@@ -20,6 +20,8 @@ import { Button as MaterialButton } from "@material-ui/core";
 import Skeleton from '@material-ui/lab/Skeleton';
 import UserBetsFilter from './UserBetsFilter';
 import UserContainer from '../../../shared/components/UserContainer';
+import CurrencyContainer from '../../../shared/components/CurrencyContainer';
+import BetContainer from '../../../shared/components/BetContainer';
 
 function getSorting(data, order, orderBy) {
 
@@ -49,7 +51,10 @@ const fromDatabasetoTable = (data, currencies, users, games) => {
             betAmount: key.betAmount,
             nonce: key.nonce,
             fee: key.fee,
-			creation_timestamp: key.timestamp
+            creation_timestamp: key.timestamp,
+            clientSeed: key.clientSeed,
+            serverSeed: key.serverSeed,
+            serverHashedSeed: key.serverHashedSeed
 		}
 	})
 }
@@ -469,8 +474,12 @@ class EnhancedTable extends React.Component {
                             tabIndex={-1}
                             key={n._id}
                             selected={isSelected}
-                        >
-                            <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
+                        >   
+                            <TableCell align="left">
+                                <BetContainer bet={n} id={n.currency._id}>
+                                    <p className='text-small'>{n._id}</p>
+                                </BetContainer>
+                            </TableCell>
                             <TableCell align="left">
                                 {/* <UserContainer user={n.user._id}> */}
                                 <div style={{display: 'flex'}}>
@@ -480,10 +489,12 @@ class EnhancedTable extends React.Component {
                                 {/* </UserContainer>  */}
                              </TableCell>
                             <TableCell align="left">
+                                <CurrencyContainer id={n.currency._id}>
                                 <div style={{display: 'flex'}}>
                                     <img src={n.currency.image} style={{ width : 25, height : 25}}/>
                                     <p className='text-small' style={{margin: 5, alignSelf: "center" }}>{n.currency.name}</p>
                                 </div>
+                                </CurrencyContainer>
                             </TableCell>
                             <TableCell align="left">
                                 <div style={{display: 'flex'}}>
