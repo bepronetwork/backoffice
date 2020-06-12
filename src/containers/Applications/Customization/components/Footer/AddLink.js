@@ -20,8 +20,8 @@ class AddLink extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            newName: null,
-            newLink: null,
+            newName: "",
+            newLink: "",
             newImage: ""
         };
     }
@@ -60,7 +60,7 @@ class AddLink extends React.Component {
             })
         } else {
             this.setState({
-                newName: null
+                newName: ""
             })
         }
     }
@@ -72,7 +72,7 @@ class AddLink extends React.Component {
             })
         } else {
             this.setState({
-                newLink: null
+                newLink: ""
             })
         }
     }
@@ -110,11 +110,11 @@ class AddLink extends React.Component {
         
         const newLinkObj = { name: newName, href: newLink, image_url: newImage, _id: Math.random().toString(36).substr(2, 9) }
 
-        const newLinks = [newLinkObj, ...links];
+        const newLinks = links ? [newLinkObj, ...links] : [newLinkObj];
 
         this.setState({
-            newName: null,
-            newLink: null,
+            newName: "",
+            newLink: "",
             newImage: ""
         })
 

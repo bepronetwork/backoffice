@@ -16,6 +16,7 @@ import moment from 'moment';
 import Skeleton from '@material-ui/lab/Skeleton';
 import CurrencyContainer from '../../../../../../shared/components/CurrencyContainer';
 import BetContainer from '../../../../../../shared/components/BetContainer';
+import GameContainer from '../../../../../../shared/components/GameContainer';
 
 
 function desc(a, b, orderBy) {
@@ -378,10 +379,12 @@ class UserBetsTable extends React.Component {
                                 </CurrencyContainer>
                             </TableCell>
                             <TableCell align="left">
+                                <GameContainer id={n.game._id}>
                                 <div style={{display: 'flex'}}>
                                 <img src={n.game.image_url} style={{ width : 50, height : 40 }}/>
                                     <p className='text-small' style={{margin: 5, marginLeft: 0, alignSelf: "center"}}>{n.game.name}</p>
-                                </div>  
+                                </div>                                 
+                                </GameContainer> 
                              </TableCell>
                             <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.winAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>

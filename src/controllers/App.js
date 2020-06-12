@@ -764,7 +764,6 @@ class App{
 
     editFooterCustomization = async ({communityLinks, supportLinks}) => {
         try{
-            /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editFooterCustomization({   
                 params : {
                     admin : this.getAdminId(),
@@ -774,9 +773,6 @@ class App{
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
-
-            /* Update App Info Async */
-            await this.updateAppInfoAsync();
 
             return res;
         }catch(err){

@@ -28,13 +28,11 @@ class LinksContainer extends React.Component {
     projectData = async (props) => {
         const { links, type, complement } = props;
 
-        if (!_.isEmpty(links)) {
-            this.setState({
-                links: links.map(link => ( { ...link, _id: Math.random().toString(36).substr(2, 9) })),
-                type: type,
-                complement: complement
-            })
-        }
+        this.setState({
+            links: links ? links.map(link => ( { ...link, _id: Math.random().toString(36).substr(2, 9) })) : [],
+            type: type,
+            complement: complement
+        })
     }
 
     renderImage = (src) => {
@@ -69,6 +67,7 @@ class LinksContainer extends React.Component {
 
         const filteredLinks = links.map(({_id, ...rest}) => rest);
 
+        console.log(type)
         this.setState({
             isLoading: true
         })
@@ -93,8 +92,6 @@ class LinksContainer extends React.Component {
     render() {
         const { links, isLoading, locked } = this.state;
 
-        if (!links) return null;
-
         return (
             <>
             <EditLock 
@@ -103,18 +100,18 @@ class LinksContainer extends React.Component {
                 lockField={this.lockField} 
                 confirmChanges={this.confirmChanges} 
                 locked={locked}>
-            <Card style={{ paddingBottom: 0 }}>
-                <CardBody style={{ margin: 0, padding: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "white", boxShadow: "none" }}>
-                    <Row>
-                    <AddLink setLinks={this.setLinks} links={links} locked={locked}/>
-                    { !_.isEmpty(links) && links.map(link => {
-                        return (
-                            <Link setLinks={this.setLinks} links={links} link={link} locked={locked}/>
-                        )
-                    }) }
-                    </Row>
-                </CardBody>
-            </Card>
+                <Card style={{ paddingBottom: 0 }}>
+                    <CardBody style={{ margin: 0, padding: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "white", boxShadow: "none" }}>
+                        <Row>
+                        <AddLink setLinks={this.setLinks} links={links} locked={locked}/>
+                        { !_.isEmpty(links) && links.map(link => {
+                            return (
+                                <Link setLinks={this.setLinks} links={links} link={link} locked={locked}/>
+                            )
+                        }) }
+                        </Row>
+                    </CardBody>
+                </Card>
             </EditLock>
             </>
         )

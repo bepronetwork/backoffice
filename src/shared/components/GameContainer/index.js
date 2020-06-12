@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { ButtonBase, Dialog, DialogContent, Button } from '@material-ui/core';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Card, CardBody } from 'reactstrap';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import AnimationNumber from '../../../containers/UI/Typography/components/AnimationNumber';
 import { CloseIcon, ArrowTopRightIcon } from 'mdi-react';
 import { DialogHeader, CloseButton, Title } from './styles';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 class GameContainer extends React.Component {
  
@@ -14,8 +15,7 @@ class GameContainer extends React.Component {
         super();
         this.state = {
             open: false,
-            currency: {},
-            wallet: {},
+            game: {},
             isLoading: false
         };
     }
@@ -30,44 +30,35 @@ class GameContainer extends React.Component {
 
     projectData = async (props) => {
         const { id, profile } = props;
-        const { App } = profile;
 
-        if (!_.isEmpty(this.state.currency)) {
+        if (!_.isEmpty(this.state.game)) {
+            const allGames = this.props.profile.getApp().getSummaryData('games');
+            const gamesInfo = profile.getApp().getSummaryData('gamesInfo').data.data.message;
+            const games = getAllGames(allGames.data, gamesInfo);
 
-            const wallets = App.params.wallet;
-            const currencies = App.params.currencies;
-            const currency = currencies.find(currency => currency._id === id);
-            const wallet = wallets.find(wallet => wallet.currency._id === currency._id);
-
-            if (!_.isEmpty(currency)) {
+            if (!_.isEmpty(games)) {
                 this.setState({
-                    currency: currency,
-                    wallet: wallet
+                    game: games.find(game => game._id === id)
                 })
             } else {
                 this.setState({
-                    currency: {},
-                    wallet: {}
+                    game: {}
                 })
             }
         }
     }
 
     setOpen = async () => {
-        const { id,  profile } = this.props;
-        const { App } = profile;
+        const { id, profile } = this.props;
 
-        if (_.isEmpty(this.state.currency)) {
+        if (_.isEmpty(this.state.game)) {
+            const allGames = this.props.profile.getApp().getSummaryData('games');
+            const gamesInfo = profile.getApp().getSummaryData('gamesInfo').data.data.message;
+            const games = getAllGames(allGames.data, gamesInfo);
 
-            const wallets = App.params.wallet;
-            const currencies = App.params.currencies;
-            const currency = currencies.find(currency => currency._id === id);
-            const wallet = wallets.find(wallet => wallet.currency._id === currency._id);
-
-            if (!_.isEmpty(currency)) {
+            if (!_.isEmpty(games)) {
                 this.setState({
-                    currency: currency,
-                    wallet: wallet,
+                    game: games.find(game => game._id === id),
                     open: true
                 })
             }
@@ -78,26 +69,42 @@ class GameContainer extends React.Component {
 
         this.setState({
             open: false,
-            currency: {},
-            wallet: {}
+            game: {}
         })
     }
 
-    render() {
-        const { open, currency, wallet } = this.state;
+    renderDataTitle = ({title, data, span, loading, decimals}) => {
 
-        console.log(currency);
+        return (
+            <Card>
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    <p className='text-small pink-text'> {title} </p>
+                    {loading ? (
+                        <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    ) : (
+                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={decimals} font={'11pt'} number={data}/> <span className='text-x-small'>{span}</span></h4>
+                    )}
+                </CardBody>
+            </Card>
+        )
+    }
+
+    render() {
+        const { currency } = this.props;
+        const { open, game, isLoading } = this.state;
+        const { _id, name, description, image_url, profit, betAmount, betsAmount, wallet, edge } = game;
 
         return(
             <>
             <ButtonBase onClick={this.setOpen}>
                 {this.props.children} 
             </ButtonBase>
-            { !_.isEmpty(currency) ? 
+            { !_.isEmpty(game) ? 
                 <Dialog
                 // disableBackdropClick
                 open={open}
                 onClose={this.setClose}
+                fullWidth maxWidth="lg"
                     >
                     <DialogHeader style={{ paddingBottom: 0 }}>
                         <CloseButton onClick={this.setClose}>
@@ -105,32 +112,43 @@ class GameContainer extends React.Component {
                         </CloseButton>
                     </DialogHeader>
                     <DialogContent style={{ paddingTop: 0 }}>
-                    <Title>Currency</Title>
                         <Row>
-                            <Col sd={12} md={12} lg={4}>
-                                <img src={currency.image} style={{ height: 75, width: 75 }}className='user-avatar' alt={currency.name}/>
+                            <Col md={4}>
+                                <div className='user-page-top'>
+                                    <Card>
+                                        <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                                            <Row>
+                                                <Col sd={12} md={12} lg={4}>
+                                                    <div>
+                                                        <img src={image_url} className='user-avatar'/>
+                                                    </div>
+                                                </Col>
+                                                <Col sd={12} md={12} lg={8}>
+                                                    <h5 className='pink-text'>{name}</h5>
+                                                    <hr></hr>
+                                                    <p className='secondary-text text-small'> {description}</p>
+                                                    <p className='text-x-small'> #{_id} </p>
+                                                </Col>
+                                            </Row>
+                                        </CardBody>
+                                    </Card>
+                                </div>
                             </Col>
-                            <Col sd={12} md={12} lg={8}>
-                                <h4 style={{marginTop : 5}}> {currency.name} 
-                                {/* <span className='text-small'>{currency.ticker}</span> */}
-                                </h4>
-                                <p className='text-x-small'> #{currency._id} </p>
-                                <hr></hr>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sd={12} md={12} lg={4}>
-                            <Title>Wallet</Title>
-                            <Link to={'/wallet'}>
-                            <Button variant="outlined" size="small" style={{ textTransform: "none", backgroundColor: "#63c965", color: "#ffffff", boxShadow: "none", height: 35, margin: "10px 0px", marginTop: 0, marginLeft: -5 }}>
-                                <ArrowTopRightIcon style={{ marginRight: 3 }}/> Wallet
-                            </Button>
-                            </Link>
-                            </Col>
-                            <Col sd={12} md={12} lg={8} style={{ paddingTop: 30 }}>
-                                <h4 style={{marginTop : 5}}> <AnimationNumber decimals={6} font={'20pt'} number={wallet.playBalance ? wallet.playBalance : 0 }/> <span className='text-small'>{wallet.currency.ticker}</span></h4>
-                                <p className='text-x-small'> #{wallet._id} </p>
-                                <hr></hr>
+                            <Col md={8}>
+                                <Row>
+                                    <Col sd={12} md={4} lg={3}>
+                                        {this.renderDataTitle({title : 'Bets Amount', data : betAmount ? betAmount : 0, span : "", loading: isLoading, decimals: 0})}
+                                    </Col>
+                                    <Col sd={12} md={4} lg={3}>
+                                        {this.renderDataTitle({title : 'TurnOver', data :  betsAmount ? parseFloat(betsAmount).toFixed(6) : 0, span : currency.ticker, loading: isLoading, decimals: 6})}
+                                    </Col>
+                                    <Col sd={12} md={4} lg={3}>
+                                        {this.renderDataTitle({title : 'Profit', data : profit ? parseFloat(profit).toFixed(6) : 0, span : currency.ticker, loading: isLoading, decimals: 6})}
+                                    </Col>
+                                    <Col sd={12} md={4} lg={3}>
+                                        {this.renderDataTitle({title : 'Edge', data :  edge ? parseFloat(edge).toFixed(2) : 0, span : "%", loading: isLoading, decimals: 2})}
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </DialogContent>
@@ -141,9 +159,37 @@ class GameContainer extends React.Component {
 
 }
 
+function getAllGames(data, gamesInfo){
+    let allGames = [];
+
+    const gamesOnPeriodicity = data.map(index => index.games);
+    const concatGames = [].concat(...gamesOnPeriodicity);
+
+    const games = Object.values([...concatGames].reduce((acc, { _id, name, edge, betsAmount, betAmount, profit, fees }) => {
+    acc[_id] = { _id, name, 
+        edge: (acc[_id] ? acc[_id].edge : 0) + edge,
+        betsAmount: (acc[_id] ? acc[_id].betsAmount : 0) + betsAmount,
+        betAmount: (acc[_id] ? acc[_id].betAmount : 0) + betAmount,
+        profit: (acc[_id] ? acc[_id].profit : 0) + profit,
+        fees: (acc[_id] ? acc[_id].fees : 0) + fees };
+    return acc;
+    }, {}));
+
+    gamesInfo.filter(game => games.map(g => g._id).includes(game._id)).map(game => {
+        games.filter(g => g._id === game._id).map(g => allGames.push({...g, ...game}));
+    })
+
+    gamesInfo.filter(game => !games.map(g => g._id).includes(game._id)).map(game => {
+        allGames.push({edge: 0, betsAmount: 0, betAmount: 1, profit: 0, fees: 0, ...game });
+    });
+
+    return allGames;
+}
+
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        currency: state.currency
     };
 }
 

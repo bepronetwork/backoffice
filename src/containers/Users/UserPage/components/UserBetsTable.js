@@ -20,6 +20,9 @@ import { CSVLink } from "react-csv";
 import { Button as MaterialButton } from "@material-ui/core";
 import { export2JSON } from '../../../../utils/export2JSON';
 import { TableIcon, JsonIcon } from 'mdi-react';
+import BetContainer from '../../../../shared/components/BetContainer';
+import CurrencyContainer from '../../../../shared/components/CurrencyContainer';
+import GameContainer from '../../../../shared/components/GameContainer';
 
 function getSorting(data, order, orderBy) {
 
@@ -49,7 +52,10 @@ const fromDatabasetoTable = (data, currencies, user, games ) => {
             betAmount: key.betAmount,
             nonce: key.nonce,
             fee: key.fee,
-			creation_timestamp: key.timestamp
+            creation_timestamp: key.timestamp,
+            clientSeed: key.clientSeed,
+            serverSeed: key.serverSeed,
+            serverHashedSeed: key.serverHashedSeed
 		}
 	})
 }
@@ -401,18 +407,26 @@ class UserBetsTable extends React.Component {
                             key={n._id}
                             selected={isSelected}
                         >
-                            <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
                             <TableCell align="left">
+                                <BetContainer bet={n}>
+                                <p className='text-small'>{n._id}</p>
+                                </BetContainer>
+                            </TableCell>
+                            <TableCell align="left">
+                                <CurrencyContainer id={n.currency._id}>
                                 <div style={{display: 'flex'}}>
                                     <img src={n.currency.image} style={{ width : 25, height : 25}}/>
                                     <p className='text-small' style={{margin: 5, alignSelf: "center" }}>{n.currency.name}</p>
                                 </div>
+                                </CurrencyContainer>
                             </TableCell>
                             <TableCell align="left">
-                                <div style={{display: 'flex'}}>
-                                <img src={n.game.image_url} style={{ width : 50, height : 40 }}/>
-                                    <p className='text-small' style={{margin: 5, marginLeft: 0, alignSelf: "center"}}>{n.game.name}</p>
-                                </div> 
+                                <GameContainer id={n.game._id}>
+                                    <div style={{display: 'flex'}}>
+                                    <img src={n.game.image_url} style={{ width : 50, height : 40 }}/>
+                                        <p className='text-small' style={{margin: 5, marginLeft: 0, alignSelf: "center"}}>{n.game.name}</p>
+                                    </div>
+                                </GameContainer>
                             </TableCell>
                             <TableCell align="left"><p className='text-small'>{n.isJackpot ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
