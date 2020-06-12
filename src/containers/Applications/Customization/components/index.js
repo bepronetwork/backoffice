@@ -1,7 +1,7 @@
 import Banners  from './Banners';
 import AnnouncementTab from './AnnouncementTab';
 import Logo from './Logo';
-import Footer from './Footer';
+import Footer from '../components/Footer';
 import Colors from './Colors';
 import Fonts from './Fonts';
 
