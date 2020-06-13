@@ -5,8 +5,11 @@ import { Row, Col, Card, CardBody } from 'reactstrap';
 import _ from 'lodash';
 import AnimationNumber from '../../../containers/UI/Typography/components/AnimationNumber';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { CloseIcon } from 'mdi-react';
+import { CloseIcon, TableIcon, JsonIcon } from 'mdi-react';
 import { DialogHeader, CloseButton } from './styles';
+import { CSVLink } from 'react-csv';
+import { Button as MaterialButton } from "@material-ui/core";
+import { export2JSON } from '../../../utils/export2JSON';
 
 class UserContainer extends React.Component {
  
@@ -108,7 +111,51 @@ class UserContainer extends React.Component {
 
         const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, wallet, affiliateWallet } = user;
         const playBalance = wallet ? wallet.find(wallet => wallet.currency._id === currency._id).playBalance : undefined;
+        
+        let csvData = [{}];
+        let jsonData = [];
+        let  headers = []
 
+        if (!_.isEmpty(user)) {
+            const data = [
+                { 
+                    _id: _id,
+                    username: username,
+                    email: email,
+                    currency: currency,
+                    playBalance: playBalance ? parseFloat(playBalance).toFixed(6) : 0,
+                    betAmount: betAmount ? parseFloat(betAmount).toFixed(6) : 0,
+                    winAmount: winAmount ? parseFloat(winAmount).toFixed(6) : 0,
+                    profit: profit ? parseFloat(profit).toFixed(6) : 0,
+                    withdraws: parseFloat(withdraws.length),
+                    deposits: parseFloat(deposits.length),
+                    affiliateWallet: !_.isEmpty(affiliateWallet) ? parseFloat(affiliateWallet[0].playBalance).toFixed(6) : 0,
+                    affiliates: affiliate.affiliatedLinks ? affiliate.affiliatedLinks.length : 0
+                }
+            ]
+    
+            headers = [
+                { label: "Id", key: "_id" },
+                { label: "Username", key: "username" },
+                { label: "E-mail", key: "email" },
+                { label: "Currency", key: "currency" },
+                { label: "Balance", key: "playBalance" },
+                { label: "Win Amount", key: "winAmount" },
+                { label: "Bet Amount", key: "betAmount" },
+                { label: "Profit", key: "profit" },
+                { label: "Withdraws", key: "withdraws" },
+                { label: "Deposits", key: "deposits" },
+                { label: "Affiliate Wallet", key: "affiliateWallet" },
+                { label: "Affiliates", key: "affiliates" },
+            ];
+    
+            if (!_.isEmpty(data)) {
+                csvData = data.map(row => ({...row, currency: row.currency.name}));
+        
+                jsonData = csvData.map(row => _.pick(row, ['_id', 'username', 'email', 'currency', 'playBalance', 'winAmount', 'betAmount', 'profit', 'withdraws', 'deposits', 'affiliateWallet', 'affiliates']));
+            }
+        }
+        
         return(
             <>
             <ButtonBase onClick={this.setOpen}>
@@ -122,6 +169,16 @@ class UserContainer extends React.Component {
                 fullWidth maxWidth="lg"
                     >
                     <DialogHeader>
+                    <div style={{ display: "flex", justifyContent: "flex-start", marginRight: 20 }}>
+                        <CSVLink data={csvData} filename={"user.csv"} headers={headers}>
+                            <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                                <TableIcon style={{marginRight: 7}}/> CSV
+                            </MaterialButton>
+                        </CSVLink>
+                        <MaterialButton onClick={() => export2JSON(jsonData, "user")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                            <JsonIcon style={{marginRight: 7}}/> JSON
+                        </MaterialButton>
+                    </div>
                         <CloseButton onClick={this.setClose}>
                             <CloseIcon/>
                         </CloseButton>

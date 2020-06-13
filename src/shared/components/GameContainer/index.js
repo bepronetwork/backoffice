@@ -5,9 +5,12 @@ import { Row, Col, Card, CardBody } from 'reactstrap';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import AnimationNumber from '../../../containers/UI/Typography/components/AnimationNumber';
-import { CloseIcon, ArrowTopRightIcon } from 'mdi-react';
+import { CloseIcon, ArrowTopRightIcon, TableIcon, JsonIcon } from 'mdi-react';
 import { DialogHeader, CloseButton, Title } from './styles';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { CSVLink } from 'react-csv';
+import { Button as MaterialButton } from "@material-ui/core";
+import { export2JSON } from '../../../utils/export2JSON';
 
 class GameContainer extends React.Component {
  
@@ -94,6 +97,42 @@ class GameContainer extends React.Component {
         const { open, game, isLoading } = this.state;
         const { _id, name, description, image_url, profit, betAmount, betsAmount, wallet, edge } = game;
 
+        let csvData = [{}];
+        let jsonData = [];
+        let  headers = []
+
+        if (!_.isEmpty(game)) {
+            const data = [
+                { 
+                    _id: _id,
+                    name: name,
+                    description: description,
+                    currency: currency,
+                    profit: profit ? parseFloat(profit).toFixed(6) : 0,
+                    betAmount: betAmount ? betAmount : 0,
+                    betsAmount: betsAmount ? parseFloat(betsAmount).toFixed(6) : 0,
+                    edge: profit ? parseFloat(edge).toFixed(2) : 0
+                }
+            ]
+    
+            headers = [
+                { label: "Id", key: "_id" },
+                { label: "Name", key: "name" },
+                { label: "Description", key: "description" },
+                { label: "Currency", key: "currency" },
+                { label: "Profit", key: "profit" },
+                { label: "Bets Amount", key: "betAmount" },
+                { label: "TurnOver", key: "betsAmount" },
+                { label: "Edge", key: "edge" }
+            ];
+    
+            if (!_.isEmpty(data)) {
+                csvData = data.map(row => ({...row, currency: row.currency.name}));
+        
+                jsonData = csvData.map(row => _.pick(row, ['_id', 'name', 'description', 'currency', 'profit', 'betAmount', 'betsAmount', 'edge']));
+            }
+        }
+
         return(
             <>
             <ButtonBase onClick={this.setOpen}>
@@ -107,6 +146,16 @@ class GameContainer extends React.Component {
                 fullWidth maxWidth="lg"
                     >
                     <DialogHeader style={{ paddingBottom: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "flex-start", marginRight: 20 }}>
+                        <CSVLink data={csvData} filename={"game.csv"} headers={headers}>
+                            <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                                <TableIcon style={{marginRight: 7}}/> CSV
+                            </MaterialButton>
+                        </CSVLink>
+                        <MaterialButton onClick={() => export2JSON(jsonData, "game")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                            <JsonIcon style={{marginRight: 7}}/> JSON
+                        </MaterialButton>
+                    </div>
                         <CloseButton onClick={this.setClose}>
                             <CloseIcon/>
                         </CloseButton>
