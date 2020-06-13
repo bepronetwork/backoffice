@@ -3,8 +3,8 @@ import { ButtonBase } from '@material-ui/core';
 
 export const DialogHeader = styled.section`
     width: 100%;
-    height: 50px;
     padding: 10px 20px;
+    margin-bottom: 15px;
 
     display: flex;
     justify-content: flex-end;

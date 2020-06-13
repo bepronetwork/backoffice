@@ -5,8 +5,12 @@ import { Row, Col } from 'reactstrap';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import AnimationNumber from '../../../containers/UI/Typography/components/AnimationNumber';
-import { CloseIcon, ArrowTopRightIcon } from 'mdi-react';
+import { CloseIcon, ArrowTopRightIcon, TableIcon, JsonIcon } from 'mdi-react';
 import { DialogHeader, CloseButton, Title } from './styles';
+import moment from 'moment';
+import { CSVLink } from 'react-csv';
+import { Button as MaterialButton } from "@material-ui/core";
+import { export2JSON } from '../../../utils/export2JSON';
 
 class BetContainer extends React.Component {
  
@@ -68,7 +72,47 @@ class BetContainer extends React.Component {
 
     render() {
         const { open, bet } = this.state;
-        const { game, user, currency, betAmount, winAmount, creation_timestamp, serverSeed, clientSeed, serverHashedSeed } = bet;
+        const { _id, game, user, currency, betAmount, winAmount, creation_timestamp, serverSeed, clientSeed, serverHashedSeed } = bet;
+
+        let csvData = [{}];
+        let jsonData = [];
+        let  headers = []
+
+        if (!_.isEmpty(user)) {
+            const data = [
+                { 
+                    _id: _id,
+                    game: game.name,
+                    user: user.username,
+                    currency: currency.name,
+                    betAmount: betAmount ? parseFloat(betAmount).toFixed(6) : 0,
+                    winAmount: winAmount ? parseFloat(winAmount).toFixed(6) : 0,
+                    creation_timestamp: creation_timestamp,
+                    serverSeed: serverSeed,
+                    clientSeed: clientSeed,
+                    serverHashedSeed: serverHashedSeed
+                }
+            ]
+    
+            headers = [
+                { label: "Id", key: "_id" },
+                { label: "Game", key: "game" },
+                { label: "User", key: "user" },
+                { label: "Currency", key: "currency" },
+                { label: "Bet Amount", key: "betAmount" },
+                { label: "Win Amount", key: "winAmount" },
+                { label: "Created At", key: "creation_timestamp" },
+                { label: "Server Seed", key: "serverSeed" },
+                { label: "Client Seed", key: "clientSeed" },
+                { label: "Server Hashed Seed", key: "serverHashedSeed" }
+            ];
+    
+            if (!_.isEmpty(data)) {
+                csvData = data.map(row => ({...row, creation_timestamp: moment(row.creation_timestamp).format("lll")}));
+        
+                jsonData = csvData.map(row => _.pick(row, ['_id', 'game', 'user', 'currency', 'betAmount', 'winAmount', 'creation_timestamp', 'serverSeed', 'clientSeed', 'serverHashedSeed']));
+            }
+        }
 
         return(
             <>
@@ -82,6 +126,16 @@ class BetContainer extends React.Component {
                 onClose={this.setClose}
                     >
                     <DialogHeader style={{ paddingBottom: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "flex-start", marginRight: 20 }}>
+                        <CSVLink data={csvData} filename={"bet.csv"} headers={headers}>
+                            <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                                <TableIcon style={{marginRight: 7}}/> CSV
+                            </MaterialButton>
+                        </CSVLink>
+                        <MaterialButton onClick={() => export2JSON(jsonData, "bet")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                            <JsonIcon style={{marginRight: 7}}/> JSON
+                        </MaterialButton>
+                    </div>
                         <CloseButton onClick={this.setClose}>
                             <CloseIcon/>
                         </CloseButton>

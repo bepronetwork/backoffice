@@ -5,8 +5,11 @@ import { Row, Col } from 'reactstrap';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import AnimationNumber from '../../../containers/UI/Typography/components/AnimationNumber';
-import { CloseIcon, ArrowTopRightIcon } from 'mdi-react';
+import { CloseIcon, ArrowTopRightIcon, TableIcon, JsonIcon } from 'mdi-react';
 import { DialogHeader, CloseButton, Title } from './styles';
+import { CSVLink } from 'react-csv';
+import { Button as MaterialButton } from "@material-ui/core";
+import { export2JSON } from '../../../utils/export2JSON';
 
 class CurrencyContainer extends React.Component {
  
@@ -86,6 +89,36 @@ class CurrencyContainer extends React.Component {
     render() {
         const { open, currency, wallet } = this.state;
 
+        let csvData = [{}];
+        let jsonData = [];
+        let  headers = []
+
+        if (!_.isEmpty(currency)) {
+            const data = [
+                { 
+                    _id: currency._id,
+                    name: currency.name,
+                    ticker: currency.ticker,
+                    walletId: wallet._id,
+                    walletPlayBalance: wallet.playBalance ? parseFloat(wallet.playBalance).toFixed(6) : 0
+                }
+            ]
+    
+            headers = [
+                { label: "Id", key: "_id" },
+                { label: "Name", key: "name" },
+                { label: "Ticker", key: "ticker" },
+                { label: "Wallet", key: "walletId" },
+                { label: "Wallet Balance", key: "walletPlayBalance" }
+            ];
+    
+            if (!_.isEmpty(data)) {
+                csvData = data;
+        
+                jsonData = csvData.map(row => _.pick(row, ['_id', 'name', 'ticker', 'walletId', 'walletPlayBalance']));
+            }
+        }
+
         return(
             <>
             <ButtonBase onClick={this.setOpen}>
@@ -98,6 +131,16 @@ class CurrencyContainer extends React.Component {
                 onClose={this.setClose}
                     >
                     <DialogHeader style={{ paddingBottom: 0 }}>
+                        <div style={{ display: "flex", justifyContent: "flex-start", marginRight: 20 }}>
+                            <CSVLink data={csvData} filename={"currency.csv"} headers={headers}>
+                                <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
+                                    <TableIcon style={{marginRight: 7}}/> CSV
+                                </MaterialButton>
+                            </CSVLink>
+                            <MaterialButton onClick={() => export2JSON(jsonData, "currency")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
+                                <JsonIcon style={{marginRight: 7}}/> JSON
+                            </MaterialButton>
+                        </div>
                         <CloseButton onClick={this.setClose}>
                             <CloseIcon/>
                         </CloseButton>
