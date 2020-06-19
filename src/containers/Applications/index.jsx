@@ -20,6 +20,8 @@ import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
 import { Bet, Reward, Settings, Rewards, AddOn, Wallet, Casino, CasinoWhite } from '../../components/Icons';
 import styled from 'styled-components';
 import { Grid } from '@material-ui/core';
+import { TabContainer } from './styles';
+import EsportsPage from './EsportsPage';
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
@@ -177,11 +179,12 @@ class ApplicationsContainer extends React.Component{
                         <div>
                             <Row>
                                 <Col md={4}>
-                                    <Row>
+                                    <TabContainer/>
+                                    {/* <Row>
                                         {servicesCodes.map( (key) => {
                                             return widgets[key] ? widgets[key]() : null;
                                         })}
-                                    </Row>
+                                    </Row> */}
                                 </Col>
                                 <Col md={8} style={{ paddingBottom: 20, height: 70 }}>
                                     <MobileWrapper>
@@ -190,11 +193,14 @@ class ApplicationsContainer extends React.Component{
                                     <HostingLink/>
                                 </Col>
                             </Row>
-                            <TabsContainer 
+                            {/* <TabsContainer 
                                 items={
                                     this.getTabsPerPermission(permission)
                                 }
-                            />
+                            /> */}
+                            <TabContainer>
+                                <EsportsPage/>
+                            </TabContainer>
                                 
                         </div>   
                     </Col>
