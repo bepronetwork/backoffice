@@ -73,7 +73,7 @@ class Match extends React.Component {
         return (
             <>
             <MatchLink 
-            // onClick={() => setMatchPage(data)}
+            onClick={() => setMatchPage(data)}
             >
                 <MatchContainer>
                     <Indicator color={videogames[videogame.id].indicatorColor}/>

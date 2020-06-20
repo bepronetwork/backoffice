@@ -85,7 +85,7 @@ class ApplicationsContainer extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            activeTab: 'casino'
+            activeTab: 'esports'
         }
     }
    

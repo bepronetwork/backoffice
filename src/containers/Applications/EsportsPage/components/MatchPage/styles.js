@@ -29,12 +29,51 @@ export const MatchSummary = styled.section`
 export const SerieSummary = styled.section`
     grid-area: serie;
 
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    display: grid;
+
+    grid-template-areas: 
+    'matchStatus'
+    'serieInfo';
+
+    grid-template-columns: 100%;
+    grid-template-rows: 26px auto;
+`;
+
+export const MatchStatus = styled.section`
+    grid-area: matchStatus;
+
+    display: flex;
+    justify-content: center;
+    align-self: baseline;
+
+    border-top: 6px solid #ED5565;
+`;
+
+export const SerieInfo = styled.section`
+    grid-area: serieInfo;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0px 20px;
+
     span {
+        padding-top: 10px;
         color: rgb(95, 110, 133);
         font-size: 10px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
+`;
+
+export const MatchFinishedIcon = styled.section`
+    height: 20px;
+    width: 220px;
+    margin-top: -6px;
 `;
 
 export const VideoGameIcon = styled.section`
@@ -44,9 +83,84 @@ export const VideoGameIcon = styled.section`
 `;
 
 export const Score = styled.section`
+    width: 75%;
     grid-area: score;
+    padding: 0px 20px;
+
+    display: grid;
+
+    grid-template-areas: 
+    'teamOne date teamTwo';
+
+    grid-template-columns: 40% 20% 40%;
+    grid-template-rows: auto;
+
+    align-self: center;
+    justify-self: center;
+`;
+
+export const TeamOne = styled.section`
+    grid-area: teamOne;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    img {
+        height: auto;
+        width: 35px;
+    }
+
+    span {
+        margin: 0px 7px;
+        font-family: Poppins;
+        font-size: 13px;
+    }
+`;
+
+export const TeamTwo = styled.section`
+    grid-area: teamTwo;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    img {
+        height: auto;
+        width: 35px;
+    }
+
+    span {
+        margin: 0px 7px;
+        font-family: Poppins;
+        font-size: 13px;
+    }
+`;
+
+export const DateInfo = styled.section`
+    grid-area: date;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+`;
+
+export const Time = styled.span`
+    font-family: Poppins;
+    margin-bottom: 3px;
+    font-size: 17px;
+    font-weight: 800;
+    color: rgb(95, 110, 133);
+`;
+
+export const Date = styled.span`
+    font-family: Poppins;
+    font-size: 13px;
+    font-weight: 300;
+    color: rgb(95, 110, 133);
 `;
 
 export const InfoContainer = styled.section`
     grid-area: info;
+    border-top: solid 1px rgba(164, 161, 161, 0.35);
 `;
