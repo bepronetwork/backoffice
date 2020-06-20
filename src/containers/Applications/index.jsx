@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Container, Row, Card, CardBody } from 'reactstrap';
+import { Col, Container, Row, Card, CardBody, Nav, NavItem, TabContent, TabPane } from 'reactstrap';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
@@ -20,8 +20,9 @@ import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
 import { Bet, Reward, Settings, Rewards, AddOn, Wallet, Casino, CasinoWhite } from '../../components/Icons';
 import styled from 'styled-components';
 import { Grid } from '@material-ui/core';
-import { TabContainer } from './styles';
+import { TabContainer, StyledNavLink } from './styles';
 import EsportsPage from './EsportsPage';
+import classnames from 'classnames';
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
@@ -83,6 +84,9 @@ class ApplicationsContainer extends React.Component{
 
     constructor(props){
         super(props)
+        this.state = {
+            activeTab: 'casino'
+        }
     }
    
     isAdded = (AddOn) => {
@@ -90,6 +94,14 @@ class ApplicationsContainer extends React.Component{
 
         return !!Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().includes(k.toLowerCase()));
          
+    }
+
+    toggle = (tab) => {
+        if (this.state.activeTab !== tab) {
+            this.setState({
+            activeTab: tab
+            });
+        }
     }
 
     getTabsPerPermission(permission) {
@@ -179,29 +191,55 @@ class ApplicationsContainer extends React.Component{
                         <div>
                             <Row>
                                 <Col md={4}>
-                                    <TabContainer/>
+                                <Nav pills style={{ justifyContent: "space-around" }}>
+                                        <NavItem style={{ height: 80, marginTop: "20px" }}>
+                                            <StyledNavLink
+                                                className={classnames({ active: this.state.activeTab === 'casino' })}
+                                                onClick={() => {
+                                                this.toggle('casino');
+                                                }}
+                                            >
+                                                <span>Casino</span>
+                                            </StyledNavLink>
+                                        </NavItem>
+                                        <NavItem style={{ height: 80, marginTop: "20px" }}>
+                                            <StyledNavLink
+                                                className={classnames({ active: this.state.activeTab === 'esports' })}
+                                                onClick={() => {
+                                                this.toggle('esports');
+                                                }}
+                                            >
+                                                <span>e-Sports</span>
+                                            </StyledNavLink>
+                                        </NavItem>
+                                </Nav>
                                     {/* <Row>
                                         {servicesCodes.map( (key) => {
                                             return widgets[key] ? widgets[key]() : null;
                                         })}
                                     </Row> */}
                                 </Col>
-                                <Col md={8} style={{ paddingBottom: 20, height: 70 }}>
+                                <Col md={8} style={{ height: 70 }}>
                                     <MobileWrapper>
                                         <Link>Application link</Link>
                                     </MobileWrapper>
                                     <HostingLink/>
                                 </Col>
                             </Row>
-                            {/* <TabsContainer 
-                                items={
-                                    this.getTabsPerPermission(permission)
-                                }
-                            /> */}
                             <TabContainer>
-                                <EsportsPage/>
+                                <TabContent activeTab={this.state.activeTab}>
+                                    <TabPane tabId={'casino'} style={{ paddingTop: 30 }}>
+                                        <TabsContainer 
+                                            items={
+                                                this.getTabsPerPermission(permission)
+                                            }
+                                        />
+                                    </TabPane>
+                                    <TabPane tabId={'esports'} style={{ paddingTop: 30 }}>
+                                        <EsportsPage/>
+                                    </TabPane>
+                                </TabContent>
                             </TabContainer>
-                                
                         </div>   
                     </Col>
                 </Row>
