@@ -2,7 +2,18 @@ import styled from 'styled-components';
 
 export const MatchLink = styled.a`
     cursor: pointer;
+    /* padding: 0;
+    background: none;
+    outline: none;
+    border: 0; */
 `;
+
+// export const MatchLink = styled.button`
+//     padding: 0;
+//     background: none;
+//     outline: none;
+//     border: 0;
+// `;
 
 export const MatchContainer = styled.div`
     display: grid;

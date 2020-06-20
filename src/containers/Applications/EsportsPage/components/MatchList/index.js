@@ -25,12 +25,13 @@ class MatchList extends React.Component {
 
 
     render() {
+        const { setMatchPage } = this.props;
 
         return (
             <>
             <Container>
                 { matches.map(match => (
-                    <Match data={match} series={series}/>
+                    <Match data={match} series={series} setMatchPage={setMatchPage}/>
                 ))}
             </Container>
             </>

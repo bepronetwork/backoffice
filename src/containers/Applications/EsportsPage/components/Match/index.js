@@ -60,6 +60,7 @@ class Match extends React.Component {
     render() {
         const { data } = this.state;
         const { opponents, results, videogame, scheduled_at } = data;
+        const { setMatchPage } = this.props;
 
         if (_.isEmpty(data)) return null;
 
@@ -71,7 +72,9 @@ class Match extends React.Component {
 
         return (
             <>
-            <MatchLink>
+            <MatchLink 
+            // onClick={() => setMatchPage(data)}
+            >
                 <MatchContainer>
                     <Indicator color={videogames[videogame.id].indicatorColor}/>
                     <MatchInfo>

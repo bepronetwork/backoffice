@@ -4,9 +4,11 @@ import { Container, Tabs, Content, AllTab, Actions, CollapseButton } from './sty
 import MatchList from './components/MatchList';
 import VideogameTab from './components/VideogameTab';
 import VideogameTabCollapsed from './components/VideogameTabCollapsed';
+import _ from 'lodash';
 
 import { LoL, CSGO, Dota, Overwatch, RocketLeague, CoD, RainbowSix } from './components/Icons';
 import { ChevronLeftIcon, ChevronRightIcon } from 'mdi-react';
+import MatchPage from './components/MatchPage';
 
 const videogames = [
     { name: 'League of Legends', icon: <LoL/> },
@@ -23,7 +25,9 @@ class EsportsPage extends React.Component {
         super(props);
 
         this.state = {
-            collapsed: false
+            collapsed: false,
+            showMatchPage: false,
+            match: {}
         };
       }
 
@@ -47,9 +51,16 @@ class EsportsPage extends React.Component {
         })
     }
 
+    setMatchPage = data => {
+        this.setState({
+            showMatchPage: true,
+            match: data
+        })
+    }
+
 
     render() {
-        const { collapsed } = this.state;
+        const { collapsed, showMatchPage, match } = this.state;
 
         return (
             <>
@@ -68,7 +79,11 @@ class EsportsPage extends React.Component {
                     ))}
                 </Tabs>
                 <Content>
-                    <MatchList/>
+                    { showMatchPage && !_.isEmpty(match) ? (
+                        <MatchPage/>
+                    ) : (
+                        <MatchList setMatchPage={this.setMatchPage}/>
+                    )}
                 </Content>
             </Container>
             </>
