@@ -4,19 +4,19 @@ export const Container = styled.div`
     width: 100%;
 `;
 
-export const Tab = styled.a`
+export const Tab = styled.div`
     width: 100%;
-    height: 58px;
+    /* min-height: 58px; */
     background-color: white;
-    cursor: pointer;
 
     display: grid;
 
     grid-template-areas: 
-    'select videogame dropdown';
+    'select videogame dropdown'
+    'subtab subtab subtab';
 
     grid-template-columns: 10% 80% 10%;
-    grid-template-rows: auto;
+    grid-template-rows: 58px auto;
 
     border-top: solid 1px rgba(164, 161, 161, 0.35);
 `;
@@ -57,13 +57,14 @@ export const VideogameName = styled.section`
     grid-area: gameName;
 
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
 
     span {
         font-family: Poppins;
         font-size: 15px;
         font-weight: 500;
+        color: ${props => props.selected ? "#3399ff": "#212529"}
     }
 `;
 
@@ -75,3 +76,44 @@ export const Dropdown = styled.section`
     align-items: center;
 `;
 
+export const SubTabContainer = styled.section`
+    grid-area: subtab;
+
+    padding: 0px 20px;
+`;
+
+export const SubTab = styled.div`
+    width: 100%;
+    height: 30px;
+    background-color: white;
+
+    display: grid;
+
+    grid-template-areas: 
+    'select league';
+
+    grid-template-columns: 10% 90%;
+    grid-template-rows: auto;
+`;
+
+export const SubTabSelect = styled.section`
+    grid-area: select;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const LeagueName = styled.section`
+    grid-area: league;
+    
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    span {
+        font-family: Poppins;
+        font-size: 12px;
+        font-weight: 400;
+    }
+`;

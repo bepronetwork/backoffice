@@ -16,6 +16,13 @@ export const Tabs = styled.section`
     border-right: solid 1px rgba(164, 161, 161, 0.35);
 
     padding: 8px;
+    max-height: 607px;
+
+    overflow-y: scroll;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 export const AllTab = styled.a`
@@ -40,5 +47,11 @@ export const AllTab = styled.a`
 
 export const Content = styled.section`
     grid-area: content;
+
+    overflow-y: scroll;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 
 `;

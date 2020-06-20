@@ -11,7 +11,7 @@ export const MatchContainer = styled.div`
     'indicator match teams action'
     'indicator footer footer footer';
 
-    grid-template-columns: 4px calc(15% - 4px) 70% 15%;
+    grid-template-columns: 4px calc(25% - 4px) 60% 15%;
     grid-template-rows: 58px 30px;
 
     width: 100%;
@@ -38,8 +38,10 @@ export const MatchInfo = styled.section`
     grid-template-areas: 
     'videogame date info';
 
-    grid-template-columns: 30% 40% 30%;
+    grid-template-columns: 20% 50% 30%;
     grid-template-rows: auto;
+
+    padding: 0px 20px;
 `;
 
 export const VideogameInfo = styled.section`
@@ -62,7 +64,9 @@ export const DateInfo = styled.section`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+
+    padding: 0px 8px;
 
 `;
 
