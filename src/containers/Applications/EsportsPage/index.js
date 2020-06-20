@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Tabs, Content, AllTab } from './styles';
+import { Container, Tabs, Content, AllTab, Actions, CollapseButton } from './styles';
 import MatchList from './components/MatchList';
 import VideogameTab from './components/VideogameTab';
+import VideogameTabCollapsed from './components/VideogameTabCollapsed';
 
 import { LoL, CSGO, Dota, Overwatch, RocketLeague, CoD, RainbowSix } from './components/Icons';
+import { ChevronLeftIcon, ChevronRightIcon } from 'mdi-react';
 
 const videogames = [
     { name: 'League of Legends', icon: <LoL/> },
@@ -20,7 +22,9 @@ class EsportsPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            collapsed: false
+        };
       }
 
     componentDidMount(){
@@ -35,18 +39,32 @@ class EsportsPage extends React.Component {
 
     }
 
+    toggleCollape = () => {
+        const { collapsed } = this.state;
+
+        this.setState({
+            collapsed: !collapsed
+        })
+    }
+
 
     render() {
+        const { collapsed } = this.state;
 
         return (
             <>
-            <Container>
+            <Container collapsed={collapsed}>
                 <Tabs>
+                    <Actions>
+                        <CollapseButton onClick={this.toggleCollape}>
+                    { collapsed ? <ChevronRightIcon/> : <ChevronLeftIcon/> }
+                        </CollapseButton>
+                    </Actions>
                     <AllTab>
                         <span>All</span>
                     </AllTab>
                     { videogames.map(videogame => (
-                        <VideogameTab data={videogame}/>
+                        collapsed ? <VideogameTabCollapsed data={videogame}/> : <VideogameTab data={videogame}/> 
                     ))}
                 </Tabs>
                 <Content>
