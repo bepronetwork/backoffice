@@ -66,8 +66,8 @@ const CasinoContainer = styled.section`
 `;
 
 const Icon = styled.section`
-    height: 200px;
-    width: 200px;
+    height: 50px;
+    width: 50px;
     opacity: 0.56;
 `
 
@@ -85,7 +85,7 @@ class ApplicationsContainer extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            activeTab: 'esports'
+            activeTab: 'casino'
         }
     }
    
@@ -190,8 +190,8 @@ class ApplicationsContainer extends React.Component{
                     <Col lg={12}>
                         <div>
                             <Row>
-                                <Col md={4}>
-                                <Nav pills style={{ justifyContent: "space-around" }}>
+                                <Col md={4} style={{ padding: 0 }}>
+                                <Nav pills style={{ justifyContent: "flex-start", marginBottom: 25 }}>
                                         <NavItem style={{ height: 80, marginTop: "20px" }}>
                                             <StyledNavLink
                                                 className={classnames({ active: this.state.activeTab === 'casino' })}
@@ -200,6 +200,11 @@ class ApplicationsContainer extends React.Component{
                                                 }}
                                             >
                                                 <span>Casino</span>
+                                                { this.state.activeTab === 'casino' && (
+                                                    <Icon>
+                                                        <CasinoWhite/>
+                                                    </Icon>
+                                                )}
                                             </StyledNavLink>
                                         </NavItem>
                                         <NavItem style={{ height: 80, marginTop: "20px" }}>
@@ -210,6 +215,7 @@ class ApplicationsContainer extends React.Component{
                                                 }}
                                             >
                                                 <span>e-Sports</span>
+
                                             </StyledNavLink>
                                         </NavItem>
                                 </Nav>
