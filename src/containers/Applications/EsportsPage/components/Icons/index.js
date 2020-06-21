@@ -6,6 +6,7 @@ import Overwatch from './Overwatch';
 import RainbowSix from './RainbowSix';
 import RocketLeague from './RocketLeage';
 import MatchFinished from './MatchFinished';
+import Trophy from './Trophy';
 
 export {
     CoD,
@@ -15,5 +16,6 @@ export {
     Overwatch,
     RainbowSix,
     RocketLeague,
-    MatchFinished
+    MatchFinished,
+    Trophy
 }

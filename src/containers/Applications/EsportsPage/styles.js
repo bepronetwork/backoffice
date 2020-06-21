@@ -68,6 +68,28 @@ export const AllTab = styled.a`
     }
 `;
 
+export const MatchSpanTab = styled.a`
+    width: 100%;
+    height: 58px;
+    background-color: white;
+    cursor: pointer;
+
+    padding: 0px 8px;
+    margin-top: 20px;
+    
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    span {
+        font-family: Poppins;
+        margin: 0px 8px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #5f6e85;
+    }
+`;
+
 export const TabsCollapsed = styled.section`
     grid-area: tabs;
     border-right: solid 1px rgba(164, 161, 161, 0.35);
@@ -91,4 +113,39 @@ export const Content = styled.section`
         display: none;
     }
 
+`;
+
+export const BackTo = styled.section`
+    display: grid;
+
+    grid-template-areas: 
+    'icon pageName';
+
+    grid-template-columns: 20px auto;
+    grid-template-rows: 33px;
+
+`;
+
+export const BackIcon = styled.section`
+    grid-area: icon;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const PageName = styled.section`
+    grid-area: pageName;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    span {
+        font-family: Poppins;
+        margin: 0px 8px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #39f;
+    }
 `;

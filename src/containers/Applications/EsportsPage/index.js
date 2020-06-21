@@ -1,14 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Tabs, Content, AllTab, Actions, CollapseButton } from './styles';
+import { Container, Tabs, Content, AllTab, Actions, CollapseButton, MatchSpanTab, BackTo, BackIcon, PageName } from './styles';
 import MatchList from './components/MatchList';
 import VideogameTab from './components/VideogameTab';
 import VideogameTabCollapsed from './components/VideogameTabCollapsed';
 import _ from 'lodash';
 
 import { LoL, CSGO, Dota, Overwatch, RocketLeague, CoD, RainbowSix } from './components/Icons';
-import { ChevronLeftIcon, ChevronRightIcon } from 'mdi-react';
+import { ChevronLeftIcon, ChevronRightIcon, ArrowBackIcon } from 'mdi-react';
 import MatchPage from './components/MatchPage';
+import MatchTab from './components/MatchTab';
+import { ButtonBase } from '@material-ui/core';
 
 const videogames = [
     { name: 'League of Legends', icon: <LoL/> },
@@ -58,6 +60,13 @@ class EsportsPage extends React.Component {
         })
     }
 
+    backToListPage = () => {
+        this.setState({
+            showMatchPage: false,
+            match: {}
+        })
+    }
+
 
     render() {
         const { collapsed, showMatchPage, match } = this.state;
@@ -71,12 +80,33 @@ class EsportsPage extends React.Component {
                     { collapsed ? <ChevronRightIcon/> : <ChevronLeftIcon/> }
                         </CollapseButton>
                     </Actions>
-                    <AllTab>
-                        <span>All</span>
-                    </AllTab>
-                    { videogames.map(videogame => (
-                        collapsed ? <VideogameTabCollapsed data={videogame}/> : <VideogameTab data={videogame}/> 
-                    ))}
+                    { !showMatchPage && _.isEmpty(match) ? (
+                        <>
+                            <AllTab>
+                                <span>All</span>
+                            </AllTab>
+                            { videogames.map(videogame => (
+                                collapsed ? <VideogameTabCollapsed data={videogame}/> : <VideogameTab data={videogame}/> 
+                            ))}
+                        </>
+                    ) : (
+                        <>  
+                            <ButtonBase disableRipple onClick={this.backToListPage}>
+                                <BackTo>
+                                    <BackIcon>
+                                        <ArrowBackIcon color="#39f"/>
+                                    </BackIcon>
+                                    <PageName>
+                                        <span> Back to events list </span>
+                                    </PageName>
+                                </BackTo>
+                            </ButtonBase>
+                            <MatchSpanTab>
+                                <span>Match</span>
+                            </MatchSpanTab>
+                            <MatchTab data={match}/>
+                        </>
+                    )} 
                 </Tabs>
                 <Content>
                     { showMatchPage && !_.isEmpty(match) ? (
