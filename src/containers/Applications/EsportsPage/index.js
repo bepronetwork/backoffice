@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Tabs, Content, AllTab, Actions, CollapseButton, MatchSpanTab, BackTo, BackIcon, PageName } from './styles';
+import { Container, Tabs, Content, AllTab, Actions, CollapseButton, MatchSpanTab, BackTo, BackIcon, PageName, MatchIcon } from './styles';
 import MatchList from './components/MatchList';
 import VideogameTab from './components/VideogameTab';
 import VideogameTabCollapsed from './components/VideogameTabCollapsed';
@@ -11,6 +11,7 @@ import { ChevronLeftIcon, ChevronRightIcon, ArrowBackIcon } from 'mdi-react';
 import MatchPage from './components/MatchPage';
 import MatchTab from './components/MatchTab';
 import { ButtonBase } from '@material-ui/core';
+import MatchTabCollapsed from './components/MatchTabCollapsed';
 
 const videogames = [
     { name: 'League of Legends', icon: <LoL/> },
@@ -92,19 +93,31 @@ class EsportsPage extends React.Component {
                     ) : (
                         <>  
                             <ButtonBase disableRipple onClick={this.backToListPage}>
-                                <BackTo>
+                                { collapsed ? (
                                     <BackIcon>
                                         <ArrowBackIcon color="#39f"/>
                                     </BackIcon>
-                                    <PageName>
-                                        <span> Back to events list </span>
-                                    </PageName>
-                                </BackTo>
+                                ) : (
+                                    <BackTo>
+                                        <BackIcon>
+                                            <ArrowBackIcon color="#39f"/>
+                                        </BackIcon>
+                                        <PageName>
+                                            <span> Back to events list </span>
+                                        </PageName>
+                                    </BackTo>
+                                ) }
                             </ButtonBase>
-                            <MatchSpanTab>
-                                <span>Match</span>
-                            </MatchSpanTab>
-                            <MatchTab data={match}/>
+                            { collapsed ? (
+                                <MatchIcon>
+                                    <span>M</span>
+                                </MatchIcon>
+                            ) : (
+                                <MatchSpanTab>
+                                    <span>Match</span>
+                                </MatchSpanTab>
+                            )}
+                            { collapsed ? <MatchTabCollapsed data={match}/> : <MatchTab data={match}/> }
                         </>
                     )} 
                 </Tabs>

@@ -149,3 +149,25 @@ export const PageName = styled.section`
         color: #39f;
     }
 `;
+
+export const MatchIcon = styled.a`
+    width: 37px;
+    height: 37px;
+    border-radius: 3px;
+    background-color: #ecf1f4;
+    margin: 5px 0px;
+    margin-left: 3px;
+    margin-top: 20px;
+
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+        font-family: Poppins;
+        font-size: 14px;
+        color: #333;
+    }
+`;
