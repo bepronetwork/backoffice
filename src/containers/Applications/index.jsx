@@ -214,7 +214,7 @@ class ApplicationsContainer extends React.Component{
                                                 this.toggle('esports');
                                                 }}
                                             >
-                                                <span>e-Sports</span>
+                                                <span>Esports</span>
 
                                             </StyledNavLink>
                                         </NavItem>

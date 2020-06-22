@@ -39,6 +39,7 @@ export const StyledNavLink = styled(NavLink)`
 
 
         span {
+            margin: 0px 1fr;
             font-family: Poppins;
             font-size: 18px;
             font-weight: 400;
