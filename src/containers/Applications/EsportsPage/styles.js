@@ -7,7 +7,7 @@ export const Container = styled.div`
     grid-template-columns: ${props => props.collapsed ? "79px auto" : "289px auto"};
     grid-template-rows: auto;
     grid-gap: 15px;
-
+    
     height: 100vh;
 `;
 
@@ -32,6 +32,12 @@ export const CollapseButton = styled.button`
     border-radius: 50%;
     color: #39f;
     background-color: #fff;
+    transition: 0.2s;
+
+    &:hover {
+        color: #fff;
+        background-color: #39f;
+    }
 `;
 
 export const Tabs = styled.section`
