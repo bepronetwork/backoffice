@@ -1,11 +1,12 @@
 import styled from 'styled-components';
+import { ButtonBase } from '@material-ui/core';
 
-export const MatchLink = styled.a`
+export const MatchLink = styled(ButtonBase)`
     cursor: pointer;
-    /* padding: 0;
+    padding: 0;
     background: none;
     outline: none;
-    border: 0; */
+    border: 0;
 `;
 
 // export const MatchLink = styled.button`
@@ -32,6 +33,11 @@ export const MatchContainer = styled.div`
     background-color: #fafcff;
     border-radius: 6px;
     border: solid 1px rgba(164, 161, 161, 0.35);
+    transition: 0.2s;
+
+    &:hover {
+        transform: scale(1.005);
+    }
 `;
 
 export const Indicator = styled.section`

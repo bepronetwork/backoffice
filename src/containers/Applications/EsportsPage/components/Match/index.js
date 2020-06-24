@@ -73,6 +73,7 @@ class Match extends React.Component {
         return (
             <>
             <MatchLink 
+            disableRipple
             onClick={() => setMatchPage(data)}
             >
                 <MatchContainer>
