@@ -14,6 +14,7 @@ export const MatchSummary = styled.section`
 
     height: 30%;
     width: 100%;
+    min-width: 450px;
 
     display: grid;
 
@@ -151,6 +152,7 @@ export const Time = styled.span`
     font-size: 17px;
     font-weight: 800;
     color: rgb(95, 110, 133);
+    padding: 0px 8px;
 `;
 
 export const Date = styled.span`

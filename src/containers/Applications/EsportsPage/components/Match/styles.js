@@ -26,6 +26,7 @@ export const MatchContainer = styled.div`
     grid-template-rows: 58px 30px;
 
     width: 100%;
+    min-width: 450px;
     height: auto;
     margin: 10px 0px;
     background-color: #fafcff;
@@ -53,6 +54,7 @@ export const MatchInfo = styled.section`
     grid-template-rows: auto;
 
     padding: 0px 20px;
+    padding-right: 0px;
 `;
 
 export const VideogameInfo = styled.section`
