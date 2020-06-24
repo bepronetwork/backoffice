@@ -6,7 +6,7 @@ export const Container = styled.div`
     grid-template-areas: 'tabs content';
     grid-template-columns: ${props => props.collapsed ? "79px auto" : "289px auto"};
     grid-template-rows: auto;
-    grid-gap: 50px;
+    grid-gap: 15px;
 
     height: 100vh;
 `;
@@ -108,6 +108,7 @@ export const Content = styled.section`
     grid-area: content;
 
     overflow-y: scroll;
+    overflow-x: scroll;
 
     ::-webkit-scrollbar {
         display: none;
