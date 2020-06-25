@@ -16,6 +16,7 @@ import currencyReducer from './currencyReducer';
 import walletReducer from './walletReducer';
 import addCurrencyWalletReducer from './addCurrencyWalletReducer';
 import videogamesReducer from './videogamesReducer';
+import seriesReducer from './seriesReducer';
 
 export {
     themeReducer,
@@ -35,5 +36,6 @@ export {
     profileReducer,
     appCreationReducer,
     addCurrencyWalletReducer,
-    videogamesReducer
+    videogamesReducer,
+    seriesReducer
 };

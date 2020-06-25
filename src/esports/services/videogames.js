@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import store from '../../containers/App/store';
 import { setVideogamesData } from '../../redux/actions/videogamesActions';
+import { setSeriesData } from '../../redux/actions/seriesActions';
 
 export const getVideoGamesAll = ({ params, headers }) => {
 
@@ -17,6 +18,7 @@ export const getVideoGamesAll = ({ params, headers }) => {
         res => {
             if (res.data.message) {
                 store.dispatch(setVideogamesData(_.sortBy(res.data.message, 'external_id')));
+                store.dispatch(setSeriesData(res.data.message));
             }
         }
     )

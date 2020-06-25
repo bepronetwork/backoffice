@@ -18,7 +18,8 @@ import {
   walletReducer,
   currencyReducer,
   addCurrencyWalletReducer,
-  videogamesReducer
+  videogamesReducer,
+  seriesReducer
 } from '../../redux/reducers/index';
 
 
@@ -41,7 +42,8 @@ const reducer = combineReducers({
     profile  : profileReducer,
     appCreation : appCreationReducer,
     addCurrencyWallet : addCurrencyWalletReducer,
-    videogames: videogamesReducer
+    videogames: videogamesReducer,
+    series: seriesReducer
 });
 const store = createStore(reducer);
 

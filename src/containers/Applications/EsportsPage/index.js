@@ -4,7 +4,7 @@ import { Container, Tabs, Content, AllTab, Actions, CollapseButton, MatchSpanTab
 import MatchList from './components/MatchList';
 import VideogameTab from './components/VideogameTab';
 import VideogameTabCollapsed from './components/VideogameTabCollapsed';
-import _ from 'lodash';
+import _, { toInteger } from 'lodash';
 
 import videogamesEnum from './components/Enums/videogames';
 import { ChevronLeftIcon, ChevronRightIcon, ArrowBackIcon } from 'mdi-react';
@@ -42,7 +42,8 @@ class EsportsPage extends React.Component {
             getVideoGamesAll({ params: {} });
 
             this.setState({
-                videogames: props.videogames
+                videogames: props.videogames,
+                series: props.series
             })
         }
 
@@ -87,9 +88,17 @@ class EsportsPage extends React.Component {
         })
     }
 
+    updateVideogameSeries = ({ videogame, seriesArr }) => {
+        const { series } = this.state;
+
+        this.setState({
+            series: { ...series, [videogame]: seriesArr.map(serie => parseInt(serie)) }
+        })
+    }
+
 
     render() {
-        const { collapsed, showMatchPage, match, videogames } = this.state;
+        const { collapsed, showMatchPage, match, videogames, series } = this.state;
 
         return (
             <>
@@ -106,7 +115,7 @@ class EsportsPage extends React.Component {
                                 <span>All</span>
                             </AllTab>
                             { videogames.map(videogame => (
-                                collapsed ? <VideogameTabCollapsed data={this.getVideogameInfo(videogame)}/> : <VideogameTab data={this.getVideogameInfo(videogame)}/> 
+                                collapsed ? <VideogameTabCollapsed data={this.getVideogameInfo(videogame)}/> : <VideogameTab data={this.getVideogameInfo(videogame)} updateVideogameSeries={this.updateVideogameSeries}/> 
                             ))}
                         </>
                     ) : (
@@ -144,7 +153,7 @@ class EsportsPage extends React.Component {
                     { showMatchPage && !_.isEmpty(match) ? (
                         <MatchPage data={match}/>
                     ) : (
-                        <MatchList setMatchPage={this.setMatchPage}/>
+                        <MatchList setMatchPage={this.setMatchPage} series={series}/>
                     )}
                 </Content>
             </Container>
@@ -158,6 +167,7 @@ function mapStateToProps(state){
     return {
         profile: state.profile,
         videogames: state.videogames,
+        series: state.series,
         isLoading: state.isLoading
     };
 }

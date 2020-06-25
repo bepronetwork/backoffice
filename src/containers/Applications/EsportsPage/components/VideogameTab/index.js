@@ -61,12 +61,24 @@ class VideogameTab extends React.Component {
     }
 
     toggleSelected = () => {
-        const { selected, selectedSeries } = this.state;
+        const { updateVideogameSeries } = this.props;
+        const { selected, selectedSeries, data } = this.state;
+        const { _id } = data;
+
+        const newSelectedSeries = _.mapValues(selectedSeries, () => !selected);
 
         this.setState({
             selected: !selected,
-            selectedSeries: _.mapValues(selectedSeries, () => !selected)
+            selectedSeries: newSelectedSeries
         })
+
+        const seriesArr = _.keys(_.pickBy(newSelectedSeries));
+
+        updateVideogameSeries({
+            videogame: _id,
+            seriesArr
+        })
+
     }
 
     toggleSelectedSerie = id => {
@@ -153,7 +165,9 @@ class VideogameTab extends React.Component {
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        series: state.series,
+        videogames: state.videogames
     };
 }
 
