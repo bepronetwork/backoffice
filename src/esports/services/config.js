@@ -1,4 +1,4 @@
-export const PANDASCORE_API_URL = "https://api.pandascore.co";
+export const API_URL = "http://localhost:8000";
 
 const PANDASCORE_TOKEN = "wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0";
 

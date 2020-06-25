@@ -1,17 +1,29 @@
-import { PANDASCORE_API_URL, headers } from "./config";
+import { API_URL } from "./config";
 
 import { ajax } from "rxjs/ajax";
 
-const apiServiceBuilder = method => (url) =>
+const apiServiceBuilder = method => (
+  url,
+  { headers, body } = { headers: {}, body: {} }
+) =>
   ajax({
-    url: `${PANDASCORE_API_URL}${url}`,
+    url: `${API_URL}${url}`,
     method,
     headers: {
-      ...headers.authorization,
+      // ...headers.authorization,
+      ...headers,
       "Content-Type": "application/json"
-    }
+    },
+    body
 });
 
 export const apiService = {
-  get: apiServiceBuilder("GET")
+  post: apiServiceBuilder("POST")
 };
+
+function addHeaders(config, newHeaders) {
+  return {
+    ...config.headers,
+    ...newHeaders
+  }
+}
