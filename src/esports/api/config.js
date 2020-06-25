@@ -1,4 +1,4 @@
-export const API_URL = "http://localhost:8000";
+export const API_URL = "https://ms-esports-dev.herokuapp.com";
 
 const PANDASCORE_TOKEN = "wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0";
 

@@ -1,10 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Tab, Select, Videogame, Dropdown, VideoGameImage, VideoGameIcon, VideogameName, SubTabContainer, SubTab, SubTabSelect, LeagueName } from './styles';
-import { FormGroup, Label, Input } from 'reactstrap';
 import _ from 'lodash';
 import { ChevronUpIcon, ChevronDownIcon } from 'mdi-react';
-import { ButtonBase } from '@material-ui/core';
+import { ButtonBase, Checkbox, createMuiTheme, ThemeProvider } from '@material-ui/core';
+
+const theme = createMuiTheme({
+    palette: {
+      primary: { 
+        main: '#3399ff' 
+        }
+    },
+  });
 
 class VideogameTab extends React.Component {
     constructor(props) {
@@ -13,7 +20,8 @@ class VideogameTab extends React.Component {
         this.state = {
             data: {},
             open: false,
-            selected: false
+            selected: false,
+            selectedSeries: {}
         };
       }
 
@@ -30,7 +38,8 @@ class VideogameTab extends React.Component {
 
         if (!_.isEmpty(data)) {
             this.setState({
-                data: data
+                data: data,
+                // selectedSeries: data.series.map(serie => { return serie.id: true })
             })
         }
     }
@@ -51,6 +60,14 @@ class VideogameTab extends React.Component {
         })
     }
 
+    toggleSelectSerie = id => {
+        const { selectedSeries } = this.state;
+
+        this.setState({
+            selectedSeries: { ...selectedSeries, [id]: selectedSeries[id] ? !selectedSeries[id] : true }
+        })
+    }
+
     getSerieName = (serie) => {
         const { league } = serie;
 
@@ -58,7 +75,7 @@ class VideogameTab extends React.Component {
     }
 
     render() {
-        const { data, open, selected } = this.state;
+        const { data, open, selected, selectedSeries } = this.state;
         const { name, icon, series } = data;
 
         if (_.isEmpty(data)) return null;
@@ -68,12 +85,14 @@ class VideogameTab extends React.Component {
             <Container>
                 <Tab>
                     <Select>
-                    {/* <FormGroup check>
-                        <Label check>
-                        <Input type="checkbox" />{' '}
-                        Check me out
-                        </Label>
-                    </FormGroup> */}
+                    <ThemeProvider theme={theme}>
+                        <Checkbox
+                        checked
+                        // onChange={handleChange}
+                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                        color="primary"
+                        />
+                    </ThemeProvider>
                     </Select>
                     <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={this.toggleSelect}>
                     <Videogame>
@@ -97,7 +116,15 @@ class VideogameTab extends React.Component {
                     { series.map(serie => (
                     <SubTab>
                         <SubTabSelect>
-
+                            <ThemeProvider theme={theme}>
+                                <Checkbox
+                                size="small"
+                                checked={selectedSeries[serie.id]}
+                                onChange={() => this.toggleSelectSerie(serie.id)}
+                                inputProps={{ 'aria-label': 'primary checkbox' }}
+                                color="primary"
+                                />
+                            </ThemeProvider>
                         </SubTabSelect>
                         <LeagueName>
                             <span>

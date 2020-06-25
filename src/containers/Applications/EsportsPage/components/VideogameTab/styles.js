@@ -87,6 +87,8 @@ export const SubTab = styled.div`
     height: 40px;
     background-color: white;
 
+    margin: 8px 0px;
+
     display: grid;
 
     grid-template-areas: 
@@ -113,7 +115,7 @@ export const LeagueName = styled.section`
     margin: 3px 0px;
 
     span {
-        padding: 8px 0px;
+        padding: 8px;
         font-family: Poppins;
         font-size: 12px;
         font-weight: 400;
