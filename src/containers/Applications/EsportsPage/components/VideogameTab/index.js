@@ -4,6 +4,7 @@ import { Container, Tab, Select, Videogame, Dropdown, VideoGameImage, VideoGameI
 import _ from 'lodash';
 import { ChevronUpIcon, ChevronDownIcon } from 'mdi-react';
 import { ButtonBase, Checkbox, createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { getSeriesMatches } from '../../../../../esports/services';
 
 const theme = createMuiTheme({
     palette: {
@@ -47,9 +48,11 @@ class VideogameTab extends React.Component {
 
             this.setState({
                 data: data,
-                selectedSeries: selectedSeries
+                selectedSeries: selectedSeries,
+                // series: this.props.series
             })
         }
+        
     }
 
     toggleDropdown = () => {
@@ -61,32 +64,44 @@ class VideogameTab extends React.Component {
     }
 
     toggleSelected = () => {
-        const { updateVideogameSeries } = this.props;
-        const { selected, selectedSeries, data } = this.state;
+        const { selected, selectedSeries, data, series } = this.state;
         const { _id } = data;
 
         const newSelectedSeries = _.mapValues(selectedSeries, () => !selected);
+        const seriesArr = _.keys(_.pickBy(newSelectedSeries));
 
         this.setState({
             selected: !selected,
-            selectedSeries: newSelectedSeries
+            selectedSeries: newSelectedSeries,
+            series: { ...series, [_id]: seriesArr.map(serie => parseInt(serie)) }
         })
 
-        const seriesArr = _.keys(_.pickBy(newSelectedSeries));
-
-        updateVideogameSeries({
-            videogame: _id,
-            seriesArr
-        })
+        this.updateMatches({ series: { ...series, [_id]: seriesArr.map(serie => parseInt(serie)) } });
 
     }
 
     toggleSelectedSerie = id => {
-        const { selectedSeries } = this.state;
+        const { selectedSeries, series, data } = this.state;
+        const { _id } = data;
+
+        const newSelectedSeries = { ...selectedSeries, [id]: selectedSeries[id] ? !selectedSeries[id] : true };
+        const seriesArr = _.keys(_.pickBy(newSelectedSeries));
 
         this.setState({
-            selectedSeries: { ...selectedSeries, [id]: selectedSeries[id] ? !selectedSeries[id] : true }
+            selectedSeries: newSelectedSeries,
+            series: { ...series, [_id]: seriesArr.map(serie => parseInt(serie)) }
         })
+
+        this.updateMatches({ series: { ...series, [_id]: seriesArr.map(serie => parseInt(serie)) } });
+    }
+
+    updateMatches = ({ series }) => {
+        
+        const seriesArr = _.concat(Object.values(series));
+
+        getSeriesMatches({ params: {
+            serie_id: seriesArr[0]
+        }})
     }
 
     getSerieName = (serie) => {

@@ -43,7 +43,7 @@ class EsportsPage extends React.Component {
 
             this.setState({
                 videogames: props.videogames,
-                series: props.series
+                // series: props.series
             })
         }
 
@@ -87,15 +87,6 @@ class EsportsPage extends React.Component {
             match: {}
         })
     }
-
-    updateVideogameSeries = ({ videogame, seriesArr }) => {
-        const { series } = this.state;
-
-        this.setState({
-            series: { ...series, [videogame]: seriesArr.map(serie => parseInt(serie)) }
-        })
-    }
-
 
     render() {
         const { collapsed, showMatchPage, match, videogames, series } = this.state;
@@ -153,7 +144,7 @@ class EsportsPage extends React.Component {
                     { showMatchPage && !_.isEmpty(match) ? (
                         <MatchPage data={match}/>
                     ) : (
-                        <MatchList setMatchPage={this.setMatchPage} series={series}/>
+                        <MatchList setMatchPage={this.setMatchPage}/>
                     )}
                 </Content>
             </Container>
