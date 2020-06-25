@@ -6,14 +6,6 @@ import _ from 'lodash';
 import { ChevronUpIcon, ChevronDownIcon } from 'mdi-react';
 import { ButtonBase } from '@material-ui/core';
 
-const leaguesByVideogame = [
-    { name: 'League 01'},
-    { name: 'League 02'},
-    { name: 'League 03'},
-    { name: 'League 04'},
-    { name: 'League 05'},
-]
-
 class VideogameTab extends React.Component {
     constructor(props) {
         super(props);
@@ -59,9 +51,15 @@ class VideogameTab extends React.Component {
         })
     }
 
+    getSerieName = (serie) => {
+        const { league } = serie;
+
+        return `${league.name} / ${serie.full_name}`;
+    }
+
     render() {
         const { data, open, selected } = this.state;
-        const { name, icon } = data;
+        const { name, icon, series } = data;
 
         if (_.isEmpty(data)) return null;
 
@@ -86,7 +84,7 @@ class VideogameTab extends React.Component {
                         </VideoGameImage>
                         <VideogameName selected={selected}>
                             <span>{ name }</span>
-                            { selected ? <span style={{ margin: '0px 8px' }}>{leaguesByVideogame.length}</span> : null }
+                            { selected ? <span style={{ margin: '0px 8px' }}>{series.length}</span> : null }
                         </VideogameName>
                     </Videogame>
                     </ButtonBase>
@@ -96,14 +94,14 @@ class VideogameTab extends React.Component {
                         </ButtonBase>
                     </Dropdown>
                     { open ? <SubTabContainer>
-                    { leaguesByVideogame.map(league => (
+                    { series.map(serie => (
                     <SubTab>
                         <SubTabSelect>
 
                         </SubTabSelect>
                         <LeagueName>
                             <span>
-                                { league.name }
+                                { this.getSerieName(serie) }
                             </span>
                         </LeagueName>
                     </SubTab>

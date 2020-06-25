@@ -6,22 +6,14 @@ import VideogameTab from './components/VideogameTab';
 import VideogameTabCollapsed from './components/VideogameTabCollapsed';
 import _ from 'lodash';
 
-import { LoL, CSGO, Dota, Overwatch, RocketLeague, CoD, RainbowSix } from './components/Icons';
+import videogamesEnum from './components/Enums/videogames';
 import { ChevronLeftIcon, ChevronRightIcon, ArrowBackIcon } from 'mdi-react';
 import MatchPage from './components/MatchPage';
 import MatchTab from './components/MatchTab';
 import { ButtonBase } from '@material-ui/core';
 import MatchTabCollapsed from './components/MatchTabCollapsed';
 
-const videogames = [
-    { name: 'League of Legends', icon: <LoL/> },
-    { name: 'CS:GO', icon: <CSGO/> },
-    { name: 'Dota 2', icon: <Dota/> },
-    { name: 'Overwatch', icon: <Overwatch/> },
-    { name: 'Rocket League', icon: <RocketLeague/> },
-    { name: 'Call of Duty', icon: <CoD/> },
-    { name: 'Rainbow Six', icon: <RainbowSix/> },
-]
+import { getVideoGamesAll } from '../../../esports/services';
 
 class EsportsPage extends React.Component {
     constructor(props) {
@@ -30,7 +22,8 @@ class EsportsPage extends React.Component {
         this.state = {
             collapsed: true,
             showMatchPage: false,
-            match: {}
+            match: {},
+            videogames: []
         };
       }
 
@@ -43,7 +36,33 @@ class EsportsPage extends React.Component {
     }
 
     projectData = (props) => {
+        const { videogames } = this.state;
 
+        if (_.isEmpty(videogames)) {
+            getVideoGamesAll({ params: {} });
+
+            this.setState({
+                videogames: props.videogames
+            })
+        }
+
+    }
+
+    getVideogameInfo = videogame => {
+        const external_id  = videogame.external_id.toString();
+        
+        if (_.has(videogamesEnum, external_id)) {
+            const videogameName = videogamesEnum[external_id].name;
+            const videogameIcon = videogamesEnum[external_id].icon;
+
+            return {
+                _id: videogame._id,
+                name: videogameName,
+                icon: videogameIcon,
+                series: videogame.series
+            }
+        }
+        
     }
 
     toggleCollape = () => {
@@ -70,7 +89,7 @@ class EsportsPage extends React.Component {
 
 
     render() {
-        const { collapsed, showMatchPage, match } = this.state;
+        const { collapsed, showMatchPage, match, videogames } = this.state;
 
         return (
             <>
@@ -87,7 +106,7 @@ class EsportsPage extends React.Component {
                                 <span>All</span>
                             </AllTab>
                             { videogames.map(videogame => (
-                                collapsed ? <VideogameTabCollapsed data={videogame}/> : <VideogameTab data={videogame}/> 
+                                collapsed ? <VideogameTabCollapsed data={this.getVideogameInfo(videogame)}/> : <VideogameTab data={this.getVideogameInfo(videogame)}/> 
                             ))}
                         </>
                     ) : (
@@ -137,7 +156,9 @@ class EsportsPage extends React.Component {
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        videogames: state.videogames,
+        isLoading: state.isLoading
     };
 }
 

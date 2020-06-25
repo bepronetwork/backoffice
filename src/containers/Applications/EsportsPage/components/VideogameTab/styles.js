@@ -84,7 +84,7 @@ export const SubTabContainer = styled.section`
 
 export const SubTab = styled.div`
     width: 100%;
-    height: 30px;
+    height: 40px;
     background-color: white;
 
     display: grid;
@@ -110,8 +110,10 @@ export const LeagueName = styled.section`
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    margin: 3px 0px;
 
     span {
+        padding: 8px 0px;
         font-family: Poppins;
         font-size: 12px;
         font-weight: 400;
