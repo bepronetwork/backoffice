@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { MatchLink, MatchContainer,Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan } from './styles';
+import { MatchLink, MatchContainer, Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan } from './styles';
 
 import videogames from '../Enums/videogames';
 
@@ -51,9 +51,10 @@ class Match extends React.Component {
     getLeagueName = id => {
         const { series } = this.state;
 
-        const league = series.find(serie => serie.league_id === id);
+        const serie = series.find(serie => serie.league_id === id);
+        const { league } = serie;
 
-        return league ? `${league.league_name} ${league.full_name}` : null;
+        return league ? `${league.name} ${serie.full_name}` : null;
     }
 
 

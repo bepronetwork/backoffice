@@ -37,9 +37,13 @@ class EsportsPage extends React.Component {
 
     projectData = (props) => {
         const { videogames } = this.state;
+        const { profile } = props;
+
+        const id = profile.App.getAdminId();
+        const bearerToken = profile.App.getBearerToken();
 
         if (_.isEmpty(videogames)) {
-            getVideoGamesAll({ params: {} });
+            getVideoGamesAll({ params: { admin: id }, headers: { bearerToken, id } });
 
             this.setState({
                 videogames: props.videogames,

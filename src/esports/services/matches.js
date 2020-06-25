@@ -4,10 +4,17 @@ import { pluck } from 'rxjs/operators';
 import store from '../../containers/App/store';
 import { setMatchesData } from '../../redux/actions/matchesActions';
 
-export const getSeriesMatches = ({ params, headers }) => {
+function authHeaders(bearerToken, id){
+    return {
+        "authorization" : "Bearer " + bearerToken,
+        "payload" : JSON.stringify({ id : id })
+    }
+}
+
+export const getSeriesMatches = ({ params, headers: { bearerToken, id } }) => {
     return apiService
         .post("/api/get/matches/series", {
-            // headers: addHeaders(config, headers),
+            headers: authHeaders(bearerToken, id),
             body: JSON.stringify(params)
         })
         .pipe(pluck("response"))

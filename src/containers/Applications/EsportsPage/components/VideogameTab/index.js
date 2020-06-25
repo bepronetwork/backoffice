@@ -96,12 +96,25 @@ class VideogameTab extends React.Component {
     }
 
     updateMatches = ({ series }) => {
+        const { profile } = this.props;
+
+        const id = profile.App.getAdminId();
+        const bearerToken = profile.App.getBearerToken();
         
         const seriesArr = _.concat(Object.values(series));
-
-        getSeriesMatches({ params: {
-            serie_id: seriesArr[0]
-        }})
+        
+        if (!_.isEmpty(seriesArr[0])) {
+            getSeriesMatches({ params: {
+                admin: id,
+                serie_id: seriesArr[0]
+            },
+            headers: {
+                bearerToken,
+                id
+            }
+            })
+        }
+        
     }
 
     getSerieName = (serie) => {

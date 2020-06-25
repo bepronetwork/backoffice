@@ -6,11 +6,18 @@ import store from '../../containers/App/store';
 import { setVideogamesData } from '../../redux/actions/videogamesActions';
 import { setSeriesData } from '../../redux/actions/seriesActions';
 
-export const getVideoGamesAll = ({ params, headers }) => {
+function authHeaders(bearerToken, id){
+    return {
+        "authorization" : "Bearer " + bearerToken,
+        "payload" : JSON.stringify({ id : id })
+    }
+}
+
+export const getVideoGamesAll = ({ params, headers: { bearerToken, id } }) => {
 
     return apiService
         .post("/api/get/videogames/all", {
-            // headers: addHeaders(config, headers),
+            headers: authHeaders(bearerToken, id),
             body: JSON.stringify(params)
         })
         .pipe(pluck("response"))
