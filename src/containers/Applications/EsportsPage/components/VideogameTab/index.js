@@ -37,9 +37,17 @@ class VideogameTab extends React.Component {
         const { data } = props;
 
         if (!_.isEmpty(data)) {
+            const { series } = data;
+
+            let selectedSeries = {}; 
+            
+            series.forEach(serie => {
+                selectedSeries[serie.id] = false
+            });
+
             this.setState({
                 data: data,
-                // selectedSeries: data.series.map(serie => { return serie.id: true })
+                selectedSeries: selectedSeries
             })
         }
     }
@@ -52,15 +60,16 @@ class VideogameTab extends React.Component {
         })
     }
 
-    toggleSelect = () => {
-        const { selected } = this.state;
+    toggleSelected = () => {
+        const { selected, selectedSeries } = this.state;
 
         this.setState({
-            selected: !selected
+            selected: !selected,
+            selectedSeries: _.mapValues(selectedSeries, () => !selected)
         })
     }
 
-    toggleSelectSerie = id => {
+    toggleSelectedSerie = id => {
         const { selectedSeries } = this.state;
 
         this.setState({
@@ -87,14 +96,14 @@ class VideogameTab extends React.Component {
                     <Select>
                     <ThemeProvider theme={theme}>
                         <Checkbox
-                        checked
-                        // onChange={handleChange}
+                        checked={selected}
+                        onChange={() => this.toggleSelected()}
                         inputProps={{ 'aria-label': 'primary checkbox' }}
                         color="primary"
                         />
                     </ThemeProvider>
                     </Select>
-                    <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={this.toggleSelect}>
+                    <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={this.toggleSelected}>
                     <Videogame>
                         <VideoGameImage>
                             <VideoGameIcon>
@@ -108,7 +117,7 @@ class VideogameTab extends React.Component {
                     </Videogame>
                     </ButtonBase>
                     <Dropdown>
-                        <ButtonBase disableRipple onClick={this.toggleDropdown}>
+                        <ButtonBase disableRipple onClick={this.toggleDropdown} disabled={_.isEmpty(series)}>
                         { open ? <ChevronDownIcon/> : <ChevronUpIcon/> }
                         </ButtonBase>
                     </Dropdown>
@@ -120,7 +129,7 @@ class VideogameTab extends React.Component {
                                 <Checkbox
                                 size="small"
                                 checked={selectedSeries[serie.id]}
-                                onChange={() => this.toggleSelectSerie(serie.id)}
+                                onChange={() => this.toggleSelectedSerie(serie.id)}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                                 color="primary"
                                 />

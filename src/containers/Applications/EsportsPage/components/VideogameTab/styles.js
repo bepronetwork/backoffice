@@ -80,6 +80,12 @@ export const SubTabContainer = styled.section`
     grid-area: subtab;
 
     padding: 0px 20px;
+
+    overflow-y: scroll;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 export const SubTab = styled.div`
