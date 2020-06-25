@@ -3,7 +3,7 @@ import { pluck } from 'rxjs/operators';
 
 export const getSpecificMatch = ({ params, headers }) => {
     return apiService
-        .post("api/get/match/specific", {
+        .post("/api/get/match/specific", {
             // headers: addHeaders(config, headers),
             body: JSON.stringify(params)
         })

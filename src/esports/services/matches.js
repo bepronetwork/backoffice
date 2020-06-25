@@ -3,7 +3,7 @@ import { pluck } from 'rxjs/operators';
 
 export const getSeriesMatches = ({ params, headers }) => {
     return apiService
-        .post("api/get/matches/series", {
+        .post("/api/get/matches/series", {
             // headers: addHeaders(config, headers),
             body: JSON.stringify(params)
         })
