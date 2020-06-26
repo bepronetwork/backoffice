@@ -4,7 +4,6 @@ import { Container, Tab, Select, Videogame, Dropdown, VideoGameImage, VideoGameI
 import _ from 'lodash';
 import { ChevronUpIcon, ChevronDownIcon } from 'mdi-react';
 import { ButtonBase, Checkbox, createMuiTheme, ThemeProvider } from '@material-ui/core';
-import { getSeriesMatches } from '../../../../../esports/services';
 
 const theme = createMuiTheme({
     palette: {
@@ -38,21 +37,21 @@ class VideogameTab extends React.Component {
         const { data } = props;
 
         if (!_.isEmpty(data)) {
-            const { series } = data;
-
-            let selectedSeries = {}; 
-            
-            series.forEach(serie => {
-                selectedSeries[serie.id] = false
-            });
 
             this.setState({
-                data: data,
-                selectedSeries: selectedSeries,
-                // series: this.props.series
+                data: data
             })
         }
         
+    }
+
+    toggleSelected = () => {
+        const { selected, open } = this.state;
+
+        this.setState({
+            selected: !selected,
+            open: !open
+        })
     }
 
     toggleDropdown = () => {
@@ -63,60 +62,6 @@ class VideogameTab extends React.Component {
         })
     }
 
-    toggleSelected = () => {
-        const { selected, selectedSeries, data, series } = this.state;
-        const { _id } = data;
-
-        const newSelectedSeries = _.mapValues(selectedSeries, () => !selected);
-        const seriesArr = _.keys(_.pickBy(newSelectedSeries));
-
-        this.setState({
-            selected: !selected,
-            selectedSeries: newSelectedSeries,
-            series: { ...series, [_id]: seriesArr.map(serie => parseInt(serie)) }
-        })
-
-        this.updateMatches({ series: { ...series, [_id]: seriesArr.map(serie => parseInt(serie)) } });
-
-    }
-
-    toggleSelectedSerie = id => {
-        const { selectedSeries, series, data } = this.state;
-        const { _id } = data;
-
-        const newSelectedSeries = { ...selectedSeries, [id]: selectedSeries[id] ? !selectedSeries[id] : true };
-        const seriesArr = _.keys(_.pickBy(newSelectedSeries));
-
-        this.setState({
-            selectedSeries: newSelectedSeries,
-            series: { ...series, [_id]: seriesArr.map(serie => parseInt(serie)) }
-        })
-
-        this.updateMatches({ series: { ...series, [_id]: seriesArr.map(serie => parseInt(serie)) } });
-    }
-
-    updateMatches = ({ series }) => {
-        const { profile } = this.props;
-
-        const id = profile.App.getAdminId();
-        const bearerToken = profile.App.getBearerToken();
-        
-        const seriesArr = _.concat(Object.values(series));
-        
-        if (!_.isEmpty(seriesArr[0])) {
-            getSeriesMatches({ params: {
-                admin: id,
-                serie_id: seriesArr[0]
-            },
-            headers: {
-                bearerToken,
-                id
-            }
-            })
-        }
-        
-    }
-
     getSerieName = (serie) => {
         const { league } = serie;
 
@@ -124,8 +69,9 @@ class VideogameTab extends React.Component {
     }
 
     render() {
-        const { data, open, selected, selectedSeries } = this.state;
-        const { name, icon, series } = data;
+        const { toggleSelected, toggleSelectedSerie, selectedVideogames, seriesSelected } = this.props;
+        const { data, open, selected } = this.state;
+        const { _id, name, icon, series } = data;
 
         if (_.isEmpty(data)) return null;
 
@@ -136,28 +82,29 @@ class VideogameTab extends React.Component {
                     <Select>
                     <ThemeProvider theme={theme}>
                         <Checkbox
-                        checked={selected}
-                        onChange={() => this.toggleSelected()}
+                        checked={selectedVideogames.includes(_id) && !_.isEmpty(seriesSelected)}
+                        onChange={() => toggleSelected(_id)}
                         inputProps={{ 'aria-label': 'primary checkbox' }}
                         color="primary"
+                        disabled={_.isEmpty(series)}
                         />
                     </ThemeProvider>
                     </Select>
-                    <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={this.toggleSelected}>
-                    <Videogame>
+                    <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={this.toggleSelected} disabled={_.isEmpty(series)}>
+                    <Videogame style={{ opacity: _.isEmpty(series) ? 0.5 : 1 }}>
                         <VideoGameImage>
                             <VideoGameIcon>
                                 { icon }
                             </VideoGameIcon>
                         </VideoGameImage>
-                        <VideogameName selected={selected}>
+                        <VideogameName selected={selected || ( selectedVideogames.includes(_id) && !_.isEmpty(seriesSelected) )}>
                             <span>{ name }</span>
-                            { selected ? <span style={{ margin: '0px 8px' }}>{series.length}</span> : null }
+                            { selected || ( selectedVideogames.includes(_id) && !_.isEmpty(seriesSelected) ) ? <span style={{ margin: '0px 8px' }}>{ seriesSelected ? seriesSelected.length : 0 }</span> : null }
                         </VideogameName>
                     </Videogame>
                     </ButtonBase>
                     <Dropdown>
-                        <ButtonBase disableRipple onClick={this.toggleDropdown} disabled={_.isEmpty(series)}>
+                        <ButtonBase disableRipple onClick={this.toggleDropdown} disabled={_.isEmpty(series)} style={{ opacity: _.isEmpty(series) ? 0.5 : 1 }}>
                         { open ? <ChevronDownIcon/> : <ChevronUpIcon/> }
                         </ButtonBase>
                     </Dropdown>
@@ -168,8 +115,8 @@ class VideogameTab extends React.Component {
                             <ThemeProvider theme={theme}>
                                 <Checkbox
                                 size="small"
-                                checked={selectedSeries[serie.id]}
-                                onChange={() => this.toggleSelectedSerie(serie.id)}
+                                checked={ seriesSelected ? seriesSelected.includes(serie.id) : false }
+                                onChange={() => toggleSelectedSerie({ videogame_id: _id, serie_id: serie.id })}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                                 color="primary"
                                 />
@@ -193,9 +140,7 @@ class VideogameTab extends React.Component {
 
 function mapStateToProps(state){
     return {
-        profile: state.profile,
-        series: state.series,
-        videogames: state.videogames
+        profile: state.profile
     };
 }
 

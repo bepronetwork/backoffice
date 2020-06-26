@@ -4,7 +4,7 @@ import { Container, Tabs, Content, AllTab, Actions, CollapseButton, MatchSpanTab
 import MatchList from './components/MatchList';
 import VideogameTab from './components/VideogameTab';
 import VideogameTabCollapsed from './components/VideogameTabCollapsed';
-import _, { toInteger } from 'lodash';
+import _ from 'lodash';
 
 import videogamesEnum from './components/Enums/videogames';
 import { ChevronLeftIcon, ChevronRightIcon, ArrowBackIcon } from 'mdi-react';
@@ -13,7 +13,7 @@ import MatchTab from './components/MatchTab';
 import { ButtonBase } from '@material-ui/core';
 import MatchTabCollapsed from './components/MatchTabCollapsed';
 
-import { getVideoGamesAll } from '../../../esports/services';
+import { getVideoGamesAll, getSeriesMatches } from '../../../esports/services';
 
 class EsportsPage extends React.Component {
     constructor(props) {
@@ -23,7 +23,9 @@ class EsportsPage extends React.Component {
             collapsed: true,
             showMatchPage: false,
             match: {},
-            videogames: []
+            videogames: [],
+            selectedVideogames: [],
+            seriesSelected: {}
         };
       }
 
@@ -47,7 +49,7 @@ class EsportsPage extends React.Component {
 
             this.setState({
                 videogames: props.videogames,
-                // series: props.series
+                series: props.series
             })
         }
 
@@ -92,8 +94,120 @@ class EsportsPage extends React.Component {
         })
     }
 
+    setSelected = data => {
+        const { seriesSelected } = this.state;
+
+        this.setState({
+            seriesSelected: { ...seriesSelected, ...data }
+        })
+    }
+    
+    toggleSelected = _id => {
+        const { selectedVideogames, seriesSelected, videogames } = this.state;
+
+        const videogame = videogames.find(videogame => videogame._id === _id);
+
+        if (selectedVideogames.includes(_id)) {
+            this.setState({
+                selectedVideogames: _.without(selectedVideogames, _id),
+                seriesSelected: {
+                    ...seriesSelected,
+                    [_id]: []
+                }
+            }, this.updateMatches({ 
+                seriesSelected: {
+                    ...seriesSelected,
+                     [_id]: []
+                } 
+            }))
+        } else {
+            this.setState({
+                selectedVideogames: [ ...selectedVideogames, _id ],
+                seriesSelected: {
+                    ...seriesSelected,
+                    [_id]: videogame.series.map(serie => serie.id)
+                }
+            }, this.updateMatches({
+                seriesSelected: {
+                    ...seriesSelected,
+                    [_id]: videogame.series.map(serie => serie.id)
+                }
+            }))
+        }
+
+    }
+
+    toggleSelectedSerie = ({ videogame_id, serie_id }) => {
+        const { seriesSelected, selectedVideogames } = this.state;
+
+        if (!_.has(seriesSelected, videogame_id)) {
+            this.setState({
+                selectedVideogames: [ ...selectedVideogames, videogame_id ],
+                seriesSelected: {
+                    ...seriesSelected,
+                    [videogame_id]: [ serie_id ]
+                }
+            }, this.updateMatches({
+                seriesSelected: {
+                    ...seriesSelected,
+                    [videogame_id]: [ serie_id ]
+                }
+            }))
+        } else {
+            const series = seriesSelected[videogame_id];
+
+            if (series.includes(serie_id)) {
+                this.setState({
+                    seriesSelected: {
+                        ...seriesSelected,
+                        [videogame_id]: _.without(series, serie_id)
+                    }
+                }, this.updateMatches({
+                    seriesSelected: {
+                        ...seriesSelected,
+                        [videogame_id]: _.without(series, serie_id)
+                    }
+                }))
+            } else {
+                this.setState({
+                    seriesSelected: {
+                        ...seriesSelected,
+                        [videogame_id]: [...series, serie_id]
+                    }
+                }, this.updateMatches({
+                    seriesSelected: {
+                        ...seriesSelected,
+                        [videogame_id]: [...series, serie_id]
+                    }
+                }))
+            }
+        }
+    }
+
+    updateMatches = ({ seriesSelected }) => {
+        const { profile } = this.props;
+
+        const id = profile.App.getAdminId();
+        const bearerToken = profile.App.getBearerToken();
+        
+        const seriesArr = _.concat(Object.values(seriesSelected)).flat();
+        
+        if (!_.isEmpty(seriesArr)) {
+            getSeriesMatches({ params: {
+                admin: id,
+                serie_id: seriesArr
+            },
+            headers: {
+                bearerToken,
+                id
+            }
+            })
+        }
+        
+    }
+
     render() {
-        const { collapsed, showMatchPage, match, videogames, series } = this.state;
+        const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames } = this.state;
 
         return (
             <>
@@ -110,7 +224,14 @@ class EsportsPage extends React.Component {
                                 <span>All</span>
                             </AllTab>
                             { videogames.map(videogame => (
-                                collapsed ? <VideogameTabCollapsed data={this.getVideogameInfo(videogame)}/> : <VideogameTab data={this.getVideogameInfo(videogame)} updateVideogameSeries={this.updateVideogameSeries}/> 
+                                collapsed ? <VideogameTabCollapsed data={this.getVideogameInfo(videogame)}/> 
+                                : <VideogameTab 
+                                    data={this.getVideogameInfo(videogame)} 
+                                    setSelected={this.setSelected} 
+                                    toggleSelected={this.toggleSelected}
+                                    toggleSelectedSerie={this.toggleSelectedSerie} 
+                                    selectedVideogames={selectedVideogames}
+                                    seriesSelected={seriesSelected[videogame._id]}/>
                             ))}
                         </>
                     ) : (

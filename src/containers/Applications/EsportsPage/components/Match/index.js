@@ -31,7 +31,6 @@ class Match extends React.Component {
             })
         }
 
-        
         if (!_.isEmpty(series)) {
             this.setState({
                 series: series
