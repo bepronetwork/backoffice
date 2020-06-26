@@ -224,7 +224,12 @@ class EsportsPage extends React.Component {
                                 <span>All</span>
                             </AllTab>
                             { videogames.map(videogame => (
-                                collapsed ? <VideogameTabCollapsed data={this.getVideogameInfo(videogame)}/> 
+                                collapsed ? 
+                                <VideogameTabCollapsed 
+                                toggleSelected={this.toggleSelected}
+                                selectedVideogames={selectedVideogames}
+                                data={this.getVideogameInfo(videogame)}
+                                /> 
                                 : <VideogameTab 
                                     data={this.getVideogameInfo(videogame)} 
                                     setSelected={this.setSelected} 

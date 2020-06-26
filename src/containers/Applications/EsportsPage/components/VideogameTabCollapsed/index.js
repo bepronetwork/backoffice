@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Tab, VideoGameIcon } from './styles';
 import _ from 'lodash';
-
+import { ButtonBase } from '@material-ui/core';
 
 class VideogameTab extends React.Component {
     constructor(props) {
@@ -33,19 +33,22 @@ class VideogameTab extends React.Component {
 
 
     render() {
+        const { toggleSelected, selectedVideogames } = this.props;
         const { data } = this.state;
-        const { icon } = data;
+        const { _id, icon, series } = data;
 
         if (_.isEmpty(data)) return null;
 
         return (
             <>
             <Container>
-                <Tab>
-                    <VideoGameIcon>
-                        { icon }
-                    </VideoGameIcon>
-                </Tab>
+                <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={() => toggleSelected(_id)} disabled={_.isEmpty(series)}>
+                    <Tab selected={ selectedVideogames.includes(_id) }>
+                        <VideoGameIcon style={{ opacity: _.isEmpty(series) || !selectedVideogames.includes(_id) ? 0.5 : 1 }}>
+                            { icon }
+                        </VideoGameIcon>
+                    </Tab>
+                </ButtonBase>
             </Container>
             </>
         )
