@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { MatchLink, MatchContainer, Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan } from './styles';
 import Avatar from 'react-avatar';
+import moment from 'moment';
 
 import videogames from '../Enums/videogames';
 
@@ -77,7 +78,7 @@ class Match extends React.Component {
         if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
 
         const time = new Date(scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
-        const date = `${new Date(scheduled_at).getMonth()}/${new Date(scheduled_at).getDay()}`;
+        const date = moment(new Date(scheduled_at)).format('MM/DD');
 
         return (
             <>
@@ -98,7 +99,7 @@ class Match extends React.Component {
                                 { time }
                             </Time>
                             <DateSpan>
-                                {/* { date } */}
+                                { date }
                             </DateSpan>
                         </DateInfo>
                     </MatchInfo>

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { MatchContainer, MatchSummary, SerieSummary, Score, InfoContainer, VideoGameIcon, TeamOne, TeamTwo, DateInfo, Time, Date as DateSpan, MatchFinishedIcon, MatchStatus, SerieInfo } from './styles';
 import _ from 'lodash';
 import Avatar from 'react-avatar';
+import moment from 'moment';
 
 import videogames from '../Enums/videogames';
 import { MatchFinished } from '../Icons';
@@ -50,6 +51,7 @@ class MatchPage extends React.Component {
         const serieName = this.getSerieName();
         const [teamOne, teamTwo] = opponents.map(opponent => opponent.opponent);
         const time = new Date(scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+        const date = moment(new Date(scheduled_at)).format('MM/DD');
 
         return (
             <>
@@ -78,7 +80,7 @@ class MatchPage extends React.Component {
                                 { time }
                             </Time>
                             <DateSpan>
-                                6/18
+                                { date }
                             </DateSpan>
                         </DateInfo>
                         <TeamTwo>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container } from './styles';
+import { Container, Header, Videogame, Date, Bo, Status, Winner } from './styles';
 import Match from '../Match';
 import _ from 'lodash';
 
@@ -80,6 +80,23 @@ class MatchList extends React.Component {
         return (
             <>
             <Container>
+                <Header>
+                    <Videogame>
+                        <span>VG</span>
+                    </Videogame>
+                    <Date>
+                        <span>Date</span>
+                    </Date>
+                    <Bo>
+
+                    </Bo>
+                    <Status>
+
+                    </Status>
+                    <Winner>
+                        <span>Winner</span>
+                    </Winner>
+                </Header>
                 <InfiniteScroll
                 dataLength={this.state.matches.length}
                 next={this.fetchMoreData}
