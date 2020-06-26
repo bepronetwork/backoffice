@@ -200,11 +200,9 @@ class ApplicationsContainer extends React.Component{
                                                 }}
                                             >
                                                 <span>Casino</span>
-                                                { this.state.activeTab === 'casino' && (
-                                                    <Icon>
-                                                        <CasinoWhite/>
-                                                    </Icon>
-                                                )}
+                                                <Icon>
+                                                    <CasinoWhite/>
+                                                </Icon>
                                             </StyledNavLink>
                                         </NavItem>
                                         <NavItem style={{ height: 80, marginTop: "20px" }}>

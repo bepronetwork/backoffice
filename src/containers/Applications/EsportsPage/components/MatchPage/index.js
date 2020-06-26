@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { MatchContainer, MatchSummary, SerieSummary, Score, InfoContainer, VideoGameIcon, TeamOne, TeamTwo, DateInfo, Time, Date as DateSpan, MatchFinishedIcon, MatchStatus, SerieInfo } from './styles';
 import _ from 'lodash';
+import Avatar from 'react-avatar';
 
 import videogames from '../Enums/videogames';
 import { MatchFinished } from '../Icons';
@@ -70,7 +71,7 @@ class MatchPage extends React.Component {
                     <Score> 
                         <TeamOne>
                             <span>{teamOne.name}</span>
-                            <img src={teamOne.image_url} alt={teamOne.name}/> 
+                            { teamOne.image_url ? <img src={teamOne.image_url} alt={teamOne.name}/> : <Avatar name={teamOne.name} size="35" round={true}/> } 
                         </TeamOne>
                         <DateInfo>
                             <Time>
@@ -81,7 +82,7 @@ class MatchPage extends React.Component {
                             </DateSpan>
                         </DateInfo>
                         <TeamTwo>
-                            <img src={teamTwo.image_url} alt={teamTwo.name}/> 
+                            { teamTwo.image_url ? <img src={teamTwo.image_url} alt={teamTwo.name}/> : <Avatar name={teamTwo.name} size="35" round={true}/> } 
                             <span>{teamTwo.name}</span>
                         </TeamTwo>
                     </Score>

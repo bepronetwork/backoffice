@@ -131,6 +131,10 @@ export const TeamOne = styled.section`
         margin: 0px 7px;
         font-family: Poppins;
         font-size: 13px;
+
+        &:last-child {
+        margin: 0px;
+        }
     }
 `;
 
@@ -170,6 +174,10 @@ export const TeamTwo = styled.section`
         margin: 0px 7px;
         font-family: Poppins;
         font-size: 13px;
+
+        &:first-child {
+        margin: 0px;
+        }
     }
 `;
 

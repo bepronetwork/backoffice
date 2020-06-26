@@ -26,7 +26,7 @@ export const MatchContainer = styled.div`
     grid-template-columns: 4px calc(25% - 4px) 60% 15%;
     grid-template-rows: 58px 30px;
 
-    width: 100%;
+    width: 95%;
     min-width: 450px;
     height: auto;
     margin: 10px 10px;

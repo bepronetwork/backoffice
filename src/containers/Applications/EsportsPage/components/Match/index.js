@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { MatchLink, MatchContainer, Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan } from './styles';
+import Avatar from 'react-avatar';
 
 import videogames from '../Enums/videogames';
 
@@ -104,7 +105,7 @@ class Match extends React.Component {
                     <TeamsInfo>
                         <TeamOne>
                             <span>{teamOne.name}</span>
-                            <img src={teamOne.image_url} alt={teamOne.name}/> 
+                            { teamOne.image_url ? <img src={teamOne.image_url} alt={teamOne.name}/> : <Avatar name={teamOne.name} size="25" round={true}/> }
                         </TeamOne>
                         <Result>
                             <ResultValue>
@@ -116,7 +117,7 @@ class Match extends React.Component {
                             </ResultValue>
                         </Result>
                         <TeamTwo>
-                            <img src={teamTwo.image_url} alt={teamTwo.name}/> 
+                            { teamTwo.image_url ? <img src={teamTwo.image_url} alt={teamTwo.name}/> : <Avatar name={teamTwo.name} size="25" round={true}/> }
                             <span>{teamTwo.name}</span>
                         </TeamTwo>
                     </TeamsInfo>
