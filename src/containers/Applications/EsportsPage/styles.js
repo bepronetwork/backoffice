@@ -54,7 +54,7 @@ export const Tabs = styled.section`
     }
 `;
 
-export const AllTab = styled.a`
+export const AllTab = styled.section`
     width: 100%;
     height: 58px;
     background-color: white;

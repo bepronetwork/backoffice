@@ -26,3 +26,19 @@ export const getSeriesMatches = ({ params, headers: { bearerToken, id } }) => {
             }
         )
 };
+
+export const getMatchesAll = ({ params, headers: { bearerToken, id } }) => {
+    return apiService
+        .post("/api/get/matches/all", {
+            headers: authHeaders(bearerToken, id),
+            body: JSON.stringify(params)
+        })
+        .pipe(pluck("response"))
+        .subscribe(
+            res => {
+                if (res.data.message) {
+                    store.dispatch(setMatchesData(res.data.message));
+                }
+            }
+        )
+};

@@ -13,7 +13,7 @@ import MatchTab from './components/MatchTab';
 import { ButtonBase } from '@material-ui/core';
 import MatchTabCollapsed from './components/MatchTabCollapsed';
 
-import { getVideoGamesAll, getSeriesMatches } from '../../../esports/services';
+import { getVideoGamesAll, getSeriesMatches, getMatchesAll } from '../../../esports/services';
 
 class EsportsPage extends React.Component {
     constructor(props) {
@@ -46,6 +46,7 @@ class EsportsPage extends React.Component {
 
         if (_.isEmpty(videogames)) {
             getVideoGamesAll({ params: { admin: id }, headers: { bearerToken, id } });
+            getMatchesAll({ params: { admin: id }, headers: { bearerToken, id } });
 
             this.setState({
                 videogames: props.videogames,
@@ -202,13 +203,33 @@ class EsportsPage extends React.Component {
                 id
             }
             })
+        } else {
+            getMatchesAll({ params: { 
+                admin: id 
+            }, headers: { 
+                bearerToken, 
+                id 
+            } });
         }
-        
+    }
+
+    toggleAllTab = () => {
+        const { profile } = this.props;
+
+        const id = profile.App.getAdminId();
+        const bearerToken = profile.App.getBearerToken();
+
+        getMatchesAll({ params: { admin: id }, headers: { bearerToken, id } });
+
+        this.setState({
+            selectedVideogames: [],
+            seriesSelected: {}
+        })
     }
 
     render() {
         const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames } = this.state;
-
+        
         return (
             <>
             <Container collapsed={collapsed}>
@@ -220,21 +241,23 @@ class EsportsPage extends React.Component {
                     </Actions>
                     { !showMatchPage && _.isEmpty(match) ? (
                         <>
-                            <AllTab>
-                                <span>All</span>
-                            </AllTab>
+                            <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={_.debounce(this.toggleAllTab, 500)} disabled={_.isEmpty(selectedVideogames)}>
+                                <AllTab style={{ opacity: !_.isEmpty(selectedVideogames) ? 0.5 : 1 }}>
+                                    <span>All</span>
+                                </AllTab>
+                            </ButtonBase>
                             { videogames.map(videogame => (
                                 collapsed ? 
                                 <VideogameTabCollapsed 
-                                toggleSelected={this.toggleSelected}
+                                toggleSelected={_.debounce(this.toggleSelected, 500)}
                                 selectedVideogames={selectedVideogames}
                                 data={this.getVideogameInfo(videogame)}
                                 /> 
                                 : <VideogameTab 
                                     data={this.getVideogameInfo(videogame)} 
                                     setSelected={this.setSelected} 
-                                    toggleSelected={this.toggleSelected}
-                                    toggleSelectedSerie={this.toggleSelectedSerie} 
+                                    toggleSelected={_.debounce(this.toggleSelected, 500)}
+                                    toggleSelectedSerie={_.debounce(this.toggleSelectedSerie, 500)} 
                                     selectedVideogames={selectedVideogames}
                                     seriesSelected={seriesSelected[videogame._id]}/>
                             ))}

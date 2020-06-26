@@ -51,6 +51,9 @@ class Match extends React.Component {
         const { series } = this.state;
 
         const serie = series.find(serie => serie.league_id === id);
+
+        if (!serie) return null;
+
         const { league } = serie;
 
         return league ? `${league.name} ${serie.full_name}` : null;
@@ -64,9 +67,12 @@ class Match extends React.Component {
 
         if (_.isEmpty(data)) return null;
 
+        const leagueName = this.getLeagueName(data.league_id);
+        if (!leagueName) return null
+
         const [teamOne, teamTwo] = opponents.map(opponent => opponent.opponent);
         const [scoreTeamOne, scoreTeamTwo] = results ? opponents.map(opponent => this.getTeamScore(opponent.opponent.id)) : [null, null];
-        const leagueName = this.getLeagueName(data.league_id);
+
         const time = new Date(scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
         // const date = `${new Date(scheduled_at).getMonth()}/${new Date(scheduled_at).getDay()}`;
 

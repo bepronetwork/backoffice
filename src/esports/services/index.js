@@ -1,9 +1,10 @@
 import { getVideoGamesAll } from './videogames';
 import { getSpecificMatch } from './match';
-import { getSeriesMatches } from './matches';
+import { getSeriesMatches, getMatchesAll } from './matches';
 
 export {
     getVideoGamesAll,
     getSpecificMatch,
-    getSeriesMatches
+    getSeriesMatches,
+    getMatchesAll
 }
