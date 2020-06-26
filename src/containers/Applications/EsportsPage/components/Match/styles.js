@@ -29,7 +29,7 @@ export const MatchContainer = styled.div`
     width: 100%;
     min-width: 450px;
     height: auto;
-    margin: 10px 0px;
+    margin: 10px 10px;
     background-color: #fafcff;
     border-radius: 6px;
     border: solid 1px rgba(164, 161, 161, 0.35);

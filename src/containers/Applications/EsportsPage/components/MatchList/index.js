@@ -4,6 +4,9 @@ import { Container } from './styles';
 import Match from '../Match';
 import _ from 'lodash';
 
+import InfiniteScroll from "react-infinite-scroll-component";
+import { getMatchesAll, getSeriesMatches } from '../../../../../esports/services';
+
 class MatchList extends React.Component {
     constructor(props) {
         super(props);
@@ -22,15 +25,49 @@ class MatchList extends React.Component {
     }
 
     projectData = (props) => {
-        const { matches, videogames } = props;
+        const { matches, videogames, seriesSelected } = props;
 
         const series = _.concat(...videogames.map(videogame => videogame.series));
 
         this.setState({
             matches: matches,
-            series: series
+            series: series,
+            seriesSelected: seriesSelected
         })
 
+    }
+
+    fetchMoreData = () => {
+        const { seriesSelected, matches } = this.state;
+        const { profile } = this.props;
+
+        const id = profile.App.getAdminId();
+        const bearerToken = profile.App.getBearerToken();
+
+        const series = _.concat(Object.values(seriesSelected)).flat();
+
+        if (_.isEmpty(series)) {
+            getMatchesAll({ params: { 
+                admin: id, 
+                size: 10, 
+                offset: matches.length  
+            }, headers: { 
+                bearerToken, 
+                id 
+            }, isPagination: true });
+
+        } else {
+            getSeriesMatches({ params: {
+                admin: id,
+                serie_id: series,
+                size: 10,
+                offset: matches.length
+            },
+            headers: {
+                bearerToken,
+                id
+            }, isPagination: true });
+        }
     }
 
     render() {
@@ -42,9 +79,17 @@ class MatchList extends React.Component {
         return (
             <>
             <Container>
-                { matches.map(match => (
-                    <Match data={match} series={series} setMatchPage={setMatchPage}/>
-                ))}
+                <InfiniteScroll
+                dataLength={this.state.matches.length}
+                next={this.fetchMoreData}
+                hasMore={true}
+                loader={<h4>Loading...</h4>}
+                style={{ display: "flex", flexDirection: "column", padding: 0 }}
+                >                
+                    { matches.map(match => (
+                        <Match data={match} series={series} setMatchPage={setMatchPage}/>
+                    ))}
+                </InfiniteScroll>
             </Container>
             </>
         )

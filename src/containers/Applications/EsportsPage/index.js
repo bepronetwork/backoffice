@@ -45,8 +45,8 @@ class EsportsPage extends React.Component {
         const bearerToken = profile.App.getBearerToken();
 
         if (_.isEmpty(videogames)) {
-            getVideoGamesAll({ params: { admin: id }, headers: { bearerToken, id } });
-            getMatchesAll({ params: { admin: id }, headers: { bearerToken, id } });
+            getVideoGamesAll({ params: { admin: id, size: 10 }, headers: { bearerToken, id } });
+            getMatchesAll({ params: { admin: id, size: 10 }, headers: { bearerToken, id } });
 
             this.setState({
                 videogames: props.videogames,
@@ -196,6 +196,7 @@ class EsportsPage extends React.Component {
         if (!_.isEmpty(seriesArr)) {
             getSeriesMatches({ params: {
                 admin: id,
+                size: 10,
                 serie_id: seriesArr
             },
             headers: {
@@ -205,7 +206,8 @@ class EsportsPage extends React.Component {
             })
         } else {
             getMatchesAll({ params: { 
-                admin: id 
+                admin: id,
+                size: 10
             }, headers: { 
                 bearerToken, 
                 id 
@@ -219,7 +221,7 @@ class EsportsPage extends React.Component {
         const id = profile.App.getAdminId();
         const bearerToken = profile.App.getBearerToken();
 
-        getMatchesAll({ params: { admin: id }, headers: { bearerToken, id } });
+        getMatchesAll({ params: { admin: id, size: 10 }, headers: { bearerToken, id } });
 
         this.setState({
             selectedVideogames: [],
@@ -297,7 +299,9 @@ class EsportsPage extends React.Component {
                     { showMatchPage && !_.isEmpty(match) ? (
                         <MatchPage data={match}/>
                     ) : (
-                        <MatchList setMatchPage={this.setMatchPage}/>
+                        <MatchList 
+                        setMatchPage={this.setMatchPage}
+                        seriesSelected={seriesSelected}/>
                     )}
                 </Content>
             </Container>

@@ -74,7 +74,7 @@ class Match extends React.Component {
         const [scoreTeamOne, scoreTeamTwo] = results ? opponents.map(opponent => this.getTeamScore(opponent.opponent.id)) : [null, null];
 
         const time = new Date(scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
-        // const date = `${new Date(scheduled_at).getMonth()}/${new Date(scheduled_at).getDay()}`;
+        const date = `${new Date(scheduled_at).getMonth()}/${new Date(scheduled_at).getDay()}`;
 
         return (
             <>
@@ -95,7 +95,7 @@ class Match extends React.Component {
                                 { time }
                             </Time>
                             <DateSpan>
-                                6/18
+                                {/* { date } */}
                             </DateSpan>
                         </DateInfo>
                     </MatchInfo>
