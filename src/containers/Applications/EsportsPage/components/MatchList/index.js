@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getMatchesAll, getSeriesMatches } from '../../../../../esports/services';
+import MatchSkeleton from '../Skeletons/MatchSkeleton';
 
 class MatchList extends React.Component {
     constructor(props) {
@@ -83,7 +84,7 @@ class MatchList extends React.Component {
                 dataLength={this.state.matches.length}
                 next={this.fetchMoreData}
                 hasMore={true}
-                loader={<h4>Loading...</h4>}
+                loader={<MatchSkeleton/>}
                 style={{ display: "flex", flexDirection: "column", padding: 0 }}
                 >                
                     { matches.map(match => (

@@ -8,7 +8,7 @@ export const Container = styled.div`
     grid-template-rows: auto;
     grid-gap: 15px;
     
-    height: 100vh;
+    max-height: 70%;
 `;
 
 export const Actions = styled.section`
@@ -119,7 +119,6 @@ export const Content = styled.section`
     ::-webkit-scrollbar {
         display: none;
     }
-
 `;
 
 export const BackTo = styled.section`

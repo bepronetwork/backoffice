@@ -65,13 +65,15 @@ class Match extends React.Component {
         const { opponents, results, videogame, scheduled_at } = data;
         const { setMatchPage } = this.props;
 
-        if (_.isEmpty(data)) return null;
+        if (_.isEmpty(data) || _.isEmpty(opponents)) return null;
 
         const leagueName = this.getLeagueName(data.league_id);
         if (!leagueName) return null
 
         const [teamOne, teamTwo] = opponents.map(opponent => opponent.opponent);
         const [scoreTeamOne, scoreTeamTwo] = results ? opponents.map(opponent => this.getTeamScore(opponent.opponent.id)) : [null, null];
+
+        if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
 
         const time = new Date(scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
         const date = `${new Date(scheduled_at).getMonth()}/${new Date(scheduled_at).getDay()}`;
