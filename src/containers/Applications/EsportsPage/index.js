@@ -13,8 +13,6 @@ import MatchTab from './components/MatchTab';
 import { ButtonBase } from '@material-ui/core';
 import MatchTabCollapsed from './components/MatchTabCollapsed';
 
-import { getVideoGamesAll, getSeriesMatches, getMatchesAll } from '../../../esports/services';
-
 class EsportsPage extends React.Component {
     constructor(props) {
         super(props);
@@ -40,13 +38,13 @@ class EsportsPage extends React.Component {
     projectData = (props) => {
         const { videogames } = this.state;
         const { profile } = props;
-
-        const id = profile.App.getAdminId();
-        const bearerToken = profile.App.getBearerToken();
+        const { App } = profile;
 
         if (_.isEmpty(videogames)) {
-            getVideoGamesAll({ params: { admin: id, size: 10 }, headers: { bearerToken, id } });
-            getMatchesAll({ params: { admin: id, size: 10 }, headers: { bearerToken, id } });
+            
+            App.getVideoGamesAll();
+
+            App.getMatchesAll({ size: 10, offset: 0 });
 
             this.setState({
                 videogames: props.videogames,
@@ -187,41 +185,22 @@ class EsportsPage extends React.Component {
 
     updateMatches = ({ seriesSelected }) => {
         const { profile } = this.props;
-
-        const id = profile.App.getAdminId();
-        const bearerToken = profile.App.getBearerToken();
+        const { App } = profile;
         
         const seriesArr = _.concat(Object.values(seriesSelected)).flat();
         
         if (!_.isEmpty(seriesArr)) {
-            getSeriesMatches({ params: {
-                admin: id,
-                size: 10,
-                serie_id: seriesArr
-            },
-            headers: {
-                bearerToken,
-                id
-            }
-            })
+            App.getSeriesMatches({ size: 10, offset: 0, serie_id: seriesArr });
         } else {
-            getMatchesAll({ params: { 
-                admin: id,
-                size: 10
-            }, headers: { 
-                bearerToken, 
-                id 
-            } });
+            App.getMatchesAll({ size: 10, offset: 0 });
         }
     }
 
     toggleAllTab = () => {
         const { profile } = this.props;
+        const { App } = profile;
 
-        const id = profile.App.getAdminId();
-        const bearerToken = profile.App.getBearerToken();
-
-        getMatchesAll({ params: { admin: id, size: 10 }, headers: { bearerToken, id } });
+        App.getMatchesAll({ size: 10, offset: 0 });
 
         this.setState({
             selectedVideogames: [],

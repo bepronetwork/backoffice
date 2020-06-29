@@ -5,7 +5,6 @@ import Match from '../Match';
 import _ from 'lodash';
 
 import InfiniteScroll from "react-infinite-scroll-component";
-import { getMatchesAll, getSeriesMatches } from '../../../../../esports/services';
 import MatchSkeleton from '../Skeletons/MatchSkeleton';
 
 class MatchList extends React.Component {
@@ -41,33 +40,14 @@ class MatchList extends React.Component {
     fetchMoreData = () => {
         const { seriesSelected, matches } = this.state;
         const { profile } = this.props;
-
-        const id = profile.App.getAdminId();
-        const bearerToken = profile.App.getBearerToken();
+        const { App } = profile;
 
         const series = _.concat(Object.values(seriesSelected)).flat();
 
         if (_.isEmpty(series)) {
-            getMatchesAll({ params: { 
-                admin: id, 
-                size: 10, 
-                offset: matches.length  
-            }, headers: { 
-                bearerToken, 
-                id 
-            }, isPagination: true });
-
+            App.getMatchesAll({ size: 10, offset: matches.length, isPagination: true });
         } else {
-            getSeriesMatches({ params: {
-                admin: id,
-                serie_id: series,
-                size: 10,
-                offset: matches.length
-            },
-            headers: {
-                bearerToken,
-                id
-            }, isPagination: true });
+            App.getSeriesMatches({ size: 10, offset: matches.length, serie_id: series, isPagination: true });
         }
     }
 

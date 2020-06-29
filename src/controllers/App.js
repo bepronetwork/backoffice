@@ -6,6 +6,7 @@ import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
 import { getAuthFromCookies } from "./services/services";
 import _ from 'lodash';
+import { getVideoGamesAll, getMatchesAll, getSeriesMatches } from "../esports/services";
 
 class App{    
     constructor(params){
@@ -1279,6 +1280,54 @@ class App{
         try{
             return (await ConnectionSingleton.getEcosystemVariables()).data.message.addresses[0].address
         }catch(err){
+            throw err;
+        }
+    }
+
+    // Esports services
+
+    getVideoGamesAll = async () => {
+        try {
+            await getVideoGamesAll({
+                params:{
+                    admin: this.getAdminId()
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getMatchesAll = async ({ size, offset, isPagination=false }) => {
+        try {
+            await getMatchesAll({
+                params: {
+                    admin: this.getAdminId(),
+                    size,
+                    offset
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getSeriesMatches = async ({ size, offset, serie_id, isPagination=false }) => {
+        try {
+            await getSeriesMatches({
+                params: {
+                    admin: this.getAdminId(),
+                    size,
+                    offset,
+                    serie_id
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
             throw err;
         }
     }
