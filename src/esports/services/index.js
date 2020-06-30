@@ -2,6 +2,7 @@ import { getVideoGamesAll } from './videogames';
 import { getSpecificMatch } from './match';
 import { getSeriesMatches, getMatchesAll } from './matches';
 import { setBookedMatch, removeBookedMatch } from './book';
+import { getTeamStats, getPlayerStats } from './stats';
 
 export {
     getVideoGamesAll,
@@ -9,5 +10,7 @@ export {
     getSeriesMatches,
     getMatchesAll,
     setBookedMatch,
-    removeBookedMatch
+    removeBookedMatch,
+    getTeamStats,
+    getPlayerStats
 }
