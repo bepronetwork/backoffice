@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import videogames from '../Enums/videogames';
 import { MatchFinished } from '../Icons';
+import StatsPage from '../StatsPage';
 
 class MatchPage extends React.Component {
     constructor(props) {
@@ -61,11 +62,11 @@ class MatchPage extends React.Component {
             <MatchContainer>
                 <MatchSummary>
                     <SerieSummary>
-                        <MatchStatus>
+                        {/* <MatchStatus>
                         <MatchFinishedIcon>
                             <MatchFinished/>
                         </MatchFinishedIcon>
-                        </MatchStatus>
+                        </MatchStatus> */}
                         <SerieInfo>
                             <VideoGameIcon>
                                 { icon }
@@ -95,6 +96,7 @@ class MatchPage extends React.Component {
 
                     </InfoContainer>
                 </MatchSummary>
+                <StatsPage match={match}/>
             </MatchContainer>            
             </>
         )
