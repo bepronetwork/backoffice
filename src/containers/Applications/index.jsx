@@ -17,7 +17,7 @@ import ThirdPartiesContainer from './ThirdParties/index.js';
 import HostingLink from './components/HostingLink';
 import AddOnsContainer from './AddOnPage';
 import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
-import { Bet, Reward, Settings, Rewards, AddOn, Wallet, Casino, CasinoWhite } from '../../components/Icons';
+import { Bet, Reward, Settings, Rewards, AddOn, Wallet, Casino, CasinoWhite, EsportsWhite } from '../../components/Icons';
 import styled from 'styled-components';
 import { Grid } from '@material-ui/core';
 import { TabContainer, StyledNavLink } from './styles';
@@ -68,6 +68,12 @@ const CasinoContainer = styled.section`
 const Icon = styled.section`
     height: 50px;
     width: 50px;
+    opacity: 0.56;
+`
+
+const EsportsIcon = styled.section`
+    height: 40px;
+    width: 40px;
     opacity: 0.56;
 `
 
@@ -213,7 +219,9 @@ class ApplicationsContainer extends React.Component{
                                                 }}
                                             >
                                                 <span>Esports</span>
-
+                                                {/* <EsportsIcon>
+                                                    <EsportsWhite isActive={this.state.activeTab === 'esports'}/>
+                                                </EsportsIcon> */}
                                             </StyledNavLink>
                                         </NavItem>
                                 </Nav>

@@ -18,6 +18,7 @@ import Cash from './Cash';
 import Email from './Email';
 import Chat from './Chat';
 import Deposit from './Deposit';
+import EsportsWhite from './EsportsWhite';
 
 export { 
     Casino, 
@@ -39,5 +40,6 @@ export {
     Cash,
     Email,
     Chat,
-    Deposit
+    Deposit,
+    EsportsWhite
 };
