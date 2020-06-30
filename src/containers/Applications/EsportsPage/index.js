@@ -14,6 +14,7 @@ import { ButtonBase } from '@material-ui/core';
 import MatchTabCollapsed from './components/MatchTabCollapsed';
 
 import socketConnection from '../../../esports/WebSocket';
+import VideoGameTabSkeleton from './components/Skeletons/VideogameTabSkeleton';
 
 class EsportsPage extends React.Component {
     static contextType = socketConnection;
@@ -27,7 +28,9 @@ class EsportsPage extends React.Component {
             match: {},
             videogames: [],
             selectedVideogames: [],
-            seriesSelected: {}
+            seriesSelected: {},
+            isLoadingVideogames: false,
+            isLoadingMatches: false
         };
       }
 
@@ -51,16 +54,20 @@ class EsportsPage extends React.Component {
         console.log(data)
     }
 
-    projectData = (props) => {
+    projectData = async (props) => {
         const { videogames } = this.state;
         const { profile } = props;
         const { App } = profile;
 
         if (_.isEmpty(videogames)) {
             
-            App.getVideoGamesAll();
+            this.setState({ isLoadingVideogames: true });
+            await App.getVideoGamesAll();
+            this.setState({ isLoadingVideogames: false });
 
-            App.getMatchesAll({ size: 10, offset: 0 });
+            this.setState({ isLoadingMatches: true });
+            await App.getMatchesAll({ size: 10, offset: 0 });
+            this.setState({ isLoadingMatches: false });
 
             this.setState({
                 videogames: props.videogames,
@@ -199,24 +206,30 @@ class EsportsPage extends React.Component {
         }
     }
 
-    updateMatches = ({ seriesSelected }) => {
+    updateMatches = async ({ seriesSelected }) => {
         const { profile } = this.props;
         const { App } = profile;
         
         const seriesArr = _.concat(Object.values(seriesSelected)).flat();
         
         if (!_.isEmpty(seriesArr)) {
-            App.getSeriesMatches({ size: 10, offset: 0, serie_id: seriesArr });
+            this.setState({ isLoadingMatches: true });
+            await App.getSeriesMatches({ size: 10, offset: 0, serie_id: seriesArr });
+            this.setState({ isLoadingMatches: false });
         } else {
-            App.getMatchesAll({ size: 10, offset: 0 });
+            this.setState({ isLoadingMatches: true });
+            await App.getMatchesAll({ size: 10, offset: 0 });
+            this.setState({ isLoadingMatches: false });
         }
     }
 
-    toggleAllTab = () => {
+    toggleAllTab = async () => {
         const { profile } = this.props;
         const { App } = profile;
 
-        App.getMatchesAll({ size: 10, offset: 0 });
+        this.setState({ isLoadingMatches: true });
+        await App.getMatchesAll({ size: 10, offset: 0 });
+        this.setState({ isLoadingMatches: false });
 
         this.setState({
             selectedVideogames: [],
@@ -225,15 +238,19 @@ class EsportsPage extends React.Component {
     }
 
     render() {
-        const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames } = this.state;
+        const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames, isLoadingVideogames } = this.state;
         
         return (
             <>
             <Container collapsed={collapsed}>
                 <Tabs>
+                    { isLoadingVideogames ? (
+                        <VideoGameTabSkeleton/>
+                    ) : (
+                    <>
                     <Actions>
                         <CollapseButton onClick={this.toggleCollape}>
-                    { collapsed ? <ChevronRightIcon/> : <ChevronLeftIcon/> }
+                            { collapsed ? <ChevronRightIcon/> : <ChevronLeftIcon/> }
                         </CollapseButton>
                     </Actions>
                     { !showMatchPage && _.isEmpty(match) ? (
@@ -249,6 +266,7 @@ class EsportsPage extends React.Component {
                                 toggleSelected={_.debounce(this.toggleSelected, 500)}
                                 selectedVideogames={selectedVideogames}
                                 data={this.getVideogameInfo(videogame)}
+                                isLoading={isLoadingVideogames}
                                 /> 
                                 : <VideogameTab 
                                     data={this.getVideogameInfo(videogame)} 
@@ -288,7 +306,9 @@ class EsportsPage extends React.Component {
                             )}
                             { collapsed ? <MatchTabCollapsed data={match}/> : <MatchTab data={match}/> }
                         </>
-                    )} 
+                    )}
+                    </>    
+                    )}
                 </Tabs>
                 <Content>
                     { showMatchPage && !_.isEmpty(match) ? (
@@ -310,8 +330,7 @@ function mapStateToProps(state){
     return {
         profile: state.profile,
         videogames: state.videogames,
-        series: state.series,
-        isLoading: state.isLoading
+        series: state.series
     };
 }
 
