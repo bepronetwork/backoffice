@@ -30,11 +30,11 @@ class MatchPage extends React.Component {
 
         const match = await App.getSpecificMatch({ match_id: matchId });
 
-        // if (!_.isEmpty(match.data.message)) {
-        //     this.setState({
-        //         match: match.data.message
-        //     })
-        // }
+        if (!_.isEmpty(match.data.message)) {
+            this.setState({
+                match: match.data.message
+            })
+        }
 
     }
 
