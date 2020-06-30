@@ -13,7 +13,7 @@ import MatchTab from './components/MatchTab';
 import { ButtonBase } from '@material-ui/core';
 import MatchTabCollapsed from './components/MatchTabCollapsed';
 
-import socketConnection from './components/WebSocket';
+import socketConnection from '../../../esports/WebSocket';
 
 class EsportsPage extends React.Component {
     static contextType = socketConnection;
