@@ -74,7 +74,7 @@ class MatchList extends React.Component {
 
                     </Status>
                     <Winner>
-                        <span>Winner</span>
+                        <span>Match winner</span>
                     </Winner>
                 </Header>
                 <InfiniteScroll
