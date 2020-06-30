@@ -48,7 +48,7 @@ class StatsPage extends React.Component {
         return (
             <>
             <StatsContainer>
-                <LastGames teams={[teamOne, teamTwo]}/>
+                {/* <LastGames teamOne={teamOne} teamTwo={teamTwo}/> */}
             </StatsContainer>
             
             </>

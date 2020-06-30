@@ -96,7 +96,7 @@ class MatchPage extends React.Component {
 
                     </InfoContainer>
                 </MatchSummary>
-                <StatsPage match={match}/>
+                {/* <StatsPage match={match}/> */}
             </MatchContainer>            
             </>
         )
