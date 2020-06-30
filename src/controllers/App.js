@@ -6,7 +6,7 @@ import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
 import { getAuthFromCookies } from "./services/services";
 import _ from 'lodash';
-import { getVideoGamesAll, getMatchesAll, getSeriesMatches, getSpecificMatch } from "../esports/services";
+import { getVideoGamesAll, getMatchesAll, getSeriesMatches, getSpecificMatch, setBookedMatch, removeBookedMatch } from "../esports/services";
 
 class App{    
     constructor(params){
@@ -1340,6 +1340,36 @@ class App{
                 },
                 headers: authHeaders(this.getBearerToken(), this.getAdminId()),
                 isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    setBookedMatch = async ({ match_external_id }) => {
+        try {
+            return await setBookedMatch({
+                params:{
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    match_external_id
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    removeBookedMatch = async ({ match_external_id }) => {
+        try {
+            return await removeBookedMatch({
+                params:{
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    match_external_id
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
             })
         } catch (err) {
             throw err;

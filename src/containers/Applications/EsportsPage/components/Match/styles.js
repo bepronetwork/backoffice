@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ButtonBase } from '@material-ui/core';
+import { ButtonBase, Button } from '@material-ui/core';
 
 export const MatchLink = styled(ButtonBase)`
     cursor: pointer;
@@ -9,13 +9,6 @@ export const MatchLink = styled(ButtonBase)`
     border: 0;
 `;
 
-// export const MatchLink = styled.button`
-//     padding: 0;
-//     background: none;
-//     outline: none;
-//     border: 0;
-// `;
-
 export const MatchContainer = styled.div`
     display: grid;
 
@@ -23,7 +16,7 @@ export const MatchContainer = styled.div`
     'indicator match teams action'
     'indicator footer footer footer';
 
-    grid-template-columns: 4px calc(25% - 4px) 60% 15%;
+    grid-template-columns: 4px calc(25% - 4px) 65% 10%;
     grid-template-rows: 58px 30px;
 
     width: 100%;
@@ -113,7 +106,6 @@ export const TeamsInfo = styled.section`
 
     grid-template-columns: 35% 30% 35%;
     grid-template-rows: auto;
-
 `;
 
 export const TeamOne = styled.section`
@@ -183,6 +175,27 @@ export const TeamTwo = styled.section`
 
 export const ActionArea = styled.section`
     grid-area: action;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const BookButton = styled(Button)`
+    text-transform: none !important;
+    background-color: #39f !important;
+    color: white !important;
+    box-shadow: none !important;
+
+    height: 23px;
+
+    position: absolute;
+
+    span {
+        font-family: Poppins;
+        font-size: 11px;
+        font-weight: 300;
+    }
 `;
 
 export const Footer = styled.section`

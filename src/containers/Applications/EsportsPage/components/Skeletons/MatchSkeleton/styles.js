@@ -26,13 +26,15 @@ export const MatchContainer = styled.div`
     grid-template-columns: 4px calc(25% - 4px) 60% 15%;
     grid-template-rows: 58px 30px;
 
-    width: 95%;
+    width: 99%;
     min-width: 450px;
     height: auto;
     margin: 10px 10px;
     border-radius: 6px;
-    /* border: solid 1px rgba(164, 161, 161, 0.35); */
+    border: solid 1px rgba(164, 161, 161, 0.35);
     transition: 0.2s;
+
+    padding-top: 8px;
 
     &:hover {
         transform: scale(1.005);
@@ -181,8 +183,8 @@ export const Footer = styled.section`
     display: flex;
     /* padding: 0px 30px; */
     align-items: center;
-    justify-content: flex-start;
-    /* border-top: solid 1px rgba(164, 161, 161, 0.35); */
+    justify-content: center;
+    border-top: solid 1px rgba(164, 161, 161, 0.35);
 `;
 
 export const SerieName = styled.span`

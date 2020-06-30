@@ -26,7 +26,7 @@ const MatchSkeleton = () => {
                     <Skeleton variant="rect" width="80%" height="80%" />
                 </ActionArea>
                 <Footer>
-                    <Skeleton variant="rect" width="100%" height="80%" />
+                    <Skeleton variant="rect" width="100%" height="60%" />
                 </Footer>
             </MatchContainer>
 
