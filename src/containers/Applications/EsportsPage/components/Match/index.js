@@ -1,18 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { MatchLink, MatchContainer, Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan, BookButton } from './styles';
+import { MatchLink, MatchContainer, Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan, BookButton, RemoveBookButton } from './styles';
 import Avatar from 'react-avatar';
 import moment from 'moment';
 
 import videogames from '../Enums/videogames';
+import { updateMatchData } from '../../../../../redux/actions/matchesActions';
+import store from '../../../../App/store';
+
+const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 class Match extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: {}
+            data: {},
+            isLoading: false
         };
       }
 
@@ -61,15 +66,66 @@ class Match extends React.Component {
         return league ? `${league.name} ${serie.full_name}` : null;
     }
 
-    button = e => {
+    setMatchBooked = async e => {
         e.stopPropagation();
-        console.log("button");
-      };
+
+        const { profile } = this.props;
+        const { data } = this.state;
+        const { id } = data;
+        const { App } = profile;
+
+        this.setState({ isLoading: true });
+
+        const response = await App.setBookedMatch({ match_external_id: id });
+
+        if (response.data.status === 200) {
+            const matchUpdated = await App.getSpecificMatch({ match_id: id });
+
+            if (matchUpdated.data.message) {
+                store.dispatch(updateMatchData(matchUpdated.data.message));
+
+                this.setState({
+                    data: matchUpdated.data.message,
+                    isLoading: false
+                })
+            }
+        }
+
+        this.setState({ isLoading: false });
+    };
+
+    removeMatchBooked = async e => {
+        e.stopPropagation();
+
+        const { profile } = this.props;
+        const { data } = this.state;
+        const { id } = data;
+        const { App } = profile;
+
+        this.setState({ isLoading: true });
+
+        const response = await App.removeBookedMatch({ match_external_id: id });
+
+        if (response.data.status === 200) {
+            const matchUpdated = await App.getSpecificMatch({ match_id: id });
+
+            if (matchUpdated.data.message) {
+                store.dispatch(updateMatchData(matchUpdated.data.message));
+
+                this.setState({
+                    data: matchUpdated.data.message,
+                    isLoading: false
+                })
+            }
+        }
+
+        this.setState({ isLoading: false });
+    };
 
 
     render() {
-        const { data } = this.state;
-        const { opponents, results, videogame, scheduled_at } = data;
+        const { data, isLoading } = this.state;
+        const { opponents, results, videogame, scheduled_at, booked } = data;
         const { setMatchPage } = this.props;
 
         if (_.isEmpty(data) || _.isEmpty(opponents)) return null;
@@ -88,6 +144,7 @@ class Match extends React.Component {
         return (
             <>
             <MatchLink 
+            disabled={isLoading}
             disableRipple
             onClick={() => setMatchPage(data)}
             >
@@ -128,9 +185,15 @@ class Match extends React.Component {
                         </TeamTwo>
                     </TeamsInfo>
                     <ActionArea>
-                        <BookButton variant="contained" size="small" onClick={this.button}>
-                            Book
-                        </BookButton>
+                        { booked ? (
+                            <RemoveBookButton variant="contained" size="small" onClick={this.removeMatchBooked} disabled={isLoading}>
+                                { isLoading ? <img src={loading} className={'loading_gif'}/> : "Remove" }
+                            </RemoveBookButton>
+                        ) : (
+                            <BookButton variant="contained" size="small" onClick={this.setMatchBooked} disabled={isLoading}>
+                                { isLoading ? <img src={loading} className={'loading_gif'}/> : "Book" }
+                            </BookButton>
+                        )}
                     </ActionArea>
                     <Footer>
                         <SerieName>

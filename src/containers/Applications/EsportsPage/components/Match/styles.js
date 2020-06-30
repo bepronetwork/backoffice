@@ -16,7 +16,7 @@ export const MatchContainer = styled.div`
     'indicator match teams action'
     'indicator footer footer footer';
 
-    grid-template-columns: 4px calc(25% - 4px) 65% 10%;
+    grid-template-columns: 4px calc(25% - 4px) 60% 15%;
     grid-template-rows: 58px 30px;
 
     width: 100%;
@@ -177,13 +177,32 @@ export const ActionArea = styled.section`
     grid-area: action;
 
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
+
+    padding: 0px 15px;
 `;
 
 export const BookButton = styled(Button)`
     text-transform: none !important;
     background-color: #39f !important;
+    color: white !important;
+    box-shadow: none !important;
+
+    height: 23px;
+
+    position: absolute;
+
+    span {
+        font-family: Poppins;
+        font-size: 11px;
+        font-weight: 300;
+    }
+`;
+
+export const RemoveBookButton = styled(Button)`
+    text-transform: none !important;
+    background-color: #e6536e !important;
     color: white !important;
     box-shadow: none !important;
 
