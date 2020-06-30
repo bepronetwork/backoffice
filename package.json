@@ -162,6 +162,7 @@
     "serve": "^10.1.1",
     "slick-carousel": "^1.8.1",
     "smooth-scrollbar": "^8.3.1",
+    "socket.io-client": "^2.3.0",
     "style-loader": "0.23.0",
     "styled-components": "^5.1.0",
     "terser-webpack-plugin": "1.1.0",
