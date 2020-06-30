@@ -79,9 +79,13 @@ class Match extends React.Component {
         const response = await App.setBookedMatch({ match_external_id: id });
 
         if (response.data.status === 200) {
-            const matchUpdated = await App.getSpecificMatch({ match_id: id });
+            // Modify it later!!!
+            let matchUpdated = await App.getSpecificMatch({ match_id: id });
 
             if (matchUpdated.data.message) {
+                // Modify it later!!!
+                matchUpdated.data.message.booked = true;
+
                 store.dispatch(updateMatchData(matchUpdated.data.message));
 
                 this.setState({
