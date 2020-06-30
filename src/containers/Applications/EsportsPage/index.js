@@ -29,7 +29,6 @@ class EsportsPage extends React.Component {
             videogames: [],
             selectedVideogames: [],
             seriesSelected: {},
-            isLoadingVideogames: false,
             isLoadingMatches: false
         };
       }
@@ -61,17 +60,16 @@ class EsportsPage extends React.Component {
 
         if (_.isEmpty(videogames)) {
             
-            this.setState({ isLoadingVideogames: true });
-            await App.getVideoGamesAll();
-            this.setState({ isLoadingVideogames: false });
+            App.getVideoGamesAll();
 
             this.setState({ isLoadingMatches: true });
+
             await App.getMatchesAll({ size: 10, offset: 0 });
-            this.setState({ isLoadingMatches: false });
 
             this.setState({
                 videogames: props.videogames,
-                series: props.series
+                series: props.series,
+                isLoadingMatches: false
             })
         }
 
@@ -124,7 +122,7 @@ class EsportsPage extends React.Component {
         })
     }
     
-    toggleSelected = _id => {
+    toggleSelected = async _id => {
         const { selectedVideogames, seriesSelected, videogames } = this.state;
 
         const videogame = videogames.find(videogame => videogame._id === _id);
@@ -136,7 +134,7 @@ class EsportsPage extends React.Component {
                     ...seriesSelected,
                     [_id]: []
                 }
-            }, this.updateMatches({ 
+            }, await this.updateMatches({ 
                 seriesSelected: {
                     ...seriesSelected,
                      [_id]: []
@@ -149,7 +147,7 @@ class EsportsPage extends React.Component {
                     ...seriesSelected,
                     [_id]: videogame.series.map(serie => serie.id)
                 }
-            }, this.updateMatches({
+            }, await this.updateMatches({
                 seriesSelected: {
                     ...seriesSelected,
                     [_id]: videogame.series.map(serie => serie.id)
@@ -159,7 +157,7 @@ class EsportsPage extends React.Component {
 
     }
 
-    toggleSelectedSerie = ({ videogame_id, serie_id }) => {
+    toggleSelectedSerie = async ({ videogame_id, serie_id }) => {
         const { seriesSelected, selectedVideogames } = this.state;
 
         if (!_.has(seriesSelected, videogame_id)) {
@@ -169,7 +167,7 @@ class EsportsPage extends React.Component {
                     ...seriesSelected,
                     [videogame_id]: [ serie_id ]
                 }
-            }, this.updateMatches({
+            }, await this.updateMatches({
                 seriesSelected: {
                     ...seriesSelected,
                     [videogame_id]: [ serie_id ]
@@ -184,7 +182,7 @@ class EsportsPage extends React.Component {
                         ...seriesSelected,
                         [videogame_id]: _.without(series, serie_id)
                     }
-                }, this.updateMatches({
+                }, await this.updateMatches({
                     seriesSelected: {
                         ...seriesSelected,
                         [videogame_id]: _.without(series, serie_id)
@@ -196,7 +194,7 @@ class EsportsPage extends React.Component {
                         ...seriesSelected,
                         [videogame_id]: [...series, serie_id]
                     }
-                }, this.updateMatches({
+                }, await this.updateMatches({
                     seriesSelected: {
                         ...seriesSelected,
                         [videogame_id]: [...series, serie_id]
@@ -229,22 +227,22 @@ class EsportsPage extends React.Component {
 
         this.setState({ isLoadingMatches: true });
         await App.getMatchesAll({ size: 10, offset: 0 });
-        this.setState({ isLoadingMatches: false });
 
         this.setState({
             selectedVideogames: [],
-            seriesSelected: {}
+            seriesSelected: {},
+            isLoadingMatches: false
         })
     }
 
     render() {
-        const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames, isLoadingVideogames } = this.state;
-        
+        const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames, isLoadingMatches } = this.state;
+
         return (
             <>
             <Container collapsed={collapsed}>
                 <Tabs>
-                    { isLoadingVideogames ? (
+                    { _.isEmpty(videogames) ? (
                         <VideoGameTabSkeleton/>
                     ) : (
                     <>
@@ -266,7 +264,6 @@ class EsportsPage extends React.Component {
                                 toggleSelected={_.debounce(this.toggleSelected, 500)}
                                 selectedVideogames={selectedVideogames}
                                 data={this.getVideogameInfo(videogame)}
-                                isLoading={isLoadingVideogames}
                                 /> 
                                 : <VideogameTab 
                                     data={this.getVideogameInfo(videogame)} 
@@ -316,7 +313,8 @@ class EsportsPage extends React.Component {
                     ) : (
                         <MatchList 
                         setMatchPage={this.setMatchPage}
-                        seriesSelected={seriesSelected}/>
+                        seriesSelected={seriesSelected}
+                        isLoading={isLoadingMatches}/>
                     )}
                 </Content>
             </Container>

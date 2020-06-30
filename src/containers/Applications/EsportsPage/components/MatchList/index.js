@@ -52,9 +52,9 @@ class MatchList extends React.Component {
     }
 
     render() {
-        const { setMatchPage } = this.props;
+        const { setMatchPage, isLoading } = this.props;
         const { matches, series } = this.state;
-
+        
         if (_.isEmpty(matches) || _.isEmpty(series)) return null;
 
         return (
@@ -83,10 +83,14 @@ class MatchList extends React.Component {
                 hasMore={true}
                 loader={<MatchSkeleton/>}
                 style={{ display: "flex", flexDirection: "column", padding: 0 }}
-                >                
-                    { matches.map(match => (
-                        <Match data={match} series={series} setMatchPage={setMatchPage}/>
-                    ))}
+                >   
+                    { isLoading ? (
+                        _.times(10, () => <MatchSkeleton/>)
+                    ) : (
+                        matches.map(match => (
+                            <Match data={match} series={series} setMatchPage={setMatchPage}/>
+                        ))
+                    )}            
                 </InfiniteScroll>
             </Container>
             </>
