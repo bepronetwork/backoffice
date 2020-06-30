@@ -24,14 +24,17 @@ class MatchPage extends React.Component {
        this.projectData(props);
     }
 
-    projectData = (props) => {
-        const { data } = props;
+    projectData = async (props) => {
+        const { matchId, profile } = props;
+        const { App } = profile;
 
-        if (!_.isEmpty(data)) {
-            this.setState({
-                match: data
-            })
-        }
+        const match = await App.getSpecificMatch({ match_id: matchId });
+
+        // if (!_.isEmpty(match.data.message)) {
+        //     this.setState({
+        //         match: match.data.message
+        //     })
+        // }
 
     }
 

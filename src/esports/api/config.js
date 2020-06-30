@@ -1,9 +1,18 @@
 export const API_URL = "https://ms-esports-dev.herokuapp.com";
 
-const PANDASCORE_TOKEN = "wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0";
+export const config = {
+    headers: {
+        'Content-Type' : 'application/json'
+    },
+    server: {
+        development : 'http://localhost:80',
+        production : 'https://api.betprotocol.com'
+    }
+}
 
-export const headers = {
-    authorization: {
-        "Authorization": `Bearer ${PANDASCORE_TOKEN}`
+export function addHeaders(config, newHeaders){
+    return {
+        ...config.headers,
+        ...newHeaders   
     }
 }

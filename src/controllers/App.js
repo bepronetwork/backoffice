@@ -6,7 +6,7 @@ import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
 import { getAuthFromCookies } from "./services/services";
 import _ from 'lodash';
-import { getVideoGamesAll, getMatchesAll, getSeriesMatches } from "../esports/services";
+import { getVideoGamesAll, getMatchesAll, getSeriesMatches, getSpecificMatch } from "../esports/services";
 
 class App{    
     constructor(params){
@@ -1309,6 +1309,20 @@ class App{
                 },
                 headers: authHeaders(this.getBearerToken(), this.getAdminId()),
                 isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getSpecificMatch = async ({ match_id }) => {
+        try {
+            return await getSpecificMatch({
+                params:{
+                    admin: this.getAdminId(),
+                    match_id
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
             })
         } catch (err) {
             throw err;

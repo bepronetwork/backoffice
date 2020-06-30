@@ -292,7 +292,7 @@ class EsportsPage extends React.Component {
                 </Tabs>
                 <Content>
                     { showMatchPage && !_.isEmpty(match) ? (
-                        <MatchPage data={match}/>
+                        <MatchPage matchId={match.id}/>
                     ) : (
                         <MatchList 
                         setMatchPage={this.setMatchPage}

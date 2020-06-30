@@ -1,41 +1,46 @@
-import { apiService } from '../api/connection';
-import { pluck } from 'rxjs/operators';
+import { API_URL, config, addHeaders } from '../api/config';
 
 import store from '../../containers/App/store';
 import { setMatchesData, addMatchesData } from '../../redux/actions/matchesActions';
 
-export const getSeriesMatches = ({ params, headers, isPagination=false }) => {
-    return apiService
-        .post("/api/get/matches/series", {
-            headers: headers,
-            body: JSON.stringify(params)
-        })
-        .pipe(pluck("response"))
-        .subscribe(
-            res => {
-                if (res.data.message) {
-                    isPagination ? 
-                    store.dispatch(addMatchesData(res.data.message)) 
-                    : store.dispatch(setMatchesData(res.data.message));
-                }
-            }
-        )
-};
+export const getSeriesMatches = async ({ params, headers, isPagination=false }) => {
+    try {
+        const res = await fetch(API_URL + `/api/get/matches/series`, {
+            method : 'POST',
+            headers : addHeaders(config, headers),
+            body : JSON.stringify(params)
+        });
 
-export const getMatchesAll = ({ params, headers, isPagination=false }) => {
-    return apiService
-        .post("/api/get/matches/all", {
-            headers: headers,
-            body: JSON.stringify(params)
-        })
-        .pipe(pluck("response"))
-        .subscribe(
-            res => {
-                if (res.data.message) {
-                    isPagination ? 
-                    store.dispatch(addMatchesData(res.data.message)) 
-                    : store.dispatch(setMatchesData(res.data.message));
-                }
-            }
-        )
-};
+        const response = await res.json();
+
+        if (response.data.message) {
+            isPagination ? 
+            store.dispatch(addMatchesData(response.data.message)) 
+            : store.dispatch(setMatchesData(response.data.message));
+        }
+
+    } catch(err) {
+        throw err;
+    }
+}
+
+export const getMatchesAll = async ({ params, headers, isPagination=false }) => {
+    try {
+        const res = await fetch(API_URL + `/api/get/matches/all`, {
+            method : 'POST',
+            headers : addHeaders(config, headers),
+            body : JSON.stringify(params)
+        });
+
+        const response = await res.json();
+
+        if (response.data.message) {
+            isPagination ? 
+            store.dispatch(addMatchesData(response.data.message)) 
+            : store.dispatch(setMatchesData(response.data.message));
+        }
+
+    } catch(err) {
+        throw err;
+    }
+}
