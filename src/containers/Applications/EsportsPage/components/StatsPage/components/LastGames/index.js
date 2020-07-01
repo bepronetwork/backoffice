@@ -1,10 +1,11 @@
 import React from 'react';
 import Avatar from 'react-avatar';
 import { Container, Header, TeamResult, Team, TeamIcon, TeamName, MatchResultList, MatchResult } from './styles';
+import _ from 'lodash';
 
 const results = Object.freeze({
-    winner: { text: "W", color: "#52b030" },
-    loser: { text: "L", color: "#ec5050" },
+    won: { text: "W", color: "#52b030" },
+    lost: { text: "L", color: "#ec5050" },
     draw: { text: "D", color: "#b0b0b0" }
 })
 
@@ -14,9 +15,9 @@ const getResult = ({ id, winner }) => {
         case winner.id === null:
             return results.draw
         case id === winner.id:
-            return results.winner
+            return results.won
         case id !== winner.id:
-            return results.loser
+            return results.lost
         default:
             break;
     }
@@ -24,8 +25,6 @@ const getResult = ({ id, winner }) => {
 
 const Result = team => {
     const { id, name, image_url, last_games } = team.team;
-
-    console.log(team)
 
     return (
         <>
@@ -53,11 +52,13 @@ const Result = team => {
 const LastGames = props => {
     const { teamOne, teamTwo } = props; 
 
+    if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
+
     return (
         <>
         <Container>
             <Header>
-                <span>LAST GAMES</span>
+                <span>Last games</span>
             </Header>
             <Result team={teamOne}/>
             <Result team={teamTwo}/>

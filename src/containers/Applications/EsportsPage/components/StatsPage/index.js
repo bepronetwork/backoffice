@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { StatsContainer } from './styles';
 import _ from 'lodash';
 import LastGames from './components/LastGames';
+import SideBySide from './components/SideBySide';
 
 class StatsPage extends React.Component {
     constructor(props) {
@@ -48,6 +49,7 @@ class StatsPage extends React.Component {
         return (
             <>
             <StatsContainer>
+                <SideBySide teamOne={teamOne} teamTwo={teamTwo}/>
                 <LastGames teamOne={teamOne} teamTwo={teamTwo}/>
             </StatsContainer>
             

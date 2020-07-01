@@ -7,6 +7,7 @@ export const Container = styled.div`
     padding: 10px;
     margin: 10px;
     width: 400px;
+    height: 180px;
 
     background-color: #fafcff;
     border-radius: 6px;
@@ -22,6 +23,7 @@ export const Header = styled.section`
     padding: 10px 20px;
 
     span {
+        text-transform: uppercase;
         font-family: Poppins;
         font-size: 14px;
         color: #5f6e85
@@ -106,6 +108,11 @@ export const MatchResult = styled.div`
     color: white;
     background-color: ${props => props.color};
     transition: 0.2s;
+
+    span {
+        font-family: Poppins;
+        font-weight: 500;
+    }
 
     /* &:hover {
         color: #fff;

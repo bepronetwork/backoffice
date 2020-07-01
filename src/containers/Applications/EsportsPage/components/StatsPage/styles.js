@@ -6,4 +6,7 @@ export const StatsContainer = styled.div`
 
     padding: 10px;
 
+    display: flex;
+    flex-wrap: wrap;
+
 `;
