@@ -9,6 +9,8 @@ const FlagIcon = FlagIconFactory(React, { useCssModules: false })
 const PlayerCard = player => {
     const { first_name, last_name, name, image_url, hometown, nationality, role } = player.player;
 
+    if (!nationality) return null;
+
     return (
         <>
         <PlayerCardContainer>
