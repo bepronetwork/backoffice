@@ -2,6 +2,7 @@ import React from 'react';
 import Avatar from 'react-avatar';
 import { Container, Header, Content, TeamOne, TeamOneHeader, TeamTwo, TeamTwoHeader, TeamOneResults, TeamOneResult, Label, Result, TeamTwoResults, TeamTwoResult, TeamTwoLabel } from './styles';
 import _ from 'lodash';
+import SideBySideSkeleton from '../../../Skeletons/SideBySideSkeleton';
 
 const results = Object.freeze({
     won: { text: "W", color: "#52b030" },
@@ -22,7 +23,9 @@ const getColor = ({ x, y }) => {
 }
 
 const SideBySide = props => {
-    const { teamOne, teamTwo } = props; 
+    const { teamOne, teamTwo, isLoading } = props; 
+
+    if (isLoading) return <SideBySideSkeleton/>
 
     if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
 
