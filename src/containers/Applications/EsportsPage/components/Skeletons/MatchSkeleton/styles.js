@@ -122,17 +122,6 @@ export const TeamOne = styled.section`
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
-    img {
-        height: auto;
-        width: 25px;
-    }
-
-    span {
-        margin: 0px 7px;
-        font-family: Poppins;
-        font-size: 13px;
-    }
 `;
 
 export const Result = styled.section`
@@ -161,17 +150,6 @@ export const TeamTwo = styled.section`
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
-    img {
-        height: auto;
-        width: 25px;
-    }
-
-    span {
-        margin: 0px 7px;
-        font-family: Poppins;
-        font-size: 13px;
-    }
 `;
 
 export const ActionArea = styled.section`

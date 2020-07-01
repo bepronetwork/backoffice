@@ -12,13 +12,13 @@ const MatchSkeleton = () => {
                 <TeamsInfo>
                     <TeamOne>
                         <Skeleton variant="rect" width="70%" height="30%" />
-                        <Skeleton variant="circle" width="50px" height="50px" />
+                        <Skeleton variant="circle" width="35px" height="35px" style={{ margin: "0px 8px" }}/>
                     </TeamOne>
                     <Result>
                         <Skeleton variant="rect" width="100%" height="80%" />
                     </Result>
                     <TeamTwo>
-                        <Skeleton variant="circle" width="50px" height="50px" />
+                        <Skeleton variant="circle" width="35px" height="35px" style={{ margin: "0px 8px" }}/>
                         <Skeleton variant="rect" width="70%" height="30%" />
                     </TeamTwo>
                 </TeamsInfo>

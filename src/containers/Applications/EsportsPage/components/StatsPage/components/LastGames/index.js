@@ -3,6 +3,8 @@ import Avatar from 'react-avatar';
 import { Container, Header, TeamResult, Team, TeamIcon, TeamName, MatchResultList, MatchResult } from './styles';
 import _ from 'lodash';
 
+import LastGamesSkeleton from '../../../Skeletons/LastGamesSkeleton';
+
 const results = Object.freeze({
     won: { text: "W", color: "#52b030" },
     lost: { text: "L", color: "#ec5050" },
@@ -50,7 +52,9 @@ const Result = team => {
 }
 
 const LastGames = props => {
-    const { teamOne, teamTwo } = props; 
+    const { teamOne, teamTwo, isLoading } = props; 
+
+    if (isLoading) return <LastGamesSkeleton/>
 
     if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
 

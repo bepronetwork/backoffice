@@ -86,6 +86,7 @@ export const VideoGameIcon = styled.section`
 
 export const Score = styled.section`
     width: 75%;
+    min-height: 100px;
     grid-area: score;
     padding: 10px 20px;
 
@@ -176,10 +177,12 @@ export const InfoContainer = styled.section`
     border-top: solid 1px rgba(164, 161, 161, 0.35);
 
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
 
     padding: 5px 20px;
+
+    min-height: 49px;
 `;
 
 export const BookButton = styled(Button)`
