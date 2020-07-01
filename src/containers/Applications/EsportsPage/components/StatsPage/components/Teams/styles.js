@@ -18,7 +18,7 @@ export const PlayerCardContainer = styled.div`
     grid-template-columns: 100%;
     grid-template-rows: 45% 55%;
 
-    height: 200px;
+    height: 220px;
     width: 150px;
 
     background-color: white;
@@ -26,6 +26,12 @@ export const PlayerCardContainer = styled.div`
     border: solid 1px rgba(164, 161, 161, 0.35);
 
     margin: 10px;
+
+    overflow-y: scroll;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 export const PlayerPhoto = styled.section`

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button } from '@material-ui/core';
 
 export const MatchContainer = styled.div`
     display: flex;
@@ -173,4 +174,44 @@ export const Date = styled.span`
 export const InfoContainer = styled.section`
     grid-area: info;
     border-top: solid 1px rgba(164, 161, 161, 0.35);
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding: 5px 20px;
+`;
+
+export const BookButton = styled(Button)`
+    text-transform: none !important;
+    background-color: #39f !important;
+    color: white !important;
+    box-shadow: none !important;
+
+    height: 23px;
+
+    position: absolute;
+
+    span {
+        font-family: Poppins;
+        font-size: 11px;
+        font-weight: 300;
+    }
+`;
+
+export const RemoveBookButton = styled(Button)`
+    text-transform: none !important;
+    background-color: #e6536e !important;
+    color: white !important;
+    box-shadow: none !important;
+
+    height: 23px;
+
+    position: absolute;
+
+    span {
+        font-family: Poppins;
+        font-size: 11px;
+        font-weight: 300;
+    }
 `;

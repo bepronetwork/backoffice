@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { MatchContainer, MatchSummary, SerieSummary, Score, InfoContainer, VideoGameIcon, TeamOne, TeamTwo, DateInfo, Time, Date as DateSpan, MatchFinishedIcon, MatchStatus, SerieInfo } from './styles';
+import { MatchContainer, MatchSummary, SerieSummary, Score, InfoContainer, VideoGameIcon, TeamOne, TeamTwo, DateInfo, Time, Date as DateSpan, MatchFinishedIcon, MatchStatus, SerieInfo, BookButton, RemoveBookButton } from './styles';
 import _ from 'lodash';
 import Avatar from 'react-avatar';
 import moment from 'moment';
@@ -9,11 +9,17 @@ import videogames from '../Enums/videogames';
 import { MatchFinished } from '../Icons';
 import StatsPage from '../StatsPage';
 
+import { updateMatchData } from '../../../../../redux/actions/matchesActions';
+import store from '../../../../App/store';
+
+const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
+
 class MatchPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            match: {}
+            match: {},
+            isLoading: false
         };
       }
 
@@ -45,9 +51,69 @@ class MatchPage extends React.Component {
         return `${league.name} ${serie.full_name} - ${tournament.name}`;
     }
 
-    render() {
+    setMatchBooked = async e => {
+        e.stopPropagation();
+
+        const { profile } = this.props;
         const { match } = this.state;
-        const { videogame, opponents, scheduled_at } = match;
+        const { id } = match;
+        const { App } = profile;
+
+        this.setState({ isLoading: true });
+
+        const response = await App.setBookedMatch({ match_external_id: id });
+
+        if (response.data.status === 200) {
+            // Modify it later!!!
+            let matchUpdated = await App.getSpecificMatch({ match_id: id });
+
+            if (matchUpdated.data.message) {
+                // Modify it later!!!
+                matchUpdated.data.message.booked = true;
+
+                store.dispatch(updateMatchData(matchUpdated.data.message));
+
+                this.setState({
+                    match: matchUpdated.data.message,
+                    isLoading: false
+                })
+            }
+        }
+
+        this.setState({ isLoading: false });
+    };
+
+    removeMatchBooked = async e => {
+        e.stopPropagation();
+
+        const { profile } = this.props;
+        const { match } = this.state;
+        const { id } = match;
+        const { App } = profile;
+
+        this.setState({ isLoading: true });
+
+        const response = await App.removeBookedMatch({ match_external_id: id });
+
+        if (response.data.status === 200) {
+            const matchUpdated = await App.getSpecificMatch({ match_id: id });
+
+            if (matchUpdated.data.message) {
+                store.dispatch(updateMatchData(matchUpdated.data.message));
+
+                this.setState({
+                    match: matchUpdated.data.message,
+                    isLoading: false
+                })
+            }
+        }
+
+        this.setState({ isLoading: false });
+    };
+
+    render() {
+        const { match, isLoading } = this.state;
+        const { videogame, opponents, scheduled_at, booked } = match;
 
         if (_.isEmpty(match)) return null;
 
@@ -95,7 +161,15 @@ class MatchPage extends React.Component {
                         </TeamTwo>
                     </Score>
                     <InfoContainer>
-
+                        { booked ? (
+                            <RemoveBookButton variant="contained" size="small" onClick={this.removeMatchBooked} disabled={isLoading}>
+                                { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Remove" }
+                            </RemoveBookButton>
+                        ) : (
+                            <BookButton variant="contained" size="small" onClick={this.setMatchBooked} disabled={isLoading}>
+                                { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Book" }
+                            </BookButton>
+                        )}
                     </InfoContainer>
                 </MatchSummary>
                 { isLoL ? <StatsPage match={match}/> : null }
