@@ -57,6 +57,8 @@ class MatchPage extends React.Component {
         const time = new Date(scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
         const date = moment(new Date(scheduled_at)).format('MM/DD');
 
+        const isLoL = videogame.slug === "league-of-legends"; 
+
         return (
             <>
             <MatchContainer>
@@ -96,7 +98,7 @@ class MatchPage extends React.Component {
 
                     </InfoContainer>
                 </MatchSummary>
-                <StatsPage match={match}/>
+                { isLoL ? <StatsPage match={match}/> : null }
             </MatchContainer>            
             </>
         )

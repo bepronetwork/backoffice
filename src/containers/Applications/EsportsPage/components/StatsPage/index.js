@@ -4,6 +4,7 @@ import { StatsContainer } from './styles';
 import _ from 'lodash';
 import LastGames from './components/LastGames';
 import SideBySide from './components/SideBySide';
+import Teams from './components/Teams';
 
 class StatsPage extends React.Component {
     constructor(props) {
@@ -49,6 +50,7 @@ class StatsPage extends React.Component {
         return (
             <>
             <StatsContainer>
+                <Teams teamOne={teamOne} teamTwo={teamTwo}/>
                 <SideBySide teamOne={teamOne} teamTwo={teamTwo}/>
                 <LastGames teamOne={teamOne} teamTwo={teamTwo}/>
             </StatsContainer>

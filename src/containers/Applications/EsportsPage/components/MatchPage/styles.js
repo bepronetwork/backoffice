@@ -86,7 +86,7 @@ export const VideoGameIcon = styled.section`
 export const Score = styled.section`
     width: 75%;
     grid-area: score;
-    padding: 0px 20px;
+    padding: 10px 20px;
 
     display: grid;
 
