@@ -13,14 +13,32 @@ export const Container = styled.div`
     border: solid 1px rgba(164, 161, 161, 0.35);
 `;
 
+export const Header = styled.section`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    height: 20px;
+    padding: 10px 20px;
+
+    span {
+        font-family: Poppins;
+        font-size: 14px;
+        color: #5f6e85
+    }
+
+`;
+
 export const TeamResult = styled.div`
     display: grid;
 
     grid-template-areas: 
     'team result';
 
-    grid-template-columns: 40% 60%; 
-    grid-template-rows: 70px;
+    grid-template-columns: 50% 50%; 
+    grid-template-rows: 55px;
+
+    margin: 5px 0px;
 `;
 
 export const Team = styled.section`
@@ -53,31 +71,44 @@ export const TeamName = styled.section`
     grid-area: name;
 
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
     span {
         padding: 0px 8px;
         font-family: Poppins;
-        font-size: 14px;
+        font-size: 13px;
     }
 `;
 
-export const MatchResult = styled.button`
+export const MatchResultList = styled.section`
+    grid-area: result;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const MatchResult = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 3px;
     padding: 0;
     background: none;
     outline: none;
     font: inherit;
     z-index: 2;
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    color: #39f;
-    background-color: #fff;
+    color: white;
+    background-color: ${props => props.color};
     transition: 0.2s;
 
-    &:hover {
+    /* &:hover {
         color: #fff;
         background-color: #39f;
-    }
+    } */
 `;
