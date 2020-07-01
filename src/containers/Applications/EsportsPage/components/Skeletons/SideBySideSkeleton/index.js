@@ -31,7 +31,7 @@ const SideBySideSkeleton = () => {
                 </TeamOne>
                 <TeamTwo>
                     <TeamTwoHeader>
-                        <Skeleton variant="circle" width="30px" height="20px" />
+                        <Skeleton variant="circle" width="30px" height="30px" />
                         <Skeleton variant="rect" width="100%" height="15%" />
                     </TeamTwoHeader>
                     <TeamTwoResults>
