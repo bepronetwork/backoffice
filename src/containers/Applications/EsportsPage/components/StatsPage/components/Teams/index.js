@@ -3,6 +3,7 @@ import { Container, PlayerCardContainer, PlayerPhoto, PlayerInfo, PlayerName, Pl
 import _ from 'lodash';
 import Avatar from 'react-avatar';
 import FlagIconFactory from 'react-flag-icon-css'
+import TeamsSkeleton from '../../../Skeletons/TeamsSkeleton';
  
 const FlagIcon = FlagIconFactory(React, { useCssModules: false })
 
@@ -66,7 +67,9 @@ const Team = props => {
 }
 
 const Teams = props => {
-    const { teamOne, teamTwo } = props; 
+    const { teamOne, teamTwo, isLoading } = props; 
+
+    if (isLoading) return <TeamsSkeleton/>
 
     if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
 
