@@ -13,19 +13,18 @@ export const Header = styled.section`
     display: grid;
 
     grid-template-areas: 
-    'VG Date BO Status Winner';
+    'VG Date Status Winner';
 
-    grid-template-columns: auto auto auto 0% 90%;
+    grid-template-columns: 5% 5% 10% 80%;
     grid-template-rows: 32px;
 
-    padding: 0 20px;
-    padding-left: 30px;
+    padding: 0 30px;
 
-    overflow-x: scroll;
+    /* overflow-x: scroll;
 
     ::-webkit-scrollbar {
         display: none;
-    }
+    } */
 `;
 
 export const Videogame = styled.section`
@@ -54,10 +53,12 @@ export const Bo = styled(Videogame)`
 
 export const Status = styled(Videogame)`
     grid-area: Status;
+    justify-content: flex-end;
 `;
 
 export const Winner = styled(Videogame)`
     grid-area: Winner;
+    width: 88%;
 `;
 
 

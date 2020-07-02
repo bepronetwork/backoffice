@@ -67,11 +67,8 @@ class MatchList extends React.Component {
                     <Date>
                         <span>Date</span>
                     </Date>
-                    <Bo>
-
-                    </Bo>
                     <Status>
-
+                        <span>Status</span>
                     </Status>
                     <Winner>
                         <span>Match winner</span>

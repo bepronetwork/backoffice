@@ -20,7 +20,7 @@ export const MatchContainer = styled.div`
     grid-template-rows: 58px 30px;
 
     width: 100%;
-    min-width: 450px;
+    min-width: 854px;
     height: auto;
     margin: 10px 10px;
     background-color: #fafcff;
@@ -99,8 +99,7 @@ export const Tag = styled.div`
 
     width: 81px;
     height: 23px;
-    padding: 0;
-    margin-right: 10px;
+    padding: 5px;
     border-radius: 3px;
 
     font-family: Poppins;
