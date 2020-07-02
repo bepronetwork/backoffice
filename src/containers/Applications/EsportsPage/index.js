@@ -253,7 +253,7 @@ class EsportsPage extends React.Component {
                     </Actions>
                     { !showMatchPage && _.isEmpty(match) ? (
                         <>
-                            <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={_.debounce(this.toggleAllTab, 500)} disabled={_.isEmpty(selectedVideogames)}>
+                            <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={this.toggleAllTab} disabled={ _.isEmpty(selectedVideogames) || isLoadingMatches }>
                                 <AllTab style={{ opacity: !_.isEmpty(selectedVideogames) ? 0.5 : 1 }}>
                                     <span>All</span>
                                 </AllTab>
@@ -261,15 +261,17 @@ class EsportsPage extends React.Component {
                             { videogames.map(videogame => (
                                 collapsed ? 
                                 <VideogameTabCollapsed 
-                                toggleSelected={_.debounce(this.toggleSelected, 500)}
+                                isLoading={isLoadingMatches}
+                                toggleSelected={this.toggleSelected}
                                 selectedVideogames={selectedVideogames}
                                 data={this.getVideogameInfo(videogame)}
                                 /> 
                                 : <VideogameTab 
+                                    isLoading={isLoadingMatches}
                                     data={this.getVideogameInfo(videogame)} 
                                     setSelected={this.setSelected} 
-                                    toggleSelected={_.debounce(this.toggleSelected, 500)}
-                                    toggleSelectedSerie={_.debounce(this.toggleSelectedSerie, 500)} 
+                                    toggleSelected={this.toggleSelected}
+                                    toggleSelectedSerie={this.toggleSelectedSerie} 
                                     selectedVideogames={selectedVideogames}
                                     seriesSelected={seriesSelected[videogame._id]}/>
                             ))}

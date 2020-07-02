@@ -69,7 +69,7 @@ class VideogameTab extends React.Component {
     }
 
     render() {
-        const { toggleSelected, toggleSelectedSerie, selectedVideogames, seriesSelected } = this.props;
+        const { toggleSelected, toggleSelectedSerie, selectedVideogames, seriesSelected, isLoading } = this.props;
         const { data, open, selected } = this.state;
         const { _id, name, icon, series } = data;
 
@@ -86,7 +86,7 @@ class VideogameTab extends React.Component {
                         onChange={() => toggleSelected(_id)}
                         inputProps={{ 'aria-label': 'primary checkbox' }}
                         color="primary"
-                        disabled={_.isEmpty(series)}
+                        disabled={ _.isEmpty(series) || isLoading }
                         />
                     </ThemeProvider>
                     </Select>
@@ -119,6 +119,7 @@ class VideogameTab extends React.Component {
                                 onChange={() => toggleSelectedSerie({ videogame_id: _id, serie_id: serie.id })}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                                 color="primary"
+                                disabled={isLoading}
                                 />
                             </ThemeProvider>
                         </SubTabSelect>

@@ -33,7 +33,7 @@ class VideogameTab extends React.Component {
 
 
     render() {
-        const { toggleSelected, selectedVideogames } = this.props;
+        const { toggleSelected, selectedVideogames, isLoading } = this.props;
         const { data } = this.state;
         const { _id, icon, series } = data;
 
@@ -42,7 +42,7 @@ class VideogameTab extends React.Component {
         return (
             <>
             <Container>
-                <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={() => toggleSelected(_id)} disabled={_.isEmpty(series)}>
+                <ButtonBase disableRipple style={{ margin: 0, padding: 0, display: 'block' }} onClick={() => toggleSelected(_id)} disabled={ _.isEmpty(series) || isLoading }>
                     <Tab selected={ selectedVideogames.includes(_id) }>
                         <VideoGameIcon style={{ opacity: _.isEmpty(series) || !selectedVideogames.includes(_id) ? 0.5 : 1 }}>
                             { icon }
