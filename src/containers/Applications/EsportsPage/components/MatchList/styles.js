@@ -18,7 +18,7 @@ export const Header = styled.section`
     grid-template-columns: 5% 5% 10% 80%;
     grid-template-rows: 32px;
 
-    padding: 0 30px;
+    padding: 10px 30px;
 
     /* overflow-x: scroll;
 

@@ -13,11 +13,11 @@ import MatchTab from './components/MatchTab';
 import { ButtonBase } from '@material-ui/core';
 import MatchTabCollapsed from './components/MatchTabCollapsed';
 
-import socketConnection from '../../../esports/WebSocket';
+// import socketConnection from '../../../esports/WebSocket';
 import VideoGameTabSkeleton from './components/Skeletons/VideogameTabSkeleton';
 
 class EsportsPage extends React.Component {
-    static contextType = socketConnection;
+    // static contextType = socketConnection;
 
     constructor(props) {
         super(props);
@@ -38,20 +38,20 @@ class EsportsPage extends React.Component {
         this.projectData(this.props);
     }
 
-    componentWillReceiveProps(props){
+    componentWillReceiveProps(props){''
        this.projectData(props);
     }
 
-    createSocketConnection = (props) => {
-        const { connection } = this.context;
+    // createSocketConnection = (props) => {
+    //     const { connection } = this.context;
 
-        connection.on("match", this.showData);
-        connection.on("serie", this.showData);
-    }
+    //     connection.on("match", this.showData);
+    //     connection.on("serie", this.showData);
+    // }
 
-    showData = data => {
-        console.log(data)
-    }
+    // showData = data => {
+    //     console.log(data)
+    // }
 
     projectData = async (props) => {
         const { videogames } = this.state;

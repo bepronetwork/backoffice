@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Header, Videogame, Date, Bo, Status, Winner } from './styles';
+import { Container, Header, Videogame, Date, Status, Winner } from './styles';
 import Match from '../Match';
 import _ from 'lodash';
 
-import InfiniteScroll from "react-infinite-scroll-component";
+import { FixedSizeList as List } from 'react-window';
+import InfiniteLoader from "react-window-infinite-loader";
+
 import MatchSkeleton from '../Skeletons/MatchSkeleton';
 
 class MatchList extends React.Component {
@@ -51,11 +53,24 @@ class MatchList extends React.Component {
         }
     }
 
+    Row = ({ index, key, style }) => {
+        const { setMatchPage } = this.props;
+        const { matches, series } = this.state;
+
+        return (
+            <div key={key} style={style}>
+                <Match data={matches[index]} series={series} setMatchPage={setMatchPage} key={key} style={style}/>
+            </div>
+        )
+    }
+
     render() {
-        const { setMatchPage, isLoading } = this.props;
+        const { isLoading } = this.props;
         const { matches, series } = this.state;
         
         if (_.isEmpty(matches) || _.isEmpty(series)) return null;
+
+        const isItemLoaded = index => !!matches[index];
 
         return (
             <>
@@ -74,27 +89,37 @@ class MatchList extends React.Component {
                         <span>Match winner</span>
                     </Winner>
                 </Header>
-                <InfiniteScroll
-                dataLength={this.state.matches.length}
-                next={this.fetchMoreData}
-                hasMore={true}
-                loader={<MatchSkeleton/>}
-                style={{ display: "flex", flexDirection: "column", padding: 0 }}
-                >   
-                    { isLoading ? (
-                        _.times(10, () => <MatchSkeleton/>)
-                    ) : (
-                        matches.map(match => (
-                            <Match data={match} series={series} setMatchPage={setMatchPage}/>
-                        ))
-                    )}            
-                </InfiniteScroll>
+                { isLoading ? (
+                    _.times(10, () => <MatchSkeleton/>)
+                ) : (
+                    <InfiniteLoader
+                    isItemLoaded={isItemLoaded}
+                    itemCount={matches.length + 10}
+                    loadMoreItems={this.fetchMoreData}
+                    placeholder={<MatchSkeleton/>}
+                  >
+                    {({ onItemsRendered, ref }) => (
+                        <List
+                        className="List"
+                        height={1100}
+                        itemCount={matches.length}
+                        itemSize={110}
+                        width="100%"
+                        ref={ref}
+                        onItemsRendered={onItemsRendered}
+                        >
+                            {this.Row}
+                        </List>
+                    )}
+                    </InfiniteLoader>)}
             </Container>
             </>
         )
     }
 
 }
+
+     
 
 function mapStateToProps(state){
     return {

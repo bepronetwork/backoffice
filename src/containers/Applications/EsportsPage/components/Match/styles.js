@@ -7,6 +7,8 @@ export const MatchLink = styled(ButtonBase)`
     background: none;
     outline: none;
     border: 0;
+
+    width: 100%;
 `;
 
 export const MatchContainer = styled.div`

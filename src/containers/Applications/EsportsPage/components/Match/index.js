@@ -56,15 +56,9 @@ class Match extends React.Component {
     }
 
     getLeagueName = id => {
-        const { series } = this.state;
+        const { serie, league } = this.state.data;
 
-        const serie = series.find(serie => serie.league_id === id);
-
-        if (!serie) return null;
-
-        const { league } = serie;
-
-        return league ? `${league.name} ${serie.full_name}` : null;
+        return `${league.name} ${serie.full_name}`;
     }
 
     setMatchBooked = async e => {
@@ -136,7 +130,6 @@ class Match extends React.Component {
         if (_.isEmpty(data) || _.isEmpty(opponents)) return null;
 
         const leagueName = this.getLeagueName(data.league_id);
-        if (!leagueName) return null
 
         const [teamOne, teamTwo] = opponents.map(opponent => opponent.opponent);
         const [scoreTeamOne, scoreTeamTwo] = results ? opponents.map(opponent => this.getTeamScore(opponent.opponent.id)) : [null, null];
