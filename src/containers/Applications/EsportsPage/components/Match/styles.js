@@ -49,7 +49,7 @@ export const MatchInfo = styled.section`
     grid-template-areas: 
     'videogame date info';
 
-    grid-template-columns: 20% 50% 30%;
+    grid-template-columns: 20% 40% 40%;
     grid-template-rows: auto;
 
     padding: 0px 20px;
@@ -80,6 +80,35 @@ export const DateInfo = styled.section`
 
     padding: 0px 8px;
 
+`;
+
+export const Status = styled.section`
+    grid-area: info;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding: 0px 5px;
+`;
+
+export const Tag = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 81px;
+    height: 23px;
+    padding: 0;
+    margin-right: 10px;
+    border-radius: 3px;
+
+    font-family: Poppins;
+    font-size: 12px;
+    font-weight: 300;
+
+    background-color: ${props => props.backgroundColor};
+    color: ${props => props.textColor};
 `;
 
 export const Time = styled.span`

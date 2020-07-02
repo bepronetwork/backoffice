@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { MatchLink, MatchContainer, Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan, BookButton, RemoveBookButton } from './styles';
+import { MatchLink, MatchContainer, Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan, BookButton, RemoveBookButton, Status, Tag } from './styles';
 import Avatar from 'react-avatar';
 import moment from 'moment';
 
 import videogames from '../Enums/videogames';
+import matchStatusEnum from '../Enums/status';
 import { updateMatchData } from '../../../../../redux/actions/matchesActions';
 import store from '../../../../App/store';
 
@@ -129,7 +130,7 @@ class Match extends React.Component {
 
     render() {
         const { data, isLoading } = this.state;
-        const { opponents, results, videogame, scheduled_at, booked } = data;
+        const { opponents, results, videogame, scheduled_at, booked, status } = data;
         const { setMatchPage } = this.props;
 
         if (_.isEmpty(data) || _.isEmpty(opponents)) return null;
@@ -144,6 +145,8 @@ class Match extends React.Component {
 
         const time = new Date(scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
         const date = moment(new Date(scheduled_at)).format('MM/DD');
+
+        const matchStatus = status ? matchStatusEnum[status] : null;
 
         return (
             <>
@@ -168,6 +171,11 @@ class Match extends React.Component {
                                 { date }
                             </DateSpan>
                         </DateInfo>
+                        <Status>
+                            { matchStatus && <Tag backgroundColor={matchStatus.backgroundColor} textColor={matchStatus.textColor}>
+                                { matchStatus.text }
+                            </Tag> }
+                        </Status>
                     </MatchInfo>
                     <TeamsInfo>
                         <TeamOne>
