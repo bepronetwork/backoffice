@@ -38,7 +38,7 @@ class EsportsPage extends React.Component {
         this.projectData(this.props);
     }
 
-    componentWillReceiveProps(props){''
+    componentWillReceiveProps(props){
        this.projectData(props);
     }
 

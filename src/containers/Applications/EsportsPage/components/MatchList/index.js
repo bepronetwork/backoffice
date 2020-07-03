@@ -8,6 +8,7 @@ import { FixedSizeList as List } from 'react-window';
 import InfiniteLoader from "react-window-infinite-loader";
 
 import MatchSkeleton from '../Skeletons/MatchSkeleton';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 class MatchList extends React.Component {
     constructor(props) {
@@ -65,7 +66,7 @@ class MatchList extends React.Component {
     }
 
     render() {
-        const { isLoading } = this.props;
+        const { isLoading, setMatchPage } = this.props;
         const { matches, series } = this.state;
         
         if (_.isEmpty(matches) || _.isEmpty(series)) return null;
@@ -89,7 +90,7 @@ class MatchList extends React.Component {
                         <span>Match winner</span>
                     </Winner>
                 </Header>
-                { isLoading ? (
+                {/* { isLoading ? (
                     _.times(10, () => <MatchSkeleton/>)
                 ) : (
                     <InfiniteLoader
@@ -111,7 +112,22 @@ class MatchList extends React.Component {
                             {this.Row}
                         </List>
                     )}
-                    </InfiniteLoader>)}
+                    </InfiniteLoader>)} */}
+                <InfiniteScroll
+                dataLength={this.state.matches.length}
+                next={this.fetchMoreData}
+                hasMore={true}
+                loader={<MatchSkeleton/>}
+                style={{ display: "flex", flexDirection: "column", padding: 0 }}
+                >   
+                    { isLoading ? (
+                        _.times(10, () => <MatchSkeleton/>)
+                    ) : (
+                        matches.map(match => (
+                            <Match data={match} series={series} setMatchPage={setMatchPage}/>
+                        ))
+                    )}            
+                </InfiniteScroll>
             </Container>
             </>
         )
