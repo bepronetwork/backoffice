@@ -29,7 +29,10 @@ class EsportsPage extends React.Component {
             videogames: [],
             selectedVideogames: [],
             seriesSelected: {},
-            isLoadingMatches: false
+            isLoadingMatches: false,
+            begin_at: null,
+            end_at: null,
+            statusSelected: null
         };
       }
 
@@ -64,7 +67,12 @@ class EsportsPage extends React.Component {
 
             this.setState({ isLoadingMatches: true });
 
-            await App.getMatchesAll({ size: 10, offset: 0 });
+            await App.getMatchesAll({ 
+                filters: { 
+                    size: 10, 
+                    offset: 0 
+                } 
+            });
 
             this.setState({
                 videogames: props.videogames,
@@ -207,16 +215,36 @@ class EsportsPage extends React.Component {
     updateMatches = async ({ seriesSelected }) => {
         const { profile } = this.props;
         const { App } = profile;
+        const { begin_at, end_at } = this.state;
         
         const seriesArr = _.concat(Object.values(seriesSelected)).flat();
         
         if (!_.isEmpty(seriesArr)) {
             this.setState({ isLoadingMatches: true });
-            await App.getSeriesMatches({ size: 10, offset: 0, serie_id: seriesArr });
+
+            await App.getSeriesMatches({ 
+                filters: {
+                    size: 10, 
+                    offset: 0, 
+                    serie_id: seriesArr,
+                    begin_at: begin_at,
+                    end_at: end_at
+                }
+            });
+
             this.setState({ isLoadingMatches: false });
+
         } else {
             this.setState({ isLoadingMatches: true });
-            await App.getMatchesAll({ size: 10, offset: 0 });
+
+            await App.getMatchesAll({ 
+                filters: { 
+                    size: 10, 
+                    offset: 0,
+                    begin_at: begin_at,
+                    end_at: end_at
+                } 
+            });
             this.setState({ isLoadingMatches: false });
         }
     }
@@ -224,9 +252,18 @@ class EsportsPage extends React.Component {
     toggleAllTab = async () => {
         const { profile } = this.props;
         const { App } = profile;
+        const { begin_at, end_at } = this.state;
 
         this.setState({ isLoadingMatches: true });
-        await App.getMatchesAll({ size: 10, offset: 0 });
+
+        await App.getMatchesAll({ 
+            filters: { 
+                size: 10, 
+                offset: 0,
+                begin_at: begin_at,
+                end_at: end_at
+            } 
+        });
 
         this.setState({
             selectedVideogames: [],
@@ -235,8 +272,21 @@ class EsportsPage extends React.Component {
         })
     }
 
+    setDateFilter = ({ begin_at, end_at }) => {
+        this.setState({
+            begin_at: begin_at,
+            end_at: end_at
+        })
+    }
+
+    setStatusFilter = ({ statusSelected }) => {
+        this.setState({
+            statusSelected: !_.isEmpty(statusSelected) ? statusSelected : null
+        })
+    }
+
     render() {
-        const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames, isLoadingMatches } = this.state;
+        const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames, isLoadingMatches, begin_at, end_at, statusSelected } = this.state;
 
         return (
             <>
@@ -314,6 +364,11 @@ class EsportsPage extends React.Component {
                         <MatchPage matchId={match.id}/>
                     ) : (
                         <MatchList 
+                        setDateFilter={this.setDateFilter}
+                        setStatusFilter={this.setStatusFilter}
+                        beginAt={begin_at}
+                        endAt={end_at}
+                        statusSelected={statusSelected}
                         setMatchPage={this.setMatchPage}
                         seriesSelected={seriesSelected}
                         isLoading={isLoadingMatches}/>

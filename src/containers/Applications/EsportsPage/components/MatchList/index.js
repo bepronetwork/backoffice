@@ -1,14 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Header, Videogame, Date, Status, Winner } from './styles';
+import { Container, Header, Videogame, Date, Status, Winner, Filters, DateFilter, StatusFilter } from './styles';
 import Match from '../Match';
-import _ from 'lodash';
+import _, { keys } from 'lodash';
+import moment from 'moment';
 
 import { FixedSizeList as List } from 'react-window';
 import InfiniteLoader from "react-window-infinite-loader";
 
 import MatchSkeleton from '../Skeletons/MatchSkeleton';
 import InfiniteScroll from 'react-infinite-scroll-component';
+
+import { DatePicker, Select } from 'antd';
+
+import matchStatus from '../Enums/status';
+const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 class MatchList extends React.Component {
     constructor(props) {
@@ -28,31 +35,113 @@ class MatchList extends React.Component {
     }
 
     projectData = (props) => {
-        const { matches, videogames, seriesSelected } = props;
+        const { matches, videogames, seriesSelected, beginAt, endAt } = props;
 
         const series = _.concat(...videogames.map(videogame => videogame.series));
 
         this.setState({
             matches: matches,
             series: series,
-            seriesSelected: seriesSelected
+            seriesSelected: seriesSelected,
+            begin_at: beginAt,
+            end_at: endAt
         })
 
     }
 
-    fetchMoreData = () => {
-        const { seriesSelected, matches } = this.state;
+    fetchFilteredData = () => {
+        const { seriesSelected, begin_at, end_at, statusSelected } = this.state;
         const { profile } = this.props;
         const { App } = profile;
 
         const series = _.concat(Object.values(seriesSelected)).flat();
 
         if (_.isEmpty(series)) {
-            App.getMatchesAll({ size: 10, offset: matches.length, isPagination: true });
+            App.getMatchesAll({ 
+                filters: { 
+                    size: 10, 
+                    begin_at: begin_at,
+                    end_at: end_at,
+                    status: statusSelected
+                }
+            });
+
         } else {
-            App.getSeriesMatches({ size: 10, offset: matches.length, serie_id: series, isPagination: true });
+            App.getSeriesMatches({ 
+                filters: {
+                    size: 10, 
+                    serie_id: series, 
+                    begin_at: begin_at,
+                    end_at: end_at,
+                    status: statusSelected
+                }
+            });
         }
     }
+
+    fetchMoreData = () => {
+        const { seriesSelected, matches, begin_at, end_at, statusSelected } = this.state;
+        const { profile } = this.props;
+        const { App } = profile;
+
+        const series = _.concat(Object.values(seriesSelected)).flat();
+
+        if (_.isEmpty(series)) {
+            App.getMatchesAll({ 
+                filters: { 
+                    size: 10, 
+                    offset: matches.length,
+                    begin_at: begin_at,
+                    end_at: end_at,
+                    status: statusSelected
+                }, 
+                isPagination: true 
+            });
+
+        } else {
+            App.getSeriesMatches({ 
+                filters: {
+                    size: 10, 
+                    offset: matches.length, 
+                    serie_id: series, 
+                    begin_at: begin_at,
+                    end_at: end_at,
+                    status: statusSelected
+                },
+                isPagination: true 
+            });
+        }
+    }
+
+    onChangeDate = (_value, dateString) => {
+        const { setDateFilter } = this.props;
+
+        const [begin_at, end_at] = dateString;
+
+        setDateFilter({
+            begin_at: begin_at,
+            end_at: end_at
+        })
+
+        this.setState({
+            begin_at: begin_at,
+            end_at: end_at
+        }, () => this.fetchFilteredData())
+    }
+
+    onChangeStatus = (value) => {
+        const { setStatusFilter } = this.props;
+
+        setStatusFilter({ statusSelected: value });
+
+        this.setState({
+            statusSelected: !_.isEmpty(value) ? value : null
+        }, () => this.fetchFilteredData())
+    }
+      
+    // onOk = (value) => {
+    //     console.log('onOk: ', value);
+    //   }
 
     Row = ({ index, key, style }) => {
         const { setMatchPage } = this.props;
@@ -68,14 +157,39 @@ class MatchList extends React.Component {
     render() {
         const { isLoading, setMatchPage } = this.props;
         const { matches, series } = this.state;
-        
-        if (_.isEmpty(matches) || _.isEmpty(series)) return null;
 
-        const isItemLoaded = index => !!matches[index];
+        // const isItemLoaded = index => !!matches[index];
 
         return (
             <>
             <Container>
+                <Filters>
+                    <DateFilter>
+                    <RangePicker 
+                    onChange={this.onChangeDate} 
+                    // onOk={this.onOk}
+                    ranges={{
+                        'Today': [moment().utc(), moment().utc()],
+                        'Yesterday': [moment().subtract(1, 'days').utc(), moment().subtract(1, 'days').utc()],
+                        'Tomorrow': [moment().add(1, 'days').utc(), moment().add(1, 'days').utc()],
+                        'Last 7 days': [moment().subtract(7, 'days').utc(), moment().utc()],
+                        'Next 7 days': [moment().utc(), moment().add(7, 'days').utc()]
+                      }}/>
+                    </DateFilter>
+                    <StatusFilter>
+                    <Select
+                        mode="multiple"
+                        style={{ minWidth: 150 }}
+                        placeholder="Match Status"
+                        onChange={this.onChangeStatus}
+                    >   
+                        { Object.keys(matchStatus).map(key => (
+                            <Option key={key}>{matchStatus[key].text}</Option>
+                        ))}
+                    </Select>
+                    </StatusFilter>
+                    
+                </Filters>
                 <Header>
                     <Videogame>
                         <span>VG</span>
@@ -113,21 +227,24 @@ class MatchList extends React.Component {
                         </List>
                     )}
                     </InfiniteLoader>)} */}
-                <InfiniteScroll
-                dataLength={this.state.matches.length}
-                next={this.fetchMoreData}
-                hasMore={true}
-                loader={<MatchSkeleton/>}
-                style={{ display: "flex", flexDirection: "column", padding: 0 }}
-                >   
-                    { isLoading ? (
-                        _.times(10, () => <MatchSkeleton/>)
-                    ) : (
-                        matches.map(match => (
-                            <Match data={match} series={series} setMatchPage={setMatchPage}/>
-                        ))
-                    )}            
-                </InfiniteScroll>
+                { !_.isEmpty(matches) && !_.isEmpty(series) ? (
+                    <InfiniteScroll
+                    dataLength={this.state.matches.length}
+                    next={this.fetchMoreData}
+                    hasMore={this.state.matches.length % 10 === 0}
+                    loader={<MatchSkeleton/>}
+                    style={{ display: "flex", flexDirection: "column", padding: 0 }}
+                    >   
+                        { isLoading ? (
+                            _.times(10, () => <MatchSkeleton/>)
+                        ) : (
+                            matches.map(match => (
+                                <Match data={match} series={series} setMatchPage={setMatchPage}/>
+                            ))
+                        )}            
+                    </InfiniteScroll>
+                ) : null }
+                
             </Container>
             </>
         )

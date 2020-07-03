@@ -1299,13 +1299,12 @@ class App{
         }
     }
 
-    getMatchesAll = async ({ size, offset, isPagination=false }) => {
+    getMatchesAll = async ({ filters, isPagination=false }) => {
         try {
             await getMatchesAll({
                 params: {
                     admin: this.getAdminId(),
-                    size,
-                    offset
+                    ..._.pickBy(filters, _.identity)
                 },
                 headers: authHeaders(this.getBearerToken(), this.getAdminId()),
                 isPagination
@@ -1329,14 +1328,12 @@ class App{
         }
     }
 
-    getSeriesMatches = async ({ size, offset, serie_id, isPagination=false }) => {
+    getSeriesMatches = async ({ filters, isPagination=false }) => {
         try {
             await getSeriesMatches({
                 params: {
                     admin: this.getAdminId(),
-                    size,
-                    offset,
-                    serie_id
+                    ..._.pickBy(filters, _.identity)
                 },
                 headers: authHeaders(this.getBearerToken(), this.getAdminId()),
                 isPagination

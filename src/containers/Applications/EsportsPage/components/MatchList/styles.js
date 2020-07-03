@@ -9,6 +9,47 @@ export const Container = styled.div`
     height: 100%;
 `;
 
+export const Filters = styled.section`
+    display: grid;
+
+    grid-template-areas: 
+    'Date Status';
+
+    grid-template-columns: 310px 1fr;
+    grid-template-rows: auto;
+
+    width: 100%;
+    height: auto;
+
+    border-bottom: solid 1px rgba(164, 161, 161, 0.35);
+`;
+
+export const DateFilter = styled.section`
+    grid-area: Date;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    width: 100%;
+    height: auto;
+
+    padding: 20px 0px;
+`;
+
+export const StatusFilter = styled.section`
+    grid-area: Status;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    width: 100%;
+    height: auto;
+
+    padding: 0px 10px;
+`;
+
 export const Header = styled.section`
     display: grid;
 
