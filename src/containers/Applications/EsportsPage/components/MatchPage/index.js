@@ -12,6 +12,7 @@ import StatsPage from '../StatsPage';
 import { updateMatchData } from '../../../../../redux/actions/matchesActions';
 import store from '../../../../App/store';
 import MarketsPage from '../MarketsPage';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -116,7 +117,15 @@ class MatchPage extends React.Component {
         const { match, isLoading } = this.state;
         const { videogame, opponents, scheduled_at, booked, odds, status } = match;
 
-        if (_.isEmpty(match)) return null;
+        if (_.isEmpty(match)) {
+            return (
+                <MatchContainer>
+                    <MatchSummary style={{ backgroundColor: "none" }}>
+                        <Skeleton variant="rect" height="213px" width="100%" animation="wave"/>
+                    </MatchSummary>
+                </MatchContainer>
+            );
+        }
 
         const { icon } = videogames[videogame.id];
         const serieName = this.getSerieName();

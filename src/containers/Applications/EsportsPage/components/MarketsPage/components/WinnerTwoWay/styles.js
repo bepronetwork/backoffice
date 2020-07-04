@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button } from '@material-ui/core';
 
 export const Container = styled.div`
     display: grid;
@@ -55,7 +56,7 @@ export const ResultHeader = styled.section`
     grid-template-areas: 
     'name graph tag';
 
-    grid-template-columns: 70% 15% 15%;
+    grid-template-columns: 60% 25% 15%;
     grid-template-rows: 100%; 
 
     padding: 0px 8px;   
@@ -73,6 +74,20 @@ export const MarketName = styled.section`
     font-size: 14px;
     font-weight: 400;
     color: #333333;
+`;
+
+export const Graph = styled.section`
+    grid-area: graph;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0px 8px; 
+
+    svg {
+        margin-bottom: 5px;
+    }  
 `;
 
 export const Status = styled.section`
@@ -154,4 +169,26 @@ export const TeamResult = styled.section`
     font-size: 14px;
     font-weight: 400;
     color: ${props => props.color ? props.color : "#333333"};
+`;
+
+export const CloseButton = styled(Button)`
+    text-transform: none !important;
+    background-color: #39f !important;
+    color: white !important;
+    box-shadow: none !important;
+
+    height: 23px;
+
+    font-family: Poppins !important;
+    font-size: 11px !important;
+    font-weight: 300 !important;
+`;
+
+export const GraphContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 950px;
+    height: 500px;
 `;

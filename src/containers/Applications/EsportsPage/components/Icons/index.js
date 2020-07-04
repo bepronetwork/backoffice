@@ -7,6 +7,7 @@ import RainbowSix from './RainbowSix';
 import RocketLeague from './RocketLeage';
 import MatchFinished from './MatchFinished';
 import Trophy from './Trophy';
+import SeeGraph from './SeeGraph';
 
 export {
     CoD,
@@ -17,5 +18,6 @@ export {
     RainbowSix,
     RocketLeague,
     MatchFinished,
-    Trophy
+    Trophy,
+    SeeGraph
 }
