@@ -11,6 +11,7 @@ import StatsPage from '../StatsPage';
 
 import { updateMatchData } from '../../../../../redux/actions/matchesActions';
 import store from '../../../../App/store';
+import MarketsPage from '../MarketsPage';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -113,7 +114,7 @@ class MatchPage extends React.Component {
 
     render() {
         const { match, isLoading } = this.state;
-        const { videogame, opponents, scheduled_at, booked } = match;
+        const { videogame, opponents, scheduled_at, booked, odds, status } = match;
 
         if (_.isEmpty(match)) return null;
 
@@ -124,7 +125,8 @@ class MatchPage extends React.Component {
         const date = moment(new Date(scheduled_at)).format('MM/DD');
 
         const isLoL = videogame.slug === "league-of-legends"; 
-
+        const hasMarkets = !_.isEmpty(odds) && !_.isEmpty(odds.markets);
+        
         return (
             <>
             <MatchContainer>
@@ -172,7 +174,7 @@ class MatchPage extends React.Component {
                         )}
                     </InfoContainer>
                 </MatchSummary>
-                { isLoL ? <StatsPage match={match}/> : null }
+                { isLoL ? <StatsPage match={match}/> : <MarketsPage status={status} markets={hasMarkets ? odds.markets : []} teamOne={teamOne} teamTwo={teamTwo}/> }
             </MatchContainer>            
             </>
         )
