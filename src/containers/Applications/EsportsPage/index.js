@@ -215,7 +215,7 @@ class EsportsPage extends React.Component {
     updateMatches = async ({ seriesSelected }) => {
         const { profile } = this.props;
         const { App } = profile;
-        const { begin_at, end_at } = this.state;
+        const { begin_at, end_at, statusSelected } = this.state;
         
         const seriesArr = _.concat(Object.values(seriesSelected)).flat();
         
@@ -228,7 +228,8 @@ class EsportsPage extends React.Component {
                     offset: 0, 
                     serie_id: seriesArr,
                     begin_at: begin_at,
-                    end_at: end_at
+                    end_at: end_at,
+                    status: statusSelected
                 }
             });
 
@@ -242,7 +243,8 @@ class EsportsPage extends React.Component {
                     size: 10, 
                     offset: 0,
                     begin_at: begin_at,
-                    end_at: end_at
+                    end_at: end_at,
+                    status: statusSelected
                 } 
             });
             this.setState({ isLoadingMatches: false });
