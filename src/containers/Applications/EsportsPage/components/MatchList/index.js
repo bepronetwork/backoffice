@@ -170,6 +170,8 @@ class MatchList extends React.Component {
 
         // const isItemLoaded = index => !!matches[index];
 
+        const matchesFiltered = showOnlyBookedMatches && !_.isEmpty(matches) ? matches.filter(match => match.booked) : matches;
+
         return (
             <>
             <Container>
@@ -198,9 +200,9 @@ class MatchList extends React.Component {
                         ))}
                     </Select>
                     </StatusFilter>
-                    {/* <BookedFilter>
+                    <BookedFilter>
                         <Checkbox checked={showOnlyBookedMatches} onChange={setBookedFilter}>Show only Booked Matches</Checkbox>
-                    </BookedFilter> */}
+                    </BookedFilter>
                 </Filters>
                 <Header>
                     <Videogame>
@@ -239,7 +241,7 @@ class MatchList extends React.Component {
                         </List>
                     )}
                     </InfiniteLoader>)} */}
-                { !_.isEmpty(matches) && !_.isEmpty(series) ? (
+                { !_.isEmpty(matchesFiltered) && !_.isEmpty(series) ? (
                     <InfiniteScroll
                     dataLength={this.state.matches.length}
                     next={this.fetchMoreData}
@@ -250,7 +252,7 @@ class MatchList extends React.Component {
                         { isLoading || isLoadingMatches ? (
                             _.times(10, () => <MatchSkeleton/>)
                         ) : (
-                            matches.map(match => (
+                            matchesFiltered.map(match => (
                                 <Match data={match} series={series} setMatchPage={setMatchPage}/>
                             ))
                         )}            
