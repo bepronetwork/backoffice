@@ -174,8 +174,8 @@ class MatchPage extends React.Component {
                         )}
                     </InfoContainer>
                 </MatchSummary>
-                { isLoL ? <StatsPage match={match}/> : null }
-                {/* { isLoL ? <StatsPage match={match}/> : <MarketsPage status={status} markets={hasMarkets ? odds.markets : []} teamOne={teamOne} teamTwo={teamTwo}/> } */}
+                {/* { isLoL ? <StatsPage match={match}/> : null } */}
+                { isLoL ? <StatsPage match={match}/> : <MarketsPage status={status} markets={hasMarkets ? odds.markets : []} teamOne={teamOne} teamTwo={teamTwo}/> }
             </MatchContainer>            
             </>
         )

@@ -70,15 +70,28 @@ class Match extends React.Component {
     }
 
     getTwoWayOdds = odds => {
-        const odd = odds.find(odd => odd.template === 'winner-2-way');
+        switch (true) {
+            case _.isArray(odds):
+                const odd = odds.find(odd => odd.template === 'winner-2-way');
 
-        if (odd) {
-            const { selections } = odd;
+                if (odd) {
+                    const { selections } = odd;
+                    return [1/(selections[0].probability), 1/(selections[1].probability)];
+        
+                } else {
+                    return [null, null];
+                }
+            case !_.isEmpty(odds.markets):
+                const { selections } = odds.markets.find(market => market.template === 'winner-2-way');
 
-            return [1/(selections[0].probability), 1/(selections[1].probability)]
-
-        } else {
-            return [null, null]
+                if (selections) {
+                    return [1/(selections[0].probability), 1/(selections[1].probability)];
+                    
+                } else {
+                    return [null, null];
+                }
+            default:
+                return [null, null];
         }
     }
 
@@ -169,7 +182,7 @@ class Match extends React.Component {
 
         const [teamOne, teamTwo] = opponents.map(opponent => opponent.opponent);
         const [scoreTeamOne, scoreTeamTwo] = results ? opponents.map(opponent => this.getTeamScore(opponent.opponent.id)) : [null, null];
-        // const [teamOneOdd, teamTwoOdd] = !_.isEmpty(odds) ? this.getTwoWayOdds(odds) : [null, null];
+        const [teamOneOdd, teamTwoOdd] = !_.isEmpty(odds) ? this.getTwoWayOdds(odds) : [null, null];
 
         if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
 
@@ -215,7 +228,7 @@ class Match extends React.Component {
                             <span>{teamOne.name}</span>
                             { teamOne.image_url ? <img src={teamOne.image_url} alt={teamOne.name}/> : <Avatar name={teamOne.name} size="25" round={true}/> }
                         </TeamOne>
-                        {/* { teamOneOdd !== null && teamTwoOdd !== null && !isMatchFinished ? (
+                        { teamOneOdd !== null && teamTwoOdd !== null && !isMatchFinished ? (
                             <Odds>
                                 <OddValue>
                                     { teamOneOdd.toFixed(2) }
@@ -225,7 +238,7 @@ class Match extends React.Component {
                                     { teamTwoOdd.toFixed(2) }
                                 </OddValue> 
                             </Odds>
-                        ) : ( */}
+                        ) : (
                             <Result>
                                 <ResultValue color={this.getResultColor({ id: teamOne.id, winner_id: winner_id })}>
                                     { scoreTeamOne !== null && isMatchFinished ? scoreTeamOne : '-' }
@@ -235,7 +248,7 @@ class Match extends React.Component {
                                     { scoreTeamTwo !== null && isMatchFinished ? scoreTeamTwo : '-' }
                                 </ResultValue>
                             </Result>
-                        {/* )} */}
+                        )}
                         <TeamTwo>
                             { teamTwo.image_url ? <img src={teamTwo.image_url} alt={teamTwo.name}/> : <Avatar name={teamTwo.name} size="25" round={true}/> }
                             <span>{teamTwo.name}</span>
