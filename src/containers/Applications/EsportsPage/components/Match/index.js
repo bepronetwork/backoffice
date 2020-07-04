@@ -169,7 +169,7 @@ class Match extends React.Component {
 
         const [teamOne, teamTwo] = opponents.map(opponent => opponent.opponent);
         const [scoreTeamOne, scoreTeamTwo] = results ? opponents.map(opponent => this.getTeamScore(opponent.opponent.id)) : [null, null];
-        const [teamOneOdd, teamTwoOdd] = !_.isEmpty(odds) ? this.getTwoWayOdds(odds) : [null, null];
+        // const [teamOneOdd, teamTwoOdd] = !_.isEmpty(odds) ? this.getTwoWayOdds(odds) : [null, null];
 
         if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
 
@@ -215,7 +215,7 @@ class Match extends React.Component {
                             <span>{teamOne.name}</span>
                             { teamOne.image_url ? <img src={teamOne.image_url} alt={teamOne.name}/> : <Avatar name={teamOne.name} size="25" round={true}/> }
                         </TeamOne>
-                        { teamOneOdd !== null && teamTwoOdd !== null && !isMatchFinished ? (
+                        {/* { teamOneOdd !== null && teamTwoOdd !== null && !isMatchFinished ? (
                             <Odds>
                                 <OddValue>
                                     { teamOneOdd.toFixed(2) }
@@ -225,7 +225,7 @@ class Match extends React.Component {
                                     { teamTwoOdd.toFixed(2) }
                                 </OddValue> 
                             </Odds>
-                        ) : (
+                        ) : ( */}
                             <Result>
                                 <ResultValue color={this.getResultColor({ id: teamOne.id, winner_id: winner_id })}>
                                     { scoreTeamOne !== null && isMatchFinished ? scoreTeamOne : '-' }
@@ -235,7 +235,7 @@ class Match extends React.Component {
                                     { scoreTeamTwo !== null && isMatchFinished ? scoreTeamTwo : '-' }
                                 </ResultValue>
                             </Result>
-                        )}
+                        {/* )} */}
                         <TeamTwo>
                             { teamTwo.image_url ? <img src={teamTwo.image_url} alt={teamTwo.name}/> : <Avatar name={teamTwo.name} size="25" round={true}/> }
                             <span>{teamTwo.name}</span>
