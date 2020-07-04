@@ -40,9 +40,9 @@ class MarketsPage extends React.Component {
 
         if (!markets) return [];
 
-        const { selections } = markets.find(market => market.name === 'Winner 2-Way');
+        const market = markets.find(market => market.name === 'Winner 2-Way');
 
-        return selections ? selections : [];
+        return market ? market.selections : [];
     }
 
     render() {
