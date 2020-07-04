@@ -22,7 +22,8 @@ class MatchList extends React.Component {
         super(props);
 
         this.state = {
-            matches: []
+            matches: [],
+            isLoadingMatches: false
         };
       }
 
@@ -49,7 +50,7 @@ class MatchList extends React.Component {
 
     }
 
-    fetchFilteredData = () => {
+    fetchFilteredData = async () => {
         const { seriesSelected, begin_at, end_at, statusSelected } = this.state;
         const { profile } = this.props;
         const { App } = profile;
@@ -57,7 +58,7 @@ class MatchList extends React.Component {
         const series = _.concat(Object.values(seriesSelected)).flat();
 
         if (_.isEmpty(series)) {
-            App.getMatchesAll({ 
+            await App.getMatchesAll({ 
                 filters: { 
                     size: 10, 
                     begin_at: begin_at,
@@ -66,8 +67,10 @@ class MatchList extends React.Component {
                 }
             });
 
+            this.setState({ isLoadingMatches: false });
+
         } else {
-            App.getSeriesMatches({ 
+            await App.getSeriesMatches({ 
                 filters: {
                     size: 10, 
                     serie_id: series, 
@@ -76,10 +79,12 @@ class MatchList extends React.Component {
                     status: statusSelected
                 }
             });
+
+            this.setState({ isLoadingMatches: false });
         }
     }
 
-    fetchMoreData = () => {
+    fetchMoreData = async () => {
         const { seriesSelected, matches, begin_at, end_at, statusSelected } = this.state;
         const { profile } = this.props;
         const { App } = profile;
@@ -87,7 +92,7 @@ class MatchList extends React.Component {
         const series = _.concat(Object.values(seriesSelected)).flat();
 
         if (_.isEmpty(series)) {
-            App.getMatchesAll({ 
+            await App.getMatchesAll({ 
                 filters: { 
                     size: 10, 
                     offset: matches.length,
@@ -99,7 +104,7 @@ class MatchList extends React.Component {
             });
 
         } else {
-            App.getSeriesMatches({ 
+            await App.getSeriesMatches({ 
                 filters: {
                     size: 10, 
                     offset: matches.length, 
@@ -125,7 +130,8 @@ class MatchList extends React.Component {
 
         this.setState({
             begin_at: begin_at,
-            end_at: end_at
+            end_at: end_at,
+            isLoadingMatches: true
         }, () => this.fetchFilteredData())
     }
 
@@ -135,7 +141,8 @@ class MatchList extends React.Component {
         setStatusFilter({ statusSelected: value });
 
         this.setState({
-            statusSelected: !_.isEmpty(value) ? value : null
+            statusSelected: !_.isEmpty(value) ? value : null,
+            isLoadingMatches: true
         }, () => this.fetchFilteredData())
     }
       
@@ -156,7 +163,7 @@ class MatchList extends React.Component {
 
     render() {
         const { isLoading, setMatchPage } = this.props;
-        const { matches, series } = this.state;
+        const { matches, series, isLoadingMatches } = this.state;
 
         // const isItemLoaded = index => !!matches[index];
 
@@ -235,7 +242,7 @@ class MatchList extends React.Component {
                     loader={<MatchSkeleton/>}
                     style={{ display: "flex", flexDirection: "column", padding: 0 }}
                     >   
-                        { isLoading ? (
+                        { isLoading || isLoadingMatches ? (
                             _.times(10, () => <MatchSkeleton/>)
                         ) : (
                             matches.map(match => (

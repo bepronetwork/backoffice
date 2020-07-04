@@ -99,8 +99,8 @@ export const Tag = styled.div`
     justify-content: center;
     align-items: center;
 
-    width: 81px;
-    height: 23px;
+    min-width: 81px;
+    min-height: 23px;
     padding: 5px;
     border-radius: 3px;
 
@@ -161,6 +161,7 @@ export const TeamOne = styled.section`
 `;
 
 export const Result = styled.section`
+    grid-area: result;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -176,9 +177,44 @@ export const Result = styled.section`
 export const ResultValue = styled.span`
     margin: 0px 8px;
     font-family: Poppins;
-    font-size: 15px;
-    font-weight: 800; 
-    color: #333;
+    font-size: 15px !important;
+    font-weight: 500; 
+    color: ${props => props.color} !important;
+`;
+
+export const Draw = styled.span`
+    display: inline-block;
+    width: 34px;
+    height: 19px;
+    line-height: 19px;
+    border-radius: 3px;
+    font-family: Poppins;
+    font-size: 13px;
+    color: #333333 !important;
+    background-color: #DFE1EC;
+`;
+
+export const Odds = styled.section`
+    grid-area: result;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 0px 10px;
+
+    span {
+        font-family: Poppins;
+        font-size: 13px;
+        color: #828282;
+    }
+`;
+
+export const OddValue = styled.span`
+    margin: 0px 8px;
+    font-family: Poppins;
+    font-size: 15px !important;
+    font-weight: 500; 
+    color: #333333 !important;
 `;
 
 export const TeamTwo = styled.section`

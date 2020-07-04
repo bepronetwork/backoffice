@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { MatchLink, MatchContainer, Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan, BookButton, RemoveBookButton, Status, Tag } from './styles';
+import { MatchLink, MatchContainer, Indicator, MatchInfo, TeamsInfo, ActionArea, Footer, TeamOne, 
+    Result, ResultValue, TeamTwo, SerieName, VideoGameIcon, VideogameInfo, DateInfo, Time, Date as DateSpan, 
+    BookButton, RemoveBookButton, Status, Tag, Odds, OddValue, Draw } from './styles';
 import Avatar from 'react-avatar';
 import moment from 'moment';
 
@@ -11,6 +13,12 @@ import { updateMatchData } from '../../../../../redux/actions/matchesActions';
 import store from '../../../../App/store';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
+
+const results = Object.freeze({
+    won: { text: "W", color: "#7bd389" },
+    lost: { text: "L", color: "#ed5565" },
+    draw: { text: "D", color: "#b0b0b0" }
+})
 
 class Match extends React.Component {
     constructor(props) {
@@ -59,6 +67,34 @@ class Match extends React.Component {
         const { serie, league } = this.state.data;
 
         return `${league.name} ${serie.full_name}`;
+    }
+
+    getTwoWayOdds = odds => {
+        const odd = odds.find(odd => odd.template === 'winner-2-way');
+
+        if (odd) {
+            const { selections } = odd;
+
+            return [1/(selections[0].probability), 1/(selections[1].probability)]
+
+        } else {
+            return [null, null]
+        }
+    }
+
+    
+    getResultColor = ({ id, winner_id }) => {
+
+        switch (true) {
+            case winner_id === null:
+                return results.draw.color
+            case id === winner_id:
+                return results.won.color
+            case id !== winner_id:
+                return results.lost.color
+            default:
+                break;
+        }
     }
 
     setMatchBooked = async e => {
@@ -124,7 +160,7 @@ class Match extends React.Component {
 
     render() {
         const { data, isLoading } = this.state;
-        const { opponents, results, videogame, scheduled_at, booked, status } = data;
+        const { opponents, results, videogame, scheduled_at, booked, status, odds, winner_id } = data;
         const { setMatchPage } = this.props;
 
         if (_.isEmpty(data) || _.isEmpty(opponents)) return null;
@@ -133,6 +169,7 @@ class Match extends React.Component {
 
         const [teamOne, teamTwo] = opponents.map(opponent => opponent.opponent);
         const [scoreTeamOne, scoreTeamTwo] = results ? opponents.map(opponent => this.getTeamScore(opponent.opponent.id)) : [null, null];
+        const [teamOneOdd, teamTwoOdd] = !_.isEmpty(odds) ? this.getTwoWayOdds(odds) : [null, null];
 
         if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
 
@@ -140,6 +177,9 @@ class Match extends React.Component {
         const date = moment(new Date(scheduled_at)).format('MM/DD');
 
         const matchStatus = status ? matchStatusEnum[status] : null;
+
+        const isMatchFinished = !_.isEmpty(status) && (status === 'finished' || status === 'settled');
+        const isTie = scoreTeamOne !== null && scoreTeamTwo !== null && scoreTeamOne === scoreTeamTwo && isMatchFinished;
 
         return (
             <>
@@ -175,15 +215,27 @@ class Match extends React.Component {
                             <span>{teamOne.name}</span>
                             { teamOne.image_url ? <img src={teamOne.image_url} alt={teamOne.name}/> : <Avatar name={teamOne.name} size="25" round={true}/> }
                         </TeamOne>
-                        <Result>
-                            <ResultValue>
-                                { scoreTeamOne !== null ? scoreTeamOne : '-' }
-                            </ResultValue>
-                            <span>vs</span>
-                            <ResultValue>
-                                { scoreTeamTwo !== null ? scoreTeamTwo : '-' }
-                            </ResultValue>
-                        </Result>
+                        { teamOneOdd !== null && teamTwoOdd !== null && !isMatchFinished ? (
+                            <Odds>
+                                <OddValue>
+                                    { teamOneOdd.toFixed(2) }
+                                </OddValue>
+                                <span>vs</span>
+                                <OddValue>
+                                    { teamTwoOdd.toFixed(2) }
+                                </OddValue> 
+                            </Odds>
+                        ) : (
+                            <Result>
+                                <ResultValue color={this.getResultColor({ id: teamOne.id, winner_id: winner_id })}>
+                                    { scoreTeamOne !== null && isMatchFinished ? scoreTeamOne : '-' }
+                                </ResultValue>
+                                { isTie ? <Draw>Tie</Draw> : <span>vs</span> }
+                                <ResultValue color={this.getResultColor({ id: teamTwo.id, winner_id: winner_id })}>
+                                    { scoreTeamTwo !== null && isMatchFinished ? scoreTeamTwo : '-' }
+                                </ResultValue>
+                            </Result>
+                        )}
                         <TeamTwo>
                             { teamTwo.image_url ? <img src={teamTwo.image_url} alt={teamTwo.name}/> : <Avatar name={teamTwo.name} size="25" round={true}/> }
                             <span>{teamTwo.name}</span>
@@ -192,11 +244,11 @@ class Match extends React.Component {
                     <ActionArea>
                         { booked ? (
                             <RemoveBookButton variant="contained" size="small" onClick={this.removeMatchBooked} disabled={isLoading}>
-                                { isLoading ? <img src={loading} className={'loading_gif'}/> : "Remove" }
+                                { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Remove" }
                             </RemoveBookButton>
                         ) : (
                             <BookButton variant="contained" size="small" onClick={this.setMatchBooked} disabled={isLoading}>
-                                { isLoading ? <img src={loading} className={'loading_gif'}/> : "Book" }
+                                { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Book" }
                             </BookButton>
                         )}
                     </ActionArea>
