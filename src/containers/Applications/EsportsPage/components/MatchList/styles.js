@@ -13,9 +13,9 @@ export const Filters = styled.section`
     display: grid;
 
     grid-template-areas: 
-    'Date Status';
+    'Date Status Booked';
 
-    grid-template-columns: 310px 1fr;
+    grid-template-columns: 310px auto 1fr;
     grid-template-rows: auto;
 
     width: 100%;
@@ -39,6 +39,19 @@ export const DateFilter = styled.section`
 
 export const StatusFilter = styled.section`
     grid-area: Status;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    width: 100%;
+    height: auto;
+
+    padding: 0px 10px;
+`;
+
+export const BookedFilter = styled.section`
+    grid-area: Booked;
 
     display: flex;
     justify-content: flex-start;

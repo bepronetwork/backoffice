@@ -32,7 +32,8 @@ class EsportsPage extends React.Component {
             isLoadingMatches: false,
             begin_at: null,
             end_at: null,
-            statusSelected: null
+            statusSelected: null,
+            showOnlyBookedMatches: false
         };
       }
 
@@ -287,8 +288,16 @@ class EsportsPage extends React.Component {
         })
     }
 
+    setBookedFilter = () => {
+        const { showOnlyBookedMatches } = this.state;
+
+        this.setState({
+            showOnlyBookedMatches: !showOnlyBookedMatches
+        })
+    }   
+
     render() {
-        const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames, isLoadingMatches, begin_at, end_at, statusSelected } = this.state;
+        const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames, isLoadingMatches, begin_at, end_at, statusSelected, showOnlyBookedMatches } = this.state;
 
         return (
             <>
@@ -370,6 +379,8 @@ class EsportsPage extends React.Component {
                         setStatusFilter={this.setStatusFilter}
                         beginAt={begin_at}
                         endAt={end_at}
+                        showOnlyBookedMatches={showOnlyBookedMatches}
+                        setBookedFilter={this.setBookedFilter}
                         statusSelected={statusSelected}
                         setMatchPage={this.setMatchPage}
                         seriesSelected={seriesSelected}

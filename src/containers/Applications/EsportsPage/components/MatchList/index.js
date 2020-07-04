@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Header, Videogame, Date, Status, Winner, Filters, DateFilter, StatusFilter } from './styles';
+import { Container, Header, Videogame, Date, Status, Winner, Filters, DateFilter, StatusFilter, BookedFilter } from './styles';
 import Match from '../Match';
 import _, { keys } from 'lodash';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import InfiniteLoader from "react-window-infinite-loader";
 import MatchSkeleton from '../Skeletons/MatchSkeleton';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Select, Checkbox } from 'antd';
 
 import matchStatus from '../Enums/status';
 const { RangePicker } = DatePicker;
@@ -36,7 +36,7 @@ class MatchList extends React.Component {
     }
 
     projectData = (props) => {
-        const { matches, videogames, seriesSelected, beginAt, endAt } = props;
+        const { matches, videogames, seriesSelected, beginAt, endAt, showOnlyBookedMatches } = props;
 
         const series = _.concat(...videogames.map(videogame => videogame.series));
 
@@ -45,7 +45,8 @@ class MatchList extends React.Component {
             series: series,
             seriesSelected: seriesSelected,
             begin_at: beginAt,
-            end_at: endAt
+            end_at: endAt,
+            showOnlyBookedMatches: showOnlyBookedMatches
         })
 
     }
@@ -145,10 +146,12 @@ class MatchList extends React.Component {
             isLoadingMatches: true
         }, () => this.fetchFilteredData())
     }
-      
-    // onOk = (value) => {
-    //     console.log('onOk: ', value);
-    //   }
+    
+    onChangeBookedFilter = () => {
+        const { setBookedFilter } = this.props;
+        
+        setBookedFilter();
+    }
 
     Row = ({ index, key, style }) => {
         const { setMatchPage } = this.props;
@@ -162,7 +165,7 @@ class MatchList extends React.Component {
     }
 
     render() {
-        const { isLoading, setMatchPage } = this.props;
+        const { isLoading, setMatchPage, showOnlyBookedMatches, setBookedFilter } = this.props;
         const { matches, series, isLoadingMatches } = this.state;
 
         // const isItemLoaded = index => !!matches[index];
@@ -195,7 +198,9 @@ class MatchList extends React.Component {
                         ))}
                     </Select>
                     </StatusFilter>
-                    
+                    {/* <BookedFilter>
+                        <Checkbox checked={showOnlyBookedMatches} onChange={setBookedFilter}>Show only Booked Matches</Checkbox>
+                    </BookedFilter> */}
                 </Filters>
                 <Header>
                     <Videogame>
