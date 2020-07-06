@@ -7,7 +7,7 @@ import VideogameTabCollapsed from './components/VideogameTabCollapsed';
 import _ from 'lodash';
 
 import videogamesEnum from './components/Enums/videogames';
-import { ChevronLeftIcon, ChevronRightIcon, ArrowBackIcon } from 'mdi-react';
+import { ChevronLeftIcon, ChevronRightIcon, ArrowBackIcon, FormatLineStyleIcon } from 'mdi-react';
 import MatchPage from './components/MatchPage';
 import MatchTab from './components/MatchTab';
 import { ButtonBase } from '@material-ui/core';
@@ -58,30 +58,32 @@ class EsportsPage extends React.Component {
     // }
 
     projectData = async (props) => {
-        const { videogames } = this.state;
         const { profile } = props;
         const { App } = profile;
 
-        if (_.isEmpty(videogames)) {
+        this.setState({
+            videogames: props.videogames,
+            series: props.series
+        }, async () => {
             
-            App.getVideoGamesAll();
+            const { videogames } = this.state;
 
-            this.setState({ isLoadingMatches: true });
-
-            await App.getMatchesAll({ 
-                filters: { 
-                    size: 10, 
-                    offset: 0 
-                } 
-            });
-
-            this.setState({
-                videogames: props.videogames,
-                series: props.series,
-                isLoadingMatches: false
-            })
-        }
-
+            if (_.isEmpty(videogames)) {
+                
+                await App.getVideoGamesAll();
+    
+                this.setState({ isLoadingMatches: true });
+    
+                await App.getMatchesAll({ 
+                    filters: { 
+                        size: 10, 
+                        offset: 0 
+                    } 
+                });
+    
+                this.setState({ isLoadingMatches: false });
+            }
+        })
     }
 
     getVideogameInfo = videogame => {
