@@ -13,11 +13,13 @@ import MatchTab from './components/MatchTab';
 import { ButtonBase } from '@material-ui/core';
 import MatchTabCollapsed from './components/MatchTabCollapsed';
 
-// import socketConnection from '../../../esports/WebSocket';
+import socketConnection from '../../../esports/WebSocket';
 import VideoGameTabSkeleton from './components/Skeletons/VideogameTabSkeleton';
+import store from '../../App/store';
+import { updateMatchData } from '../../../redux/actions/matchesActions';
 
 class EsportsPage extends React.Component {
-    // static contextType = socketConnection;
+    static contextType = socketConnection;
 
     constructor(props) {
         super(props);
@@ -38,7 +40,7 @@ class EsportsPage extends React.Component {
       }
 
     componentDidMount(){
-        // this.createSocketConnection(this.props);
+        this.createSocketConnection(this.props);
         this.projectData(this.props);
     }
 
@@ -46,16 +48,22 @@ class EsportsPage extends React.Component {
        this.projectData(props);
     }
 
-    // createSocketConnection = (props) => {
-    //     const { connection } = this.context;
+    createSocketConnection = () => {
+        const { connection } = this.context;
 
-    //     connection.on("match", this.showData);
-    //     connection.on("serie", this.showData);
-    // }
+        connection.on("matchUpdate", this.updateMatch);
+        // connection.on("serieUpdate", this.showData);
+    }
 
-    // showData = data => {
-    //     console.log(data)
-    // }
+    updateMatch = async (data) => {
+        const { App } = this.props.profile;
+        
+        const matchUpdated = await App.getSpecificMatch({ match_id: data.message });
+
+        if (matchUpdated.data.message) {
+            store.dispatch(updateMatchData(matchUpdated.data.message));
+        }
+    }
 
     projectData = async (props) => {
         const { profile } = props;
