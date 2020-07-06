@@ -44,9 +44,9 @@ const GraphModal = props => {
           onOk={() => toggleModal()}
           onCancel={() => toggleModal()}
           footer={[
-            <CloseButton key="close" onClick={() => toggleModal()}>
-                Close
-            </CloseButton>
+            // <CloseButton key="close" onClick={() => toggleModal()}>
+            //     Close
+            // </CloseButton>
           ]}
         >
             <GraphContainer>
