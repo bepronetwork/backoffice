@@ -59,7 +59,7 @@ export const SerieInfo = styled.section`
     grid-area: serieInfo;
 
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     padding: 0px 20px;
 
@@ -217,4 +217,47 @@ export const RemoveBookButton = styled(Button)`
         font-size: 11px;
         font-weight: 300;
     }
+`;
+
+export const Result = styled.section`
+    grid-area: date;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 0px 10px;
+
+    span {
+        font-family: Poppins;
+        font-size: 14px;
+        color: #828282;
+    }
+`;
+
+export const ResultValue = styled.span`
+    margin: 0px 8px;
+    font-family: Poppins !important;
+    font-size: 18px !important;
+    font-weight: 500; 
+    color: ${props => props.color} !important;
+`;
+
+export const Draw = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 34px;
+    height: 19px;
+    border-radius: 3px;
+    background-color: #DFE1EC;
+
+    span {
+        font-family: Poppins !important;
+        font-size: 13px;
+        color: #333333 !important;
+    }
+`;
+
+export const TabsContainer = styled.div`
+    margin: 10;
+    padding: 10;
 `;

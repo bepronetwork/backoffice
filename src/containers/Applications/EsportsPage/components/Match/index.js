@@ -191,7 +191,8 @@ class Match extends React.Component {
 
         const matchStatus = status ? matchStatusEnum[status] : null;
 
-        const isMatchFinished = !_.isEmpty(status) && (status === 'finished' || status === 'settled');
+        const isMatchFinished = !_.isEmpty(status) && ['settled', 'finished'].includes(status);
+        const hasResults = !_.isEmpty(results) && ['live', 'settled', 'finished'].includes(status);
         const isTie = scoreTeamOne !== null && scoreTeamTwo !== null && scoreTeamOne === scoreTeamTwo && isMatchFinished;
 
         return (
@@ -241,11 +242,11 @@ class Match extends React.Component {
                         ) : (
                             <Result>
                                 <ResultValue color={this.getResultColor({ id: teamOne.id, winner_id: winner_id })}>
-                                    { scoreTeamOne !== null && isMatchFinished ? scoreTeamOne : '-' }
+                                    { scoreTeamOne !== null && hasResults ? scoreTeamOne : '-' }
                                 </ResultValue>
                                 { isTie ? <Draw>Tie</Draw> : <span>vs</span> }
                                 <ResultValue color={this.getResultColor({ id: teamTwo.id, winner_id: winner_id })}>
-                                    { scoreTeamTwo !== null && isMatchFinished ? scoreTeamTwo : '-' }
+                                    { scoreTeamTwo !== null && hasResults ? scoreTeamTwo : '-' }
                                 </ResultValue>
                             </Result>
                         )}

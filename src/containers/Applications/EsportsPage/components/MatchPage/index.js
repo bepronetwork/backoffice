@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { MatchContainer, MatchSummary, SerieSummary, Score, InfoContainer, VideoGameIcon, TeamOne, TeamTwo, DateInfo, Time, Date as DateSpan, MatchFinishedIcon, MatchStatus, SerieInfo, BookButton, RemoveBookButton } from './styles';
+import { MatchContainer, MatchSummary, SerieSummary, Score, InfoContainer, VideoGameIcon, TeamOne, TeamTwo, DateInfo, Time, Date as DateSpan, MatchFinishedIcon, MatchStatus, SerieInfo, BookButton, RemoveBookButton, Result, ResultValue, Draw, TabsContainer } from './styles';
 import _ from 'lodash';
 import Avatar from 'react-avatar';
 import moment from 'moment';
@@ -14,7 +14,16 @@ import store from '../../../../App/store';
 import MarketsPage from '../MarketsPage';
 import Skeleton from '@material-ui/lab/Skeleton';
 
+import { Tabs } from 'antd';
+const { TabPane } = Tabs;
+
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
+
+const results = Object.freeze({
+    won: { text: "W", color: "#7bd389" },
+    lost: { text: "L", color: "#ed5565" },
+    draw: { text: "D", color: "#b0b0b0" }
+})
 
 class MatchPage extends React.Component {
     constructor(props) {
@@ -113,9 +122,31 @@ class MatchPage extends React.Component {
         this.setState({ isLoading: false });
     };
 
+    getTeamScore = id => {
+        const { results } = this.state.match;
+
+        const result = results.find(result => result.team_id === id);
+
+        return result ? result.score : null;
+    }
+
+    getResultColor = ({ id, winner_id }) => {
+
+        switch (true) {
+            case winner_id === null:
+                return results.draw.color
+            case id === winner_id:
+                return results.won.color
+            case id !== winner_id:
+                return results.lost.color
+            default:
+                break;
+        }
+    }
+
     render() {
         const { match, isLoading } = this.state;
-        const { videogame, opponents, scheduled_at, booked, odds, status } = match;
+        const { videogame, opponents, scheduled_at, booked, odds, status, results, winner_id } = match;
 
         if (_.isEmpty(match)) {
             return (
@@ -130,11 +161,15 @@ class MatchPage extends React.Component {
         const { icon } = videogames[videogame.id];
         const serieName = this.getSerieName();
         const [teamOne, teamTwo] = opponents.map(opponent => opponent.opponent);
+        const [scoreTeamOne, scoreTeamTwo] = results ? opponents.map(opponent => this.getTeamScore(opponent.opponent.id)) : [null, null];
         const time = new Date(scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
         const date = moment(new Date(scheduled_at)).format('MM/DD');
 
         const isLoL = videogame.slug === "league-of-legends"; 
         const hasMarkets = !_.isEmpty(odds) && !_.isEmpty(odds.markets);
+        const isMatchFinished = !_.isEmpty(status) && ['settled', 'finished'].includes(status);
+        const hasResults = !_.isEmpty(results) && ['live', 'settled', 'finished'].includes(status);
+        const isTie = scoreTeamOne !== null && scoreTeamTwo !== null && scoreTeamOne === scoreTeamTwo && isMatchFinished;
         
         return (
             <>
@@ -147,10 +182,23 @@ class MatchPage extends React.Component {
                         </MatchFinishedIcon>
                         </MatchStatus> */}
                         <SerieInfo>
-                            <VideoGameIcon>
-                                { icon }
-                            </VideoGameIcon>
-                            <span>{ serieName }</span>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <VideoGameIcon>
+                                    { icon }
+                                </VideoGameIcon>
+                                <span>{ serieName }</span>
+                            </div>
+                            <div>
+                                { hasResults && scoreTeamOne !== null && scoreTeamTwo !== null &&
+                                <DateInfo style={{ flexDirection: "row" }}>
+                                    <Time style={{ margin: 5, padding: 0 }}>
+                                        { time }
+                                    </Time>
+                                    <DateSpan style={{ margin: 5, padding: 0 }}>
+                                        { date }
+                                    </DateSpan>
+                                </DateInfo> }
+                            </div>
                         </SerieInfo>
                     </SerieSummary>
                     <Score> 
@@ -158,14 +206,26 @@ class MatchPage extends React.Component {
                             <span>{teamOne.name}</span>
                             { teamOne.image_url ? <img src={teamOne.image_url} alt={teamOne.name}/> : <Avatar name={teamOne.name} size="35" round={true}/> } 
                         </TeamOne>
-                        <DateInfo>
-                            <Time>
-                                { time }
-                            </Time>
-                            <DateSpan>
-                                { date }
-                            </DateSpan>
-                        </DateInfo>
+                        { hasResults && scoreTeamOne !== null && scoreTeamTwo !== null ? (
+                            <Result>
+                                <ResultValue color={this.getResultColor({ id: teamOne.id, winner_id: winner_id })}>
+                                    { scoreTeamOne }
+                                </ResultValue>
+                                { isTie ? <Draw><span>Tie</span></Draw> : <span>vs</span> }
+                                <ResultValue color={this.getResultColor({ id: teamTwo.id, winner_id: winner_id })}>
+                                    { scoreTeamTwo }
+                                </ResultValue>
+                            </Result>
+                        ) : (
+                            <DateInfo>
+                                <Time>
+                                    { time }
+                                </Time>
+                                <DateSpan>
+                                    { date }
+                                </DateSpan>
+                            </DateInfo>
+                        )}
                         <TeamTwo>
                             { teamTwo.image_url ? <img src={teamTwo.image_url} alt={teamTwo.name}/> : <Avatar name={teamTwo.name} size="35" round={true}/> } 
                             <span>{teamTwo.name}</span>
@@ -183,8 +243,16 @@ class MatchPage extends React.Component {
                         )}
                     </InfoContainer>
                 </MatchSummary>
-                {/* { isLoL ? <StatsPage match={match}/> : null } */}
-                { isLoL ? <StatsPage match={match}/> : <MarketsPage status={status} markets={hasMarkets ? odds.markets : []} teamOne={teamOne} teamTwo={teamTwo}/> }
+                <TabsContainer>
+                    <Tabs defaultActiveKey="1" type="card" size="large" style={{ margin: 15 }}>
+                        <TabPane tab="Markets" key="1">
+                            <MarketsPage status={status} markets={hasMarkets ? odds.markets : []} teamOne={teamOne} teamTwo={teamTwo}/>
+                        </TabPane>
+                        <TabPane tab="Stats" key="2">
+                            { isLoL ? <StatsPage match={match}/> : null }
+                        </TabPane>
+                    </Tabs>
+                </TabsContainer>
             </MatchContainer>            
             </>
         )

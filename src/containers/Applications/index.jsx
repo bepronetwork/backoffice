@@ -72,8 +72,8 @@ const Icon = styled.section`
 `
 
 const EsportsIcon = styled.section`
-    height: 40px;
-    width: 40px;
+    height: 50px;
+    width: 50px;
     opacity: 0.56;
 `
 
@@ -219,9 +219,9 @@ class ApplicationsContainer extends React.Component{
                                                 }}
                                             >
                                                 <span>Esports</span>
-                                                {/* <EsportsIcon>
+                                                <EsportsIcon>
                                                     <EsportsWhite isActive={this.state.activeTab === 'esports'}/>
-                                                </EsportsIcon> */}
+                                                </EsportsIcon>
                                             </StyledNavLink>
                                         </NavItem>
                                 </Nav>
