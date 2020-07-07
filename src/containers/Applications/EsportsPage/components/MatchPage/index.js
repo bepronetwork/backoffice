@@ -169,6 +169,7 @@ class MatchPage extends React.Component {
         const hasMarkets = !_.isEmpty(odds) && !_.isEmpty(odds.markets);
         const isMatchFinished = !_.isEmpty(status) && ['settled', 'finished'].includes(status);
         const hasResults = !_.isEmpty(results) && ['live', 'settled', 'finished'].includes(status);
+        const isPreMatch = !_.isEmpty(status) && ['pre_match'].includes(status);
         const isTie = scoreTeamOne !== null && scoreTeamTwo !== null && scoreTeamOne === scoreTeamTwo && isMatchFinished;
         
         return (
@@ -237,14 +238,15 @@ class MatchPage extends React.Component {
                                 { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Remove" }
                             </RemoveBookButton>
                         ) : (
+                            isPreMatch && (
                             <BookButton variant="contained" size="small" onClick={this.setMatchBooked} disabled={isLoading}>
                                 { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Book" }
-                            </BookButton>
+                            </BookButton>)
                         )}
                     </InfoContainer>
                 </MatchSummary>
                 <TabsContainer>
-                    <Tabs defaultActiveKey="1" type="card" size="large" style={{ margin: 15 }}>
+                    <Tabs defaultActiveKey="1" type="card" size="middle" style={{ margin: 15 }}>
                         <TabPane tab="Markets" key="1">
                             <MarketsPage status={status} markets={hasMarkets ? odds.markets : []} teamOne={teamOne} teamTwo={teamTwo}/>
                         </TabPane>

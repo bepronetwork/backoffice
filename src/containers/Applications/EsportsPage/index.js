@@ -51,7 +51,7 @@ class EsportsPage extends React.Component {
     createSocketConnection = () => {
         const { connection } = this.context;
 
-        connection.on("matchUpdate", this.updateMatch);
+        connection.on("matchUpdate", _.debounce(this.updateMatch, 10000));
         // connection.on("serieUpdate", this.showData);
     }
 

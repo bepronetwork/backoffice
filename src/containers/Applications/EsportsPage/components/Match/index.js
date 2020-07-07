@@ -192,6 +192,7 @@ class Match extends React.Component {
         const matchStatus = status ? matchStatusEnum[status] : null;
 
         const isMatchFinished = !_.isEmpty(status) && ['settled', 'finished'].includes(status);
+        const isPreMatch = !_.isEmpty(status) && ['pre_match'].includes(status);
         const hasResults = !_.isEmpty(results) && ['live', 'settled', 'finished'].includes(status);
         const isTie = scoreTeamOne !== null && scoreTeamTwo !== null && scoreTeamOne === scoreTeamTwo && isMatchFinished;
 
@@ -261,9 +262,10 @@ class Match extends React.Component {
                                 { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Remove" }
                             </RemoveBookButton>
                         ) : (
+                            isPreMatch && (
                             <BookButton variant="contained" size="small" onClick={this.setMatchBooked} disabled={isLoading}>
                                 { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Book" }
-                            </BookButton>
+                            </BookButton>)
                         )}
                     </ActionArea>
                     <Footer>
