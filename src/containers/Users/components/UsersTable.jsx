@@ -305,9 +305,36 @@ class UsersTable extends React.Component {
         this.setState({[type] : item});
     }
 
-    handleChangePage = (event, page) => {
-        this.setState({ page });
+    handleChangePage = async (event, page) => {
+        const { data, rowsPerPage } = this.state;
+        const { currency } = this.props;
+        const { App } = this.props.profile;
+
+        if (page === Math.ceil(data.length / rowsPerPage)) {
+
+            this.setLoading(true);
+
+            const users = await App.getUsersAsync({ size: 100, offset: data.length });
+            
+            if (users.length > 0) {
+                this.setState({
+                    data: data.concat(fromDatabasetoTable(users, this.props.data.usersOtherInfo.data, currency)),
+                    page: page
+                })
+
+            }
+
+            this.setLoading(false);
+
+        } else {
+            this.setState({ page });
+        }
     };
+
+    setLoading = (status) => {
+        this.setState(state => ({ loading: status }));
+    }
+    
 
     handleChangeRowsPerPage = event => {
         this.setState({ rowsPerPage: event.target.value });
@@ -322,7 +349,7 @@ class UsersTable extends React.Component {
 
     render() {
         const { classes, currency, isLoading } = this.props;
-        const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter, idFilter } = this.state;
+        const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter, idFilter, loading } = this.state;
         const dataFiltered = data.filter(n => 
             (_.isEmpty(usernameFilter) || n.username.includes(usernameFilter)) &&
             (_.isEmpty(emailFilter) || n.email.includes(emailFilter)) &&
@@ -362,14 +389,10 @@ class UsersTable extends React.Component {
                         <JsonIcon style={{marginRight: 7}}/> JSON
                     </MaterialButton>
                 </div>
-                {isLoading ? (
+                {isLoading || loading ? (
                     <>
                     <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 20 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    { _.times(rowsPerPage, () => <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>)}
                     </>
                     ) : (
                     <>
@@ -493,11 +516,12 @@ class UsersTable extends React.Component {
                     </div>
                     </>)}
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[5, 10, 25, 50, 100]}
                         component="div"
-                        count={dataFiltered.length}
+                        count={data.length + rowsPerPage}
                         rowsPerPage={rowsPerPage}
                         page={page}
+                        labelDisplayedRows={({ from, to, count }) => `${from}-${to > count - rowsPerPage ? count - rowsPerPage : to} of ${count - rowsPerPage}`}
                         backIconButtonProps={{
                             'aria-label': 'Previous Page',
                         }}
