@@ -76,26 +76,52 @@ class Match extends React.Component {
 
                 if (odd !== undefined) {
                     const { selections } = odd;
-                    return [1/(selections[0].probability), 1/(selections[1].probability)];
+                    return [1/(selections[0].probability), null, 1/(selections[1].probability)];
         
                 } else {
-                    return [null, null];
+                    return [];
                 }
             case !_.isEmpty(odds.markets):
                 const market = odds.markets.find(market => market.template === 'winner-2-way');
 
                 if (market !== undefined && market.selections !== undefined) {
-                    return [1/(market.selections[0].probability), 1/(market.selections[1].probability)];
+                    return [1/(market.selections[0].probability), null, 1/(market.selections[1].probability)];
                     
                 } else {
-                    return [null, null];
+                    return [];
                 }
             default:
-                return [null, null];
+                return [];
         }
     }
 
-    
+    getThreeWayOdds = odds => {
+        switch (true) {
+            case _.isArray(odds):
+                const odd = odds.find(odd => odd.template === 'winner-3-way');
+
+                if (odd !== undefined) {
+                    const { selections } = odd;
+                    return [1/(selections[0].probability), 1/(selections[1].probability), 1/(selections[2].probability)];
+        
+                } else {
+                    return [];
+                }
+            case !_.isEmpty(odds.markets):
+                const market = odds.markets.find(market => market.template === 'winner-3-way');
+
+                if (market !== undefined && market.selections !== undefined) {
+                    return [1/(market.selections[0].probability), 1/(market.selections[1].probability), 1/(market.selections[2].probability)];
+                    
+                } else {
+                    return [];
+                }
+            default:
+                return [];
+        }
+    }
+
+
     getResultColor = ({ id, winner_id }) => {
 
         switch (true) {
@@ -182,7 +208,11 @@ class Match extends React.Component {
 
         const [teamOne, teamTwo] = opponents.map(opponent => opponent.opponent);
         const [scoreTeamOne, scoreTeamTwo] = results ? opponents.map(opponent => this.getTeamScore(opponent.opponent.id)) : [null, null];
-        const [teamOneOdd, teamTwoOdd] = !_.isEmpty(odds) ? this.getTwoWayOdds(odds) : [null, null];
+
+        const winnerTwoWayOdds = this.getTwoWayOdds(odds);
+        const winnerThreeWayOdds = this.getThreeWayOdds(odds);
+
+        const [teamOneOdd, tieOdd, teamTwoOdd] = !_.isEmpty(winnerThreeWayOdds) ? winnerThreeWayOdds : !_.isEmpty(winnerTwoWayOdds) ? winnerTwoWayOdds : [undefined, undefined, undefined];
 
         if (_.isEmpty(teamOne) || _.isEmpty(teamTwo)) return null;
 
@@ -230,12 +260,12 @@ class Match extends React.Component {
                             <span>{teamOne.name}</span>
                             { teamOne.image_url ? <img src={teamOne.image_url} alt={teamOne.name}/> : <Avatar name={teamOne.name} size="25" round={true}/> }
                         </TeamOne>
-                        { teamOneOdd !== null && teamTwoOdd !== null && !isMatchFinished ? (
+                        { teamOneOdd && teamTwoOdd && !isMatchFinished ? (
                             <Odds>
                                 <OddValue>
                                     { teamOneOdd.toFixed(2) }
                                 </OddValue>
-                                <span>vs</span>
+                                { tieOdd ? <OddValue>{ tieOdd.toFixed(2) }</OddValue> : <span>vs</span> }
                                 <OddValue>
                                     { teamTwoOdd.toFixed(2) }
                                 </OddValue> 

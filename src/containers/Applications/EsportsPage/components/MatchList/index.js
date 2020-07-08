@@ -171,7 +171,7 @@ class MatchList extends React.Component {
         // const isItemLoaded = index => !!matches[index];
 
         const matchesFiltered = showOnlyBookedMatches && !_.isEmpty(matches) ? matches.filter(match => match.booked) : matches;
-
+        
         return (
             <>
             <Container>
