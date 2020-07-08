@@ -74,7 +74,7 @@ class Match extends React.Component {
             case _.isArray(odds):
                 const odd = odds.find(odd => odd.template === 'winner-2-way');
 
-                if (odd) {
+                if (odd !== undefined) {
                     const { selections } = odd;
                     return [1/(selections[0].probability), 1/(selections[1].probability)];
         
@@ -82,10 +82,10 @@ class Match extends React.Component {
                     return [null, null];
                 }
             case !_.isEmpty(odds.markets):
-                const { selections } = odds.markets.find(market => market.template === 'winner-2-way');
+                const market = odds.markets.find(market => market.template === 'winner-2-way');
 
-                if (selections) {
-                    return [1/(selections[0].probability), 1/(selections[1].probability)];
+                if (market !== undefined && market.selections !== undefined) {
+                    return [1/(market.selections[0].probability), 1/(market.selections[1].probability)];
                     
                 } else {
                     return [null, null];
