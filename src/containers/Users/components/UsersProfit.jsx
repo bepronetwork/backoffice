@@ -43,7 +43,7 @@ class UsersProfit extends PureComponent {
 
 
     render() {        
-        const { currency, isLoading } = this.props;
+        const { currency, isLoading, periodicity } = this.props;
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
@@ -62,7 +62,7 @@ class UsersProfit extends PureComponent {
                             <span> {this.state.ticker}</span></p>
                         </div>)}
                         <div className="dashboard__visitors-chart">
-                            <p className="dashboard__visitors-chart-title"> Users Profits <span> {this.state.timeline} </span></p>
+                            <p className="dashboard__visitors-chart-title"> Users Profits <span> {periodicity} </span></p>
                         </div>
                     </CardBody>
                 </Card>
@@ -82,7 +82,8 @@ const getProfits = (users) => {
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        currency : state.currency
+        currency : state.currency,
+        periodicity: state.periodicity
     };
 }
 
