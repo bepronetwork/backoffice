@@ -22,7 +22,7 @@ class UsersProfile extends PureComponent {
 
     render() {
         const { profile } = this.props;
-        const params = profile.getApp().params
+        const params = profile.getApp().params;
         const users = params.external_users ? params.external_users.length : Object.keys(this.props.data.data).length;
 
         return (
