@@ -1,4 +1,4 @@
-export const API_URL = "https://ms-esports-dev.herokuapp.com";
+export const API_URL = process.env.REACT_APP_API_ESPORTS;
 
 export const config = {
     headers: {
