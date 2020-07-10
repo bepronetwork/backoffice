@@ -19,8 +19,8 @@ export const StyledNavLink = styled(NavLink)`
     align-items: center;
     justify-content: space-between;
     height: 50px;
-    width: 170px;
-    margin: 0px 10px;
+    width: 150px;
+    margin: 0px 5px;
 
     span {
         margin: 0px 1fr;

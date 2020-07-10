@@ -91,7 +91,7 @@ class ApplicationsContainer extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            activeTab: 'casino'
+            activeTab: 'platform'
         }
     }
    
@@ -110,9 +110,8 @@ class ApplicationsContainer extends React.Component{
         }
     }
 
-    getTabsPerPermission(permission) {
-
-        const tabs = {
+    getTabs = () => {
+        return {
             myGames: {
                 title : 'My Games',
                 container : (
@@ -164,19 +163,47 @@ class ApplicationsContainer extends React.Component{
                 icon : <Wallet/>
             }
         }
+    }
+
+    getCasinoTabs = permission => {
+
+        const tabs = this.getTabs();
 
         switch (true) {
             case permission.super_admin:
-                return [tabs.myGames, tabs.gameStore, tabs.customization, tabs.thirdParties, tabs.addOns, tabs.currencies];
+                return [tabs.myGames, tabs.gameStore];
             
             case permission.customization && permission.financials:
-                return [tabs.myGames, tabs.customization, tabs.addOns, tabs.currencies];
+                return [tabs.myGames];
+
+            case permission.customization:
+                return [];
+            
+            case permission.financials:
+                return [tabs.myGames];
+            
+            default:
+                return [];
+            
+        }
+    }
+
+    getPlatformTabs = permission => {
+
+        const tabs = this.getTabs();
+
+        switch (true) {
+            case permission.super_admin:
+                return [tabs.customization, tabs.thirdParties, tabs.addOns, tabs.currencies];
+            
+            case permission.customization && permission.financials:
+                return [tabs.customization, tabs.addOns, tabs.currencies];
 
             case permission.customization:
                 return [tabs.customization];
             
             case permission.financials:
-                return [tabs.myGames, tabs.addOns, tabs.currencies];
+                return [tabs.addOns, tabs.currencies];
             
             default:
                 return [];
@@ -198,6 +225,19 @@ class ApplicationsContainer extends React.Component{
                             <Row>
                                 <Col md={4} style={{ padding: 0 }}>
                                 <Nav pills style={{ justifyContent: "flex-start", marginBottom: 25 }}>
+                                    <NavItem style={{ height: 80, marginTop: "20px" }}>
+                                            <StyledNavLink
+                                                className={classnames({ active: this.state.activeTab === 'platform' })}
+                                                onClick={() => {
+                                                this.toggle('platform');
+                                                }}
+                                            >
+                                                <span>Platform</span>
+                                                {/* <Icon>
+                                                    <CasinoWhite/>
+                                                </Icon> */}
+                                            </StyledNavLink>
+                                        </NavItem>
                                         <NavItem style={{ height: 80, marginTop: "20px" }}>
                                             <StyledNavLink
                                                 className={classnames({ active: this.state.activeTab === 'casino' })}
@@ -240,10 +280,17 @@ class ApplicationsContainer extends React.Component{
                             </Row>
                             <TabContainer>
                                 <TabContent activeTab={this.state.activeTab}>
+                                    <TabPane tabId={'platform'} style={{ paddingTop: 30 }}>
+                                        <TabsContainer 
+                                            items={
+                                                this.getPlatformTabs(permission)
+                                            }
+                                        />
+                                    </TabPane>
                                     <TabPane tabId={'casino'} style={{ paddingTop: 30 }}>
                                         <TabsContainer 
                                             items={
-                                                this.getTabsPerPermission(permission)
+                                                this.getCasinoTabs(permission)
                                             }
                                         />
                                     </TabPane>
