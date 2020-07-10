@@ -1,6 +1,6 @@
 import { getVideoGamesAll } from './videogames';
 import { getSpecificMatch } from './match';
-import { getSeriesMatches, getMatchesAll } from './matches';
+import { getSeriesMatches, getMatchesAll, getBookedMatches, getBookedSeriesMatches } from './matches';
 import { setBookedMatch, removeBookedMatch } from './book';
 import { getTeamStats, getPlayerStats } from './stats';
 
@@ -12,5 +12,7 @@ export {
     setBookedMatch,
     removeBookedMatch,
     getTeamStats,
-    getPlayerStats
+    getPlayerStats,
+    getBookedMatches,
+    getBookedSeriesMatches
 }

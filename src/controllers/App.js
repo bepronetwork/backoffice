@@ -6,7 +6,7 @@ import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
 import { getAuthFromCookies } from "./services/services";
 import _ from 'lodash';
-import { getVideoGamesAll, getMatchesAll, getSeriesMatches, getSpecificMatch, setBookedMatch, removeBookedMatch, getTeamStats, getPlayerStats } from "../esports/services";
+import { getVideoGamesAll, getMatchesAll, getSeriesMatches, getSpecificMatch, setBookedMatch, removeBookedMatch, getTeamStats, getPlayerStats, getBookedMatches, getBookedSeriesMatches } from "../esports/services";
 
 class App{    
     constructor(params){
@@ -1314,6 +1314,36 @@ class App{
         }
     }
 
+    getMatchesAll = async ({ filters, isPagination=false }) => {
+        try {
+            await getMatchesAll({
+                params: {
+                    admin: this.getAdminId(),
+                    ..._.pickBy(filters, _.identity)
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getBookedMatches = async ({ filters, isPagination=false }) => {
+        try {
+            await getBookedMatches({
+                params: {
+                    admin: this.getAdminId(),
+                    ..._.pickBy(filters, _.identity)
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
     getSpecificMatch = async ({ match_id }) => {
         try {
             return await getSpecificMatch({
@@ -1331,6 +1361,21 @@ class App{
     getSeriesMatches = async ({ filters, isPagination=false }) => {
         try {
             await getSeriesMatches({
+                params: {
+                    admin: this.getAdminId(),
+                    ..._.pickBy(filters, _.identity)
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getBookedSeriesMatches = async ({ filters, isPagination=false }) => {
+        try {
+            await getBookedSeriesMatches({
                 params: {
                     admin: this.getAdminId(),
                     ..._.pickBy(filters, _.identity)
