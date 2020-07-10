@@ -113,6 +113,7 @@
     "react-csv": "^2.0.3",
     "react-data-grid": "^3.0.10",
     "react-datepicker": "^1.6.0",
+    "react-debounce-input": "^3.2.2",
     "react-dev-utils": "^6.0.3",
     "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
