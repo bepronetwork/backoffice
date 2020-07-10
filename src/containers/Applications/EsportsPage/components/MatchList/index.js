@@ -52,71 +52,136 @@ class MatchList extends React.Component {
     }
 
     fetchFilteredData = async () => {
-        const { seriesSelected, begin_at, end_at, statusSelected } = this.state;
+        const { seriesSelected, begin_at, end_at, statusSelected, showOnlyBookedMatches } = this.state;
         const { profile } = this.props;
         const { App } = profile;
 
         const series = _.concat(Object.values(seriesSelected)).flat();
 
-        if (_.isEmpty(series)) {
-            await App.getMatchesAll({ 
-                filters: { 
-                    size: 10, 
-                    begin_at: begin_at,
-                    end_at: end_at,
-                    status: statusSelected
-                }
-            });
-
-            this.setState({ isLoadingMatches: false });
+        if (showOnlyBookedMatches) {
+            if (_.isEmpty(series)) {
+                await App.getBookedMatches({ 
+                    filters: { 
+                        size: 10,
+                        offset: 0, 
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }
+                });
+    
+                this.setState({ isLoadingMatches: false });
+    
+            } else {
+                await App.getBookedSeriesMatches({ 
+                    filters: {
+                        size: 10, 
+                        offset: 0,
+                        serie_id: series, 
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }
+                });
+    
+                this.setState({ isLoadingMatches: false });
+            }
 
         } else {
-            await App.getSeriesMatches({ 
-                filters: {
-                    size: 10, 
-                    serie_id: series, 
-                    begin_at: begin_at,
-                    end_at: end_at,
-                    status: statusSelected
-                }
-            });
-
-            this.setState({ isLoadingMatches: false });
+            if (_.isEmpty(series)) {
+                await App.getMatchesAll({ 
+                    filters: { 
+                        size: 10, 
+                        offset: 0,
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }
+                });
+    
+                this.setState({ isLoadingMatches: false });
+    
+            } else {
+                await App.getSeriesMatches({ 
+                    filters: {
+                        size: 10, 
+                        offset: 0,
+                        serie_id: series, 
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }
+                });
+    
+                this.setState({ isLoadingMatches: false });
+            }
         }
+
     }
 
     fetchMoreData = async () => {
-        const { seriesSelected, matches, begin_at, end_at, statusSelected } = this.state;
+        const { seriesSelected, matches, begin_at, end_at, statusSelected, showOnlyBookedMatches } = this.state;
         const { profile } = this.props;
         const { App } = profile;
 
         const series = _.concat(Object.values(seriesSelected)).flat();
 
-        if (_.isEmpty(series)) {
-            await App.getMatchesAll({ 
-                filters: { 
-                    size: 10, 
-                    offset: matches.length,
-                    begin_at: begin_at,
-                    end_at: end_at,
-                    status: statusSelected
-                }, 
-                isPagination: true 
-            });
+        if (showOnlyBookedMatches) {
+            if (_.isEmpty(series)) {
+                await App.getBookedMatches({ 
+                    filters: { 
+                        size: 10, 
+                        offset: matches.length,
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }, 
+                    isPagination: true 
+                });
+    
+            } else {
+                await App.getBookedSeriesMatches({ 
+                    filters: {
+                        size: 10, 
+                        offset: matches.length, 
+                        serie_id: series, 
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    },
+                    isPagination: true 
+                });
+            }
 
         } else {
-            await App.getSeriesMatches({ 
-                filters: {
-                    size: 10, 
-                    offset: matches.length, 
-                    serie_id: series, 
-                    begin_at: begin_at,
-                    end_at: end_at,
-                    status: statusSelected
-                },
-                isPagination: true 
-            });
+            if (_.isEmpty(series)) {
+                await App.getMatchesAll({ 
+                    filters: { 
+                        size: 10, 
+                        offset: matches.length,
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }, 
+                    isPagination: true 
+                });
+    
+            } else {
+                await App.getSeriesMatches({ 
+                    filters: {
+                        size: 10, 
+                        offset: matches.length, 
+                        serie_id: series, 
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    },
+                    isPagination: true 
+                });
+            }
+
         }
+
     }
 
     onChangeDate = (_value, dateString) => {
@@ -167,10 +232,6 @@ class MatchList extends React.Component {
     render() {
         const { isLoading, setMatchPage, showOnlyBookedMatches, setBookedFilter } = this.props;
         const { matches, series, isLoadingMatches } = this.state;
-
-        // const isItemLoaded = index => !!matches[index];
-
-        const matchesFiltered = showOnlyBookedMatches && !_.isEmpty(matches) ? matches.filter(match => match.booked) : matches;
         
         return (
             <>
@@ -218,47 +279,26 @@ class MatchList extends React.Component {
                         <span>Match winner</span>
                     </Winner>
                 </Header>
-                {/* { isLoading ? (
-                    _.times(10, () => <MatchSkeleton/>)
-                ) : (
-                    <InfiniteLoader
-                    isItemLoaded={isItemLoaded}
-                    itemCount={matches.length + 10}
-                    loadMoreItems={this.fetchMoreData}
-                    placeholder={<MatchSkeleton/>}
-                  >
-                    {({ onItemsRendered, ref }) => (
-                        <List
-                        className="List"
-                        height={1100}
-                        itemCount={matches.length}
-                        itemSize={110}
-                        width="100%"
-                        ref={ref}
-                        onItemsRendered={onItemsRendered}
-                        >
-                            {this.Row}
-                        </List>
-                    )}
-                    </InfiniteLoader>)} */}
-                { !_.isEmpty(matchesFiltered) && !_.isEmpty(series) ? (
-                    <InfiniteScroll
-                    dataLength={this.state.matches.length}
-                    next={this.fetchMoreData}
-                    hasMore={this.state.matches.length % 10 === 0}
-                    loader={<MatchSkeleton/>}
-                    style={{ display: "flex", flexDirection: "column", padding: 0 }}
-                    >   
-                        { isLoading || isLoadingMatches ? (
-                            _.times(10, () => <MatchSkeleton/>)
-                        ) : (
-                            matchesFiltered.map(match => (
-                                <Match data={match} series={series} setMatchPage={setMatchPage}/>
-                            ))
-                        )}            
-                    </InfiniteScroll>
-                ) : null }
-                
+                 { isLoading && _.isEmpty(matches) ? (
+                    _.times(10, () => <MatchSkeleton/>))
+                : (
+                    !_.isEmpty(matches) && !_.isEmpty(series) ? (
+                        <InfiniteScroll
+                        dataLength={this.state.matches.length}
+                        next={this.fetchMoreData}
+                        hasMore={this.state.matches.length % 10 === 0}
+                        loader={<MatchSkeleton/>}
+                        style={{ display: "flex", flexDirection: "column", padding: 0 }}
+                        >   
+                            { isLoading || isLoadingMatches ? (
+                                _.times(10, () => <MatchSkeleton/>)
+                            ) : (
+                                matches.map(match => (
+                                    <Match data={match} series={series} setMatchPage={setMatchPage}/>
+                                ))
+                            )}            
+                        </InfiniteScroll>
+                    ) : null ) }
             </Container>
             </>
         )

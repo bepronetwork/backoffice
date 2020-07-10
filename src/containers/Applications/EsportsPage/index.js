@@ -80,7 +80,9 @@ class EsportsPage extends React.Component {
                 
                 await App.getVideoGamesAll();
     
-                this.setState({ isLoadingMatches: true });
+                this.setState({ isLoadingMatches: true }, () => {
+                    
+                });
     
                 await App.getMatchesAll({ 
                     filters: { 
@@ -226,39 +228,69 @@ class EsportsPage extends React.Component {
     updateMatches = async ({ seriesSelected }) => {
         const { profile } = this.props;
         const { App } = profile;
-        const { begin_at, end_at, statusSelected } = this.state;
+        const { begin_at, end_at, statusSelected, showOnlyBookedMatches } = this.state;
         
-        const seriesArr = _.concat(Object.values(seriesSelected)).flat();
+        const series = _.concat(Object.values(seriesSelected)).flat();
+
+        this.setState({ isLoadingMatches: true });
         
-        if (!_.isEmpty(seriesArr)) {
-            this.setState({ isLoadingMatches: true });
-
-            await App.getSeriesMatches({ 
-                filters: {
-                    size: 10, 
-                    offset: 0, 
-                    serie_id: seriesArr,
-                    begin_at: begin_at,
-                    end_at: end_at,
-                    status: statusSelected
-                }
-            });
-
-            this.setState({ isLoadingMatches: false });
+        if (showOnlyBookedMatches) {
+            if (_.isEmpty(series)) {
+                await App.getBookedMatches({ 
+                    filters: { 
+                        size: 10,
+                        offset: 0, 
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }
+                });
+    
+                this.setState({ isLoadingMatches: false });
+    
+            } else {
+                await App.getBookedSeriesMatches({ 
+                    filters: {
+                        size: 10, 
+                        offset: 0,
+                        serie_id: series, 
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }
+                });
+    
+                this.setState({ isLoadingMatches: false });
+            }
 
         } else {
-            this.setState({ isLoadingMatches: true });
-
-            await App.getMatchesAll({ 
-                filters: { 
-                    size: 10, 
-                    offset: 0,
-                    begin_at: begin_at,
-                    end_at: end_at,
-                    status: statusSelected
-                } 
-            });
-            this.setState({ isLoadingMatches: false });
+            if (_.isEmpty(series)) {
+                await App.getMatchesAll({ 
+                    filters: { 
+                        size: 10, 
+                        offset: 0,
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }
+                });
+    
+                this.setState({ isLoadingMatches: false });
+    
+            } else {
+                await App.getSeriesMatches({ 
+                    filters: {
+                        size: 10, 
+                        offset: 0,
+                        serie_id: series, 
+                        begin_at: begin_at,
+                        end_at: end_at,
+                        status: statusSelected
+                    }
+                });
+    
+                this.setState({ isLoadingMatches: false });
+            }
         }
     }
 
@@ -299,10 +331,12 @@ class EsportsPage extends React.Component {
     }
 
     setBookedFilter = () => {
-        const { showOnlyBookedMatches } = this.state;
+        const { showOnlyBookedMatches, seriesSelected } = this.state;
 
         this.setState({
             showOnlyBookedMatches: !showOnlyBookedMatches
+        }, () => {
+            this.updateMatches({ seriesSelected });
         })
     }   
 
