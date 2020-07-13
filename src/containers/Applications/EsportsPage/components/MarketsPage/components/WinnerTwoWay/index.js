@@ -15,7 +15,7 @@ const GraphModal = props => {
         datasets: [{
             label: teamOne.name,
             fill: false,
-            data: Array.from({length: 10}, () => (1/teamOne.probability).toFixed(2)),
+            data: Array.from({length: 10}, () => teamOne.probability),
             borderColor: [
                 'rgb(51, 153, 255)'
                 
@@ -25,7 +25,7 @@ const GraphModal = props => {
         {
             label: teamTwo.name,
             fill: false,
-            data: Array.from({length: 10}, () => (1/teamTwo.probability).toFixed(2)),
+            data: Array.from({length: 10}, () => teamTwo.probability),
             borderColor: [
                 'rgb(237, 85, 101)'
             ],
@@ -65,6 +65,13 @@ const GraphModal = props => {
                             display:false
                         }
                     }],
+                    yAxes: [{
+                        ticks: {
+                            suggestedMin: 0,
+                            max: 1,
+                            beginAtZero: true
+                        },
+                    }]
                 },
                 elements: {
                     point:{
