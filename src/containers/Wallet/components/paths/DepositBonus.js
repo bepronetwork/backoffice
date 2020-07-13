@@ -13,9 +13,11 @@ class DepositBonus extends PureComponent {
             maxDeposit: 0,
             minDeposit: 0,
             percentage: 0,
+            multiplier: 0,
             newMaxDeposit: null,
             newMinDeposit: null,
             newPercentage: null,
+            newMultiplier: null,
             lock: true
         };
     }
@@ -52,6 +54,11 @@ class DepositBonus extends PureComponent {
         this.setState({...this.state, newPercentage: value ? parseFloat(value) : 0 })
     }
 
+    onChangeMultiplier = (value) => {
+        this.setState({...this.state, newMultiplier: value ? parseFloat(value) : 0 })
+    }
+
+
     projectData = (props) => {
         const { profile, data } = props;
 
@@ -64,14 +71,15 @@ class DepositBonus extends PureComponent {
             isDepositBonus: depositBonus.isDepositBonus,
             maxDeposit: depositBonus.max_deposit.find(deposit => deposit.currency === data._id).amount,
             minDeposit: depositBonus.min_deposit.find(deposit => deposit.currency === data._id).amount,
-            percentage: depositBonus.percentage.find(deposit => deposit.currency === data._id).amount
+            percentage: depositBonus.percentage.find(deposit => deposit.currency === data._id).amount,
+            multiplier: depositBonus.multiplier.find(deposit => deposit.currency === data._id).multiple
         })
 
     }
 
     confirmChanges = async () => {
         const { profile } = this.props;
-        const { currency, isDepositBonus, maxDeposit, minDeposit, percentage, newMaxDeposit, newMinDeposit, newPercentage } = this.state;
+        const { currency, isDepositBonus, maxDeposit, minDeposit, percentage, multiplier, newMaxDeposit, newMinDeposit, newPercentage, newMultiplier } = this.state;
 
         this.setState({...this.state, loading: true })
 
@@ -79,7 +87,8 @@ class DepositBonus extends PureComponent {
             isDepositBonus: isDepositBonus,
             max_deposit: newMaxDeposit !== null ? newMaxDeposit : maxDeposit,
             min_deposit: newMinDeposit !== null ? newMinDeposit : minDeposit,
-            percentage: newPercentage !== null ? newPercentage : percentage
+            percentage: newPercentage !== null ? newPercentage : percentage,
+            multiplier: newMultiplier !== null ? newMultiplier : multiplier
         }
         
         await profile.getApp().editDepositBonus({ currency: currency, depositBonusParams })
@@ -93,7 +102,7 @@ class DepositBonus extends PureComponent {
 
     render() {
         const { data } = this.props;
-        const { lock, maxDeposit, minDeposit, percentage, isDepositBonus } = this.state;
+        const { lock, maxDeposit, minDeposit, percentage, multiplier, isDepositBonus } = this.state;
 
         if(!data){return null}
         
@@ -153,7 +162,7 @@ class DepositBonus extends PureComponent {
                         <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Percentage</h3>
 
                         <div style={{ display: "flex"}}>
-                                <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{`${percentage.toFixed(2)} % `}</h3>
+                            <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{`${percentage.toFixed(2)} % `}</h3>
                         </div>
                             <TextInput
                                 name="percentage"
@@ -163,6 +172,18 @@ class DepositBonus extends PureComponent {
                                 changeContent={(type, value) => this.onChangePercentage(value)}
                             />
 
+                        <h3 style={{ fontSize: 17, marginLeft: 0, marginTop: 35 }} className={"dashboard__total-stat"}>Multiplier</h3>
+
+                        <div style={{ display: "flex"}}>
+                            <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{`${multiplier.toFixed(2)}`}</h3>
+                        </div>
+                            <TextInput
+                                name="multiplier"
+                                label={<h6 style={{ fontSize: 11 }}>New Multiplier</h6>}
+                                type="text"
+                                disabled={lock}
+                                changeContent={(type, value) => this.onChangeMultiplier(value)}
+                            />
                         </Col>
                     </Row>
                     </EditLock>
