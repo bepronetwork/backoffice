@@ -5,9 +5,9 @@ import LoL from './LoL';
 import Overwatch from './Overwatch';
 import RainbowSix from './RainbowSix';
 import RocketLeague from './RocketLeage';
-import MatchFinished from './MatchFinished';
 import Trophy from './Trophy';
 import SeeGraph from './SeeGraph';
+import Status from './Status';
 
 export {
     CoD,
@@ -17,7 +17,7 @@ export {
     Overwatch,
     RainbowSix,
     RocketLeague,
-    MatchFinished,
+    Status,
     Trophy,
     SeeGraph
 }

@@ -52,7 +52,7 @@ export const MatchStatus = styled.section`
     justify-content: center;
     align-self: baseline;
 
-    border-top: 6px solid #ED5565;
+    border-top: ${props => `6px solid ${props.color}`};
 `;
 
 export const SerieInfo = styled.section`
@@ -72,7 +72,7 @@ export const SerieInfo = styled.section`
     }
 `;
 
-export const MatchFinishedIcon = styled.section`
+export const MatchIcon = styled.section`
     height: 20px;
     width: 220px;
     margin-top: -6px;

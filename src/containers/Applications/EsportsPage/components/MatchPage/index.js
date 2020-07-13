@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { MatchContainer, MatchSummary, SerieSummary, Score, InfoContainer, VideoGameIcon, TeamOne, TeamTwo, DateInfo, Time, Date as DateSpan, MatchFinishedIcon, MatchStatus, SerieInfo, BookButton, RemoveBookButton, Result, ResultValue, Draw, TabsContainer } from './styles';
+import { MatchContainer, MatchSummary, SerieSummary, Score, InfoContainer, VideoGameIcon, TeamOne, TeamTwo, DateInfo, Time, Date as DateSpan, MatchIcon, MatchStatus, SerieInfo, BookButton, RemoveBookButton, Result, ResultValue, Draw, TabsContainer } from './styles';
 import _ from 'lodash';
 import Avatar from 'react-avatar';
 import moment from 'moment';
 
 import videogames from '../Enums/videogames';
-import { MatchFinished } from '../Icons';
+import matchStatus from '../Enums/status';
+import { Status } from '../Icons';
 import StatsPage from '../StatsPage';
 
 import { updateMatchData } from '../../../../../redux/actions/matchesActions';
@@ -177,11 +178,13 @@ class MatchPage extends React.Component {
             <MatchContainer>
                 <MatchSummary>
                     <SerieSummary>
-                        {/* <MatchStatus>
-                        <MatchFinishedIcon>
-                            <MatchFinished/>
-                        </MatchFinishedIcon>
-                        </MatchStatus> */}
+                        { status && _.has(matchStatus, status) && (
+                            <MatchStatus color={matchStatus[status].backgroundColor}>
+                                <MatchIcon>
+                                    <Status status={status}/>
+                                </MatchIcon>
+                            </MatchStatus>
+                        )}
                         <SerieInfo>
                             <div style={{ display: "flex", alignItems: "center" }}>
                                 <VideoGameIcon>

@@ -1,7 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 
-export default class MatchFinished extends Component {
-  render() {
+import matchStatus from '../Enums/status';
+
+const Status = props => {
+  const { status } = props;
+
     return (
       <svg
         fill="none"
@@ -11,10 +14,11 @@ export default class MatchFinished extends Component {
       >
         <path
           d="M234 0H0v5h1.01a30 30 0 0120.78 8.362l3.655 3.51a30 30 0 0020.78 8.361h141.473a29.999 29.999 0 0020.009-7.648l5.516-4.937A29.997 29.997 0 01233.232 5H234V0z"
-          fill="#ED5565"
+          fill={matchStatus[status].backgroundColor}
         />
-        <text x="50%" y="50%" text-anchor="middle" fill="white" dy=".3em">FINISHED</text>
+        <text x="50%" y="50%" text-anchor="middle" fill={matchStatus[status].textColor} dy=".3em">{(matchStatus[status].text).toUpperCase()}</text>
       </svg>
     );
-  }
-}
+};
+
+export default Status;
