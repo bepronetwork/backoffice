@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Formik, Form } from 'formik';
 import TextField from '@material-ui/core/TextField';
-import { List, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, ClickAwayListener, Select, FormControl, InputLabel, MenuItem } from '@material-ui/core';
+import { List, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, ClickAwayListener, Select, MenuItem } from '@material-ui/core';
 import { Button as MaterialButton } from '@material-ui/core';
 import { Button, Col } from 'react-bootstrap';
 import { ExpandMoreIcon } from 'mdi-react';
@@ -66,7 +66,7 @@ class UserBetsFilter extends Component {
         if (user) {
             return user._id;
         } else {
-            return null
+            return name;
         }
     }
 

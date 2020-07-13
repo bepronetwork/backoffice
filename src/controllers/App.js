@@ -407,13 +407,14 @@ class App{
         })).data.message;
     }
 
-    getUsersAsync = async ({ size, offset }) => {
+    getUsersAsync = async ({ size, offset, filters={} }) => {
         try{
             /* Get App Users  */
             this.data.summary.usersInfoSummary = (await ConnectionSingleton.getAppUsers({
                 params : {
                     size,
                     offset,
+                    ..._.pickBy(filters, _.identity),
                     app : this.getId(),
                     admin : this.getAdminId()
                 },
