@@ -105,7 +105,7 @@ class EditableTable extends React.Component{
         const { title, data, columns} = this.state;
         return (
             <Card>
-                <CardBody className="dashboard__card-widget">
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", boxShadow: "none" }}>
                     <MaterialTable
                         icons={tableIcons}
                         title={title}

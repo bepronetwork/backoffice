@@ -108,6 +108,7 @@ class App{
                 withdraws : res[9]
             } 
             this.params = serverApiInfo.app;
+            this.params.users = serverApiInfo.usersInfoSummary;
 
             this.data = {
                 ...this.data,
@@ -764,7 +765,6 @@ class App{
 
     editFooterCustomization = async ({communityLinks, supportLinks}) => {
         try{
-            /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editFooterCustomization({   
                 params : {
                     admin : this.getAdminId(),
@@ -774,9 +774,6 @@ class App{
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
-
-            /* Update App Info Async */
-            await this.updateAppInfoAsync();
 
             return res;
         }catch(err){
@@ -1218,6 +1215,24 @@ class App{
                 params : {
                     balance,
                     currency,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    modifyUserBalance = async ({ user, wallet, newBalance }) => {
+        try{
+            return await ConnectionSingleton.modifyUserBalance({   
+                params : {
+                    user,
+                    wallet,
+                    newBalance,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     

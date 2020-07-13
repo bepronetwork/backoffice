@@ -116,7 +116,7 @@ class ComplianceContainer extends React.Component{
             <div>               
                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Compliance </p>
                 <hr/>
-                <Paper style={{ boxShadow: "0 10px 30px 1px rgba(0, 0, 0, 0.06)", padding: 25 }} >
+                <Paper style={{ padding: 25, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }} >
                     <Typography style={{ fontSize: 17 }} variant="h6" id="tableTitle">Restricted Countries</Typography>
                     <Grid container spacing={2}>
                     <EditLock 

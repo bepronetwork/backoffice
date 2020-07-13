@@ -95,7 +95,7 @@ class AverageReturn extends PureComponent {
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
-                    <CardBody className="dashboard__card-widget">
+                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     {isLoading ? (
                     <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/> 
                     ) : ( 

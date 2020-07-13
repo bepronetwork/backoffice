@@ -36,7 +36,7 @@ class GameInfo extends PureComponent {
                 {isLoading ? (
                 <>
                 <Card className='game-container'>
-                    <CardBody className="dashboard__card-widget">
+                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <Grid container direction='row' spacing={1}>
                             <Grid item xs={9}>
                                 <Skeleton variant="rect" width={120} height={29} style={{ marginTop: 10, marginBottom: 10 }}/>
@@ -53,7 +53,7 @@ class GameInfo extends PureComponent {
                 ) : (
                 <button className='clean_button' onClick={ () => this.goToGamePage()} style={{width: `100%`, height: `100%` }}>
                     <Card className='game-container'>
-                        <CardBody className="dashboard__card-widget">
+                        <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                             <Row>
                                 <Col lg={8} >
                                     <div className="dashboard__visitors-chart text-left">

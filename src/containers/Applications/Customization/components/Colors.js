@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
 import ColorPickerInput from '../../../../shared/components/color_picker_input/ColorPickerInput';
+import ColorPicker from '../../../../shared/components/color_picker_input/ColorPicker.js';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
 import { FormControlLabel } from '@material-ui/core';
@@ -91,8 +92,8 @@ class Colors extends Component {
 
         return (
             <>
-                <Col md={4}>
-                    <ColorPickerInput 
+                <Col md={6}>
+                    <ColorPicker
                         label={name}
                         name={type}
                         color={hex}
@@ -114,7 +115,7 @@ class Colors extends Component {
                     <h5> Note : Change of Colors will require a rebuild of the app, so expect a 5-20 min delay for the changes to take effect</h5>
                 </Card>
                 <Card>
-                    <CardBody style={{ margin: "0px 15px" }}>
+                    <CardBody style={{ margin: "0px 15px", borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <EditLock 
                             isLoading={isLoading} 
                             unlockField={this.unlockField} 

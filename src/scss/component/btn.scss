@@ -132,10 +132,7 @@
     }
 
     svg {
-
-      @include themify($themes) {
-        fill: themed('colorText');
-      }
+        fill: #814c94;
     }
 
     &:before {

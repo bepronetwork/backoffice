@@ -6,29 +6,26 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import { LockWrapper } from '../../../../shared/components/LockWrapper';
 import DepositBonus from './DepositBonus';
+import { TabContainer } from '../WalletTabs/styles';
+import { Paragraph } from '../LiquidityWalletContainer/styles';
 
 class BonusWidget extends React.Component{
 
     render = () => {
         const { profile } = this.props;
-        const { currency } = this.props.wallet;
+        const { currency } = this.props.data.wallet;
 
         const isSuperAdmin = profile.User.permission.super_admin;
 
         return (
-            <Container className="dashboard">
-                <Col lg={12}>
-                    <h3 style={{marginTop : 20 }} className={"bold-text dashboard__total-stat"}>Bonus</h3>
-                    <p className="" style={{marginBottom : 50 }}>
-                        Choose the bonus to deposit of your wallet.
-                    </p>
-                </Col>
+            <TabContainer>
+                <Paragraph style={{ marginBottom: 15 }}>Choose the bonus to deposit of your wallet</Paragraph>
                 <Row>
                 <LockWrapper hasPermission={isSuperAdmin}>
                     <DepositBonus profile={profile} data={currency}/>
                 </LockWrapper>
                 </Row>
-            </Container>
+            </TabContainer>
         )
     }
 

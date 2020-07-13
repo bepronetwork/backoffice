@@ -8,15 +8,15 @@ const LockAdmin = (props) => {
             {props.children}
             <div style={{ height: "35px", marginTop: 10 }}>
                 {props.locked ?
-                    <Button size="sm" style={{ margin: 0 }} onClick={() => props.unlockField({field : props.type})} className="icon" outline>
+                    <Button size="sm" style={{ margin: 0, backgroundColor: "white" }} onClick={() => props.unlockField({field : props.type})} className="icon" outline>
                         <p><LockIcon className="deposit-icon"/> Unlock</p>
                     </Button>
                 :
                     <div>
-                        <Button size="sm" style={{ margin: 0, marginRight: 15 }} onClick={() => props.lockField({field : props.type})} className="icon" outline>
+                        <Button size="sm" style={{ margin: 0, marginRight: 15, backgroundColor: "white" }} onClick={() => props.lockField({field : props.type})} className="icon" outline>
                             <p><LockIcon className="deposit-icon"/> Lock </p>
                         </Button>
-                        <Button size="sm" style={{ margin: 0 }} disabled={props.isLoading} onClick={() => props.confirmChanges({field : props.type})} className="icon" outline>
+                        <Button size="sm" style={{ margin: 0, backgroundColor: "white" }} disabled={props.isLoading} onClick={() => props.confirmChanges({field : props.type})} className="icon" outline>
                             <p><ArrowExpandRightIcon className="deposit-icon"/>
                                 {props.isLoading ? 'Updating..' : 'Confirm'}
                             </p>

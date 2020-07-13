@@ -70,6 +70,32 @@ class Connection {
         }
     }
 
+    resetAdminPassword = async ({ username_or_email }) => {
+        try{
+            let response = await fetch(URL + '/api/admins/password/reset/ask', {
+                method : 'POST',
+                headers : config.headers,
+                body : JSON.stringify({ username_or_email })
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    confirmResetAdminPassword = async ({ token, password, admin_id }) => {
+        try{
+            let response = await fetch(URL + '/api/admins/password/reset/set', {
+                method : 'POST',
+                headers : config.headers,
+                body : JSON.stringify({ token, password, admin_id })
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     createApp = async ({name, description, virtual, metadataJSON, admin_id, marketType}) => {
         try{
             let response = await fetch(URL + '/api/app/create', {
@@ -265,6 +291,20 @@ class Connection {
             return response.json();
         }catch(err){
             console.log(err);
+            throw err;
+        }
+    }
+
+    modifyUserBalance = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/balance/modify`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
             throw err;
         }
     }

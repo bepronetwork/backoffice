@@ -27,7 +27,7 @@ class UsersProfile extends PureComponent {
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
-                    <CardBody className="dashboard__card-widget">
+                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : '#646777'}

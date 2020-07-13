@@ -20,7 +20,7 @@ class DocsContainer extends React.Component{
             <Col md={12} lg={12}>
                 <a href={'https://docs.betprotocol.com'} target={'__blank'}>
                     <Card>
-                    <CardBody className="dashboard__card-widget no_padding_card">
+                    <CardBody className="dashboard__card-widget no_padding_card" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", boxShadow: "none" }}>
                         <Row style={{overflow : 'hidden'}}>
                             <Col lg={4}>
                                 <h4 style={{marginTop : 0, paddingTop : 40, paddingBottom : 40, marginBottom : 20}} className={"dashboard__total-stat"}>

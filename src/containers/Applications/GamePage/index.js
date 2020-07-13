@@ -105,7 +105,7 @@ class GamePageContainer extends React.Component{
 
     renderAddImage = () => {
         return(
-            <div className='dropzone-image'>
+            <div className='dropzone-image' style={{ backgroundColor: "white" }}>
                 <Dropzone onDrop={this.onAddedFile} ref={(el) => (this.dropzoneRef = el)} 
                     style={{height:120, borderWidth: 2, borderolor: "#666666", borderStyle: "dashed", borderRadius: 5}}
                     disabled={this.state.locks.image}>
@@ -118,7 +118,7 @@ class GamePageContainer extends React.Component{
 
     renderAddBackground = () => {
         return(
-            <div className='dropzone-image'>
+            <div className='dropzone-image' style={{ backgroundColor: "white" }}>
                 <Dropzone onDrop={this.onBackgroundAddedFile} ref={(el) => (this.dropzoneRef = el)} 
                     style={{height:120, borderWidth: 2, borderolor: "#666666", borderStyle: "dashed", borderRadius: 5}}
                     disabled={this.state.locks.background}>
@@ -149,7 +149,7 @@ class GamePageContainer extends React.Component{
         }
 
         return (
-            <div style={{paddingBottom : 20, height : 220, overflow : 'hidden', margin : 'auto', border: '1px solid rgba(0, 0, 0, 0.1)', borderRadius: 5}}>
+            <div style={{paddingBottom : 20, height : 220, overflow : 'hidden', margin : 'auto', border: '1px solid rgba(0, 0, 0, 0.1)', backgroundColor: "white", borderRadius: 5}}>
                 <button disabled={[field] == 'image' ? this.state.locks.image : [field] == 'background' ? this.state.locks.background : true} onClick={() => this.removeImage(src, field)} 
                     style={{right : 20, top : 6}}
                     className='carousel-trash button-hover'>
@@ -229,7 +229,7 @@ class GamePageContainer extends React.Component{
                     <Col lg={4}>
                     <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
-                            <CardBody>
+                            <CardBody style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                 <Row>
                                     <Col lg={4}>
                                         <img className='application__game__image' src={image}/>
@@ -248,7 +248,7 @@ class GamePageContainer extends React.Component{
                     <Col lg={8}>
                     <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
-                            <CardBody>
+                            <CardBody style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                 <Row>
                                     <Col md={4}>
                                         <h5 className="">Bets Amount</h5>
@@ -291,7 +291,7 @@ class GamePageContainer extends React.Component{
                     <Col lg={4}>
                         <LockWrapper hasPermission={isSuperAdmin}>
                         <Card >
-                            <CardBody>
+                            <CardBody style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                 <Row>
                                     <Col md={4}>
                                         <img className='application__game__image' src={edgeImg}/>
@@ -327,7 +327,7 @@ class GamePageContainer extends React.Component{
                     <Col lg={4}>
                         <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
-                            <CardBody>
+                            <CardBody style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                 <Row>
                                     <Col md={4}>
                                         <img className='application__game__image' src={tableLimitImg}/>
@@ -369,7 +369,7 @@ class GamePageContainer extends React.Component{
                     <Col lg={4}>
                     <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
-                            <CardBody>
+                            <CardBody style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                 <Row>
                                     <Col md={4}>
                                         <div style={{paddingBottom : 20}}>
@@ -405,7 +405,7 @@ class GamePageContainer extends React.Component{
                     <Col lg={4}>
                     <LockWrapper hasPermission={isSuperAdmin}>
                         <Card>
-                            <CardBody>
+                            <CardBody style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                 <Row>
                                     <Col md={4}>
                                         <div style={{paddingBottom : 20}}>

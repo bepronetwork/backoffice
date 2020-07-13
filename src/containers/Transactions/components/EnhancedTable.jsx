@@ -25,6 +25,7 @@ import { export2JSON } from "../../../utils/export2JSON";
 import { Button as MaterialButton } from "@material-ui/core";
 import CancelWithdrawDialog from './CancelWithdrawDialog';
 import ConfirmWithdrawDialog from './ConfirmWithdrawDialog';
+import UserContainer from '../../../shared/components/UserContainer';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -419,7 +420,7 @@ class EnhancedTable extends React.Component {
     const jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'transactionHash', 'creation_timestamp', 'amount', 'status']));
 
     return (
-        <Paper className={classes.root}>
+        <Paper className={classes.root} style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
             <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
             <div style={{ display: "flex", justifyContent: "flex-end"}}>
                 <CSVLink data={csvData} filename={"transactions.csv"} headers={headers}>
@@ -522,7 +523,11 @@ class EnhancedTable extends React.Component {
                                     selected={isSelected}
                                 >
                                     <TableCell align="left"> <p className='text-small'>{n._id}</p></TableCell>
-                                    <TableCell align="left"><p className='text-small'>{n.user}</p></TableCell> 
+                                    <TableCell align="left">
+                                        <UserContainer user={n.user}>
+                                            <p className='text-small'>{n.user}</p>
+                                        </UserContainer>
+                                    </TableCell> 
                                     <TableCell align="left">
                                         { 
                                             n.transactionHash ? 

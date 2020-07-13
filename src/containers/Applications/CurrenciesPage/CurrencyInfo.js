@@ -80,7 +80,7 @@ class CurrencyInfo extends PureComponent {
         
         return (
             <Card className='game-container' style={{ width: 307 }}>
-                <CardBody className="dashboard__card-widget dashboard_borderTop" style={{ width: 307, paddingBottom: 10 }}>
+                <CardBody className="dashboard__card-widget" style={{ width: 307, paddingBottom: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <EditLock 
                             unlockField={this.unlock} 
                             lockField={this.lock} 

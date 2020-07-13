@@ -14,6 +14,9 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import moment from 'moment';
 import Skeleton from '@material-ui/lab/Skeleton';
+import CurrencyContainer from '../../../../../../shared/components/CurrencyContainer';
+import BetContainer from '../../../../../../shared/components/BetContainer';
+import GameContainer from '../../../../../../shared/components/GameContainer';
 
 
 function desc(a, b, orderBy) {
@@ -46,22 +49,25 @@ const fromDatabasetoTable = (data, currencies, users, games ) => {
 	return data.map((key) => {
 
         const currency = currencies.find(currency => currency._id === key.currency);
-        const user = users.find(user => user._id === key.user._id);
+        // const user = users.find(user => user._id === key.user._id);
         const game = games.find(game => game._id === key.game);
 
 		return {
             _id :  key._id,
-            user : user._id,
+            user : key.user,
             currency : currency, 
             app : key.app,
-            game : game._id,
+            game : game,
             ticker : currency ? currency.ticker : '',
             isWon :  key.isWon,
             winAmount : key.winAmount,
             betAmount : key.betAmount,
             nonce : key.nonce,
             fee : key.fee,
-			creation_timestamp: moment(new Date(key.timestamp)).format('lll')
+            creation_timestamp: moment(new Date(key.timestamp)).format('lll'),
+            clientSeed: key.clientSeed,
+            serverSeed: key.serverSeed,
+            serverHashedSeed: key.serverHashedSeed
 		}
 	})
 }
@@ -361,12 +367,25 @@ class UserBetsTable extends React.Component {
                             key={n._id}
                             selected={isSelected}
                         >
-                            <TableCell align="left"><p className='text-small'>{n._id}</p></TableCell>
                             <TableCell align="left">
-                                <img src={n.currency.image} style={{float : 'left', marginRight : 4, width : 20, height : 20}}/>
-                                <p className='text-small' style={{margin: 0}}>{n.currency.name}</p>
+                                <BetContainer bet={n}>
+                                    <p className='text-small'>{n._id}</p>
+                                </BetContainer>
                             </TableCell>
-                            <TableCell align="left"><p className='text-small'>{n.game}</p></TableCell>
+                            <TableCell align="left">
+                                <CurrencyContainer id={n.currency._id}>
+                                    <img src={n.currency.image} style={{float : 'left', marginRight : 4, width : 20, height : 20}}/>
+                                    <p className='text-small' style={{margin: 0}}>{n.currency.name}</p>
+                                </CurrencyContainer>
+                            </TableCell>
+                            <TableCell align="left">
+                                <GameContainer id={n.game._id}>
+                                <div style={{display: 'flex'}}>
+                                <img src={n.game.image_url} style={{ width : 50, height : 40 }}/>
+                                    <p className='text-small' style={{margin: 5, marginLeft: 0, alignSelf: "center"}}>{n.game.name}</p>
+                                </div>                                 
+                                </GameContainer> 
+                             </TableCell>
                             <TableCell align="left"><p className='text-small'>{n.isWon ? <p className='text-small background-green text-white'>Yes</p> : <p className='text-small background-red text-white'>No</p>}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.winAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>
                             <TableCell align="left"><p className='text-small'>{`${n.betAmount.toFixed(6)} ${n.ticker}`}</p></TableCell>

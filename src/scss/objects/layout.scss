@@ -11,10 +11,7 @@
   padding-top: 75px;
   min-height: 100vh;
   transition: padding-left 0.3s;
-
-  @include themify($themes) {
-    background: themed('colorBackgroundBody');
-  }
+  background: #ffffff;
 
   @media screen and (min-width: 576px) {
     padding-left: 250px;
