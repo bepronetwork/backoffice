@@ -10,11 +10,13 @@ import GameStoreContainer from './Game';
 import { Grid } from '@material-ui/core';
 import store from '../../App/store';
 import { setLoadingStatus } from '../../../redux/actions/loadingAction';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 
 const defaultState = {
     ecosystemGames : [],
-    appGames : []
+    appGames : [],
+    isLoading: false
     
 }
 
@@ -36,11 +38,13 @@ class GameStorePageContainer extends React.Component{
     projectData = async (props) => {
         let { profile } = props;
 
-        store.dispatch(setLoadingStatus(true));
+        this.setState({
+            isLoading: true
+        })
 
         let ecosystemGames = await profile.getApp().getEcosystemGames();
-        if(!(profile.getApp().getSummaryData('gamesInfo').data)){return null}
-        let appGames = (profile.getApp().getSummaryData('gamesInfo')).data.data.message;
+        if(!(await profile.getApp().getSummaryData('gamesInfo').data)){return null}
+        let appGames = (await profile.getApp().getSummaryData('gamesInfo')).data.data.message;
 
         ecosystemGames = ecosystemGames.map( ecoGame => {
             let exists = false;
@@ -55,10 +59,10 @@ class GameStorePageContainer extends React.Component{
 
         this.setState({...this.state, 
             ecosystemGames,
-            appGames
+            appGames,
+            isLoading: false
         })
 
-        store.dispatch(setLoadingStatus(false));
     }
 
     addGame = async game => {
@@ -70,9 +74,40 @@ class GameStorePageContainer extends React.Component{
 
 
     render = () => {
-        const { ecosystemGames } = this.state;
+        const { ecosystemGames, isLoading } = this.state;
+        const { loading } = this.props;
 
         const games = ecosystemGames.filter(game => game.isValid);
+
+        if ((_.isEmpty(games) && isLoading) || loading) {
+            return (
+                <div>
+                    <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+                        {_.times(7, () => (
+                            <Grid item xs>
+                            <Col md={12} xl={12} lg={12} xs={12} style={{ minWidth: 288, maxWidth: 415, height: 230 }}>
+                            <Card className='game-container'>
+                                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                                    <Grid container direction='row' spacing={1}>
+                                        <Grid item xs={3}>
+                                            <Skeleton variant="circle" width={50} height={50} style={{ marginBottom: 10, marginLeft: 'auto', marginRight: 0 }}/>
+                                        </Grid>
+                                        <Grid item xs={9}>
+                                            <Skeleton variant="rect" width="60%" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                            <Skeleton variant="rect" width="100%" height={20} style={{ marginTop: 10, marginBottom: 20 }}/>
+                                        </Grid>           
+                                    </Grid>
+                                    <Skeleton variant="rect" width="30%" height={30} style={{ marginBottom: 10 }}/>
+                                </CardBody>
+                            </Card>
+                            </Col>
+                        </Grid>
+
+                        ))}
+                    </Grid>
+                </div>
+            )
+        }
 
         return (
             <div>
@@ -97,7 +132,8 @@ class GameStorePageContainer extends React.Component{
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        loading: state.isLoading
     };
 }
 
