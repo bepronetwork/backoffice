@@ -3,6 +3,7 @@ import { Col, Container, Row } from 'reactstrap';
 import { connect } from "react-redux";
 import store from '../App/store';
 import { setCurrencyView } from '../../redux/actions/currencyReducer';
+import { setLoadingStatus } from '../../redux/actions/loadingAction';
 import { addCurrencyWallet } from '../../redux/actions/addCurrencyWallet';
 import CurrencyStoreContainer from './store/Currency';
 import { Header } from './components/LiquidityWalletContainer/styles';
@@ -33,6 +34,9 @@ class CurrencyStore extends React.Component{
     
     projectData = async (props) => {
         let { profile } = props;
+        
+        store.dispatch(setLoadingStatus(true));
+
         let ecosystemCurrencies = await profile.getApp().getEcosystemCurrencies();
         if(!(profile.getApp().getSummaryData('walletSimple').data)){return null}
         let integratedWallets = (profile.getApp().getSummaryData('walletSimple')).data;
@@ -53,6 +57,8 @@ class CurrencyStore extends React.Component{
             ecosystemCurrencies,
             integratedWallets
         })
+
+        store.dispatch(setLoadingStatus(false));
     }
 
     hasRestriction = (appUseVirtualCurrencies, currency) => {
@@ -75,10 +81,10 @@ class CurrencyStore extends React.Component{
                 </Header>
                 <div style={{marginTop: 20}}>
                     <Row>
-                        {currencies.map( c => {
+                        {currencies.map(currency => {
                             return (
-                                <Col lg={4} key={c._id} style={{ minWidth: 250 }}>
-                                    <CurrencyStoreContainer onClick={this.addCurrency} currency={c} isAdded={c.isAdded}/>
+                                <Col lg={4} key={currency._id} style={{ minWidth: 250 }}>
+                                    <CurrencyStoreContainer onClick={this.addCurrency} currency={currency} isAdded={currency}/>
                                 </Col>
                             )
                         })}

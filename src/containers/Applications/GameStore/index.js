@@ -8,6 +8,8 @@ import _ from 'lodash';
 import { ArrowExpandRightIcon, LockIcon, BankIcon } from 'mdi-react';
 import GameStoreContainer from './Game';
 import { Grid } from '@material-ui/core';
+import store from '../../App/store';
+import { setLoadingStatus } from '../../../redux/actions/loadingAction';
 
 
 const defaultState = {
@@ -33,6 +35,9 @@ class GameStorePageContainer extends React.Component{
     
     projectData = async (props) => {
         let { profile } = props;
+
+        store.dispatch(setLoadingStatus(true));
+
         let ecosystemGames = await profile.getApp().getEcosystemGames();
         if(!(profile.getApp().getSummaryData('gamesInfo').data)){return null}
         let appGames = (profile.getApp().getSummaryData('gamesInfo')).data.data.message;
@@ -52,6 +57,8 @@ class GameStorePageContainer extends React.Component{
             ecosystemGames,
             appGames
         })
+
+        store.dispatch(setLoadingStatus(false));
     }
 
     addGame = async game => {
