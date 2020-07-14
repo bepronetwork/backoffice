@@ -1,10 +1,10 @@
 [{
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.betprotocol.app.twa",
-      "sha256_cert_fingerprints": [
-        "58:72:8E:E3:CA:12:1B:5A:58:FC:F9:1C:B6:0A:0B:A0:51:B7:C0:A3:00:84:D7:EF:78:7C:A6:AB:70:A5:E4:01"
-      ]
-    }
-  }]
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.betprotocol.app.twa",
+    "sha256_cert_fingerprints": [
+      "A5:D9:34:62:53:E4:4A:9F:C5:0D:C8:21:65:0A:AB:90:D0:3F:97:54:3C:4C:A7:67:35:51:E5:C4:39:8A:4E:7F"
+    ]
+  }
+}]
