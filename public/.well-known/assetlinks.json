@@ -1,0 +1,10 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.betprotocol.app.twa",
+      "sha256_cert_fingerprints": [
+        "58:72:8E:E3:CA:12:1B:5A:58:FC:F9:1C:B6:0A:0B:A0:51:B7:C0:A3:00:84:D7:EF:78:7C:A6:AB:70:A5:E4:01"
+      ]
+    }
+  }]

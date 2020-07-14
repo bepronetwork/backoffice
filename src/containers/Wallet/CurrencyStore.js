@@ -8,6 +8,10 @@ import { addCurrencyWallet } from '../../redux/actions/addCurrencyWallet';
 import CurrencyStoreContainer from './store/Currency';
 import { Header } from './components/LiquidityWalletContainer/styles';
 
+import _ from 'lodash';
+import { CurrencyStoreCard } from './store/styles';
+import { Grid } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 class CurrencyStore extends React.Component{
 
@@ -15,7 +19,8 @@ class CurrencyStore extends React.Component{
         super(props);
         this.state = {
             ecosystemCurrencies : [],
-            integratedWallets : []
+            integratedWallets : [],
+            isLoading: false
         }
     }
 
@@ -35,12 +40,12 @@ class CurrencyStore extends React.Component{
     projectData = async (props) => {
         let { profile } = props;
         
-        store.dispatch(setLoadingStatus(true));
+        this.setState({ isLoading: true });
 
         let ecosystemCurrencies = await profile.getApp().getEcosystemCurrencies();
-        if(!(profile.getApp().getSummaryData('walletSimple').data)){return null}
-        let integratedWallets = (profile.getApp().getSummaryData('walletSimple')).data;
-        const { virtual } = profile.getApp().getParams();
+        if(!(await profile.getApp().getSummaryData('walletSimple').data)){return null}
+        let integratedWallets = (await profile.getApp().getSummaryData('walletSimple')).data;
+        const { virtual } = await profile.getApp().getParams();
 
         ecosystemCurrencies = ecosystemCurrencies.map( ecoCurrency => {
             let exists = false;
@@ -55,10 +60,9 @@ class CurrencyStore extends React.Component{
 
         this.setState({...this.state, 
             ecosystemCurrencies,
-            integratedWallets
+            integratedWallets,
+            isLoading: false
         })
-
-        store.dispatch(setLoadingStatus(false));
     }
 
     hasRestriction = (appUseVirtualCurrencies, currency) => {
@@ -66,12 +70,40 @@ class CurrencyStore extends React.Component{
     }
 
     render = () => {
-        const { ecosystemCurrencies } = this.state;
-        const { profile } = this.props;
+        const { ecosystemCurrencies, isLoading } = this.state;
+        const { profile, loading } = this.props;
 
         const appUseVirtualCurrencies = profile.App.params.virtual;
 
         const currencies = ecosystemCurrencies.filter(currency => !this.hasRestriction(appUseVirtualCurrencies, currency));
+
+        if ((_.isEmpty(currencies) && isLoading) || loading ) {
+            return (
+                <>
+                <Header style={{ paddingLeft: 10 }}>
+                    <h3>Currency Store</h3>
+                    <p>Available Currencies to Integrate</p>
+                </Header>
+                <div style={{marginTop: 20}}>
+                    <Row>
+                        { _.times(4, () => (
+                            <Col lg={4} style={{ minWidth: 250 }}>
+                                <CurrencyStoreCard>
+                                    <Grid container direction='row' spacing={1}>
+                                        <Grid item xs={3}>
+                                            <Skeleton variant="circle" width={60} height={60} style={{ marginBottom: 30, marginLeft: 'auto', marginRight: 0 }}/>
+                                        </Grid>         
+                                    </Grid>
+                                    <Skeleton variant="rect" width="30%" height={30} style={{ marginBottom: 20 }}/>
+                                    <Skeleton variant="rect" width="40%" height={30} style={{ marginBottom: 10 }}/>
+                                </CurrencyStoreCard>
+                            </Col>
+                        ))}
+                    </Row>
+                </div>
+            </>
+            )
+        }
 
         return (
             <>
@@ -84,7 +116,7 @@ class CurrencyStore extends React.Component{
                         {currencies.map(currency => {
                             return (
                                 <Col lg={4} key={currency._id} style={{ minWidth: 250 }}>
-                                    <CurrencyStoreContainer onClick={this.addCurrency} currency={currency} isAdded={currency}/>
+                                    <CurrencyStoreContainer onClick={this.addCurrency} currency={currency} isAdded={currency.isAdded}/>
                                 </Col>
                             )
                         })}
@@ -101,7 +133,8 @@ class CurrencyStore extends React.Component{
 function mapStateToProps(state){
     return {
         profile: state.profile,
-        currency : state.currency
+        currency : state.currency,
+        loading: state.isLoading
     };
 }
 

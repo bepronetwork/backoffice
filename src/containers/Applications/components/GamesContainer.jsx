@@ -25,10 +25,10 @@ class GamesContainer extends PureComponent {
         this.projectData(props);
     }
 
-    async projectData(props){
+    projectData = async (props) => {
 
-            const gamesInfo = props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
-            const games = getAllGames(props.data.games.data, gamesInfo);
+            const gamesInfo = await props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
+            const games = await getAllGames(props.data.games.data, gamesInfo);
             const wallet = props.data.wallet.data;
 
             this.setState({...this.state, 
