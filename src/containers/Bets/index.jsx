@@ -40,11 +40,7 @@ class BetsContainer extends React.Component{
                         <AverageReturn periodicity={periodicity} isLoading={isLoading} currency={currency}/>
                     </Col>
                     <Col lg={12}>
-                        <BetsTable
-                                data={{
-                                    bets: this.props.profile.getApp().getAllBets({ filters: {}})
-                                }}
-                            />
+                        <BetsTable/>
                     </Col>
                 </Row>
                 
@@ -57,7 +53,6 @@ class BetsContainer extends React.Component{
 
 
 function mapStateToProps(state){
-    console.log(state)
     return {
         profile: state.profile,
         periodicity: state.periodicity,
