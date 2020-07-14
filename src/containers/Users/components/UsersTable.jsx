@@ -8,18 +8,20 @@ import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
 import { 
     Table, TableBody, TableCell, TableHead, TablePagination, TableRow, IconButton,
-    TableSortLabel, Toolbar, Typography, Paper, Tooltip, FormControl
+    TableSortLabel, Toolbar, Typography, Paper, Tooltip, FormControl, TextField
       } from '@material-ui/core';
 import { Col, Row } from 'reactstrap';
 import TextInput from '../../../shared/components/TextInput';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { FilterListIcon, TableIcon, JsonIcon } from 'mdi-react';
 import { compareIDS } from '../../../lib/string';
-import _ from 'lodash';
+import _, { isObject } from 'lodash';
 import { CSVLink } from "react-csv";
 import { export2JSON } from "../../../utils/export2JSON";
 import { Button as MaterialButton } from "@material-ui/core";
 import Skeleton from '@material-ui/lab/Skeleton';
+
+import { DebounceInput } from 'react-debounce-input';
 
 function getSorting(data, order, orderBy) {
 
@@ -301,12 +303,58 @@ class UsersTable extends React.Component {
         this.setState({ selected: newSelected });
     };
 
-    handleChangeInputContent = (type, item) => {
-        this.setState({[type] : item});
+    handleChangeInputContent = event => {
+
+        if (event.target.name) {
+            this.setState({
+                [event.target.name] : event.target.value ? event.target.value : null
+            }, () => {
+                this.fetchFilteredData();
+            }
+            );
+        }
+    }
+
+    fetchFilteredData = async () => {
+        const { profile, currency } = this.props;
+        const { usernameFilter, emailFilter, idFilter } = this.state;
+
+        const users = await profile.App.getUsersAsync({ 
+            size: 100, 
+            offset: 0,
+            filters: {
+                username: usernameFilter,
+                email: emailFilter,
+                user: idFilter
+            }
+        });
+
+        if ((_.isArray(users) || _.isObject(users)) && !_.isString(users)) {
+            this.setState({
+                data: fromDatabasetoTable(users, this.props.data.usersOtherInfo.data, currency)
+            })
+        }
+    }
+
+    resetData = async () => {
+        const { profile, currency } = this.props;
+
+        this.setLoading(true);
+
+        const users = await profile.App.getUsersAsync({ 
+            size: 100, 
+            offset: 0
+        });
+
+        this.setState({
+            data: fromDatabasetoTable(users, this.props.data.usersOtherInfo.data, currency)
+        })
+
+        this.setLoading(false);
     }
 
     handleChangePage = async (event, page) => {
-        const { data, rowsPerPage } = this.state;
+        const { data, rowsPerPage, usernameFilter, emailFilter, idFilter } = this.state;
         const { currency } = this.props;
         const { App } = this.props.profile;
 
@@ -314,7 +362,16 @@ class UsersTable extends React.Component {
 
             this.setLoading(true);
 
-            const users = await App.getUsersAsync({ size: 100, offset: data.length });
+            const users = await App.getUsersAsync({ 
+                size: 100, 
+                offset: 
+                data.length,
+                filters: {
+                    username: usernameFilter,
+                    email: emailFilter,
+                    user: idFilter
+                }
+            });
             
             if (users.length > 0) {
                 this.setState({
@@ -350,16 +407,11 @@ class UsersTable extends React.Component {
     render() {
         const { classes, currency, isLoading } = this.props;
         const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter, idFilter, loading } = this.state;
-        const dataFiltered = data.filter(n => 
-            (_.isEmpty(usernameFilter) || n.username.includes(usernameFilter)) &&
-            (_.isEmpty(emailFilter) || n.email.includes(emailFilter)) &&
-            (_.isEmpty(idFilter) || n._id.includes(idFilter))
-        );
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, dataFiltered.length - page * rowsPerPage);
+        const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
         const styles = {
             fitler: {
-                padding: '20px 20px 30px 20px', border: "1px solid #d9d9d9", margin: '24px 14px 0 0',
-                backgroundColor: "#f2f4f7", borderRadius: 4, width: 330, position: 'absolute',
+                padding: '30px 20px', border: "1px solid #d9d9d9", margin: '24px 14px 0 0',
+                backgroundColor: "#f2f4f7", borderRadius: 4, width: 400, position: 'absolute',
                 top: 0, right: 0, left: 'auto', zIndex: 10, display: showFilter ? 'block' : 'none'
             }
         };
@@ -374,13 +426,13 @@ class UsersTable extends React.Component {
             { label: "Profit", key: "profit"}
         ];
 
-        const jsonData = dataFiltered.map(row => _.pick(row, ['_id', 'username', 'email', 'wallet', 'bets', 'turnoverAmount', 'profit']));
+        const jsonData = data.map(row => _.pick(row, ['_id', 'username', 'email', 'wallet', 'bets', 'turnoverAmount', 'profit']));
 
         return (
             <Paper className={classes.root} style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                 <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
                 <div style={{ display: "flex", justifyContent: "flex-end"}}>
-                    <CSVLink data={dataFiltered} filename={"users.csv"} headers={headers}>
+                    <CSVLink data={data} filename={"users.csv"} headers={headers}>
                         <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
                             <TableIcon style={{marginRight: 7}}/> CSV
                         </MaterialButton>
@@ -392,47 +444,59 @@ class UsersTable extends React.Component {
                 {isLoading || loading ? (
                     <>
                     <Skeleton variant="rect" height={50} style={{ marginTop: 10, marginBottom: 20 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                    <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    { _.times(rowsPerPage, () => <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>)}
                     </>
                     ) : (
                     <>
                     <div style={styles.fitler}>
-                        <Row>
-                            <Col>
-                                <FormControl style={{width : '100%'}}>
-                                    <TextInput
+                        <Col>
+                            <Row>
+                                <FormControl style={{width : '100%', padding: 8 }}>
+                                    <DebounceInput        
                                         label={'Username'}
                                         name={'usernameFilter'}
                                         type={'text'} 
+                                        debounceTimeout={500}
                                         defaultValue={usernameFilter}
-                                        changeContent={this.handleChangeInputContent} />
+                                        onChange={event => this.handleChangeInputContent(event)}
+                                        element={TextField} />
                                 </FormControl>
-                            </Col>
-                            <Col>
-                                <FormControl style={{width : '100%'}}>
-                                    <TextInput
+                            </Row>
+                            <Row>
+                                <FormControl style={{width : '100%', padding: 8 }}>
+                                    <DebounceInput  
                                         label={'Email'}
                                         name={'emailFilter'}
                                         type={'text'} 
+                                        debounceTimeout={500}
                                         defaultValue={emailFilter}
-                                        changeContent={this.handleChangeInputContent} />
+                                        onChange={event => this.handleChangeInputContent(event)}
+                                        element={TextField} />
                                 </FormControl>
-                            </Col>
-                            <Col>
-                                <FormControl style={{width : '100%'}}>
-                                    <TextInput
+                            </Row>
+                            <Row>
+                                <FormControl style={{width : '100%', padding: 8}}>
+                                    <DebounceInput
                                         label={'Id'}
                                         name={'idFilter'}
                                         type={'text'} 
+                                        debounceTimeout={500}
                                         defaultValue={idFilter}
-                                        changeContent={this.handleChangeInputContent} />
+                                        onChange={event => this.handleChangeInputContent(event)}
+                                        element={TextField} />
                                 </FormControl>
-                            </Col>
-                        </Row>
+                            </Row>
+                            <Row style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <MaterialButton size="small" variant="outlined" 
+                                style={{ marginLeft: 0, marginTop: 15, marginBottom: 5, alignSelf: 'end', textTransform: 'none' }} 
+                                onClick={() => this.resetData()}
+                                disabled={loading}
+                                >
+                                    Clear
+                                </MaterialButton>
+                            </Row>
+
+                        </Col>
                     </div>             
                     <div className={classes.tableWrapper}>
                         <Table className={classes.table} aria-labelledby="tableTitle">
@@ -442,10 +506,10 @@ class UsersTable extends React.Component {
                                 orderBy={orderBy}
                                 onSelectAllClick={this.handleSelectAllClick}
                                 onRequestSort={this.handleRequestSort}
-                                rowCount={dataFiltered.length}
+                                rowCount={data.length}
                             />
                             <TableBody>
-                                {getSorting(dataFiltered, order, orderBy)
+                                {getSorting(data, order, orderBy)
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map(n => {
                                     const isSelected = this.isSelected(n.id);
@@ -520,7 +584,7 @@ class UsersTable extends React.Component {
                     </div>
                     </>)}
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[5, 10, 25, 50, 100]}
                         component="div"
                         count={data.length + rowsPerPage}
                         rowsPerPage={rowsPerPage}
