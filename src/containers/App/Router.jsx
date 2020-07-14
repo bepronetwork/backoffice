@@ -12,6 +12,7 @@ const Router = () => (
 	<MainWrapper>
 		<main>
 		<Switch>
+			<Route exact path="/.well-known/assetlinks.json"/>
 			<Route exact path="/" component={LogIn} />
 			<Route path="/404" component={NotFound404} />
 			<Route path="/login" component={LogIn} />
