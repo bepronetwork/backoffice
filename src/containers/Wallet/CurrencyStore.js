@@ -8,6 +8,7 @@ import { addCurrencyWallet } from '../../redux/actions/addCurrencyWallet';
 import CurrencyStoreContainer from './store/Currency';
 import { Header } from './components/LiquidityWalletContainer/styles';
 
+import _ from 'lodash';
 
 class CurrencyStore extends React.Component{
 
@@ -38,9 +39,9 @@ class CurrencyStore extends React.Component{
         store.dispatch(setLoadingStatus(true));
 
         let ecosystemCurrencies = await profile.getApp().getEcosystemCurrencies();
-        if(!(profile.getApp().getSummaryData('walletSimple').data)){return null}
-        let integratedWallets = (profile.getApp().getSummaryData('walletSimple')).data;
-        const { virtual } = profile.getApp().getParams();
+        if(!(await profile.getApp().getSummaryData('walletSimple').data)){return null}
+        let integratedWallets = (await profile.getApp().getSummaryData('walletSimple')).data;
+        const { virtual } = await profile.getApp().getParams();
 
         ecosystemCurrencies = ecosystemCurrencies.map( ecoCurrency => {
             let exists = false;
@@ -84,7 +85,7 @@ class CurrencyStore extends React.Component{
                         {currencies.map(currency => {
                             return (
                                 <Col lg={4} key={currency._id} style={{ minWidth: 250 }}>
-                                    <CurrencyStoreContainer onClick={this.addCurrency} currency={currency} isAdded={currency}/>
+                                    <CurrencyStoreContainer onClick={this.addCurrency} currency={currency} isAdded={currency.isAdded}/>
                                 </Col>
                             )
                         })}
