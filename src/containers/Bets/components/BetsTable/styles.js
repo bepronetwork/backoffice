@@ -9,6 +9,14 @@ export const Container = styled.div`
     background-color: '#FAFCFF';
 `;
 
+export const Text = styled.span`
+    font-family: Poppins;
+    font-size: 14px;
+`;
+
+export const BoldText = styled(Text)`
+    font-weight: 500;
+`;
 
 export const WonResult = styled.div`
     display: flex;
@@ -19,6 +27,7 @@ export const WonResult = styled.div`
     width: 70px;
     margin: 5px;
 
+    font-family: Poppins;
     font-size: 13px;
     font-weight: 400;
     color: white;
