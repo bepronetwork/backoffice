@@ -40,7 +40,7 @@ export const Filters = styled.div`
     grid-area: filters;
 
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
 
     flex-wrap: wrap;
@@ -87,4 +87,31 @@ export const WonResult = styled.div`
 
     background-color: ${props => props.isWon ? '#63c965' : '#e6536e' };
     border-radius: 5px;
+`;
+
+export const BetType = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 22px;
+    width: 70px;
+    margin: 5px;
+
+    font-family: Poppins;
+    font-size: 13px;
+    font-weight: 400;
+    color: black;
+    text-transform: capitalize;
+
+    border: solid 1px rgba(164, 161, 161, 0.35);
+    background-color: #FAFCFF;
+    border-radius: 5px;
+`;
+
+export const VideoGameIcon = styled.section`
+    height: 25px;
+    width: 25px;
+
+    margin: 0px 5px;
 `;

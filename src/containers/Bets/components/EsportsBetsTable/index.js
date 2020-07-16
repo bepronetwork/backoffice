@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { Container, Header, TableContainer, Filters, Export, Text, BoldText, WonResult } from './styles';
+import { Container, Header, TableContainer, Filters, Export, Text, BoldText, BetType, WonResult, VideoGameIcon } from './styles';
 import { Table, Spin, DatePicker, Select, Input } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
@@ -14,15 +14,17 @@ import { TableIcon, JsonIcon } from 'mdi-react';
 import BetContainer from '../../../../shared/components/BetContainer';
 import { export2JSON } from '../../../../utils/export2JSON';
 
+import bets from './data';
+import videogames from '../../../Applications/EsportsPage/components/Enums/videogames';
+
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-class BetsTable extends React.Component {
+class EsportsBetsTable extends React.Component {
         constructor(props){
         super(props)
         this.state = {
             data: [],
-            games: [],
             currencies: [],
             pagination: {
                 current: 1,
@@ -49,47 +51,45 @@ class BetsTable extends React.Component {
             isLoading: true
         })
 
-        const response = await App.getAllBets({ 
-            filters: {
-                 size: 100, 
-                 isJackpot: false 
-                }
-        });
+        // const response = await App.getAllBets({ 
+        //     filters: {
+        //          size: 100, 
+        //          isJackpot: false 
+        //         }
+        // });
 
-        const bets = response.data.message.list;
-        const { currencies, games } = App.params;
+        // const bets = response.data.message.list;
+        const { currencies } = App.params;
 
         this.setState({
-            data: _.isEmpty(bets) ? [] : this.prepareTableData(bets, currencies, games),
+            data: _.isEmpty(bets) ? [] : this.prepareTableData(bets, currencies, videogames),
             columns: this.prepareTableColumns(bets),
             currencies: currencies,
-            games: games,
             isLoading: false
         })
     }
 
-    prepareTableData = (bets, currencies, games) => {
+    prepareTableData = (bets, currencies, videogames) => {
 
-        if (_.isEmpty(bets) || _.isEmpty(currencies) || _.isEmpty(games)) return [];
+        if (_.isEmpty(bets) || _.isEmpty(currencies)) return [];
 
         return bets.map(bet => {
             const currency = currencies.find(currency => currency._id === bet.currency);
-            const game = games.find(game => game._id === bet.game);
 
             return {
                 key: bet._id, 
                 _id: bet._id,
                 user: bet.user,
+                videogame: videogames[bet.videogame],
                 currency: currency, 
                 app: bet.app,
-                game: game,
                 ticker: currency.ticker,
                 isWon: bet.isWon,
                 winAmount: bet.winAmount,
                 betAmount: bet.betAmount,
                 nonce: bet.nonce,
-                fee: bet.fee,
-                creation_timestamp: bet.timestamp,
+                type: bet.type,
+                creation_timestamp: bet.created_at,
                 clientSeed: bet.clientSeed,
                 serverSeed: bet.serverSeed,
                 serverHashedSeed: bet.serverHashedSeed
@@ -101,9 +101,9 @@ class BetsTable extends React.Component {
         const bet = {...data, creation_timestamp: moment(data.creation_timestamp).format('lll')};
 
         return (
-            <BetContainer bet={bet} id={bet.currency._id}>
+            // <BetContainer bet={bet} id={bet.currency._id}>
                 <BoldText>{bet._id}</BoldText>
-            </BetContainer>
+            // </BetContainer>
         )
     }
 
@@ -121,10 +121,12 @@ class BetsTable extends React.Component {
         </div>
     )
 
-    getGameImage = game => (
+    getVideogameImage = videogame => (
         <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
-            <img src={game.image_url} alt={game.name} style={{ height: 40, width: 50, margin: "0px 10px" }}/>
-            <Text>{game.name}</Text>
+            <VideoGameIcon>
+                { videogame.icon }
+            </VideoGameIcon>
+            <Text>{videogame.name}</Text>
         </div>
     )
 
@@ -144,10 +146,11 @@ class BetsTable extends React.Component {
             { title: 'Id', dataIndex: '_id', key: '_id', render: (_id, data, _length) => this.getBetContainer(data) },
             { title: 'User', dataIndex: 'user', key: 'user', render: user => this.getUserImage(user) },
             { title: 'Currency', dataIndex: 'currency', key: 'currency', render: currency => this.getCurrencyImage(currency) },
-            { title: 'Game', dataIndex: 'game', key: 'game', render: game => this.getGameImage(game) },
+            { title: 'Videogame', dataIndex: 'videogame', key: 'videogame', render: videogame => this.getVideogameImage(videogame) },
+            { title: 'Type', dataIndex: 'type', key: 'type', render: type => <BetType>{type}</BetType> },
             { title: 'Won', dataIndex: 'isWon', key: 'isWon', render: isWon => <WonResult isWon={isWon}>{isWon ? 'Yes' : 'No'}</WonResult> },
+            { title: 'Bet Amount', dataIndex: 'betAmount', key: 'betAmount', render: (betAmount, currency) => this.getFormatedAmount({ value: betAmount, currency: currency, colorized: false }) },
             { title: 'Win Amount', dataIndex: 'winAmount', key: 'winAmount', render: (winAmount, currency) => this.getFormatedAmount({ value: winAmount, currency: currency, colorized: true }) },
-            { title: 'Fee', dataIndex: 'fee', key: 'fee', render: (fee, currency) => this.getFormatedAmount({ value: fee, currency: currency, colorized: false }) },
             { title: 'Created At', dataIndex: 'creation_timestamp', key: 'creation_timestamp', render: creation_timestamp => <Text>{ moment(creation_timestamp).format("lll") }</Text> }
         ]
     }
@@ -160,11 +163,11 @@ class BetsTable extends React.Component {
             pagination: pagination
         })
 
-        const dataSize = _.size(currentDataSource);
+        // const dataSize = _.size(currentDataSource);
 
-        if (parseInt(dataSize / pageSize) === current) {
-            await this.fetchMoreData(dataSize);
-        }
+        // if (parseInt(dataSize / pageSize) === current) {
+        //     await this.fetchMoreData(dataSize);
+        // }
     }
 
     fetchMoreData = async (dataSize) => {
@@ -194,17 +197,15 @@ class BetsTable extends React.Component {
     }
 
     render() {
-        const { data, columns, pagination, isLoading, games, currencies } = this.state;
+        const { data, columns, pagination, isLoading, currencies } = this.state;
 
         const headers = [
             { label: "Id", key: "_id" },
             { label: "User", key: "user" },
             { label: "Currency", key: "currency" },
-            { label: "Game", key: "game" },
             { label: "Won", key: "isWon" },
-            { label: "Win Amount", key: "winAmount" },
             { label: "Bet Amount", key: "betAmount" },
-            { label: "Fee", key: "fee" },
+            { label: "Win Amount", key: "winAmount" },
             { label: "Created At", key: "createdAt" }
         ];
     
@@ -215,10 +216,9 @@ class BetsTable extends React.Component {
             csvData = data.map(row => ({...row, currency: row.currency.name,
                 user: row.user._id, 
                 isWon: row.isWon ? 'Yes' : 'No',
-                game: row.game._id,
                 createdAt: moment(row.creation_timestamp).format("lll")}));
     
-            jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'game', 'isWon', 'winAmount', 'betAmount', 'fee', 'creation_timestamp']));
+            jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'isWon', 'betAmount', 'winAmount', 'creation_timestamp']));
         }
 
         return (
@@ -226,9 +226,8 @@ class BetsTable extends React.Component {
             <Container>
                 <Header>
                     <Filters>
-                        <Input style={{ width: 150, height: 32 }} placeholder="Bet Id" />
-                        <Input style={{ width: 150, height: 32 }} placeholder="Usename or E-mail" />
                         <RangePicker 
+                        style={{ margin: 5 }}
                         // onChange={this.onChangeDate} 
                         // onOk={this.onOk}
                         ranges={{
@@ -237,25 +236,36 @@ class BetsTable extends React.Component {
                             'Last 7 days': [moment().subtract(7, 'days').utc(), moment().utc()],
                             'Last month': [moment().subtract(1, 'month').utc(), moment().utc()]
                         }}/>
+                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Bet Id" />
+                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Username or E-mail" />
                         <Select
                         // mode="multiple"
-                        style={{ minWidth: 150 }}
-                        placeholder="Game"
-                        // onChange={this.onChangeStatus}
-                        >   
-                            { games.map(game => (
-                                <Option key={game.name}>{game.name}</Option>
-                            ))}
-                        </Select>
-                        <Select
-                        // mode="multiple"
-                        style={{ minWidth: 150 }}
+                        style={{ minWidth: 120, margin: 5 }}
                         placeholder="Currency"
                         // onChange={this.onChangeStatus}
                         >   
                             { currencies.map(currency => (
                                 <Option key={currency.name}>{this.getCurrencyImage(currency)}</Option>
                             ))}
+                        </Select>
+                        <Select
+                        // mode="multiple"
+                        style={{ minWidth: 170, margin: 5 }}
+                        placeholder="Videogame"
+                        // onChange={this.onChangeStatus}
+                        >   
+                            { Object.keys(videogames).map(key => (
+                                <Option key={videogames[key].name}>{videogames[key].name}</Option>
+                            ))}
+                        </Select>
+                        <Select
+                        // mode="multiple"
+                        style={{ minWidth: 100, margin: 5 }}
+                        placeholder="Type"
+                        // onChange={this.onChangeStatus}
+                        >   
+                            <Option key="simple">Simple</Option>
+                            <Option key="multiple">Multiple</Option>
                         </Select>
                     </Filters>
                     <Export>
@@ -292,4 +302,4 @@ function mapStateToProps(state){
 }
 
 
-export default connect(mapStateToProps)(BetsTable);
+export default connect(mapStateToProps)(EsportsBetsTable);

@@ -40,7 +40,7 @@ export const Filters = styled.div`
     grid-area: filters;
 
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
 
     flex-wrap: wrap;

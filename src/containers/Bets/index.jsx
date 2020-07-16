@@ -12,6 +12,7 @@ import AverageBet from './components/AverageBet';
 import AverageReturn from './components/AverageReturn';
 
 import { Tabs } from 'antd';
+import EsportsBetsTable from './components/EsportsBetsTable';
 const { TabPane } = Tabs;
 
 class BetsContainer extends React.Component{
@@ -44,9 +45,10 @@ class BetsContainer extends React.Component{
                     <Col lg={12}>
                         <Tabs defaultActiveKey="1" type="card" size="large" style={{ margin: 15 }}>
                             <TabPane tab="Casino" key="1">
-                                <BetsTable/>
+                                <BetsTable />
                             </TabPane>
                             <TabPane tab="Esports" key="2">
+                                <EsportsBetsTable />
                             </TabPane>
                         </Tabs>
                     </Col>

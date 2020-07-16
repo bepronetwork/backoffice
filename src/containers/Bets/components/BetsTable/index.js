@@ -146,6 +146,7 @@ class BetsTable extends React.Component {
             { title: 'Currency', dataIndex: 'currency', key: 'currency', render: currency => this.getCurrencyImage(currency) },
             { title: 'Game', dataIndex: 'game', key: 'game', render: game => this.getGameImage(game) },
             { title: 'Won', dataIndex: 'isWon', key: 'isWon', render: isWon => <WonResult isWon={isWon}>{isWon ? 'Yes' : 'No'}</WonResult> },
+            { title: 'Bet Amount', dataIndex: 'betAmount', key: 'betAmount', render: (betAmount, currency) => this.getFormatedAmount({ value: betAmount, currency: currency, colorized: false }) },
             { title: 'Win Amount', dataIndex: 'winAmount', key: 'winAmount', render: (winAmount, currency) => this.getFormatedAmount({ value: winAmount, currency: currency, colorized: true }) },
             { title: 'Fee', dataIndex: 'fee', key: 'fee', render: (fee, currency) => this.getFormatedAmount({ value: fee, currency: currency, colorized: false }) },
             { title: 'Created At', dataIndex: 'creation_timestamp', key: 'creation_timestamp', render: creation_timestamp => <Text>{ moment(creation_timestamp).format("lll") }</Text> }
@@ -226,9 +227,8 @@ class BetsTable extends React.Component {
             <Container>
                 <Header>
                     <Filters>
-                        <Input style={{ width: 150, height: 32 }} placeholder="Bet Id" />
-                        <Input style={{ width: 150, height: 32 }} placeholder="Usename or E-mail" />
                         <RangePicker 
+                        style={{ margin: 5 }}
                         // onChange={this.onChangeDate} 
                         // onOk={this.onOk}
                         ranges={{
@@ -237,9 +237,11 @@ class BetsTable extends React.Component {
                             'Last 7 days': [moment().subtract(7, 'days').utc(), moment().utc()],
                             'Last month': [moment().subtract(1, 'month').utc(), moment().utc()]
                         }}/>
+                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Bet Id" />
+                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Username or E-mail" />
                         <Select
                         // mode="multiple"
-                        style={{ minWidth: 150 }}
+                        style={{ minWidth: 150, margin: 5 }}
                         placeholder="Game"
                         // onChange={this.onChangeStatus}
                         >   
@@ -249,7 +251,7 @@ class BetsTable extends React.Component {
                         </Select>
                         <Select
                         // mode="multiple"
-                        style={{ minWidth: 150 }}
+                        style={{ minWidth: 150, margin: 5 }}
                         placeholder="Currency"
                         // onChange={this.onChangeStatus}
                         >   
