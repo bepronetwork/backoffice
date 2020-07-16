@@ -14,8 +14,9 @@ import { TableIcon, JsonIcon } from 'mdi-react';
 import BetContainer from '../../../../shared/components/BetContainer';
 import { export2JSON } from '../../../../utils/export2JSON';
 
-import bets from './data';
+import { bets } from './data';
 import videogames from '../../../Applications/EsportsPage/components/Enums/videogames';
+import EsportsBetContainer from '../EsportsBetContainer';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -101,9 +102,9 @@ class EsportsBetsTable extends React.Component {
         const bet = {...data, creation_timestamp: moment(data.creation_timestamp).format('lll')};
 
         return (
-            // <BetContainer bet={bet} id={bet.currency._id}>
+            <EsportsBetContainer bet={bet} id={bet.currency._id}>
                 <BoldText>{bet._id}</BoldText>
-            // </BetContainer>
+            </EsportsBetContainer>
         )
     }
 
