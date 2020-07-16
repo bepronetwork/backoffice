@@ -3,6 +3,9 @@ import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row, Button } from 'reactstrap';
 import { AddIcon } from 'mdi-react';
 import { CurrencyStoreCard, CardHeader, CardContent } from './styles';
+import { connect } from 'react-redux';
+import { Grid } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 class CurrencyStoreContainer extends PureComponent {
  
@@ -21,39 +24,59 @@ class CurrencyStoreContainer extends PureComponent {
     }
 
     render() {
-        const { currency, isAdded } = this.props;
+        const { currency, isAdded, loading } = this.props;
         const { isLoading } = this.state;
         if(!currency){return null}
         const { image, _id, ticker, name } = currency;
 
         return (
             <CurrencyStoreCard>
-                <CardHeader>
-                    <img className='application__game__image' style={{display: 'block', marginLeft: `0px`, height: 60, width: 60 }} src={image}/>
-                </CardHeader>
-                <CardContent>
-                    <h1>{ticker}</h1>
-                </CardContent>
-                <div className="flex-container">
-                    <div style={{flexGrow: 5}} >
-                        <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.onClick()} >
-                            {   
-                                isLoading ?
-                                    "Adding"
-                                : isAdded ? 
-                                    "Added"
-                                : 
-                                    <p><AddIcon className="deposit-icon"/> Add </p>
-                            }
-                        </Button>
+                { loading ? (
+                    <>
+                        <Grid container direction='row' spacing={1}>
+                            <Grid item xs={3}>
+                                <Skeleton variant="circle" width={60} height={60} style={{ marginBottom: 30, marginLeft: 'auto', marginRight: 0 }}/>
+                            </Grid>         
+                        </Grid>
+                        <Skeleton variant="rect" width="30%" height={30} style={{ marginBottom: 20 }}/>
+                        <Skeleton variant="rect" width="40%" height={30} style={{ marginBottom: 10 }}/>
+                    </>
+                ) : (
+                    <>
+                    <CardHeader>
+                        <img className='application__game__image' style={{display: 'block', marginLeft: `0px`, height: 60, width: 60 }} src={image}/>
+                    </CardHeader>
+                    <CardContent>
+                        <h1>{ticker}</h1>
+                    </CardContent>
+                    <div className="flex-container">
+                        <div style={{flexGrow: 5}} >
+                            <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.onClick()} >
+                                {   
+                                    isLoading ?
+                                        "Adding"
+                                    : isAdded ? 
+                                        "Added"
+                                    : 
+                                        <p><AddIcon className="deposit-icon"/> Add </p>
+                                }
+                            </Button>
+                        </div>
+                        <div style={{flexGrow: 5}} >
+                        </div>
                     </div>
-                    <div style={{flexGrow: 5}} >
-                    </div>
-                </div>
+                    </>
+                )}
             </CurrencyStoreCard>
 
         );
     }
 }
 
-export default CurrencyStoreContainer;
+function mapStateToProps(state){
+    return {
+        loading: state.isLoading
+    };
+}
+
+export default connect(mapStateToProps)(CurrencyStoreContainer);

@@ -36,16 +36,15 @@ class AddOnContainer extends PureComponent {
     hasAddOn = (addOn) => {
         const { appAddOns } = this.state;
 
-        if(_.isEmpty(appAddOns)) {
-            const isAdded = !!Object.keys(appAddOns).find(k => k.toLowerCase() === addOn.toLowerCase());
-            const isNotEmpty = !_.isEmpty(appAddOns.find(k => k.toLowerCase() === addOn.toLowerCase()));
+        if(!_.isEmpty(appAddOns)) {
+            const isAdded = _.has(appAddOns, addOn);
+            const isNotEmpty = !_.isEmpty(appAddOns[addOn]);
 
             return isAdded && isNotEmpty;
 
         } else {
             return false;
         }
-         
     }
 
     getAddOnObj = (addOn) => {
