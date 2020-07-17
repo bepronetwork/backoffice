@@ -33,19 +33,16 @@ class UserPage extends React.Component{
     }
 
     projectData = async (props) => {
-        const { profile, currency } = props;
+        const { profile, currency, location } = props;
 
-        const user = await this.getUserInfo(currency);
+        const userId = location.state.userId;
 
         const currencyTicker = currency.ticker ? currency.ticker : defaultProps.ticker;
-        const userInfo = await profile.getApp().getUserAsync({user : user._id});
+        const user = await profile.getApp().getUserAsync({ user: userId, currency: currency });
 
         this.setState({...this.state, 
             currencyTicker,
-            user : {
-                ...user,
-                ...userInfo
-            }
+            user: user
         })
     }
 
@@ -113,19 +110,7 @@ class UserPage extends React.Component{
         if(!user || _.isEmpty(user)){return null};
 
         const { currency, isLoading } = this.props;
-        const {
-            username,
-            email,
-            _id,
-            winAmount,
-            withdraws,
-            deposits,
-            affiliate,
-            profit,
-            address,
-            betAmount,
-            register_timestamp
-        } = this.state.user;
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount } = user;
 
         const wallet = user.wallet.find(wallet => wallet.currency._id === currency._id);
 

@@ -888,6 +888,19 @@ class Connection {
         }
     }
 
+    getGameStats = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/game/stats`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getWithdraws = async ({params, headers}) => {
         try{
             let response = await fetch( API_URL_WITHDRAW + `/api/app/users/withdraws`, {
