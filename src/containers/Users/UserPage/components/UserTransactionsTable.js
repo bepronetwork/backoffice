@@ -34,25 +34,27 @@ function getSorting(data, order, orderBy) {
 
 const fromDatabasetoTable = (data, { currencies=[] }) => {
 
-	return data.map( (key) => {
+	return data.map(key => {
 
-        const currency = currencies.find(c => new String(c._id).toString() == new String(key.currency).toString());
+        const transaction = key._id;
+
+        const currency = currencies.find(c => c._id === transaction.currency);
 
 		return {
-            _id :  key._id,
-            user : key.user,
+            _id :  transaction._id,
+            user : transaction.user,
             currency : currency, 
-            address: key.address,
+            address: transaction.address,
             ticker : currency ? currency.ticker : '',
-            status :  key.status,
-            amount: key.amount,
-            transactionHash : key.transactionHash,
-			creation_timestamp: key.creation_timestamp,
-            isAffiliate: key.isAffiliate ? 'Affiliate' : 'Normal',
+            status :  transaction.status,
+            amount: transaction.amount,
+            transactionHash : transaction.transactionHash,
+			creation_timestamp: transaction.creation_timestamp,
+            isAffiliate: transaction.isAffiliate ? 'Affiliate' : 'Normal',
             typeIcon: key.isWithdraw ? withdraw : deposit,
             type: key.isWithdraw ? 'Withdraw' : 'Deposit',
-            link_url: key.link_url,
-            confirmed : key.confirmed
+            link_url: transaction.link_url,
+            confirmed : transaction.confirmed
 		}
 	})
 }
