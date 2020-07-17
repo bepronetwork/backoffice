@@ -13,7 +13,7 @@ import {
 import { Col, Row } from 'reactstrap';
 import TextInput from '../../../shared/components/TextInput';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
-import { FilterListIcon, TableIcon, JsonIcon } from 'mdi-react';
+import { FilterListIcon, TableIcon, JsonIcon, HelpIcon, AlertCircleOutlineIcon } from 'mdi-react';
 import { compareIDS } from '../../../lib/string';
 import _, { isObject } from 'lodash';
 import { CSVLink } from "react-csv";
@@ -431,7 +431,7 @@ class UsersTable extends React.Component {
         return (
             <Paper className={classes.root} style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                 <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
-                <div style={{ display: "flex", justifyContent: "flex-end"}}>
+                <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
                     <CSVLink data={data} filename={"users.csv"} headers={headers}>
                         <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
                             <TableIcon style={{marginRight: 7}}/> CSV
@@ -440,6 +440,10 @@ class UsersTable extends React.Component {
                     <MaterialButton onClick={() => export2JSON(jsonData, "users")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
                         <JsonIcon style={{marginRight: 7}}/> JSON
                     </MaterialButton>
+                </div>
+                <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", padding: "10px 20px" }}>
+                    <AlertCircleOutlineIcon size={18} style={{ margin: "0px 5px "}}/>
+                    <span>Values may change according to periodicity</span>
                 </div>
                 {isLoading || loading ? (
                     <>
