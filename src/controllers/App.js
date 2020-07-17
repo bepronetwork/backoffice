@@ -396,12 +396,25 @@ class App{
         }
     }
 
-    getUserAsync = async ({user}) => {
+    getUserAsync = async ({user, currency}) => {
         return (await ConnectionSingleton.getUser({
             params : {
                 user,
                 app : this.getId(),
-                admin : this.getAdminId()
+                admin : this.getAdminId(),
+                currency: currency._id
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId()),
+        })).data.message;
+    }
+
+    getGameStats = async ({game, currency}) => {
+        return (await ConnectionSingleton.getGameStats({
+            params : {
+                game,
+                app : this.getId(),
+                admin : this.getAdminId(),
+                currency: currency._id
             },
             headers : authHeaders(this.getBearerToken(), this.getAdminId()),
         })).data.message;

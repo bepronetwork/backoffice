@@ -32,16 +32,21 @@ class GameContainer extends React.Component {
     }
 
     projectData = async (props) => {
-        const { id, profile } = props;
+        const { id, profile, currency } = props;
 
         if (!_.isEmpty(this.state.game)) {
             const allGames = this.props.profile.getApp().getSummaryData('games');
             const gamesInfo = profile.getApp().getSummaryData('gamesInfo').data.data.message;
             const games = getAllGames(allGames.data, gamesInfo);
 
+            const gameInfo = games.find(game => game._id === id);
+            const gameStats = await profile.getApp().getGameStats({ game: id, currency: currency });
+
+            const game = { description: gameInfo.description, image_url: gameInfo.image_url, name: gameInfo.name, _id: gameInfo._id,  wallets: gameInfo.wallets, ...gameStats };
+
             if (!_.isEmpty(games)) {
                 this.setState({
-                    game: games.find(game => game._id === id)
+                    game: game
                 })
             } else {
                 this.setState({
@@ -52,16 +57,21 @@ class GameContainer extends React.Component {
     }
 
     setOpen = async () => {
-        const { id, profile } = this.props;
+        const { id, profile, currency } = this.props;
 
         if (_.isEmpty(this.state.game)) {
             const allGames = this.props.profile.getApp().getSummaryData('games');
             const gamesInfo = profile.getApp().getSummaryData('gamesInfo').data.data.message;
             const games = getAllGames(allGames.data, gamesInfo);
 
+            const gameInfo = games.find(game => game._id === id);
+            const gameStats = await profile.getApp().getGameStats({ game: id, currency: currency });
+
+            const game = { description: gameInfo.description, image_url: gameInfo.image_url, name: gameInfo.name, _id: gameInfo._id,  wallets: gameInfo.wallets, ...gameStats };
+
             if (!_.isEmpty(games)) {
                 this.setState({
-                    game: games.find(game => game._id === id),
+                    game: game,
                     open: true
                 })
             }
