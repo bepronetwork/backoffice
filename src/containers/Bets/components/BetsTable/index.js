@@ -52,7 +52,8 @@ class BetsTable extends React.Component {
         const response = await App.getAllBets({ 
             filters: {
                  size: 100, 
-                 isJackpot: false 
+                 isJackpot: false,
+                 tag: 'cassino'
                 }
         });
 
@@ -181,7 +182,8 @@ class BetsTable extends React.Component {
             filters: {
                  size: 100, 
                  offset: dataSize,
-                 isJackpot: false 
+                 isJackpot: false,
+                 tag: 'cassino'
                 }
         });
 
