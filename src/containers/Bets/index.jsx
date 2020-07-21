@@ -27,6 +27,7 @@ const TabContainer = styled.div`
 const Icon = styled.section`
     height: 35px;
     width: 35px;
+    filter: ${props => props.isActive ? 'grayscale(0)' : 'grayscale(1)' };
 `;
 
 
@@ -34,11 +35,21 @@ class BetsContainer extends React.Component{
 
     constructor(props){
         super(props)
+
+        this.state = {
+            activeTab: 1
+        }
+    }
+
+    handleChangeTab = tab => {
+        this.setState({
+            activeTab: parseInt(tab)
+        })
     }
 
     render = () => {
-
         const { periodicity, isLoading, currency } = this.props;
+        const { activeTab } = this.state;
 
         if (!currency) {return null}
 
@@ -58,11 +69,11 @@ class BetsContainer extends React.Component{
                         <AverageReturn periodicity={periodicity} isLoading={isLoading} currency={currency}/>
                     </Col>
                     <Col lg={12}>
-                        <Tabs defaultActiveKey="1" type="card" size="large" style={{ margin: 15 }}>
+                        <Tabs defaultActiveKey="1" type="card" size="large" style={{ margin: 15 }} onChange={this.handleChangeTab}>
                             <TabPane tab={
                                 <TabContainer>
-                                    <Icon>
-                                        <CasinoWhite/>
+                                    <Icon isActive={activeTab === 1}>
+                                        <CasinoWhite />
                                     </Icon>
                                     <span>Casino</span>
                                 </TabContainer>
@@ -71,7 +82,7 @@ class BetsContainer extends React.Component{
                             </TabPane>
                             <TabPane tab={
                                 <TabContainer>
-                                    <Icon>
+                                    <Icon isActive={activeTab === 2}>
                                         <EsportsWhite/>
                                     </Icon>
                                     <span>Esports</span>
