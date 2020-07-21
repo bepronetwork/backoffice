@@ -31,7 +31,11 @@ class EsportsBetsTable extends React.Component {
                 current: 1,
                 pageSize: 10,
             },
-            isLoading: false
+            isLoading: false,
+            videogame: null,
+            currency: null,
+            begin_at: null,
+            end_at: null
         };
 
     }
@@ -93,7 +97,8 @@ class EsportsBetsTable extends React.Component {
                 creation_timestamp: bet.created_at,
                 clientSeed: bet.clientSeed,
                 serverSeed: bet.serverSeed,
-                serverHashedSeed: bet.serverHashedSeed
+                serverHashedSeed: bet.serverHashedSeed,
+                matches: bet.matches
             }
         })
     }
@@ -171,6 +176,33 @@ class EsportsBetsTable extends React.Component {
         // }
     }
 
+    onChangeDate = (_value, dateString) => {
+        const [begin_at, end_at] = dateString;
+
+        this.setState({
+            begin_at: begin_at,
+            end_at: end_at
+        }, () => {
+            this.fetchFilteredData()
+        })
+    }
+
+    onChangeVideogameGame = value => {
+        this.setState({
+            videogame: value ? value : null
+        }, () => {
+            this.fetchFilteredData()
+        })
+    }
+
+    onChangeCurrency = value => {
+        this.setState({
+            currency: value ? value : null
+        }, () => {
+            this.fetchFilteredData()
+        })
+    }
+
     fetchMoreData = async (dataSize) => {
         const { profile } = this.props;
         const { App } = profile;
@@ -193,6 +225,37 @@ class EsportsBetsTable extends React.Component {
 
         this.setState({
             data: _.isEmpty(bets) ? [] : _.concat(data, this.prepareTableData(bets, currencies, games)),
+            isLoading: false
+        })
+    }
+
+    fetchFilteredData = async () => {
+        const { game, currency, begin_at, end_at } = this.state;
+        const { profile } = this.props;
+        const { App } = profile;
+
+        this.setState({
+            isLoading: true
+        })
+
+        const response = await App.getAllBets({ 
+            filters: {
+                 size: 100, 
+                 offset: 0,
+                 isJackpot: false,
+                 tag: 'cassino',
+                 game: game,
+                 currency: currency,
+                 begin_at: begin_at,
+                 end_at: end_at
+            }
+        });
+
+        const bets = response.data.message.list;
+        const { currencies, games } = App.params;
+
+        this.setState({
+            data: _.isEmpty(bets) ? [] : this.prepareTableData(bets, currencies, games),
             isLoading: false
         })
     }
@@ -243,18 +306,20 @@ class EsportsBetsTable extends React.Component {
                         // mode="multiple"
                         style={{ minWidth: 120, margin: 5 }}
                         placeholder="Currency"
-                        // onChange={this.onChangeStatus}
+                        onChange={this.onChangeCurrency}
                         >   
+                            <Option key={''}>All</Option>
                             { currencies.map(currency => (
-                                <Option key={currency.name}>{this.getCurrencyImage(currency)}</Option>
+                                <Option key={currency._id}>{this.getCurrencyImage(currency)}</Option>
                             ))}
                         </Select>
                         <Select
                         // mode="multiple"
                         style={{ minWidth: 170, margin: 5 }}
                         placeholder="Videogame"
-                        // onChange={this.onChangeStatus}
+                        onChange={this.onChangeVideogame}
                         >   
+                            <Option key={''}>All</Option>
                             { Object.keys(videogames).map(key => (
                                 <Option key={videogames[key].name}>{videogames[key].name}</Option>
                             ))}

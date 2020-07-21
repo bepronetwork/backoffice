@@ -75,7 +75,7 @@ class EsportsBetContainer extends React.Component {
 
     render() {
         const { open, bet } = this.state;
-        const { _id, user, currency, videogame, isWon, betAmount, winAmount, creation_timestamp, serverSeed, clientSeed, serverHashedSeed } = bet;
+        const { _id, user, currency, videogame, isWon, betAmount, winAmount, creation_timestamp, serverSeed, clientSeed, serverHashedSeed, matches } = bet;
 
         const [teamOne, teamTwo] = opponents;
 
@@ -161,6 +161,7 @@ class EsportsBetContainer extends React.Component {
                                 <hr/>
                             </Col>
                         </Row>
+                        {_.times(matches.length, () => (
                             <MatchesContainer>
                             <SerieInfo>
                                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -203,6 +204,7 @@ class EsportsBetContainer extends React.Component {
                                     <WonResult isWon={isWon}>{isWon ? 'Won' : 'Loss'}</WonResult>
                             </div>
                             </MatchesContainer>
+                        ))}
                         <Row style={{ marginTop: 15 }}>
                             <Col sd={12} md={12} lg={6} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                             <h5 style={{margin: 5}}>Bet Amount</h5>
