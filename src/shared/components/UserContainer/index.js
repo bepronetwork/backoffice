@@ -76,15 +76,12 @@ class UserContainer extends React.Component {
 
         this.setState({ isLoading: true });
 
-        const user = await profile.getApp().getUserAsync({ user: user_id });
-        const summary = await profile.getApp().getSummaryData('users');
-        
-        const userSummary = summary.data ? summary.data.find(user => user._id === user_id) : undefined;
+        const user = await profile.getApp().getUserAsync({ user: user_id, currency: currency });
         const affiliateWallet = user.affiliate.wallet.filter(w => w.currency._id === currency._id);
         
         this.setState({ isLoading: false });
 
-        return userSummary ? {...user, ...userSummary, affiliateWallet } : { ...user, affiliateWallet };
+        return { ...user, affiliateWallet };
     }
 
     renderDataTitle = ({title, data, span, loading, decimals}) => {
