@@ -9,7 +9,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 import { CSVLink } from "react-csv";
 import { Button as MaterialButton } from "@material-ui/core";
-import { TableIcon, JsonIcon } from 'mdi-react';
+import { TableIcon, JsonIcon, AlarmLightIcon } from 'mdi-react';
 
 import BetContainer from '../../../../shared/components/BetContainer';
 import { export2JSON } from '../../../../utils/export2JSON';
@@ -28,7 +28,11 @@ class BetsTable extends React.Component {
                 current: 1,
                 pageSize: 10,
             },
-            isLoading: false
+            isLoading: false,
+            game: null,
+            currency: null,
+            begin_at: null,
+            end_at: null
         };
 
     }
@@ -169,10 +173,37 @@ class BetsTable extends React.Component {
         }
     }
 
+    onChangeDate = (_value, dateString) => {
+        const [begin_at, end_at] = dateString;
+
+        this.setState({
+            begin_at: begin_at,
+            end_at: end_at
+        }, () => {
+            this.fetchFilteredData()
+        })
+    }
+
+    onChangeGame = value => {
+        this.setState({
+            game: value ? value : null
+        }, () => {
+            this.fetchFilteredData()
+        })
+    }
+
+    onChangeCurrency = value => {
+        this.setState({
+            currency: value ? value : null
+        }, () => {
+            this.fetchFilteredData()
+        })
+    }
+
     fetchMoreData = async (dataSize) => {
         const { profile } = this.props;
         const { App } = profile;
-        const { data } = this.state;
+        const { data, game, currency, begin_at, end_at } = this.state;
 
         this.setState({
             isLoading: true
@@ -183,7 +214,11 @@ class BetsTable extends React.Component {
                  size: 100, 
                  offset: dataSize,
                  isJackpot: false,
-                 tag: 'cassino'
+                 tag: 'cassino',
+                 game: game,
+                 currency: currency,
+                 begin_at: begin_at,
+                 end_at: end_at
                 }
         });
 
@@ -192,6 +227,37 @@ class BetsTable extends React.Component {
 
         this.setState({
             data: _.isEmpty(bets) ? [] : _.concat(data, this.prepareTableData(bets, currencies, games)),
+            isLoading: false
+        })
+    }
+
+    fetchFilteredData = async () => {
+        const { game, currency, begin_at, end_at } = this.state;
+        const { profile } = this.props;
+        const { App } = profile;
+
+        this.setState({
+            isLoading: true
+        })
+
+        const response = await App.getAllBets({ 
+            filters: {
+                 size: 100, 
+                 offset: 0,
+                 isJackpot: false,
+                 tag: 'cassino',
+                 game: game,
+                 currency: currency,
+                 begin_at: begin_at,
+                 end_at: end_at
+            }
+        });
+
+        const bets = response.data.message.list;
+        const { currencies, games } = App.params;
+
+        this.setState({
+            data: _.isEmpty(bets) ? [] : this.prepareTableData(bets, currencies, games),
             isLoading: false
         })
     }
@@ -231,7 +297,7 @@ class BetsTable extends React.Component {
                     <Filters>
                         <RangePicker 
                         style={{ margin: 5 }}
-                        // onChange={this.onChangeDate} 
+                        onChange={this.onChangeDate} 
                         // onOk={this.onOk}
                         ranges={{
                             'Today': [moment().utc(), moment().utc()],
@@ -245,20 +311,22 @@ class BetsTable extends React.Component {
                         // mode="multiple"
                         style={{ minWidth: 150, margin: 5 }}
                         placeholder="Game"
-                        // onChange={this.onChangeStatus}
+                        onChange={this.onChangeGame}
                         >   
+                            <Option key={''}>All</Option>
                             { games.map(game => (
-                                <Option key={game.name}>{game.name}</Option>
+                                <Option key={game._id}>{game.name}</Option>
                             ))}
                         </Select>
                         <Select
                         // mode="multiple"
                         style={{ minWidth: 150, margin: 5 }}
                         placeholder="Currency"
-                        // onChange={this.onChangeStatus}
+                        onChange={this.onChangeCurrency}
                         >   
+                            <Option key={''}>All</Option>
                             { currencies.map(currency => (
-                                <Option key={currency.name}>{this.getCurrencyImage(currency)}</Option>
+                                <Option key={currency._id}>{this.getCurrencyImage(currency)}</Option>
                             ))}
                         </Select>
                     </Filters>

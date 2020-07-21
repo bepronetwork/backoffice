@@ -5,7 +5,7 @@ import { getNonce } from "../lib/number";
 import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
 import { getAuthFromCookies } from "./services/services";
-import _ from 'lodash';
+import _, { identity } from 'lodash';
 import { getVideoGamesAll, getMatchesAll, getSeriesMatches, getSpecificMatch, setBookedMatch, removeBookedMatch, getTeamStats, getPlayerStats, getBookedMatches, getBookedSeriesMatches } from "../esports/services";
 
 class App{    
@@ -876,7 +876,7 @@ class App{
         try{
             return await ConnectionSingleton.getAllBets({   
                 params : {
-                    ...filters,
+                    ..._.pickBy(filters, identity),
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     
