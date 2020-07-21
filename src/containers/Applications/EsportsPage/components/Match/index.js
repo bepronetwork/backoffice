@@ -225,6 +225,7 @@ class Match extends React.Component {
         const isPreMatch = !_.isEmpty(status) && ['pre_match'].includes(status);
         const hasResults = !_.isEmpty(results) && ['live', 'settled', 'finished'].includes(status);
         const isTie = scoreTeamOne !== null && scoreTeamTwo !== null && scoreTeamOne === scoreTeamTwo && isMatchFinished;
+        const hasOdds = teamOneOdd !== undefined && teamTwoOdd !== undefined;
 
         return (
             <>
@@ -292,7 +293,7 @@ class Match extends React.Component {
                                 { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Remove" }
                             </RemoveBookButton>
                         ) : (
-                            isPreMatch && (
+                            isPreMatch && hasOdds && (
                             <BookButton variant="contained" size="small" onClick={this.setMatchBooked} disabled={isLoading}>
                                 { isLoading ? <img src={loading} alt="Loading..." className={'loading_gif'}/> : "Book" }
                             </BookButton>)
