@@ -11,9 +11,24 @@ import Won from './components/Won';
 import AverageBet from './components/AverageBet';
 import AverageReturn from './components/AverageReturn';
 
+import styled from 'styled-components';
+
 import { Tabs } from 'antd';
 import EsportsBetsTable from './components/EsportsBetsTable';
+import { CasinoWhite, EsportsWhite } from '../../components/Icons';
 const { TabPane } = Tabs;
+
+const TabContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+const Icon = styled.section`
+    height: 35px;
+    width: 35px;
+`;
+
 
 class BetsContainer extends React.Component{
 
@@ -44,10 +59,24 @@ class BetsContainer extends React.Component{
                     </Col>
                     <Col lg={12}>
                         <Tabs defaultActiveKey="1" type="card" size="large" style={{ margin: 15 }}>
-                            <TabPane tab="Casino" key="1">
+                            <TabPane tab={
+                                <TabContainer>
+                                    <Icon>
+                                        <CasinoWhite/>
+                                    </Icon>
+                                    <span>Casino</span>
+                                </TabContainer>
+                            } key="1">
                                 <BetsTable />
                             </TabPane>
-                            <TabPane tab="Esports" key="2">
+                            <TabPane tab={
+                                <TabContainer>
+                                    <Icon>
+                                        <EsportsWhite/>
+                                    </Icon>
+                                    <span>Esports</span>
+                                </TabContainer>
+                            } key="2">
                                 <EsportsBetsTable />
                             </TabPane>
                         </Tabs>
