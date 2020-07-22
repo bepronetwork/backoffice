@@ -165,7 +165,7 @@ class UserPage extends React.Component{
         if(!user || _.isEmpty(user)){return null};
 
         const { currency, isLoading } = this.props;
-        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, bonusAmount } = user;
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount } = user;
 
         const wallet = user.wallet.find(wallet => wallet.currency._id === currency._id);
 
@@ -229,7 +229,7 @@ class UserPage extends React.Component{
                                 {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length, loading: isLoading, decimals: 0})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderBonusAmount({ title : 'Bonus', bonusAmount: bonusAmount, incrementBetAmountForBonus: wallet.incrementBetAmountForBonus, minBetAmountForBonusUnlocked: wallet.minBetAmountForBonusUnlocked, loading: isLoading, span: currencyTicker, decimals: 6 })}
+                                {this.renderBonusAmount({ title : 'Bonus', bonusAmount: wallet.bonusAmount, incrementBetAmountForBonus: wallet.incrementBetAmountForBonus, minBetAmountForBonusUnlocked: wallet.minBetAmountForBonusUnlocked, loading: isLoading, span: currencyTicker, decimals: 6 })}
                             </Col>
                         </Row>
                     </Col>
