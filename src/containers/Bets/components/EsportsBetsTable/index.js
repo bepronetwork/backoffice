@@ -14,8 +14,7 @@ import { TableIcon, JsonIcon } from 'mdi-react';
 import BetContainer from '../../../../shared/components/BetContainer';
 import { export2JSON } from '../../../../utils/export2JSON';
 
-import { bets } from './data';
-import videogames from '../../../Applications/EsportsPage/components/Enums/videogames';
+import videogamesEnum from '../../../Applications/EsportsPage/components/Enums/videogames';
 import EsportsBetContainer from '../EsportsBetContainer';
 
 const { RangePicker } = DatePicker;
@@ -32,10 +31,11 @@ class EsportsBetsTable extends React.Component {
                 pageSize: 10,
             },
             isLoading: false,
-            videogame: null,
+            videogamesArr: null,
             currency: null,
             begin_at: null,
-            end_at: null
+            end_at: null,
+            type: null
         };
 
     }
@@ -49,21 +49,25 @@ class EsportsBetsTable extends React.Component {
     }
 
     projectData = async (props) => {
-        const { profile } = props;
+        const { profile, videogames } = props;
         const { App } = profile;
 
         this.setState({
             isLoading: true
         })
 
-        // const response = await App.getAllBets({ 
-        //     filters: {
-        //          size: 100, 
-        //          isJackpot: false 
-        //         }
-        // });
+        if (_.isEmpty(videogames)) {
+            await App.getVideoGamesAll();
+        }
 
-        // const bets = response.data.message.list;
+        const response = await App.getAllBets({ 
+            filters: {
+                 size: 100, 
+                 tag: 'esports' 
+                }
+        });
+
+        const bets = response.data.message.list;
         const { currencies } = App.params;
 
         this.setState({
@@ -74,31 +78,36 @@ class EsportsBetsTable extends React.Component {
         })
     }
 
+    getVideogameObj = id => {
+        const { videogames } = this.props;
+
+        const videogame = videogames.find(videgame => videgame._id === id);
+
+        return videogame ? videogamesEnum[videogame.external_id] : {};
+    }
+
     prepareTableData = (bets, currencies, videogames) => {
 
-        if (_.isEmpty(bets) || _.isEmpty(currencies)) return [];
+        if (_.isEmpty(bets) || _.isEmpty(currencies) || _.isEmpty(videogames)) return [];
 
         return bets.map(bet => {
             const currency = currencies.find(currency => currency._id === bet.currency);
+            const videogames = _.uniq(bet.videogames).map(id => this.getVideogameObj(id));
 
             return {
                 key: bet._id, 
                 _id: bet._id,
                 user: bet.user,
-                videogame: videogames[bet.videogame],
+                videogames: videogames,
                 currency: currency, 
                 app: bet.app,
                 ticker: currency.ticker,
                 isWon: bet.isWon,
                 winAmount: bet.winAmount,
                 betAmount: bet.betAmount,
-                nonce: bet.nonce,
                 type: bet.type,
-                creation_timestamp: bet.created_at,
-                clientSeed: bet.clientSeed,
-                serverSeed: bet.serverSeed,
-                serverHashedSeed: bet.serverHashedSeed,
-                matches: bet.matches
+                creation_timestamp: bet.created_at,  
+                result: bet.result
             }
         })
     }
@@ -127,12 +136,13 @@ class EsportsBetsTable extends React.Component {
         </div>
     )
 
-    getVideogameImage = videogame => (
-        <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
-            <VideoGameIcon>
-                { videogame.icon }
-            </VideoGameIcon>
-            <Text>{videogame.name}</Text>
+    getVideogamesImages = videogames => (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            { videogames.map(videogame => (
+                <VideoGameIcon>
+                    { videogame.icon }
+                </VideoGameIcon>
+            ))}
         </div>
     )
 
@@ -152,7 +162,7 @@ class EsportsBetsTable extends React.Component {
             { title: 'Id', dataIndex: '_id', key: '_id', render: (_id, data, _length) => this.getBetContainer(data) },
             { title: 'User', dataIndex: 'user', key: 'user', render: user => this.getUserImage(user) },
             { title: 'Currency', dataIndex: 'currency', key: 'currency', render: currency => this.getCurrencyImage(currency) },
-            { title: 'Videogame', dataIndex: 'videogame', key: 'videogame', render: videogame => this.getVideogameImage(videogame) },
+            { title: 'Videogame', dataIndex: 'videogames', key: 'videogames', render: videogames => this.getVideogamesImages(videogames) },
             { title: 'Type', dataIndex: 'type', key: 'type', render: type => <BetType>{type}</BetType> },
             { title: 'Won', dataIndex: 'isWon', key: 'isWon', render: isWon => <WonResult isWon={isWon}>{isWon ? 'Yes' : 'No'}</WonResult> },
             { title: 'Bet Amount', dataIndex: 'betAmount', key: 'betAmount', render: (betAmount, currency) => this.getFormatedAmount({ value: betAmount, currency: currency, colorized: false }) },
@@ -169,11 +179,11 @@ class EsportsBetsTable extends React.Component {
             pagination: pagination
         })
 
-        // const dataSize = _.size(currentDataSource);
+        const dataSize = _.size(currentDataSource);
 
-        // if (parseInt(dataSize / pageSize) === current) {
-        //     await this.fetchMoreData(dataSize);
-        // }
+        if (parseInt(dataSize / pageSize) === current) {
+            await this.fetchMoreData(dataSize);
+        }
     }
 
     onChangeDate = (_value, dateString) => {
@@ -187,9 +197,9 @@ class EsportsBetsTable extends React.Component {
         })
     }
 
-    onChangeVideogameGame = value => {
+    onChangeVideogames = value => {
         this.setState({
-            videogame: value ? value : null
+            videogamesArr: value ? value : null
         }, () => {
             this.fetchFilteredData()
         })
@@ -203,10 +213,18 @@ class EsportsBetsTable extends React.Component {
         })
     }
 
+    onChangeBetType = value => {
+        this.setState({
+            type: value ? value : null
+        }, () => {
+            this.fetchFilteredData()
+        })
+    }
+
     fetchMoreData = async (dataSize) => {
-        const { profile } = this.props;
+        const { profile, videogames } = this.props;
         const { App } = profile;
-        const { data } = this.state;
+        const { data, game, currency, begin_at, end_at, type, videogamesArr } = this.state;
 
         this.setState({
             isLoading: true
@@ -216,21 +234,27 @@ class EsportsBetsTable extends React.Component {
             filters: {
                  size: 100, 
                  offset: dataSize,
-                 isJackpot: false 
+                 tag: 'esports',
+                 game: game,
+                 currency: currency,
+                 begin_at: begin_at,
+                 end_at: end_at,
+                 type: type,
+                 videogames: videogamesArr
                 }
         });
 
         const bets = response.data.message.list;
-        const { currencies, games } = App.params;
+        const { currencies } = App.params;
 
         this.setState({
-            data: _.isEmpty(bets) ? [] : _.concat(data, this.prepareTableData(bets, currencies, games)),
+            data: _.isEmpty(bets) ? data : _.concat(data, this.prepareTableData(bets, currencies, videogames)),
             isLoading: false
         })
     }
 
     fetchFilteredData = async () => {
-        const { game, currency, begin_at, end_at } = this.state;
+        const { game, currency, begin_at, end_at, type, videogamesArr } = this.state;
         const { profile } = this.props;
         const { App } = profile;
 
@@ -243,11 +267,13 @@ class EsportsBetsTable extends React.Component {
                  size: 100, 
                  offset: 0,
                  isJackpot: false,
-                 tag: 'cassino',
+                 tag: 'esports',
                  game: game,
                  currency: currency,
                  begin_at: begin_at,
-                 end_at: end_at
+                 end_at: end_at,
+                 type: type,
+                 videogames: videogamesArr
             }
         });
 
@@ -261,6 +287,7 @@ class EsportsBetsTable extends React.Component {
     }
 
     render() {
+        const { videogames } = this.props;
         const { data, columns, pagination, isLoading, currencies } = this.state;
 
         const headers = [
@@ -314,22 +341,22 @@ class EsportsBetsTable extends React.Component {
                             ))}
                         </Select>
                         <Select
-                        // mode="multiple"
+                        mode="multiple"
                         style={{ minWidth: 170, margin: 5 }}
                         placeholder="Videogame"
-                        onChange={this.onChangeVideogame}
+                        onChange={this.onChangeVideogames}
                         >   
-                            <Option key={''}>All</Option>
                             { Object.keys(videogames).map(key => (
-                                <Option key={videogames[key].name}>{videogames[key].name}</Option>
+                                <Option key={videogames[key]._id}>{videogames[key].name}</Option>
                             ))}
                         </Select>
                         <Select
                         // mode="multiple"
                         style={{ minWidth: 100, margin: 5 }}
                         placeholder="Type"
-                        // onChange={this.onChangeStatus}
+                        onChange={this.onChangeBetType}
                         >   
+                            <Option key={''}>All</Option>
                             <Option key="simple">Simple</Option>
                             <Option key="multiple">Multiple</Option>
                         </Select>
@@ -363,7 +390,8 @@ class EsportsBetsTable extends React.Component {
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        videogames: state.videogames
     };
 }
 

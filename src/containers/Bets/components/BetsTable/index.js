@@ -226,7 +226,7 @@ class BetsTable extends React.Component {
         const { currencies, games } = App.params;
 
         this.setState({
-            data: _.isEmpty(bets) ? [] : _.concat(data, this.prepareTableData(bets, currencies, games)),
+            data: _.isEmpty(bets) ? data : _.concat(data, this.prepareTableData(bets, currencies, games)),
             isLoading: false
         })
     }
