@@ -191,8 +191,9 @@ export const WonResult = styled.div`
     font-family: Poppins;
     font-size: 13px;
     font-weight: 300;
-    color: white;
+    color: ${props => props.textColor};
+    text-transform: capitalize;
 
-    background-color: ${props => props.isWon ? '#63c965' : '#e6536e' };
+    background-color: ${props => props.backgroundColor};
     border-radius: 5px;
 `;

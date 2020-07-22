@@ -14,6 +14,7 @@ import { Carousel } from 'antd';
 
 import { opponents } from './data';
 import Avatar from 'react-avatar';
+import Match from './Match';
 
 class EsportsBetContainer extends React.Component {
  
@@ -75,9 +76,9 @@ class EsportsBetContainer extends React.Component {
 
     render() {
         const { open, bet } = this.state;
-        const { _id, user, currency, videogame, isWon, betAmount, winAmount, creation_timestamp, serverSeed, clientSeed, serverHashedSeed, matches } = bet;
+        const { _id, user, currency, videogames, isWon, betAmount, winAmount, creation_timestamp, result } = bet;
 
-        const [teamOne, teamTwo] = opponents;
+        // const [teamOne, teamTwo] = opponents;
 
         let csvData = [{}];
         let jsonData = [];
@@ -91,10 +92,7 @@ class EsportsBetContainer extends React.Component {
                     currency: currency.name,
                     betAmount: betAmount ? parseFloat(betAmount).toFixed(6) : 0,
                     winAmount: winAmount ? parseFloat(winAmount).toFixed(6) : 0,
-                    creation_timestamp: creation_timestamp,
-                    serverSeed: serverSeed,
-                    clientSeed: clientSeed,
-                    serverHashedSeed: serverHashedSeed
+                    creation_timestamp: creation_timestamp
                 }
             ]
     
@@ -104,16 +102,13 @@ class EsportsBetContainer extends React.Component {
                 { label: "Currency", key: "currency" },
                 { label: "Bet Amount", key: "betAmount" },
                 { label: "Win Amount", key: "winAmount" },
-                { label: "Created At", key: "creation_timestamp" },
-                { label: "Server Seed", key: "serverSeed" },
-                { label: "Client Seed", key: "clientSeed" },
-                { label: "Server Hashed Seed", key: "serverHashedSeed" }
+                { label: "Created At", key: "creation_timestamp" }
             ];
     
             if (!_.isEmpty(data)) {
                 csvData = data.map(row => ({...row, creation_timestamp: moment(row.creation_timestamp).format("lll")}));
         
-                jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'betAmount', 'winAmount', 'creation_timestamp', 'serverSeed', 'clientSeed', 'serverHashedSeed']));
+                jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'betAmount', 'winAmount', 'creation_timestamp']));
             }
         }
 
@@ -145,7 +140,7 @@ class EsportsBetContainer extends React.Component {
                     </DialogHeader>
                     <DialogContent style={{ paddingTop: 0, maxWidth: 450 }}>
                         <Row>
-                            <Col sd={12} md={12} lg={12} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                            {/* <Col sd={12} md={12} lg={12} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                                 <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
                                     <VideoGameIcon>
                                         { videogame.icon }
@@ -153,7 +148,7 @@ class EsportsBetContainer extends React.Component {
                                     <h5>{videogame.name}</h5>
                                     <hr/>
                                 </div>
-                            </Col>
+                            </Col> */}
                             <Col sd={12} md={12} lg={12} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                                 <h5 style={{marginTop : 5}}> {user.username} 
                                 </h5>
@@ -161,49 +156,8 @@ class EsportsBetContainer extends React.Component {
                                 <hr/>
                             </Col>
                         </Row>
-                        {_.times(matches.length, () => (
-                            <MatchesContainer>
-                            <SerieInfo>
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    {/* <VideoGameIcon>
-                                        { videogame.icon }
-                                    </VideoGameIcon> */}
-                                    <span style={{ padding: 0 }}>LPL SUMMER 2020 - REGULAR SEASON</span>
-                                </div>
-                                <div>
-                                    <DateInfo style={{ flexDirection: "row" }}>
-                                        <Time style={{ margin: 5, padding: 0 }}>
-                                            { '10:00' }
-                                        </Time>
-                                        <DateSpan style={{ margin: 5, padding: 0 }}>
-                                            { '07/15' }
-                                        </DateSpan>
-                                    </DateInfo> 
-                                </div>
-                            </SerieInfo>
-                            <Score> 
-                                <TeamOne>
-                                    <span>{teamOne.name}</span>
-                                    { teamOne.image_url ? <img src={teamOne.image_url} alt={teamOne.name}/> : <Avatar name={teamOne.name} size="35" round={true}/> } 
-                                </TeamOne>
-                                    <Result>
-                                        <ResultValue>
-                                            { 2 }
-                                        </ResultValue>
-                                        <span>vs</span> 
-                                        <ResultValue>
-                                            { 1 }
-                                        </ResultValue>
-                                    </Result>
-                                <TeamTwo>
-                                    { teamTwo.image_url ? <img src={teamTwo.image_url} alt={teamTwo.name}/> : <Avatar name={teamTwo.name} size="35" round={true}/> } 
-                                    <span>{teamTwo.name}</span>
-                                </TeamTwo>
-                            </Score>
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                                    <WonResult isWon={isWon}>{isWon ? 'Won' : 'Loss'}</WonResult>
-                            </div>
-                            </MatchesContainer>
+                        { result.map(match => (
+                            <Match data={match}/>
                         ))}
                         <Row style={{ marginTop: 15 }}>
                             <Col sd={12} md={12} lg={6} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -221,7 +175,7 @@ class EsportsBetContainer extends React.Component {
                                 </div>
                             </Col>
                         </Row>
-                        <Row style={{ marginTop: 20 }}>
+                        {/* <Row style={{ marginTop: 20 }}>
                             <Col sd={12} md={12} lg={6} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                                 <h5 style={{margin: 5}}>Server Seed</h5>
                                 <p className='text-small'> {serverSeed} </p>
@@ -238,7 +192,7 @@ class EsportsBetContainer extends React.Component {
                                     <p className='text-small' style={{ padding: "0px 20px", overflowWrap: "break-word" }}> {serverHashedSeed} </p>
                                 </div>
                             </Col>
-                        </Row>
+                        </Row> */}
                     </DialogContent>
                 </Dialog> : null }
             </>
