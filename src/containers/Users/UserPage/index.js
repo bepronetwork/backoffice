@@ -12,6 +12,7 @@ import AffiliateInfo from './components/AffiliateInfo';
 import { compareIDS } from '../../../lib/string';
 import UserBetsTable from './components/UserBetsTable';
 import TopUpBalance from './components/TopUpBalance';
+import { ProgressBar } from 'react-bootstrap';
 
 const defaultProps = {
     ticker : 'No Currency Chosen'
@@ -78,6 +79,60 @@ class UserPage extends React.Component{
                         <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
                     ) : (
                         <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={decimals} font={'11pt'} number={data}/> <span className='text-x-small'>{span}</span></h4>
+                    )}
+                </CardBody>
+            </Card>
+        )
+    }
+
+    renderBonusAmount = ({title, bonusAmount, incrementBetAmountForBonus, minBetAmountForBonusUnlocked, span, loading, decimals}) => {
+
+        const percenteToBonus = 100 * (incrementBetAmountForBonus / minBetAmountForBonusUnlocked);
+
+        return (
+            <Card style={{ minWidth: minBetAmountForBonusUnlocked > 0 ? 230 : 0 }}>
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    <p className='text-small pink-text'> {title} </p>
+                    {loading ? (
+                        minBetAmountForBonusUnlocked > 0 ? (
+                            <>
+                                <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                <hr/>
+                                <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                <Skeleton variant="rect" height={20} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                            </>
+                        ) : (
+                            <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                        )
+                    ) : (
+                        <>
+                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={6} font={'11pt'} number={bonusAmount}/> <span className='text-x-small'>{span}</span></h4>
+                        { minBetAmountForBonusUnlocked > 0 ? (
+                            <>
+                            <hr/>
+                            <p className='text-small' style={{ fontSize: 8, margin: "0px 3px" }}>
+                                Progress to withdraw the full balance
+                            </p>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0px" }}>
+                                <p className='text-small pink-text' style={{ fontSize: 10, margin: "0px 3px" }}>
+                                    {`Progress (${percenteToBonus.toFixed(2)}%)`}
+                                </p>
+                            </div>
+
+                            <ProgressBar striped variant="success" now={percenteToBonus}/>
+                                                    
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0px" }}>
+                                <h4 className='secondary-text'> 
+                                    <AnimationNumber decimals={decimals} font={'8pt'} number={incrementBetAmountForBonus}/> <span className='text-x-small'>{span}</span>
+                                </h4>
+                                <h4 className='secondary-text'> 
+                                    <AnimationNumber decimals={decimals} font={'8pt'} number={minBetAmountForBonusUnlocked}/> <span className='text-x-small'>{span}</span>
+                                </h4>
+                            </div>
+                            </>
+                        ) : null }
+                        </>
                     )}
                 </CardBody>
             </Card>
@@ -172,6 +227,9 @@ class UserPage extends React.Component{
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length, loading: isLoading, decimals: 0})}
+                            </Col>
+                            <Col sd={12} md={4} lg={3}>
+                                {this.renderBonusAmount({ title : 'Bonus', bonusAmount: wallet.bonusAmount, incrementBetAmountForBonus: wallet.incrementBetAmountForBonus, minBetAmountForBonusUnlocked: wallet.minBetAmountForBonusUnlocked, loading: isLoading, span: currencyTicker, decimals: 6 })}
                             </Col>
                         </Row>
                     </Col>
