@@ -319,7 +319,7 @@ class EsportsBetsTable extends React.Component {
                     <Filters>
                         <RangePicker 
                         style={{ margin: 5 }}
-                        // onChange={this.onChangeDate} 
+                        onChange={this.onChangeDate} 
                         // onOk={this.onOk}
                         ranges={{
                             'Today': [moment().utc(), moment().utc()],

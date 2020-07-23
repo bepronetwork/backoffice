@@ -73,16 +73,27 @@ class Match extends React.Component {
         return result ? result.score : null;
     }
 
+    getBackgroundColor = status => {
+        return results[status].backgroundColor;
+    }
+
+    getTextColor = status => {
+        return results[status].textColor;
+    }
 
     render() {
         const { match, isLoading, status } = this.state;
-        const { videogame, opponents, scheduled_at, odds, results, winner_id } = match;
+        const { videogame, opponents, scheduled_at, results } = match;
 
         if (isLoading || _.isEmpty(match)) {
             return (
                 <>
-                <MatchesContainer>
-                    <Skeleton variant="rect" height="95%" width="95%"/>
+                <MatchesContainer style={{ minWidth: 402 }}>
+                    <Skeleton variant="rect" height="10%" width="100%"/>
+                    <br/>
+                    <Skeleton variant="rect" height="30%" width="100%"/>
+                    <br/>
+                    <Skeleton variant="rect" height="10%" width="100%"/>
                 </MatchesContainer>
                 </>
             )
@@ -138,7 +149,7 @@ class Match extends React.Component {
                     </TeamTwo>
                 </Score>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                    <WonResult backgroundColor={results[status].backgroundColor} textColor={results[status].textColor}>{status}</WonResult>
+                    <WonResult backgroundColor={this.getBackgroundColor(status)} textColor={this.getTextColor(status)}>{status}</WonResult>
                 </div>
             </MatchesContainer>
             </>
