@@ -35,7 +35,9 @@ class EsportsBetsTable extends React.Component {
             currency: null,
             begin_at: null,
             end_at: null,
-            type: null
+            type: null,
+            username: null,
+            bet: null
         };
 
     }
@@ -221,10 +223,26 @@ class EsportsBetsTable extends React.Component {
         })
     }
 
+    onChangeBetId = event => {
+        this.setState({
+            bet: event.target.value ? event.target.value : null
+        }, () => {
+            this.fetchFilteredData()
+        })
+    }
+
+    onChangeUsername = event => {
+        this.setState({
+            username: event.target.value ? event.target.value : null
+        }, () => {
+            this.fetchFilteredData()
+        })
+    }
+
     fetchMoreData = async (dataSize) => {
         const { profile, videogames } = this.props;
         const { App } = profile;
-        const { data, game, currency, begin_at, end_at, type, videogamesArr } = this.state;
+        const { data, game, currency, begin_at, end_at, type, videogamesArr, username, bet } = this.state;
 
         this.setState({
             isLoading: true
@@ -240,7 +258,9 @@ class EsportsBetsTable extends React.Component {
                  begin_at: begin_at,
                  end_at: end_at,
                  type: type,
-                 videogames: videogamesArr
+                 videogames: videogamesArr,
+                 username: username,
+                 bet: bet
                 }
         });
 
@@ -253,8 +273,8 @@ class EsportsBetsTable extends React.Component {
         })
     }
 
-    fetchFilteredData = async () => {
-        const { game, currency, begin_at, end_at, type, videogamesArr } = this.state;
+    fetchFilteredData = _.debounce(async () => {
+        const { game, currency, begin_at, end_at, type, videogamesArr, username, bet } = this.state;
         const { profile } = this.props;
         const { App } = profile;
 
@@ -273,7 +293,9 @@ class EsportsBetsTable extends React.Component {
                  begin_at: begin_at,
                  end_at: end_at,
                  type: type,
-                 videogames: videogamesArr
+                 videogames: videogamesArr,
+                 username: username,
+                 bet: bet
             }
         });
 
@@ -284,7 +306,7 @@ class EsportsBetsTable extends React.Component {
             data: _.isEmpty(bets) ? [] : this.prepareTableData(bets, currencies, games),
             isLoading: false
         })
-    }
+    }, 700);
 
     render() {
         const { videogames } = this.props;
@@ -327,8 +349,8 @@ class EsportsBetsTable extends React.Component {
                             'Last 7 days': [moment().subtract(7, 'days').utc(), moment().utc()],
                             'Last month': [moment().subtract(1, 'month').utc(), moment().utc()]
                         }}/>
-                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Bet Id" />
-                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Username or E-mail" />
+                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Bet Id" onChange={event => this.onChangeBetId(event)}/>
+                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Username or E-mail" onChange={event => this.onChangeUsername(event)}/>
                         <Select
                         // mode="multiple"
                         style={{ minWidth: 120, margin: 5 }}
