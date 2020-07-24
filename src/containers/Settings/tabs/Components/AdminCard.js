@@ -80,7 +80,7 @@ class AdminCard extends Component {
 
         return (
             <Card className='game-container'>
-            <CardBody className="dashboard__card-widget" style={{ width: 305, padding: 20, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+            <CardBody className="dashboard__card-widget" style={{ width: 310, padding: 20, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                 <div style={{ display: "flex" }}>
                     <h5 className="bold-text">{name}</h5>
                     <p className={`text-small ${registered ? "text-green" : "text-red"} `} style={{ margin: 0, marginLeft: 5 }} >

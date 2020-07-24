@@ -31,7 +31,7 @@ class AddOnStoreContainer extends PureComponent {
         const { name, description, image_url } = addOn;
         
         return (
-            <CardBody className="dashboard__card-widget" style={{ width: 307, minHeight: 187, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+            <CardBody className="dashboard__card-widget" style={{ minHeight: 187, maxWidth: 307, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                 <Row>
                     <Col lg={4} >  
                         <img className='application__game__image' 
