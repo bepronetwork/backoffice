@@ -95,7 +95,7 @@ class AdminContainer extends React.Component{
         const jsonData = filteredAdmins.map(row => _.pick(row, ['id', 'name', 'email', 'type']));
 
         return (
-            <div>
+            <div style={{ margin: 10 }}>
                 <h4>Application Admins</h4>
                 <div style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: 5, margin: "15px 0px", textAlign: "right", borderRadius: "5px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <TextField

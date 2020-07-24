@@ -113,7 +113,7 @@ class ComplianceContainer extends React.Component{
         if (!restrictedCountries) { return null}
 
         return (
-            <div>               
+            <div style={{ margin: 10 }}>               
                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Compliance </p>
                 <hr/>
                 <Paper style={{ padding: 15, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }} >

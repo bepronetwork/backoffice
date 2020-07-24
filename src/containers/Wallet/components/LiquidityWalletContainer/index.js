@@ -64,7 +64,7 @@ class LiquidityWalletContainer extends Component {
         if (!wallets) return null;
 
         return (
-            <>
+            <div style={{ margin: 10 }}>
                 <Container>
                     <Header>
                         <h3>Application</h3>
@@ -103,7 +103,7 @@ class LiquidityWalletContainer extends Component {
                     </Grid>
                     </Content>
                 </Container>
-            </>
+            </div>
         )
     }
 }
