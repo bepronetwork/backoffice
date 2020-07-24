@@ -136,7 +136,7 @@ class UserPage extends React.Component{
                                         </Col>
                                         <Col sd={12} md={12} lg={8}>
                                             {/* UserInfo */}
-                                            <h5 className='pink-text'> @{username}</h5>
+                                            <h5 className='pink-text' style={{ marginTop: 10 }}> @{username}</h5>
                                             <hr></hr>
                                             <p className='secondary-text text-small'> {email}</p>
                                             <p className='text-small'> {address} </p>
@@ -177,7 +177,7 @@ class UserPage extends React.Component{
                     </Col>
                 </Row>
                 <Card>
-                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", padding: 10 }}>
                         <HorizontalTabs
                             tabs={[
                                 {
