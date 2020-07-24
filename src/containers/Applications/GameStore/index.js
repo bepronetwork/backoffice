@@ -85,7 +85,7 @@ class GameStorePageContainer extends React.Component{
                     <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                         {_.times(7, () => (
                             <Grid item xs>
-                            <Col md={12} xl={12} lg={12} xs={12} style={{ minWidth: 288, maxWidth: 415, height: 230 }}>
+                            <Col md={12} xl={12} lg={12} xs={12} style={{ minWidth: 288, maxWidth: 415, height: 230, padding: 0 }}>
                             <Card className='game-container'>
                                 <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                     <Grid container direction='row' spacing={1}>

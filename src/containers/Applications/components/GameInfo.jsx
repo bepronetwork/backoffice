@@ -32,7 +32,7 @@ class GameInfo extends PureComponent {
         let game_image = game_images[new String(game.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
         return (
-            <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`, minWidth: 290 }}>
+            <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`, minWidth: 290, padding: 0 }}>
                 {isLoading ? (
                 <>
                 <Card className='game-container'>
@@ -75,23 +75,23 @@ class GameInfo extends PureComponent {
 
                                 <Col lg={6} >
                                     <div className="dashboard__visitors-chart">
+                                        <p className="dashboard__visitors-chart-title"> Profit  </p>
+                                    </div>
+                                    <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-number-second" style={
                                             {color : '#646777'}
                                         }><AnimationNumber decimals={6} number={game.profit}/> <span> {ticker}</span></p>
-                                    </div>
-                                    <div className="dashboard__visitors-chart">
-                                        <p className="dashboard__visitors-chart-title"> Profit  </p>
                                     </div>
                                 </Col>
                                
                                 <Col lg={6} >
                                     <div className="dashboard__visitors-chart">
+                                            <p className="dashboard__visitors-chart-title"> Bets Amount</p>
+                                    </div>
+                                    <div className="dashboard__visitors-chart">
                                         <p className="dashboard__visitors-chart-number-second" style={
                                             {color : '#646777'}
                                         }><AnimationNumber decimals={0} number={game.betAmount-1}/></p>
-                                    </div>
-                                    <div className="dashboard__visitors-chart">
-                                        <p className="dashboard__visitors-chart-title"> Bets Amount</p>
                                     </div>
                                 </Col>
                             
