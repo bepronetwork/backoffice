@@ -8,7 +8,7 @@ import styled from "styled-components";
 
 const MobileWrapper = styled.section`
 
-  @media (max-width: 578px) {
+  @media (max-width: 756px) {
    display: none !important;
   }
 
