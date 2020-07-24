@@ -100,8 +100,8 @@ class EmailTab extends Component {
     render() {
         const { isLoading, locked, apiKey, templateIds } = this.state; 
         return (
-            <Card style={{ marginLeft: 15 }}>
-                <CardBody style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+            <Card>
+                <CardBody style={{ margin: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                 <EditLock 
                                 isLoading={isLoading} 
                                 unlockField={this.unlockField} 
@@ -131,8 +131,8 @@ class EmailTab extends Component {
                     </Row>
                  
                     <Row>
-                        <Col md={12}>
-                            <div style={{paddingTop : 10}} >
+                        <Col md={12} style={{ padding: 0 }}>
+                            <div>
                                 <EditableTable
                                     title={''}
                                     onChange={this.onChangeTemplates}

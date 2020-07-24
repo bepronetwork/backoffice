@@ -32,7 +32,7 @@ class GameInfo extends PureComponent {
         let game_image = game_images[new String(game.name).toLowerCase().replace(/ /g,"_")];
         const image = game_image ? game_image : game_images.default;
         return (
-            <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`, minWidth: 290, padding: 0 }}>
+            <Col md={12} xl={12} lg={12} xs={12} style={{height: `100%`, minWidth: 290 }}>
                 {isLoading ? (
                 <>
                 <Card className='game-container'>
