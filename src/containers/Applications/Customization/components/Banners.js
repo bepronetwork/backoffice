@@ -199,9 +199,9 @@ class Banners extends Component {
         
         return (
             <Card>
-                <CardBody style={{ margin: "0px 15px", borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                <CardBody style={{ margin: 0, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <Row>
-                        <Col md={12}>
+                        <Col md={12} style={{ padding: 0 }}>
                             <EditLock 
                                 isLoading={isLoading} 
                                 unlockField={this.unlockField} 
@@ -220,13 +220,13 @@ class Banners extends Component {
                                                 </div>
                                             )
                                         })}
-                                        <div>
-                                            <h4 style={{padding: 20}}>Add Banner</h4> 
+                                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                                            <h4 style={{padding: 20, width: 200 }}>Add Banner</h4> 
                                             <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, height : 270, width: 230, margin: "0px 20px 20px 20px"}}> 
                                                 {this.renderAddImage(banners.length)}
                                             </div>
-                                        </div>
                                         
+                                        </div>
                                         </GridList>
                                     </div>
                                 </div>
