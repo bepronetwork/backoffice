@@ -94,7 +94,7 @@ class WalletTabs extends Component {
                     </NavItem>
                 ))}
             </Nav>
-            <TabsContainer>
+            <TabsContainer style={{ minWidth: 305 }}>
                 <TabContent activeTab={this.state.activeTab}>
                     {filteredTabs.map(tab => (
                     <TabPane tabId={tab.name}>
