@@ -159,7 +159,7 @@ class EsportsBetContainer extends React.Component {
                         { result.map(match => (
                             <Match data={match}/>
                         ))}
-                        <Row style={{ marginTop: 15 }}>
+                        <Row style={{ margin: "15px 0px" }}>
                             <Col sd={12} md={12} lg={6} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                             <h5 style={{margin: 5}}>Bet Amount</h5>
                                 <div style={{display: 'flex'}}>
