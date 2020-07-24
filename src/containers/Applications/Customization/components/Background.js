@@ -122,7 +122,7 @@ class Background extends Component {
         
         return (
             <Card>
-                <CardBody style={{ margin: 0, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                <CardBody style={{ margin: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <div style={{ border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, marginBottom : 30, padding : 30, maxWidth: 293 }}>
                         <EditLock 
                         isLoading={isLoading} 
