@@ -25,3 +25,20 @@ export const getVideoGamesAll = async ({ params, headers }) => {
         throw err;
     }
 }
+
+export const getAllVideogames = async ({ params, headers }) => {
+    try {
+        const res = await fetch(API_URL + `/api/get/videogames/all`, {
+            method : 'POST',
+            headers : addHeaders(config, headers),
+            body : JSON.stringify(params)
+        });
+
+        const response = await res.json();
+
+        return response;
+
+    } catch(err) {
+        throw err;
+    }
+}

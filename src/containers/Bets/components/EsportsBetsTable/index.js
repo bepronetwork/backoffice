@@ -31,6 +31,7 @@ class EsportsBetsTable extends React.Component {
                 pageSize: 10,
             },
             isLoading: false,
+            videogames: [],
             videogamesArr: null,
             currency: null,
             begin_at: null,
@@ -50,16 +51,16 @@ class EsportsBetsTable extends React.Component {
     }
 
     projectData = async (props) => {
-        const { profile, videogames } = props;
+        const { profile } = props;
         const { App } = profile;
 
         this.setState({
             isLoading: true
         })
 
-        if (_.isEmpty(videogames)) {
-            await App.getVideoGamesAll();
-        }
+        const res = await App.getAllVideogames();
+
+        const videogames = res.data.message ? _.sortBy(res.data.message, 'external_id') : []
 
         const response = await App.getAllBets({ 
             filters: {
@@ -75,25 +76,24 @@ class EsportsBetsTable extends React.Component {
             data: _.isEmpty(bets) ? [] : this.prepareTableData(bets, currencies, videogames),
             columns: this.prepareTableColumns(bets),
             currencies: currencies,
+            videogames: videogames,
             isLoading: false
         })
     }
 
-    getVideogameObj = id => {
-        const { videogames } = this.props;
-
-        const videogame = videogames.find(videgame => videgame._id === id);
+    getVideogameObj = ({ id, videogames }) => {
+        const videogame = videogames.find(videogame => videogame._id === id);
 
         return videogame ? videogamesEnum[videogame.external_id] : {};
     }
 
-    prepareTableData = (bets, currencies, videogames) => {
+    prepareTableData = (bets, currencies, allVideogames) => {
 
-        if (_.isEmpty(bets) || _.isEmpty(currencies) || _.isEmpty(videogames)) return [];
+        if (_.isEmpty(bets) || _.isEmpty(currencies) || _.isEmpty(allVideogames)) return [];
 
         return bets.map(bet => {
             const currency = currencies.find(currency => currency._id === bet.currency);
-            const videogames = _.uniq(bet.videogames).map(id => this.getVideogameObj(id));
+            const videogames = _.uniq(bet.videogames).map(id => this.getVideogameObj({ id: id, videogames: allVideogames }));
 
             return {
                 key: bet._id, 
@@ -231,9 +231,9 @@ class EsportsBetsTable extends React.Component {
     }
 
     fetchMoreData = async (dataSize) => {
-        const { profile, videogames } = this.props;
+        const { profile } = this.props;
         const { App } = profile;
-        const { data, game, currency, begin_at, end_at, type, videogamesArr, username, bet } = this.state;
+        const { data, game, currency, begin_at, end_at, type, videogamesArr, username, bet, videogames } = this.state;
 
         this.setState({
             isLoading: true
@@ -264,7 +264,7 @@ class EsportsBetsTable extends React.Component {
     }
 
     fetchFilteredData = _.debounce(async () => {
-        const { game, currency, begin_at, end_at, type, videogamesArr, username, bet } = this.state;
+        const { game, currency, begin_at, end_at, type, videogamesArr, username, bet, videogames } = this.state;
         const { profile } = this.props;
         const { App } = profile;
 
@@ -289,17 +289,16 @@ class EsportsBetsTable extends React.Component {
         });
 
         const bets = response.data.message.list;
-        const { currencies, games } = App.params;
+        const { currencies } = App.params;
 
         this.setState({
-            data: _.isEmpty(bets) ? [] : this.prepareTableData(bets, currencies, games),
+            data: _.isEmpty(bets) ? [] : this.prepareTableData(bets, currencies, videogames),
             isLoading: false
         })
     }, 700);
 
     render() {
-        const { videogames } = this.props;
-        const { data, columns, pagination, isLoading, currencies } = this.state;
+        const { data, columns, pagination, isLoading, currencies, videogames } = this.state;
 
         const headers = [
             { label: "Id", key: "_id" },
