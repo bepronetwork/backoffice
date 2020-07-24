@@ -36,7 +36,6 @@ class EsportsBetsTable extends React.Component {
             begin_at: null,
             end_at: null,
             type: null,
-            username: null,
             bet: null
         };
 
@@ -231,14 +230,6 @@ class EsportsBetsTable extends React.Component {
         })
     }
 
-    onChangeUsername = event => {
-        this.setState({
-            username: event.target.value ? event.target.value : null
-        }, () => {
-            this.fetchFilteredData()
-        })
-    }
-
     fetchMoreData = async (dataSize) => {
         const { profile, videogames } = this.props;
         const { App } = profile;
@@ -259,7 +250,6 @@ class EsportsBetsTable extends React.Component {
                  end_at: end_at,
                  type: type,
                  videogames: videogamesArr,
-                 username: username,
                  bet: bet
                 }
         });
@@ -294,7 +284,6 @@ class EsportsBetsTable extends React.Component {
                  end_at: end_at,
                  type: type,
                  videogames: videogamesArr,
-                 username: username,
                  bet: bet
             }
         });
@@ -350,7 +339,6 @@ class EsportsBetsTable extends React.Component {
                             'Last month': [moment().subtract(1, 'month').utc(), moment().utc()]
                         }}/>
                         <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Bet Id" onChange={event => this.onChangeBetId(event)}/>
-                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Username or E-mail" onChange={event => this.onChangeUsername(event)}/>
                         <Select
                         // mode="multiple"
                         style={{ minWidth: 120, margin: 5 }}
