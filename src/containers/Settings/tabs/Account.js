@@ -65,7 +65,7 @@ class SettingsAccountContainer extends React.Component{
         } = this.state;
 
         return (
-            <div>               
+            <div style={{ margin: 10 }}>               
                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> My Account </p>
                 <hr></hr>
                 <Container>

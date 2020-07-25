@@ -36,7 +36,7 @@ class Footer extends React.Component {
         return (
             <>
             <Card>
-                <CardBody style={{ margin: "0px 15px", borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", padding: 30 }}>
+                <CardBody style={{ margin: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", padding: 15 }}>
                     <Title>Support Links</Title>
                     <LinksContainer links={supportLinks} type={"supportLinks"} complement={communityLinks}/>
                     <Title>Community Links</Title>

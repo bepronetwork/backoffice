@@ -140,7 +140,7 @@ class UserBetsFilter extends Component {
         return (
             <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end', paddingBottom: 20}}>
                 <ClickAwayListener onClickAway={this.handleClickAway}>
-                <ExpansionPanel elevation={0} expanded={open} style={{position: 'absolute', zIndex: 10, width: 300, marginTop: '-40px', border: '1px solid rgba(0, 0, 0, 0.2)'}}>
+                <ExpansionPanel elevation={0} expanded={open} style={{position: 'absolute', zIndex: 10, width: "100%", maxWidth: 250, marginTop: '-40px', border: '1px solid rgba(0, 0, 0, 0.2)'}}>
                     <ExpansionPanelSummary
                     onClick={() => this.setState({ open: !open })}
                     expandIcon={<ExpandMoreIcon />}
@@ -149,7 +149,7 @@ class UserBetsFilter extends Component {
                     >
                     <h6>Show filters</h6>
                     </ExpansionPanelSummary>
-                    <ExpansionPanelDetails style={{paddingBottom: 0, width: 300}}>
+                    <ExpansionPanelDetails style={{ paddingBottom: 0, width: "100%", maxWidth: 250 }}>
                         <Col style={{padding: 0}}>
                         <Formik
                         initialValues={{
@@ -171,7 +171,7 @@ class UserBetsFilter extends Component {
                                 </MaterialButton>
                             </div>
                             <Form onSubmit={handleSubmit}>
-                            <List style={{width: 250, paddingTop: 0}}>
+                            <List style={{width: 220, paddingTop: 0}}>
                                     <List item key="bet">
                                     <TextField
                                         id="bet"

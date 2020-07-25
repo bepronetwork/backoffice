@@ -68,8 +68,8 @@ class Deposit extends Component {
                     <QRCode value={wallet.bank_address} size={225} bgColor={'#ffffff'} fgColor={'#000000'} style={{ marginBottom: 60 }}/>
                     <DepositAddress>
                         <h6>{wallet.bank_address}</h6>
-                        <CopyButton className="icon" onClick={() => this.copyToClipboard()} disabled={copied}>
-                            <span>{copied ? 'Copied!' : 'Copy'}</span>
+                        <CopyButton variant="contained" onClick={() => this.copyToClipboard()} disabled={copied}>
+                            {copied ? 'Copied!' : 'Copy'}
                         </CopyButton>
                     </DepositAddress>
                 </DepositContent>

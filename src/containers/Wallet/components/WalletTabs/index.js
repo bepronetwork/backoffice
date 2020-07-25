@@ -8,6 +8,7 @@ import Withdraw from './Withdraw';
 import LimitsWidget from '../../components/paths/LimitsWidget';
 import FeesWidget from '../../components/paths/FeesWidget';
 import BonusWidget from '../../components/paths/BonusWidget';
+import { ButtonBase } from '@material-ui/core';
 
 const tabs = [
     { name: "Deposit", container: (wallet) => <Deposit data={wallet}/> },
@@ -83,18 +84,20 @@ class WalletTabs extends Component {
            <Nav pills style={{ justifyContent: "space-around" }}>
                 {filteredTabs.map(tab => (
                     <NavItem style={{ height: 80, marginTop: "20px" }}>
-                        <StyledNavLink
-                            className={classnames({ active: this.state.activeTab === tab.name })}
-                            onClick={() => {
-                            this.toggle(tab.name);
-                            }}
-                        >
-                            <span>{`${tab.name}`}</span>
-                        </StyledNavLink>
+                        <ButtonBase>
+                            <StyledNavLink
+                                className={classnames({ active: this.state.activeTab === tab.name })}
+                                onClick={() => {
+                                this.toggle(tab.name);
+                                }}
+                            >
+                                <span>{`${tab.name}`}</span>
+                            </StyledNavLink>
+                        </ButtonBase>
                     </NavItem>
                 ))}
             </Nav>
-            <TabsContainer>
+            <TabsContainer style={{ minWidth: 305 }}>
                 <TabContent activeTab={this.state.activeTab}>
                     {filteredTabs.map(tab => (
                     <TabPane tabId={tab.name}>

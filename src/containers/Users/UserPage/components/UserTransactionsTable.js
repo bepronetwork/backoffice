@@ -278,7 +278,7 @@ class UserTransactionsTable extends React.Component {
     const jsonData = csvData.map(row => _.pick(row, ['_id', 'type', 'transactionHash', 'creation_timestamp', 'isAffiliate', 'amount', 'status']));
 
     return (
-      <Paper elevation={0} className={classes.root} style={{ backgroundColor: "#fafcff" }}>
+      <Paper elevation={0} className={classes.root} style={{ backgroundColor: "#fafcff", marginTop: 0 }}>
             <div style={{ display: "flex", justifyContent: "flex-end"}}>
                 <CSVLink data={csvData} filename={"user_transactions.csv"} headers={headers}>
                     <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>

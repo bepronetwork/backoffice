@@ -67,15 +67,15 @@ class CompanyId extends PureComponent {
         platformName =  app.getName() ? app.getName() : platformName;
 
         return (
-            <Col md={12} lg={12} xl={12} >
+            <Col md={12} lg={12} xl={12}>
                 <Card>
                     <Row>
                         <Col lg={6}>
-                            <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                            <CardBody className="dashboard__card-widget" style={{ minWidth: 110, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                                 <img className="company-logo-card" src={Ava} alt="avatar" />
                             </CardBody>
                         </Col>
-                        <Col lg={6}>
+                        <Col lg={6} style={{ minWidth: 120 }}>
                             <h5 style={{marginTop : 20}} className={"bold-text dashboard__total-stat"}>{platformName}</h5>
                             <p className="" style={{marginTop : 10}} >{new String(ticker).toUpperCase()}</p>
                             {platformAddressLink ?

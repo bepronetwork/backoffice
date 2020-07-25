@@ -23,6 +23,7 @@ import UserContainer from '../../../shared/components/UserContainer';
 import CurrencyContainer from '../../../shared/components/CurrencyContainer';
 import BetContainer from '../../../shared/components/BetContainer';
 import GameContainer from '../../../shared/components/GameContainer';
+import styled from 'styled-components';
 
 function getSorting(data, order, orderBy) {
 
@@ -31,6 +32,14 @@ function getSorting(data, order, orderBy) {
 
     return sortedData;
 }
+
+const MobileWrapper = styled.section`
+
+  @media (max-width: 768px) {
+   display: none !important;
+  }
+
+`;
 
 const fromDatabasetoTable = (data, currencies, users, games) => {
 
@@ -195,11 +204,13 @@ let EnhancedTableToolbar = props => {
             [classes.highlight]: numSelected > 0,
         })}
         >
-        <div className={classes.title}>
-            <Typography variant="h6" id="tableTitle">
-                Bets
-            </Typography>
-        </div>
+        <MobileWrapper>
+            <div className={classes.title}>
+                <Typography variant="h6" id="tableTitle">
+                    Bets
+                </Typography>
+            </div>
+        </MobileWrapper>
         <div className={classes.spacer} />
         </Toolbar>
     );
@@ -429,8 +440,7 @@ class EnhancedTable extends React.Component {
 
     return (
         <Paper className={classes.root} style={{ padding: 20, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none"}}>
-            <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
-            <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <div style={{ display: "flex", justifyContent: "flex-end"}}>
                 <CSVLink data={csvData} filename={"bets.csv"} headers={headers}>
                     <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
                         <TableIcon style={{marginRight: 7}}/> CSV
@@ -439,7 +449,9 @@ class EnhancedTable extends React.Component {
                 <MaterialButton onClick={() => export2JSON(jsonData, "bets")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
                     <JsonIcon style={{marginRight: 7}}/> JSON
                 </MaterialButton>
-            </div>
+            </div> 
+            <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
+
             <UserBetsFilter setData={this.setData} setFilter={this.setFilter} reset={this.reset} setLoading={this.setLoading} loading={this.state.isLoading}/>
             {isLoading ? (
                 <>
