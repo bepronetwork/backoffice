@@ -8,7 +8,7 @@ import game_images from './game_images';
 import store from '../../App/store';
 import { setGameView } from '../../../redux/actions/game';
 import { connect } from "react-redux";
-import { Grid } from '@material-ui/core';
+import { Grid, ButtonBase } from '@material-ui/core';
 
 class GameInfo extends PureComponent {
  
@@ -51,8 +51,8 @@ class GameInfo extends PureComponent {
                 </Card>
                 </>   
                 ) : (
-                <button className='clean_button' onClick={ () => this.goToGamePage()} style={{width: `100%`, height: `100%` }}>
                     <Card className='game-container'>
+                    <ButtonBase onClick={ () => this.goToGamePage() } style={{ borderRadius: 10 }}>
                         <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                             <Row>
                                 <Col lg={8} >
@@ -98,8 +98,8 @@ class GameInfo extends PureComponent {
                             </Row>
                             <p className="application__span">this week </p>
                         </CardBody>
+                        </ButtonBase>
                     </Card>
-                </button>
                 )}
             </Col>
         );

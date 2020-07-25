@@ -4,6 +4,7 @@ import { Badge } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { ChevronRightIcon } from 'mdi-react';
+import { ButtonBase } from '@material-ui/core';
 
 
 const Icon = styled.section`
@@ -23,6 +24,7 @@ const Icon = styled.section`
 const SidebarLink = ({
   title, icon, newLink, route, onClick, disabled
 }) => (
+    <ButtonBase>
     <NavLink
         to={disabled ? '#' : route}
         onClick={onClick}
@@ -45,6 +47,7 @@ const SidebarLink = ({
             : null}
         </li>
     </NavLink>
+    </ButtonBase>
 );
 
 SidebarLink.propTypes = {

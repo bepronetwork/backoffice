@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { Tab, Nav } from 'react-bootstrap';
 import { Bet } from '../../../components/Icons'
 import styled from 'styled-components';
-import { Grid } from '@material-ui/core';
+import { Grid, ButtonBase } from '@material-ui/core';
 
 const Icon = styled.section`
     padding-top: 3px;
@@ -49,11 +49,13 @@ class TabsContainer extends React.Component{
                                         <Grid>
                                             <Grid item style={{maxWidth: `258px`, minWidth: `190px`}}>
                                                 <Nav.Item key={index} style={{ margin: 7 }}>
+                                                <ButtonBase>
                                                     <Nav.Link eventKey={`item-${index}`} style={{ width: "220px", height: "40px" }}>
                                                         <div style={{ display: "flex" }}>
                                                             {<Icon>{item.icon}</Icon>} &nbsp; <Title>{item.title}</Title>
                                                         </div>
                                                     </Nav.Link>
+                                                </ButtonBase>
                                                 </Nav.Item>
                                             </Grid>
                                         </Grid>
