@@ -89,6 +89,24 @@ export const WonResult = styled.div`
     border-radius: 5px;
 `;
 
+export const PendingResult = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 22px;
+    width: 70px;
+    margin: 5px;
+
+    font-family: Poppins;
+    font-size: 13px;
+    font-weight: 400;
+    color: #333333;
+
+    background-color: #DFE1EC;
+    border-radius: 5px;
+`;
+
 export const BetType = styled.div`
     display: flex;
     justify-content: center;

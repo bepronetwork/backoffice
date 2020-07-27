@@ -3,22 +3,37 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { Container, Header, TableContainer, Filters, Export, Text, BoldText, BetType, WonResult, VideoGameIcon } from './styles';
+import { Container, Header, TableContainer, Filters, Export, Text, BoldText, BetType, WonResult, VideoGameIcon, PendingResult } from './styles';
 import { Table, Spin, DatePicker, Select, Input } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import { CSVLink } from "react-csv";
-import { Button as MaterialButton } from "@material-ui/core";
+import { Button as MaterialButton, makeStyles } from "@material-ui/core";
 import { TableIcon, JsonIcon } from 'mdi-react';
 
-import BetContainer from '../../../../shared/components/BetContainer';
 import { export2JSON } from '../../../../utils/export2JSON';
 
 import videogamesEnum from '../../../Applications/EsportsPage/components/Enums/videogames';
 import EsportsBetContainer from '../EsportsBetContainer';
 
+import Avatar from '@material-ui/core/Avatar';
+import AvatarGroup from '@material-ui/lab/AvatarGroup';
+
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+
+const useStyles = makeStyles(_theme => ({
+    root: {
+      display: 'flex',
+      justifyContent: 'center',
+      '& > *': {
+        border: 'none'
+      },
+    },
+    default: {
+      backgroundColor: 'transparent',
+    }
+  }));
 
 class EsportsBetsTable extends React.Component {
         constructor(props){
@@ -95,6 +110,9 @@ class EsportsBetsTable extends React.Component {
             const currency = currencies.find(currency => currency._id === bet.currency);
             const videogames = _.uniq(bet.videogames).map(id => this.getVideogameObj({ id: id, videogames: allVideogames }));
 
+            const results = bet.result.map(result => result.finished);
+            const isFinished = _.isEmpty(results) ? false : !results.includes(false);
+
             return {
                 key: bet._id, 
                 _id: bet._id,
@@ -103,6 +121,7 @@ class EsportsBetsTable extends React.Component {
                 currency: currency, 
                 app: bet.app,
                 ticker: currency.ticker,
+                isFinished: isFinished,
                 isWon: bet.isWon,
                 winAmount: bet.winAmount,
                 betAmount: bet.betAmount,
@@ -137,15 +156,21 @@ class EsportsBetsTable extends React.Component {
         </div>
     )
 
-    getVideogamesImages = videogames => (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            { videogames.map(videogame => (
-                <VideoGameIcon>
-                    { videogame.icon }
-                </VideoGameIcon>
-            ))}
-        </div>
-    )
+    getVideogamesImages = videogames => {
+        const classes = useStyles();
+
+        return (
+            <AvatarGroup className={classes.root} spacing="small">
+                { videogames.map(videogame => (
+                    <Avatar className={classes.default}>
+                        <VideoGameIcon>
+                            { videogame.icon }
+                        </VideoGameIcon>
+                    </Avatar>
+                ))}
+            </AvatarGroup>
+        )
+    }
 
     getFormatedAmount = ({ value, currency, colorized }) => (
         <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
@@ -154,6 +179,42 @@ class EsportsBetsTable extends React.Component {
             : <Text>{`${value.toFixed(6)} ${currency.ticker}`}</Text> }
         </div>
     )
+
+    getFormatedWinAmount = ({ data, colorized }) => {
+        const { isFinished, currency, winAmount } = data;
+
+        if (isFinished) {
+            return (
+                <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+                { colorized 
+                ? <Text style={{ color: winAmount > 0 ? '#63c965' : '#e6536e' }}>{`${winAmount.toFixed(6)} ${currency.ticker}`}</Text> 
+                : <Text>{`${winAmount.toFixed(6)} ${currency.ticker}`}</Text> }
+                </div>
+            )
+        } else {
+            return (
+                <span>Pending</span>
+            )
+        }
+    }
+
+    getWonResult = data => {
+        const { isFinished, isWon} = data;
+
+        if (isFinished) {
+            return (
+                <WonResult isWon={isWon}>
+                   {isWon ? 'Yes' : 'No'}
+                </WonResult>
+            )
+        } else {
+            return (
+                <PendingResult>
+                    Pending
+                </PendingResult>
+            )
+        }
+    }
 
     prepareTableColumns = bets => {
 
@@ -165,9 +226,10 @@ class EsportsBetsTable extends React.Component {
             { title: 'Currency', dataIndex: 'currency', key: 'currency', render: currency => this.getCurrencyImage(currency) },
             { title: 'Videogame', dataIndex: 'videogames', key: 'videogames', render: videogames => this.getVideogamesImages(videogames) },
             { title: 'Type', dataIndex: 'type', key: 'type', render: type => <BetType>{type}</BetType> },
-            { title: 'Won', dataIndex: 'isWon', key: 'isWon', render: isWon => <WonResult isWon={isWon}>{isWon ? 'Yes' : 'No'}</WonResult> },
+            { title: 'Finished', dataIndex: 'isFinished', key: 'isFinished', render: isFinished => <WonResult isWon={isFinished}>{isFinished ? 'Yes' : 'No'}</WonResult> },
+            { title: 'Won', dataIndex: 'isWon', key: 'isWon', render: (_id, data, _length) => this.getWonResult(data)},
             { title: 'Bet Amount', dataIndex: 'betAmount', key: 'betAmount', render: (betAmount, currency) => this.getFormatedAmount({ value: betAmount, currency: currency, colorized: false }) },
-            { title: 'Win Amount', dataIndex: 'winAmount', key: 'winAmount', render: (winAmount, currency) => this.getFormatedAmount({ value: winAmount, currency: currency, colorized: true }) },
+            { title: 'Win Amount', dataIndex: 'winAmount', key: 'winAmount', render: (_id, data, _length) => this.getFormatedWinAmount({ data: data, colorized: true }) },
             { title: 'Created At', dataIndex: 'creation_timestamp', key: 'creation_timestamp', render: creation_timestamp => <Text>{ moment(creation_timestamp).format("lll") }</Text> }
         ]
     }
