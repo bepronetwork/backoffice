@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { ButtonBase, Dialog, DialogContent, Button } from '@material-ui/core';
+import { ButtonBase, Dialog, DialogContent, Button, Grid } from '@material-ui/core';
 import { Row, Col } from 'reactstrap';
 import _ from 'lodash';
 import { CloseIcon, TableIcon, JsonIcon } from 'mdi-react';
@@ -155,26 +155,31 @@ class EsportsBetContainer extends React.Component {
                                 <p className='text-small'> {creation_timestamp} </p>
                                 <hr/>
                             </Col>
-                        </Row>
-                        { result.map(match => (
+                            { result.map(match => (
                             <Match data={match}/>
-                        ))}
-                        <Row style={{ margin: "15px 0px" }}>
-                            <Col sd={12} md={12} lg={6} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                            <h5 style={{margin: 5}}>Bet Amount</h5>
-                                <div style={{display: 'flex'}}>
-                                    <h5 style={{margin: 5}}>{betAmount.toFixed(6)}</h5>
-                                    <img src={currency.image} style={{ width : 25, height : 25}} alt={currency.name}/>
-                                </div>
-                            </Col>
-                            <Col sd={12} md={12} lg={6} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                            <h5 style={{margin: 5}}>Win Amount</h5>
-                                <div style={{display: 'flex'}}>
-                                    <h5 style={{margin: 5}}>{winAmount.toFixed(6)}</h5>
-                                    <img src={currency.image} style={{ width : 25, height : 25}} alt={currency.name}/>
-                                </div>
-                            </Col>
+                            ))}
                         </Row>
+                        <Grid container direction="row" style={{ margin: "15px 0px" }}>
+                            <Grid item xs>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                    <h5 style={{margin: 5}}>Bet Amount</h5>
+                                    <div style={{display: 'flex'}}>
+                                        <h5 style={{margin: 5}}>{betAmount.toFixed(6)}</h5>
+                                        <img src={currency.image} style={{ width : 25, height : 25}} alt={currency.name}/>
+                                    </div>
+                                </div>
+                            </Grid>
+                            <Grid item xs>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                    <h5 style={{margin: 5}}>Win Amount</h5>
+                                    <div style={{display: 'flex'}}>
+                                        <h5 style={{margin: 5}}>{winAmount.toFixed(6)}</h5>
+                                        <img src={currency.image} style={{ width : 25, height : 25}} alt={currency.name}/>
+                                    </div>
+                                </div>
+                            </Grid>
+                        </Grid>
+
                         {/* <Row style={{ marginTop: 20 }}>
                             <Col sd={12} md={12} lg={6} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                                 <h5 style={{margin: 5}}>Server Seed</h5>

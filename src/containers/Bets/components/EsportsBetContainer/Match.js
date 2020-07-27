@@ -41,7 +41,7 @@ class Match extends React.Component {
     projectData = async (props) => {
         const { data, profile } = props;
         const { App } = profile;
-        const { match } = data;
+        const { match, participantId, statistic } = data;
 
         this.setState({ isLoading: true });
 
@@ -50,7 +50,9 @@ class Match extends React.Component {
         if (!_.isEmpty(response.data.message)) {
             this.setState({
                 match: response.data.message,
-                status: data.status
+                status: data.status,
+                participantId: participantId,
+                odd: (1 / statistic).toFixed(2)
             })
         }
 
@@ -81,8 +83,17 @@ class Match extends React.Component {
         return results[status].textColor;
     }
 
+    getTeamName = () => {
+        const { match, participantId } = this.state;
+        const { opponents } = match;
+
+        const team = opponents.find(opponent => opponent.opponent.id === participantId);
+
+        return team.opponent.name;
+    }
+
     render() {
-        const { match, isLoading, status } = this.state;
+        const { match, isLoading, status, odd } = this.state;
         const { videogame, opponents, scheduled_at, results } = match;
 
         if (isLoading || _.isEmpty(match)) {
@@ -116,7 +127,7 @@ class Match extends React.Component {
                         <VideoGameIcon>
                             { icon }
                         </VideoGameIcon>
-                        <span style={{ padding: 0 }}>{serieName}</span>
+                        <span style={{ padding: 0, whiteSpace: "wrap", overflow: "hidden", textOverflow: "ellipsis" }}>{serieName}</span>
                     </div>
                     <div>
                         <DateInfo style={{ flexDirection: "row" }}>
@@ -148,7 +159,11 @@ class Match extends React.Component {
                         <span>{teamTwo.name}</span>
                     </TeamTwo>
                 </Score>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0px 10px" }}>
+                    <span>
+                        { this.getTeamName() }
+                        <strong style={{ margin: "0px 8px" }}>{odd}</strong>
+                    </span>
                     <WonResult backgroundColor={this.getBackgroundColor(status)} textColor={this.getTextColor(status)}>{status}</WonResult>
                 </div>
             </MatchesContainer>

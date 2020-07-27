@@ -27,8 +27,9 @@ export const VideoGameIcon = styled.section`
 `;
 
 export const MatchesContainer = styled.div`
-    height: 150px;
+    height: 160px;
     width: 100%;
+    min-width: 402px;
 
     margin: 10px 5px;
     padding: 5px;
@@ -137,12 +138,11 @@ export const Draw = styled.div`
 `;
 
 export const SerieInfo = styled.section`
-    grid-area: serieInfo;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0px 20px;
+    padding-right: 5px;
 
     span {
         padding-top: 10px;
@@ -154,13 +154,12 @@ export const SerieInfo = styled.section`
 `;
 
 export const DateInfo = styled.section`
-    grid-area: date;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
+    min-width: 120px;
 `;
 
 export const Time = styled.span`
