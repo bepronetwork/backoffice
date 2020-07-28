@@ -174,6 +174,19 @@ class Connection {
         }
     }
 
+    editVideogamesEdge = async ({admin, app, esports_edge, headers}) => {
+        try{
+            let response = await fetch(URL+ '/api/app/videogames/editEdge', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({admin, app, esports_edge})
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editRestrictedCountries = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/restrictedCountries/edit`, {

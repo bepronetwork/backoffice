@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Header, Videogame, Date, Status, Winner, Filters, DateFilter, StatusFilter, BookedFilter } from './styles';
+import { Container, Header, Videogame, Date, Status, Winner, Filters, DateFilter, StatusFilter, BookedFilter, Edge } from './styles';
 import Match from '../Match';
 import _, { keys } from 'lodash';
 import moment from 'moment';
@@ -14,6 +14,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { DatePicker, Select, Checkbox } from 'antd';
 
 import matchStatus from '../Enums/status';
+import EditEdge from './EditEdge';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -264,6 +265,9 @@ class MatchList extends React.Component {
                     <BookedFilter>
                         <Checkbox checked={showOnlyBookedMatches} onChange={setBookedFilter}>Show only Booked Matches</Checkbox>
                     </BookedFilter>
+                    <Edge>
+                        <EditEdge/>
+                    </Edge>
                 </Filters>
                 <Header>
                     <Videogame>

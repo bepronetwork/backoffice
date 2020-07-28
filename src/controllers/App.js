@@ -963,6 +963,20 @@ class App{
         }
     }
 
+    editVideogamesEdge = async ({ esports_edge }) => {
+        try{
+            return await ConnectionSingleton.editVideogamesEdge({
+                admin : this.getAdminId(),            
+                app : this.getId(),
+                esports_edge: parseFloat(esports_edge),
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     changeMaxDeposit = async ({amount, wallet_id}) => {
         try{
             let res = await ConnectionSingleton.changeMaxDeposit({
