@@ -30,13 +30,13 @@ export const StyledNavLink = styled(NavLink)`
         color: #814c94;
     }
 
-
     &.active {
         border-left: none;
         background: #814c94 !important;
         border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;
-
+        padding: 8px;
+        margin: 0px 5px;
 
         span {
             margin: 0px 1fr;

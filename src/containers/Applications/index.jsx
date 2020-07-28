@@ -17,7 +17,7 @@ import ThirdPartiesContainer from './ThirdParties/index.js';
 import HostingLink from './components/HostingLink';
 import AddOnsContainer from './AddOnPage';
 import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
-import { Bet, Reward, Settings, Rewards, AddOn, Wallet, Casino, CasinoWhite, EsportsWhite } from '../../components/Icons';
+import { Bet, Reward, Settings, Rewards, AddOn, Wallet, Casino, CasinoWhite, EsportsWhite, SettingsWhite } from '../../components/Icons';
 import styled from 'styled-components';
 import { Grid } from '@material-ui/core';
 import { TabContainer, StyledNavLink } from './styles';
@@ -72,6 +72,11 @@ const Icon = styled.section`
 `
 
 const EsportsIcon = styled.section`
+    height: 50px;
+    width: 50px;
+    opacity: 0.56;
+`
+const PlatformIcon = styled.section`
     height: 50px;
     width: 50px;
     opacity: 0.56;
@@ -233,9 +238,9 @@ class ApplicationsContainer extends React.Component{
                                                 }}
                                             >
                                                 <span>Platform</span>
-                                                {/* <Icon>
-                                                    <CasinoWhite/>
-                                                </Icon> */}
+                                                <PlatformIcon>
+                                                    <SettingsWhite isActive={this.state.activeTab === 'platform'}/>
+                                                </PlatformIcon>
                                             </StyledNavLink>
                                         </NavItem>
                                         <NavItem style={{ height: 80, marginTop: "20px" }}>
