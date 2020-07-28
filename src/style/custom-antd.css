@@ -20174,7 +20174,7 @@ span.ant-radio + * {
   margin: -8px -8px -8px 25px;
 }
 .ant-table-small .ant-table-thead > tr > th {
-  background-color: #fafafa;
+  background-color: #fafcff;
 }
 .ant-table-small .ant-table-selection-column {
   width: 46px;
@@ -20290,7 +20290,7 @@ span.ant-radio + * {
   z-index: 0;
   clear: both;
   font-size: 14px;
-  background: #fff;
+  background: #FAFCFF;
   border-radius: 2px;
 }
 .ant-table table {
