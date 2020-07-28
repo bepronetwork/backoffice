@@ -639,6 +639,25 @@ class App{
         }
     }
 
+    editEsportsPageCustomization = async ({ link_url, button_text, title, subtitle }) => {
+        try{
+            let res = await ConnectionSingleton.editEsportsPageCustomization({   
+                params: {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    link_url,
+                    button_text,
+                    title,
+                    subtitle
+                },         
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editLogoCustomization = async ({logo}) => {
         try{
             let res = await ConnectionSingleton.editLogoCustomization({   

@@ -745,6 +745,19 @@ class Connection {
         }
     }
 
+    editEsportsPageCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/esportsScrenner`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editLogoCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/logo`, {

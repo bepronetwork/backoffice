@@ -4,6 +4,7 @@ import TabsContainer from '../../../shared/components/tabs/Tabs';
 import { LayersOutlineIcon, AnnouncementIcon, BrandingWatermarkIcon, ColorizeIcon, PageLayoutFooterIcon, FormatFontIcon, ImageIcon } from 'mdi-react';
 import Background from './components/Background';
 import { Bet, Reward, Phone, Settings, Rewards, AddOn, Withdraw } from '../../../components/Icons';
+import EsportsMainPage from './components/EsportsMainPage';
 
 export default class CustomizationContainer extends Component {
     render() {
@@ -46,6 +47,11 @@ export default class CustomizationContainer extends Component {
                                 title : 'Footer',
                                 container : <Footer/>,
                                 icon : <Withdraw/>
+                            },
+                            {
+                                title : 'Esports',
+                                container : <EsportsMainPage/>,
+                                icon : <Reward/>
                             },
                          
                         ]

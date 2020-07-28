@@ -9,6 +9,8 @@ import ColorPicker from '../../../../shared/components/color_picker_input/ColorP
 import { TextField, Label } from './styles';
 import Switch from '../../../../shared/components/Switch.js';
 
+import './styles.css';
+
 const defaultState = {
     isActive: false,
     backgroundColor: '#000',
