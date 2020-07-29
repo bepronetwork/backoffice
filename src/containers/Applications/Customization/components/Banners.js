@@ -6,7 +6,8 @@ import { connect } from "react-redux";
 import AliceCarousel from 'react-alice-carousel'
 import Dropzone from 'react-dropzone'
 import 'react-alice-carousel/lib/alice-carousel.css'
-import { Grid, GridList, withStyles } from '@material-ui/core';
+import { Grid, GridList, withStyles, FormControlLabel } from '@material-ui/core';
+import BooleanInput from '../../../../shared/components/BooleanInput';
 import { styles } from './styles';
 const image2base64 = require('image-to-base64');
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
@@ -129,7 +130,7 @@ class Banners extends Component {
                         changeContent={(name, value, index) => this.onChange({name, value, index})}
                     />
                 </div>
-                <div style={{marginTop : 10}}>
+                <div style={{ marginTop: 10 }}>
                     <TextInput
                         name="subtitle"
                         label="Subtitle"
@@ -141,6 +142,23 @@ class Banners extends Component {
                         changeContent={(name, value, index) => this.onChange({name, value, index})}
                     />
                 </div>
+                <div style={{ marginTop: 10 }}>
+                    <FormControlLabel
+                        style={{ margin: 0, padding: 0 }}
+                        control={
+                            <BooleanInput
+                                checked={true} 
+                                onChange={this.onChange}
+                                disabled={false}
+                                type={'isActive'}
+                                id={'check-active-101'}
+                            />
+                        }
+                        label={true ? <h4 style={{ fontSize: 15 }}>Full width</h4> 
+                        : <h4 style={{ fontSize: 15 }}></h4>}
+                        labelPlacement="top"
+                        /> 
+                </div> 
             </div>
         )
     }
@@ -215,7 +233,7 @@ class Banners extends Component {
                                         <GridList className={classes.gridList} cols={2.5} style={{ minHeight: '410px' }}>
                                         {banners.map((i, index) => {
                                             return (
-                                                <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, height : 580, width: 300, margin: 20, padding : "0px 30px 30px 30px"}}>
+                                                <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, height : 630, width: 300, margin: 20, padding : "0px 30px 30px 30px"}}>
                                                     {this.renderImage(i.image_url, index)}
                                                 </div>
                                             )
