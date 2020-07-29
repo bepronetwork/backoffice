@@ -64,7 +64,7 @@ class GamesContainer extends PureComponent {
                     })}
                 </Row>
             : 
-            <div>
+            <div style={{ margin: 10 }}>
                 <h4>You have no Games and/or Currencies enabled currently</h4>
                 <img src={image} style={{width :'30%', marginTop : 20}}/>
             </div>
