@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
@@ -18,19 +18,19 @@ import { Route, Switch } from 'react-router-dom';
 import Account from '../../controllers/Account';
 import routesStructure from './routes';
 import _ from 'lodash';
-import UsersContainer from '../Users';
-import Applications from '../Applications';
-import StatsContainer from '../Stats'
-import AffiliatesContainer from '../Affiliates';
-import SettingsContainer from '../Settings';
-import DefaultDashboard from '../Dashboards/Default/index';
-import Developers from '../Developers';
-import TransactionsContainer from '../Transactions';
-import BetsContainer from '../Bets';
-import GamePage from '../Applications/GamePage';
-import UserPage from '../Users/UserPage';
 import { WalletContainer } from '../Wallet';
 import WalletWidget from '../Wallet/components/paths/WalletWidget';
+const UsersContainer = lazy(() => import('../Users'));
+const StatsContainer = lazy(() => import('../Stats'));
+const AffiliatesContainer = lazy(() => import('../Affiliates'));
+const Developers = lazy(() => import('../Developers'));
+const TransactionsContainer = lazy(() => import('../Transactions'));
+const BetsContainer = lazy(() => import('../Bets'));
+const GamePage = lazy(() => import('../Applications/GamePage'));
+const UserPage = lazy(() => import('../Users/UserPage'));
+const SettingsContainer = lazy(() => import('../Settings'));
+const DefaultDashboard= lazy(() => import('../Dashboards/Default/index'));
+const Applications = lazy(() => import('../Applications'));
 
 const loadingBetprotocol = `${process.env.PUBLIC_URL}/img/loading-betprotocol.gif`;
 
@@ -99,7 +99,14 @@ class MainRoute extends React.Component {
         if(!profile.hasAppStats()) { return null; }
 
         return(
-            <div>
+            <Suspense fallback={					
+            <div className={`load${this.state.loading ? '' : ' loaded'}`}>
+                <div class="load__icon-wrap">
+                    <img src={loadingBetprotocol} alt="loading..."/>
+                </div>
+            </div>}>
+
+                <div>
                 <Layout />
                 <div className="container__wrap">
                     {routeHistory.map( (routePath, i) => {
@@ -129,6 +136,7 @@ class MainRoute extends React.Component {
                     <Route path={'/affiliates'} component={AffiliatesContainer}/>	
                 </div>
             </div>
+            </Suspense>
         )
     }
 
