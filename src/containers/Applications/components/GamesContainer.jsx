@@ -1,9 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
-import {  Col, Row } from 'reactstrap';
-import GameInfo from './GameInfo';
 import { connect } from "react-redux";
-import store from '../../App/store';
+import { Col, Row } from 'reactstrap';
+import GameInfo from './GameInfo';
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
 class GamesContainer extends PureComponent {
@@ -59,7 +58,6 @@ class GamesContainer extends PureComponent {
                             <Col lg={4} style={{ minWidth: 290 }}>
                                 <GameInfo game={game} isLoading={isLoading} wallet={wallet} {...this.props}/>
                             </Col>
-
                         )                  
                     })}
                 </Row>

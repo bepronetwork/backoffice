@@ -1,13 +1,14 @@
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
-import { translate } from 'react-i18next';
+import Fade from '@material-ui/core/Fade';
+import { compose } from 'lodash/fp';
 import PropTypes from 'prop-types';
-import EnhancedTable from './components/EnhancedTable';
+import { translate } from 'react-i18next';
 import { connect } from "react-redux";
-import { compose } from 'lodash/fp'
-import TransactionsProfile from './components/TransactionsProfile';
+import { Col, Container, Row } from 'reactstrap';
 import DataWidget from '../DataWidget/DataWidget';
+import EnhancedTable from './components/EnhancedTable';
 import TransactionsOpen from './components/TransactionsOpen';
+import TransactionsProfile from './components/TransactionsProfile';
 
 
 class TransactionsContainer extends React.Component{
@@ -40,6 +41,7 @@ class TransactionsContainer extends React.Component{
 
     render = () => {
         return (
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
             <Container className="dashboard">
                 <Row>
                     <Col lg={3}>
@@ -74,8 +76,8 @@ class TransactionsContainer extends React.Component{
                         </DataWidget>
                     </Col>
                 </Row>
-                
           </Container>
+          </Fade>
         )
     }
 
