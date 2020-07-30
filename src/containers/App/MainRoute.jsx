@@ -99,13 +99,14 @@ class MainRoute extends React.Component {
         if(!profile.hasAppStats()) { return null; }
 
         return(
-            <Suspense fallback={					
-            <div className={`load${this.state.loading ? '' : ' loaded'}`}>
-                <div class="load__icon-wrap">
-                    <img src={loadingBetprotocol} alt="loading..."/>
-                </div>
-            </div>}>
-
+            <Suspense fallback={
+                <div>					
+                    <div className={"load "}>
+                        <div class="load__icon-wrap">
+                            <img src={loadingBetprotocol} alt="loading..."/>
+                        </div>
+                    </div>
+                </div> }>
                 <div>
                 <Layout />
                 <div className="container__wrap">
