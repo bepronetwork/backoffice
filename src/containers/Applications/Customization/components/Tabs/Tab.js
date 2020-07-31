@@ -1,9 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { FormGroup, Col } from 'reactstrap';
-import { LinkCard, LinkCardContent, InputField, LinkImage, InputLabel, RemoveLink, Yes, Cancel } from './styles';
+import { TabCard, TabCardContent, InputField, TabImage, InputLabel, RemoveTab, Yes, Cancel } from './styles';
 import _ from 'lodash';
-import { Grid } from '@material-ui/core';
 import Dropzone from 'react-dropzone'
 import { TrashCanOutlineIcon } from 'mdi-react';
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
@@ -34,15 +32,15 @@ class Tab extends React.Component {
 
 
     projectData = async (props) => {
-        const { link, links } = props;
+        const { tabs, tab } = props;
 
-        if (!_.isEmpty(links)) {
+        if (!_.isEmpty(tab)) {
             this.setState({
-                _id: link._id,
-                name: link.name,
-                href: link.href,
-                image_url: link.image_url,
-                links: links
+                _id: tab._id,
+                name: tab.name,
+                icon: tab.icon,
+                link_url: tab.link_url,
+                tabs: tabs
             })
         }
     }
@@ -56,18 +54,18 @@ class Tab extends React.Component {
     }
 
     onAddedFile = async ({ id, files }) => {
-        const { links } = this.state;
-        const { setLinks } = this.props;
+        const { tabs } = this.state;
+        const { setTabs } = this.props;
         const file = files[0];
         
         let blob = await image2base64(file.preview) // you can also to use url
 
-        const index = links.findIndex(l => l._id === id);
-        const newLinks = [...links];
-        newLinks[index].image_url = blob;
+        const index = tabs.findIndex(tab => tab._id === id);
+        const newTabs = [...tabs];
+        newTabs[index].icon = blob;
 
-        setLinks({
-            newLinks: newLinks
+        setTabs({
+            newTabs: newTabs
         })
     }
 
@@ -82,115 +80,106 @@ class Tab extends React.Component {
         )
     }
 
-    
-    renderImage = (src) => {
-        if(!src.includes("https")){
-            src = "data:image;base64," + src;
-        }
-
-        return src;
-    }
-
     onChangeName = ({ id, value }) => {
-        const { links } = this.state;
-        const { setLinks } = this.props;
+        const { tabs } = this.state;
+        const { setTabs } = this.props;
 
         if (value) {
-            const index = links.findIndex(l => l._id === id);
-            const newLinks = [...links];
-            newLinks[index].name = value;
+            const index = tabs.findIndex(tab => tab._id === id);
+            const newTabs = [...tabs];
+            newTabs[index].name = value;
     
-            setLinks({
-                newLinks: newLinks
+            setTabs({
+                newTabs: newTabs
             })
         } else {
-            const index = links.findIndex(l => l._id === id);
-            const newLinks = [...links];
-            newLinks[index].name = "";
+            const index = tabs.findIndex(tab => tab._id === id);
+            const newTabs = [...tabs];
+            newTabs[index].name = "";
     
-            setLinks({
-                newLinks: newLinks
+            setTabs({
+                newTabs: newTabs
             })
         }
     }
 
     onChangeLink = ({ id, value }) => {
-        const { links } = this.state;
-        const { setLinks } = this.props;
+        const { tabs } = this.state;
+        const { setTabs } = this.props;
 
         if (value) {
-            const index = links.findIndex(l => l._id === id);
-            const newLinks = [...links];
-            newLinks[index].href = value;
+            const index = tabs.findIndex(tab => tab._id === id);
+            const newTabs = [...tabs];
+            newTabs[index].link_url = value;
     
-            setLinks({
-                newLinks: newLinks
+            setTabs({
+                newTabs: newTabs
             })
         } else {
-            const index = links.findIndex(l => l._id === id);
-            const newLinks = [...links];
-            newLinks[index].href = "";
+            const index = tabs.findIndex(tab => tab._id === id);
+            const newTabs = [...tabs];
+            newTabs[index].link_url = "";
     
-            setLinks({
-                newLinks: newLinks
+            setTabs({
+                newTabs: newTabs
             })
         }
     }
 
     removeImage = ({ id }) => {
-        const { links } = this.state;
-        const { setLinks } = this.props;
+        const { tabs } = this.state;
+        const { setTabs } = this.props;
 
-        const index = links.findIndex(l => l._id === id);
-        const newLinks = [...links];
-        newLinks[index].image_url = "";
+        const index = tabs.findIndex(tab => tab._id === id);
+        const newTabs = [...tabs];
+        newTabs[index].icon = "";
 
-        setLinks({
-            newLinks: newLinks
+        setTabs({
+            newTabs: newTabs
         })
     }
 
-    removeLink = ({ id }) => {
+    removeTab = ({ id }) => {
         this.setState({
             removing: true
         })
     }
 
-    cancelRemoveLink = ({ id }) => {
+    cancelRemoveTab = ({ id }) => {
         this.setState({
             removing: false
         })
     }
 
-    removeLinkCard = ({ id }) => {
-        const { links } = this.state;
-        const { setLinks } = this.props;
+    removeTabCard = ({ id }) => {
+        const { tabs } = this.state;
+        const { setTabs } = this.props;
 
-        const index = links.findIndex(l => l._id === id);
-        const newLinks = [...links];
+        const index = tabs.findIndex(tab => tab._id === id);
+        const newTabs = [...tabs];
 
-        newLinks[index] = {};
+        newTabs[index] = {};
         
         this.setState({
             removing: false
         })
         
-        setLinks({
-            newLinks: newLinks.filter(link => !_.isEmpty(link))
+        setTabs({
+            newTabs: newTabs.filter(tab => !_.isEmpty(tab))
         })
     }
 
 
     render() {
-        const { _id, name, href, image_url, removing } = this.state;
+        const { _id, name, icon, link_url, removing } = this.state;
         const { locked } = this.props;
 
         return (
             <>
             <Col md={3} style={{ minWidth: 178, margin: 5 }}>
-                <LinkCard>
-                    <LinkCardContent>
-                        { !_.isEmpty(image_url) ? 
+                <TabCard>
+                    <TabCardContent>
+                        { !_.isEmpty(icon) ? 
                         <>  
                             <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: -10, marginBottom: -30 }}>
                                 <button
@@ -201,12 +190,12 @@ class Tab extends React.Component {
                                     <img src={trash} style={{width : 15, height : 15}}/>
                                 </button>
                             </div>
-                            <img className='application__game__image' style={{ display: 'block', width: 100, height: 100 }} src={this.renderImage(image_url)}/> 
+                            <img className='application__game__image' style={{ display: 'block', width: 100, height: 100 }} src={this.renderImage(icon)}/> 
                         </>
                         : 
-                        <LinkImage>
+                        <TabImage>
                             { this.renderAddImage({ id: _id }) }
-                        </LinkImage> }
+                        </TabImage> }
                         <FormGroup>
                             <InputLabel for="name">Title</InputLabel>
                         <InputField
@@ -224,26 +213,26 @@ class Tab extends React.Component {
                             label="Link"
                             name="link"
                             type="text"
-                            defaultValue={href}
+                            defaultValue={link_url}
                             disabled={locked}
                             onChange={(e) => this.onChangeLink({ id: _id, value: e.target.value })}
                         />
                         </FormGroup>
                         { !removing ?  
-                        <RemoveLink disabled={locked} onClick={() => this.removeLink({ id: _id })}>
+                        <RemoveTab disabled={locked} onClick={() => this.removeTab({ id: _id })}>
                             <TrashCanOutlineIcon/> Remove tab
-                        </RemoveLink>
+                        </RemoveTab>
                         : 
                         <div style={{ display: "flex" }}>
-                            <Yes disabled={locked} onClick={() => this.removeLinkCard({ id: _id })}>
+                            <Yes disabled={locked} onClick={() => this.removeTabCard({ id: _id })}>
                                 Yes
                             </Yes>
-                            <Cancel disabled={locked} onClick={() => this.cancelRemoveLink({ id: _id })}>
+                            <Cancel disabled={locked} onClick={() => this.cancelRemoveTab({ id: _id })}>
                                 Cancel
                             </Cancel>
                         </div> }
-                    </LinkCardContent>
-                </LinkCard>
+                    </TabCardContent>
+                </TabCard>
             </Col>
             </>
         )
@@ -251,10 +240,5 @@ class Tab extends React.Component {
 
 }
 
-function mapStateToProps(state){
-    return {
-        profile: state.profile
-    };
-}
     
-export default connect(mapStateToProps)(Tab);
+export default Tab;

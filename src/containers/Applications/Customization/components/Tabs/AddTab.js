@@ -1,9 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { FormGroup, Col } from 'reactstrap';
-import { LinkCard, LinkCardContent, InputField, LinkImage, InputLabel, AddLinkButton } from './styles';
+import { TabCard, TabCardContent, InputField, TabImage, InputLabel, AddTabButton } from './styles';
 import _ from 'lodash';
-import { Grid } from '@material-ui/core';
 import Dropzone from 'react-dropzone'
 import { PlusIcon } from 'mdi-react';
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
@@ -22,7 +20,7 @@ class AddTab extends React.Component {
         this.state = {
             newName: "",
             newLink: "",
-            newImage: ""
+            newIcon: ""
         };
     }
 
@@ -36,11 +34,11 @@ class AddTab extends React.Component {
 
 
     projectData = async (props) => {
-        const { links } = props;
+        const { tabs } = props;
 
-        if (!_.isEmpty(links)) {
+        if (!_.isEmpty(tabs)) {
             this.setState({
-                links: links
+                tabs: tabs
             })
         }
     }
@@ -83,7 +81,7 @@ class AddTab extends React.Component {
         let blob = await image2base64(file.preview) // you can also to use url
 
         this.setState({
-            newImage: blob
+            newIcon: blob
         })
     }
 
@@ -98,58 +96,58 @@ class AddTab extends React.Component {
         )
     }
 
-    removeNewImage = () => {
+    removeNewIcon = () => {
         this.setState({
             newImage: ""
         })
     }
 
-    addNewLink = () => {
-        const { newName, newLink, newImage } = this.state;
-        const { setLinks, links } = this.props;
+    addNewTab = () => {
+        const { newName, newLink, newIcon } = this.state;
+        const { setTabs, tabs } = this.props;
         
-        const newLinkObj = { name: newName, href: newLink, image_url: newImage, _id: Math.random().toString(36).substr(2, 9) }
+        const newTabObj = { name: newName, link_url: newLink, icon: newIcon, _id: Math.random().toString(36).substr(2, 9) }
 
-        const newLinks = links ? [newLinkObj, ...links] : [newLinkObj];
+        const newTabs = tabs ? [newTabObj, ...tabs] : [newTabObj];
 
         this.setState({
             newName: "",
             newLink: "",
-            newImage: ""
+            newIcon: ""
         })
 
-        setLinks({
-            newLinks: newLinks,
+        setTabs({
+            newTabs: newTabs,
         })
 
     }
 
     render() {
-        const { newName, newLink, newImage } = this.state;
+        const { newName, newLink, newIcon } = this.state;
         const { locked } = this.props;
 
         return (
             <>
             <Col md={3} style={{ minWidth: 178, margin: 5 }}>
-                <LinkCard>
-                    <LinkCardContent>
-                        { newImage ? 
+                <TabCard>
+                    <TabCardContent>
+                        { newIcon ? 
                         <>  
                             <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: -10, marginBottom: -30 }}>
                                 <button
                                 disabled={locked}
-                                onClick={() => this.removeNewImage()}
+                                onClick={() => this.removeNewIcon()}
                                 style={{ position: "inherit", right: 20, top: 6 }}
                                 className='carousel-trash button-hover'>
                                     <img src={trash} style={{width : 15, height : 15}}/>
                                 </button>
                             </div>
-                            <img className='application__game__image' style={{ display: 'block', width: 100, height: 100 }} src={this.renderImage(newImage)}/> 
+                            <img className='application__game__image' style={{ display: 'block', width: 100, height: 100 }} src={this.renderImage(newIcon)}/> 
                         </>
                         : 
-                        <LinkImage>
+                        <TabImage>
                             { this.renderAddNewImage() }
-                        </LinkImage> }
+                        </TabImage> }
                         <FormGroup>
                             <InputLabel for="name">Title</InputLabel>
                         <InputField
@@ -175,23 +173,17 @@ class AddTab extends React.Component {
                         />
                         </FormGroup>
 
-                        <AddLinkButton disabled={locked} onClick={() => this.addNewLink()}>
+                        <AddTabButton disabled={locked} onClick={() => this.addNewTab()}>
                             <PlusIcon/> Add tab
-                        </AddLinkButton>
+                        </AddTabButton>
 
-                    </LinkCardContent>
-                </LinkCard>
+                    </TabCardContent>
+                </TabCard>
             </Col>
             </>
         )
     }
 
 }
-
-function mapStateToProps(state){
-    return {
-        profile: state.profile
-    };
-}
     
-export default connect(mapStateToProps)(AddTab);
+export default AddTab;

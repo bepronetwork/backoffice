@@ -794,6 +794,24 @@ class App{
         }
     }
 
+    editTopTabCustomization = async ({ topTabParams, tag }) => {
+        try{
+            let res = await ConnectionSingleton.editTopTabCustomization({   
+                params : {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    topTabParams,
+                    tag
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editGameImage = async ({image_url, game}) => {
         try{
             let res = await ConnectionSingleton.editGameImage({   

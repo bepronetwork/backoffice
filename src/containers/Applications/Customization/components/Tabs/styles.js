@@ -19,6 +19,7 @@ export const Container = styled(CardBody)`
 export const TabsPreview = styled.div`
     display: flex;
     flex-direction: row;
+    align-items: center;
 
     height: 60px;
     width: 100%;
@@ -30,6 +31,12 @@ export const TabsPreview = styled.div`
     
     border-radius: 6px;
     border: solid 1px rgba(164, 161, 161, 0.35);
+
+    span {
+        font-family: Poppins;
+        font-size: 14px;
+        color: #646777;
+    }
 `;
 
 export const Text = styled.h4`
@@ -38,7 +45,7 @@ export const Text = styled.h4`
 
 export const TabsList = styled(Row)``;
 
-export const LinkCard = styled.section`
+export const TabCard = styled.section`
     width: 100%;
     min-width: 178px;
     height: 362px;
@@ -49,7 +56,7 @@ export const LinkCard = styled.section`
     padding: 15px;
 `;
 
-export const LinkCardContent = styled.section`
+export const TabCardContent = styled.section`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -66,7 +73,7 @@ export const LinkCardContent = styled.section`
 
 `;
 
-export const LinkImage = styled.section`
+export const TabImage = styled.section`
     height: 50%;
     width: 60%;
     padding: 5px;
@@ -132,7 +139,7 @@ export const ConfirmButton = styled(Button)`
 
 `;
 
-export const RemoveLink = styled(MaterialButton)`
+export const RemoveTab = styled(MaterialButton)`
     width: 100%;
     text-transform: none !important;
     background-color: #e6536e !important;
@@ -141,7 +148,7 @@ export const RemoveLink = styled(MaterialButton)`
     color: white !important;
 `;
 
-export const AddLinkButton = styled(MaterialButton)`
+export const AddTabButton = styled(MaterialButton)`
     width: 100%;
     text-transform: none !important;
     background-color: #63c965 !important;
@@ -177,9 +184,8 @@ export const Title = styled.h1`
     margin: 20px 0px;
 `;
 
-export const TabPreview = styled.div`
+export const TabPreview = styled.a`
     height: 100%;
-    width: 100px;
 
     display: flex;
     flex-direction: row;
@@ -198,7 +204,6 @@ export const TabIcon = styled.div`
 
 export const TabTitle = styled.div`
     height: 100%;
-    width: 70px;
 
     display: flex;
     flex-direction: row;
