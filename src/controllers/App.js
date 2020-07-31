@@ -617,14 +617,15 @@ class App{
         }
     }
 
-    editBannersCustomization = async ({banners, autoDisplay}) => {
+    editBannersCustomization = async ({ banners, autoDisplay, fullWidth }) => {
         try{
             let res = await ConnectionSingleton.editBannersCustomization({   
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId(),
                     banners,
-                    autoDisplay
+                    autoDisplay,
+                    fullWidth
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
