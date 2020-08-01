@@ -64,3 +64,13 @@ export const TextField = styled(Input)`
     line-height: 24px;
     color: #828282;
 `;
+
+export const Logo = styled.section`
+    height: 50%;
+    width: 40%;
+    padding: 5px;
+    border: solid 2px rgba(164, 161, 161, 0.35);
+    border-radius: 6px;
+    border-style: dashed;
+    margin-bottom: 10px;
+`;

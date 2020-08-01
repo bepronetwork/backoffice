@@ -68,6 +68,8 @@ class WalletTabs extends Component {
                 return this.isAdded('TxFee');
             case 'Bonus':
                 return this.isAdded('DepositBonus');
+            case 'Points':
+                return this.isAdded('PointSystem');
             default:
                 return true;
         }
@@ -78,7 +80,7 @@ class WalletTabs extends Component {
 
         if (!wallet) return null
 
-        const isAppWithFakeMoney = wallet.currency.name === 'Gold';
+        const isAppWithFakeMoney = wallet.currency.virtual;
         const filteredTabs = !isAppWithFakeMoney ? tabs.filter(tab => this.hasPermission(tab.name)) : tabs.filter(tab => tab.name === 'Limits');
 
         return (
