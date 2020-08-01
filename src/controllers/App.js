@@ -1224,6 +1224,23 @@ class App{
         }
     }
 
+    editPointSystem = async ({ currency, pointSystemParams }) => {
+        try{
+            return await ConnectionSingleton.editPointSystem({   
+                params : {
+                    currency,
+                    pointSystemParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     editJackpot = async ({edge}) => {
         try{
             return await ConnectionSingleton.editJackpot({   
