@@ -3,11 +3,12 @@ import EditLock from '../../../Shared/EditLock.js';
 import TextInput from '../../../../shared/components/TextInput';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
-import AliceCarousel from 'react-alice-carousel'
 import Dropzone from 'react-dropzone'
 import 'react-alice-carousel/lib/alice-carousel.css'
-import { Grid, GridList, withStyles } from '@material-ui/core';
+import { GridList, withStyles, FormLabel } from '@material-ui/core';
+import BooleanInput from '../../../../shared/components/BooleanInput';
 import { styles } from './styles';
+
 const image2base64 = require('image-to-base64');
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
@@ -50,10 +51,12 @@ class Banners extends Component {
 
     projectData = async (props) => {
         const { banners } = props.profile.getApp().getCustomization();
-        const { ids, autoDisplay } = banners;
+        const { ids, autoDisplay, fullWidth } = banners;
+
         this.setState({...this.state, 
             banners : ids,
-            autoDisplay
+            autoDisplay,
+            fullWidth: fullWidth
         })
     }
 
@@ -129,7 +132,7 @@ class Banners extends Component {
                         changeContent={(name, value, index) => this.onChange({name, value, index})}
                     />
                 </div>
-                <div style={{marginTop : 10}}>
+                <div style={{ marginTop: 10 }}>
                     <TextInput
                         name="subtitle"
                         label="Subtitle"
@@ -177,14 +180,21 @@ class Banners extends Component {
         this.setState({...this.state, locked : true})
     }
 
+    onChangeFullwidth = () =>  {
+        const { fullWidth } = this.state;
+
+        this.setState({ fullWidth: !fullWidth });
+    }
+
     confirmChanges = async () => {
         var { profile } = this.props;
-        const { banners } = this.state;
+        const { banners, fullWidth } = this.state;
 
         this.setState({...this.state, isLoading : true});
         const postData = {
             banners,
-            autoDisplay : false
+            autoDisplay: false,
+            fullWidth: fullWidth
         }
         await profile.getApp().editBannersCustomization(postData);
         this.setState({...this.state, isLoading : false, locked: true})
@@ -194,7 +204,7 @@ class Banners extends Component {
     handleOnDragStart = (e) => e.preventDefault()
 
     render() {
-        const { isLoading, locked, autoDisplay, banners } = this.state; 
+        const { isLoading, locked, autoDisplay, banners, fullWidth } = this.state; 
         const { classes } = this.props;
         
         return (
@@ -211,11 +221,21 @@ class Banners extends Component {
                                 locked={locked}
                             >
                                 <div style={{width : '96%', margin : 'auto'}}>
+                                    <div style={{ marginTop: 10 }}>
+                                        <FormLabel component="legend">Show full width banner</FormLabel>
+                                        <BooleanInput
+                                            checked={fullWidth} 
+                                            onChange={this.onChangeFullwidth}
+                                            disabled={locked}
+                                            type={'isFullWidth'}
+                                            id={'fullwidth'}
+                                        />
+                                    </div> 
                                     <div className={classes.root}>
                                         <GridList className={classes.gridList} cols={2.5} style={{ minHeight: '410px' }}>
                                         {banners.map((i, index) => {
                                             return (
-                                                <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, height : 580, width: 300, margin: 20, padding : "0px 30px 30px 30px"}}>
+                                                <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, height : 630, width: 300, margin: 20, padding : "0px 30px 30px 30px"}}>
                                                     {this.renderImage(i.image_url, index)}
                                                 </div>
                                             )
