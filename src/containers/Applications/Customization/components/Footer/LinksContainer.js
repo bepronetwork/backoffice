@@ -66,8 +66,7 @@ class LinksContainer extends React.Component {
         const { profile } = this.props;
 
         const filteredLinks = links.map(({_id, ...rest}) => rest);
-
-        console.log(type)
+        
         this.setState({
             isLoading: true
         })
