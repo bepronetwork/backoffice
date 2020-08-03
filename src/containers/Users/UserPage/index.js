@@ -11,6 +11,7 @@ import AffiliateInfo from './components/AffiliateInfo';
 import TopUpBalance from './components/TopUpBalance';
 import UserBetsTable from './components/UserBetsTable';
 import UserTransactionsTable from './components/UserTransactionsTable';
+import UserPageSkeleton from './components/UserPageSkeleton';
 
 
 const defaultProps = {
@@ -107,7 +108,8 @@ class UserPage extends React.Component{
 
     render = () => {
         const { user, currencyTicker } = this.state;
-        if(!user || _.isEmpty(user)){return null};
+        
+        if (!user || _.isEmpty(user)) { return <UserPageSkeleton/> };
 
         const { currency, isLoading } = this.props;
         const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount } = user;
