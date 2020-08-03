@@ -36,6 +36,7 @@ class UserPage extends React.Component{
     projectData = async (props) => {
         const { profile, currency, location } = props;
 
+        const app = await profile.getApp();
         const userId = location.state.userId;
 
         const currencyTicker = currency.ticker ? currency.ticker : defaultProps.ticker;
@@ -43,7 +44,9 @@ class UserPage extends React.Component{
 
         this.setState({...this.state, 
             currencyTicker,
-            user: user
+            user: user,
+            ecosystemAddOns: app.params.storeAddOn,
+            appAddOns: app.params.addOn
         })
     }
 
@@ -85,6 +88,26 @@ class UserPage extends React.Component{
         )
     }
 
+    
+    renderPointsData = ({ addon, points, loading }) => {
+        if ( _.isEmpty(addon)) return null;
+
+        const { name } = addon;
+
+        return (
+            <Card>
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    <p className='text-small pink-text'> Points </p>
+                    {loading ? (
+                        <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    ) : (
+                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={0} font={'11pt'} number={points}/> <span className='text-x-small'>{ name }</span></h4>
+                    )}
+                </CardBody>
+            </Card>
+        )
+    }
+
     renderBalanceData = ({title, data, span, loading, decimals}) => {
         const { user } = this.state;
 
@@ -106,14 +129,40 @@ class UserPage extends React.Component{
         )
     }
 
+    hasAddOn = (addOn) => {
+        const { appAddOns } = this.state;
+
+        if(!_.isEmpty(appAddOns)) {
+            const isAdded = _.has(appAddOns, addOn);
+            const isNotEmpty = !_.isEmpty(appAddOns[addOn]);
+
+            return isAdded && isNotEmpty;
+
+        } else {
+            return false;
+        }
+    }
+
+    getAddOnObj = (addOn) => {
+        const { ecosystemAddOns, appAddOns } = this.state;
+
+        const addOnInfo = ecosystemAddOns.find(addon => addon.name.toLowerCase().includes(addOn.toLowerCase()));
+        const addOnData = appAddOns[Object.keys(appAddOns).find(k => k.toLowerCase() === addOn.toLowerCase())];
+
+        const addOnObj = _.merge({}, addOnInfo, addOnData);
+
+        return addOnObj;
+
+    }
+
     render = () => {
         const { user, currencyTicker } = this.state;
         
         if (!user || _.isEmpty(user)) { return <UserPageSkeleton/> };
 
         const { currency, isLoading } = this.props;
-        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount } = user;
-
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, points } = user;
+        
         const wallet = user.wallet.find(wallet => wallet.currency._id === currency._id);
 
         const playBalance = wallet.playBalance;
@@ -165,10 +214,10 @@ class UserPage extends React.Component{
                                 {this.renderDataTitle({title : 'Profit', data :  profit ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length), decimals: 0})}
+                                {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length), loading: isLoading, decimals: 0})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length), decimals: 0})}
+                                {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length), loading: isLoading, decimals: 0})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliateWallet) ? parseFloat(affiliateWallet[0].playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
@@ -176,6 +225,11 @@ class UserPage extends React.Component{
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length, loading: isLoading, decimals: 0})}
                             </Col>
+                            { this.hasAddOn('pointSystem') && (
+                                <Col sd={12} md={4} lg={3}>
+                                    { this.renderPointsData({ addon: this.getAddOnObj('pointSystem'), points: points, loading: isLoading }) } 
+                                </Col>
+                            )}
                         </Row>
                     </Col>
                 </Row>
