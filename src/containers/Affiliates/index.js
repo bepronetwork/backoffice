@@ -7,6 +7,8 @@ import { compose } from 'lodash/fp'
 import { EditableTable, InfoNumericCard } from '../../components';
 import Switch from '@material-ui/core/Switch';
 
+import Fade from '@material-ui/core/Fade';
+
 const defaultState = {
     percentageOnLossTotal : 0,
     affiliateStructures : []
@@ -70,6 +72,7 @@ class AffiliatesContainer extends React.Component{
             }
         }, 0)
         return (
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
             <Container className="dashboard">
                 <Row>
                     <Col md={5}>
@@ -115,6 +118,7 @@ class AffiliatesContainer extends React.Component{
                     </Col>
                 </Row>
             </Container>
+        </Fade>
         )
     }
 

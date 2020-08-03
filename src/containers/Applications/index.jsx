@@ -1,29 +1,28 @@
-import React from 'react';
-import { Col, Container, Row, Card, CardBody } from 'reactstrap';
-import { translate } from 'react-i18next';
+import React, { lazy, Suspense } from 'react';
+import Fade from '@material-ui/core/Fade';
+import { compose } from 'lodash/fp';
 import PropTypes from 'prop-types';
+
+import { translate } from 'react-i18next';
 import { connect } from "react-redux";
-import { compose } from 'lodash/fp'
-import GamesContainer from './components/GamesContainer';
-import DataWidget from '../DataWidget/DataWidget';
-import IntegrationsContainer from './components/IntegrationsContainer';
-import _ from 'lodash';
-import { fromCodesToServices } from '../../controllers/services/services';
-import { GamesIcon, StoreIcon, SettingsIcon, ArrowDecisionIcon, PuzzleIcon, MoneyIcon } from 'mdi-react';
-import TabsContainer from '../../shared/components/tabs/Tabs';
-import GameStorePageContainer from './GameStore/index.js';
-import CustomizationContainer from './Customization/index.js';
-import ThirdPartiesContainer from './ThirdParties/index.js';
-import HostingLink from './components/HostingLink';
-import AddOnsContainer from './AddOnPage';
-import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
-import { Bet, Reward, Settings, Rewards, AddOn, Wallet, Casino, CasinoWhite } from '../../components/Icons';
+import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
-import { Grid } from '@material-ui/core';
+import { AddOn, Bet, CasinoWhite, Reward, Rewards, Settings, Wallet } from '../../components/Icons';
+import { fromCodesToServices } from '../../controllers/services/services';
+import TabsContainer from '../../shared/components/tabs/Tabs';
+import HostingLink from './components/HostingLink';
+const AddOnsContainer = lazy(() => import('./AddOnPage'));
+const CurrenciesContainer = lazy(() => import('./CurrenciesPage/CurrenciesContainer'));
+const CustomizationContainer = lazy(() => import('./Customization/index.js'));
+const GameStorePageContainer = lazy(() => import('./GameStore/index.js'));
+const ThirdPartiesContainer = lazy(() => import('./ThirdParties/index.js'));
+const GamesContainer  = lazy(() => import('./components/GamesContainer'));
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
 const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
+
+const loadingBetprotocol = `${process.env.PUBLIC_URL}/img/loading-betprotocol.gif`;
 
 const MobileWrapper = styled.section`
 
@@ -171,35 +170,45 @@ class ApplicationsContainer extends React.Component{
         const permission = this.props.profile.User.permission;
         
         return (
-            <Container className="dashboard">
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
+                 <Container className="dashboard">
                 <Row>
-                    <Col lg={12}>
-                        <div>
-                            <Row>
-                                <Col md={4}>
-                                    <Row>
-                                        {servicesCodes.map( (key) => {
-                                            return widgets[key] ? widgets[key]() : null;
-                                        })}
-                                    </Row>
-                                </Col>
-                                <Col md={8} style={{ paddingBottom: 20, height: 70 }}>
-                                    <MobileWrapper>
-                                        <Link>Application link</Link>
-                                    </MobileWrapper>
-                                    <HostingLink/>
-                                </Col>
-                            </Row>
-                            <TabsContainer 
-                                items={
-                                    this.getTabsPerPermission(permission)
-                                }
-                            />
-                                
-                        </div>   
-                    </Col>
-                </Row>
-          </Container>
+                <Col lg={12}>
+                    <div>
+                        <Row>
+                            <Col md={4}>
+                                <Row>
+                                    {servicesCodes.map( (key) => {
+                                        return widgets[key] ? widgets[key]() : null;
+                                    })}
+                                </Row>
+                            </Col>
+                            <Col md={8} style={{ paddingBottom: 20, height: 70 }}>
+                                <MobileWrapper>
+                                    <Link>Application link</Link>
+                                </MobileWrapper>
+                                <HostingLink/>
+                            </Col>
+                        </Row>
+                        <Suspense fallback={
+                            <div>					
+                                <div className={"load "}>
+                                    <div class="load__icon-wrap">
+                                        <img src={loadingBetprotocol} alt="loading..."/>
+                                    </div>
+                                </div>
+                            </div> }>
+                        <TabsContainer 
+                            items={
+                                this.getTabsPerPermission(permission)
+                            }
+                        />
+                        </Suspense> 
+                    </div>   
+                </Col>
+            </Row>
+            </Container>
+            </Fade>
         )
     }
 

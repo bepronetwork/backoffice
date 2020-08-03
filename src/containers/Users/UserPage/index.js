@@ -1,17 +1,17 @@
 import React from 'react';
+import Fade from '@material-ui/core/Fade';
+import Skeleton from '@material-ui/lab/Skeleton';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import { Row, Col, Container, Card, CardBody } from 'reactstrap';
-import Skeleton from '@material-ui/lab/Skeleton';
-import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
-import _ from 'lodash';
-import Numbers from '../../../services/numbers';
+import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import HorizontalTabs from '../../HorizontalTabs';
-import UserTransactionsTable from './components/UserTransactionsTable';
+import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import AffiliateInfo from './components/AffiliateInfo';
-import { compareIDS } from '../../../lib/string';
-import UserBetsTable from './components/UserBetsTable';
 import TopUpBalance from './components/TopUpBalance';
+import UserBetsTable from './components/UserBetsTable';
+import UserTransactionsTable from './components/UserTransactionsTable';
+
 
 const defaultProps = {
     ticker : 'No Currency Chosen'
@@ -121,6 +121,7 @@ class UserPage extends React.Component{
         const affiliateWallet = affiliate.wallet.filter(w => w.currency._id === currency._id);
 
         return (
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
             <Container className="dashboard">
                 <Row>
                     <Col md={4}>
@@ -206,6 +207,7 @@ class UserPage extends React.Component{
                 </Card>
               
             </Container>
+        </Fade>
         )
     }
 

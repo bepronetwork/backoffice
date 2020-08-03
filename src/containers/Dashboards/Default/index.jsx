@@ -1,25 +1,26 @@
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
-import { translate } from 'react-i18next';
-import PropTypes from 'prop-types';
-
-import RevenueChart from './components/RevenueChart';
-import VisitorsSessions from './components/VisitorsSessions';
-import BounceRateArea from './components/BounceRateArea';
-import BetsStatistics from './components/BetsStatistics';
-import CompanyId from './components/CompanyId';
-import ProfitResume from './components/ProfitResume';
-import TurnoverResume from './components/TurnoverResume';
-import LiquidityWalletWidget from './components/LiquidityWalletWidget';
-
-import { connect } from "react-redux";
-import { compose } from 'lodash/fp'
-import DataWidget from '../../DataWidget/DataWidget';
+import Fade from '@material-ui/core/Fade';
 import _ from 'lodash';
-import NoData from '../../NoData';
-
-import store from '../../App/store';
+import { compose } from 'lodash/fp';
+import PropTypes from 'prop-types';
+import { translate } from 'react-i18next';
+import { connect } from "react-redux";
+import { Col, Container, Row } from 'reactstrap';
 import { setLoadingStatus } from '../../../redux/actions/loadingAction';
+import store from '../../App/store';
+import DataWidget from '../../DataWidget/DataWidget';
+import NoData from '../../NoData';
+import BetsStatistics from './components/BetsStatistics';
+import BounceRateArea from './components/BounceRateArea';
+import CompanyId from './components/CompanyId';
+import LiquidityWalletWidget from './components/LiquidityWalletWidget';
+import ProfitResume from './components/ProfitResume';
+import RevenueChart from './components/RevenueChart';
+import TurnoverResume from './components/TurnoverResume';
+import VisitorsSessions from './components/VisitorsSessions';
+
+
+
 
 
 class DefaultDashboard extends React.Component{
@@ -69,35 +70,36 @@ class DefaultDashboard extends React.Component{
         const { periodicity, currency, isLoading } = this.props;
                         
         return (
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
             <Container className="dashboard">   
-                <Row>
-                    <Col lg={3}>
-                        <CompanyId currency={currency} app={this.props.profile.getApp()}  data={{
-                            wallet : this.props.profile.getApp().getSummaryData('wallet')
-                        }} />
-                    </Col>  
-                    <Col lg={3}>
-                        <DataWidget>
-                            <LiquidityWalletWidget currency={currency} isLoading={isLoading} data={this.props.profile.getApp().getSummaryData('wallet')} />
-                        </DataWidget>
-                    </Col>
-                    <Col lg={3}>
-                        <DataWidget>
-                            <ProfitResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
-                                revenue : this.props.profile.getApp().getSummaryData('revenue'),
-                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                }} />
-                        </DataWidget>
-                    </Col> 
-                    <Col lg={3}>
-                        <DataWidget>
-                            <TurnoverResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
-                                revenue : this.props.profile.getApp().getSummaryData('revenue'),
-                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                    <Row>
+                        <Col lg={3}>
+                            <CompanyId currency={currency} app={this.props.profile.getApp()}  data={{
+                                wallet : this.props.profile.getApp().getSummaryData('wallet')
                             }} />
-                        </DataWidget>
-                    </Col>
-                </Row>
+                        </Col>  
+                        <Col lg={3}>
+                            <DataWidget>
+                                <LiquidityWalletWidget currency={currency} isLoading={isLoading} data={this.props.profile.getApp().getSummaryData('wallet')} />
+                            </DataWidget>
+                        </Col>
+                        <Col lg={3}>
+                            <DataWidget>
+                                <ProfitResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
+                                    revenue : this.props.profile.getApp().getSummaryData('revenue'),
+                                    wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                    }} />
+                            </DataWidget>
+                        </Col> 
+                        <Col lg={3}>
+                            <DataWidget>
+                                <TurnoverResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
+                                    revenue : this.props.profile.getApp().getSummaryData('revenue'),
+                                    wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                }} />
+                            </DataWidget>
+                        </Col>
+                    </Row>
                 { isDeployed ? 
                     <div>
                         <Row>
@@ -143,6 +145,7 @@ class DefaultDashboard extends React.Component{
                 }
                 
         </Container>
+        </Fade>
         )
     }
 
