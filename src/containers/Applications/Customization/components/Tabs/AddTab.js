@@ -98,7 +98,7 @@ class AddTab extends React.Component {
 
     removeNewIcon = () => {
         this.setState({
-            newImage: ""
+            newIcon: ""
         })
     }
 
