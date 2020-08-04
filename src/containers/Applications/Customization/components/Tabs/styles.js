@@ -155,6 +155,7 @@ export const AddTabButton = styled(MaterialButton)`
     box-shadow: none !important;
     height: 30px !important;
     color: white !important;
+    opacity: ${props => props.disabled ? 0.7 : 1};
 `;
 
 
@@ -200,6 +201,8 @@ export const TabPreview = styled.a`
 
 export const TabIcon = styled.div`
     width: 30px;
+
+    margin: 0px 5px;
 `;
 
 export const TabTitle = styled.div`
