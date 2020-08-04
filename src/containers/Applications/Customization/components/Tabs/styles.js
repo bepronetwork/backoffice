@@ -155,6 +155,7 @@ export const AddTabButton = styled(MaterialButton)`
     box-shadow: none !important;
     height: 30px !important;
     color: white !important;
+    opacity: ${props => props.disabled ? 0.7 : 1};
 `;
 
 

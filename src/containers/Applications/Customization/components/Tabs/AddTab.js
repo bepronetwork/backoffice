@@ -126,6 +126,8 @@ class AddTab extends React.Component {
         const { newName, newLink, newIcon } = this.state;
         const { locked } = this.props;
 
+        const hasEmptyValues = _.isEmpty(newName) || _.isEmpty(newLink) || _.isEmpty(newIcon);
+
         return (
             <>
             <Col md={3} style={{ minWidth: 178, margin: 5 }}>
@@ -173,7 +175,7 @@ class AddTab extends React.Component {
                         />
                         </FormGroup>
 
-                        <AddTabButton disabled={locked} onClick={() => this.addNewTab()}>
+                        <AddTabButton disabled={locked || hasEmptyValues} onClick={() => this.addNewTab()}>
                             <PlusIcon/> Add tab
                         </AddTabButton>
 
