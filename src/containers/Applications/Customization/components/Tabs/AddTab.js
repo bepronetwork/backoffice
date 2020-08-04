@@ -108,7 +108,7 @@ class AddTab extends React.Component {
         
         const newTabObj = { name: newName, link_url: newLink, icon: newIcon, _id: Math.random().toString(36).substr(2, 9) }
 
-        const newTabs = tabs ? [newTabObj, ...tabs] : [newTabObj];
+        const newTabs = tabs ? [...tabs, newTabObj] : [newTabObj];
 
         this.setState({
             newName: "",

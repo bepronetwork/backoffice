@@ -201,6 +201,8 @@ export const TabPreview = styled.a`
 
 export const TabIcon = styled.div`
     width: 30px;
+
+    margin: 0px 5px;
 `;
 
 export const TabTitle = styled.div`
