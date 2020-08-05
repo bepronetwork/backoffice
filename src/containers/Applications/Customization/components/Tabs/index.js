@@ -31,11 +31,11 @@ class Tabs extends Component {
         const { profile } = props;
 
         const customization = await profile.getApp().getCustomization();
-        const { topTabCassino } = customization;
+        const { topTab } = customization;
 
-        if (!_.isEmpty(topTabCassino.topTabCassino)) {
+        if (!_.isEmpty(topTab.ids)) {
             this.setState({
-                tabs: topTabCassino.topTabCassino
+                tabs: topTab.ids
             })
         }
     }
@@ -65,7 +65,7 @@ class Tabs extends Component {
             isLoading: true
         })
 
-        await profile.getApp().editTopTabCustomization({ topTabParams: filteredTabs, tag: 'cassino' });
+        await profile.getApp().editTopTabCustomization({ topTabParams: filteredTabs });
 
         await profile.getApp().updateAppInfoAsync();
         await profile.update();
