@@ -37,9 +37,10 @@ class WalletTabs extends Component {
 
     projectData = (props) => {
         const { wallet } = props;
+        const { activeTab } = this.state;
 
         this.setState({
-            activeTab: tabs[0].name,
+            activeTab: activeTab ? activeTab : tabs[0].name,
             wallet: wallet
         })
 

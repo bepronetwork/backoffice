@@ -102,10 +102,8 @@ class PointsAddOn extends React.Component {
     }
 
     onChangeRatio = value => {
-        const { ratio } = this.state;
-
         this.setState({
-            ratio: value ? parseFloat(value) : parseFloat(ratio)
+            ratio: value ? value : ""
         })
     }
 
@@ -137,7 +135,7 @@ class PointsAddOn extends React.Component {
             isValid: isValid,
             logo: logo,
             name: name,
-            ratio: ratio
+            ratio: !_.isEmpty(ratio) ? parseFloat(ratio) : 0
         }
         
         await profile.getApp().editPointSystem({ currency: currency, pointSystemParams });
@@ -205,15 +203,7 @@ class PointsAddOn extends React.Component {
                     <br/>
 
                     <Label>Ratio</Label>
-                    <RangeSlider 
-                        min={0}
-                        max={1}
-                        step={0.1}
-                        value={ratio}
-                        tooltip="on"
-                        onChange={changeEvent => this.onChangeRatio(changeEvent.target.value)}
-                        disabled={locked}
-                        />
+                    <TextField placeholder="" disabled={locked} value={ratio} onChange={(e) => this.onChangeRatio(e.target.value)}/>
 
                     <br/>
                 </EditLock>
