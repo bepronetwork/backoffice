@@ -526,7 +526,7 @@ class App{
         }
     }
 
-    editTopBarCustomization = async ({ textColor, backgroundColor, text, isActive, isTransparent }) => {
+    editTopBarCustomization = async ({ textColor, backgroundColor, text, isActive }) => {
         try{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editTopBarCustomization({   
@@ -536,8 +536,7 @@ class App{
                     textColor,
                     backgroundColor,
                     text,
-                    isActive,
-                    isTransparent
+                    isActive
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -796,14 +795,14 @@ class App{
         }
     }
 
-    editTopTabCustomization = async ({ topTabParams, tag }) => {
+    editTopTabCustomization = async ({ topTabParams, isTransparent }) => {
         try{
             let res = await ConnectionSingleton.editTopTabCustomization({   
                 params : {
                     admin: this.getAdminId(),
                     app: this.getId(),
                     topTabParams,
-                    tag
+                    isTransparent
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
