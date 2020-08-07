@@ -8,7 +8,14 @@ import { Container, TabsPreview, Text, TabsList, TabPreview, TabIcon, TabTitle }
 import AddTab from './AddTab.js';
 import Tab from './Tab.js';
 
-import { ButtonBase } from '@material-ui/core';
+import { ButtonBase, FormLabel } from '@material-ui/core';
+import BooleanInput from '../../../../../shared/components/BooleanInput.js';
+
+const labelStyle = {
+    fontFamily: "Poppins", 
+    fontSize: 16, 
+    color: "#646777"
+}
 
 class Tabs extends Component {
     constructor(props){
@@ -31,13 +38,14 @@ class Tabs extends Component {
         const { profile } = props;
 
         const customization = await profile.getApp().getCustomization();
-        const { topTab } = customization;
 
-        if (!_.isEmpty(topTab.ids)) {
-            this.setState({
-                tabs: topTab.ids
-            })
-        }
+        const { topTab } = customization;
+        const { ids, isTransparent } = topTab;
+
+        this.setState({
+            tabs: !_.isEmpty(ids) ? ids : [],
+            isTransparent: isTransparent
+        })
     }
 
     setTabs = ({ newTabs }) => {
@@ -56,7 +64,7 @@ class Tabs extends Component {
     }
 
     confirmChanges = async () => {
-        const { tabs } = this.state;
+        const { tabs, isTransparent } = this.state;
         const { profile } = this.props;
 
         const filteredTabs = tabs.map(({_id, ...rest}) => rest);
@@ -65,7 +73,7 @@ class Tabs extends Component {
             isLoading: true
         })
 
-        await profile.getApp().editTopTabCustomization({ topTabParams: filteredTabs });
+        await profile.getApp().editTopTabCustomization({ topTabParams: filteredTabs, isTransparent: isTransparent });
 
         await profile.getApp().updateAppInfoAsync();
         await profile.update();
@@ -88,8 +96,12 @@ class Tabs extends Component {
         })
     }
 
+    onChange = ({ type, value }) => {
+        this.setState({ [type]: value })
+    }
+
     render() {
-        const { isLoading, locked, tabs } = this.state;
+        const { isLoading, locked, tabs, isTransparent } = this.state;
         
         return (
             <Container>
@@ -99,8 +111,18 @@ class Tabs extends Component {
                 lockField={this.lockField} 
                 confirmChanges={this.confirmChanges} 
                 locked={locked}>
+                    <div style={{ margin: "10px 0px" }}>
+                        <FormLabel component="legend" style={labelStyle}>{ `Style (${isTransparent ? "Transparent" : "Normal"})` }</FormLabel>
+                        <BooleanInput
+                            checked={isTransparent === true} 
+                            onChange={this.onChange}
+                            disabled={locked}
+                            type={'isTransparent'}
+                            id={'istransparent'}
+                        />
+                    </div>
                     <Text>Preview</Text>
-                    <TabsPreview>
+                    <TabsPreview hasTabs={!_.isEmpty(tabs)} locked={locked}>
                         { !_.isEmpty(tabs) ? tabs.map(tab => (
                             <ButtonBase>
                                 <TabPreview target="_blank" href={tab.link_url}>

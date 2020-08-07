@@ -5,8 +5,6 @@ import { Button } from 'react-bootstrap';
 import { Button as MaterialButton } from '@material-ui/core';
 
 export const Container = styled(CardBody)`
-    width: 100%;
-
     margin: 10px;
     padding: 15px;
 
@@ -21,7 +19,7 @@ export const TabsPreview = styled.div`
     flex-direction: row;
     align-items: center;
 
-    height: 60px;
+    min-height: 60px;
     width: 100%;
 
     margin: 15px 0px;
@@ -36,6 +34,13 @@ export const TabsPreview = styled.div`
         font-family: Poppins;
         font-size: 14px;
         color: #646777;
+    }
+
+    overflow-x: ${props => props.hasTabs ? 'scroll' : 'hidden' };
+    pointer-events: ${props => props.locked ? 'none' : 'all' };
+
+    ::-webkit-scrollbar {
+        display: none
     }
 `;
 
@@ -213,7 +218,7 @@ export const TabTitle = styled.div`
     justify-content: flex-start;
     align-items: center;
 
-    padding: 0px 5px;
+    padding: 5px;
 
     font-family: Poppins;
     font-size: 16px;

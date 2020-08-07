@@ -176,7 +176,7 @@ class Tab extends React.Component {
 
         return (
             <>
-            <Col md={3} style={{ minWidth: 178, margin: 5 }}>
+            <Col md={3} style={{ minWidth: 178, maxWidth: 230, padding: 0, margin: "10px 15px" }}>
                 <TabCard>
                     <TabCardContent>
                         { !_.isEmpty(icon) ? 

@@ -8,7 +8,6 @@ import ColorPicker from '../../../../shared/components/color_picker_input/ColorP
 import { TextField } from './styles';
 
 const defaultState = {
-    isTransparent: false,
     isActive: false,
     backgroundColor: '#000',
     textColor: '#000',
@@ -51,11 +50,14 @@ class AnnouncementTab extends Component {
     }
 
     projectData = async (props) => {
-        const { topBar } = props.profile.getApp().getCustomization();
-        const { isTransparent, isActive, backgroundColor, textColor, text } = topBar;
+        const { profile } = props;
+
+        const customization = profile.getApp().getCustomization();
+
+        const { topBar } = customization;
+        const { isActive, backgroundColor, textColor, text } = topBar;
 
         this.setState({ 
-            isTransparent,
             isActive,
             backgroundColor,
             textColor,
@@ -94,7 +96,7 @@ class AnnouncementTab extends Component {
     }
 
     render() {
-        const { isLoading, locked, isActive, textColor, backgroundColor, text, isTransparent } = this.state; 
+        const { isLoading, locked, isActive, textColor, backgroundColor, text } = this.state; 
 
         return (
             <Card>
@@ -135,16 +137,6 @@ class AnnouncementTab extends Component {
                                     disabled={locked}
                                     onChange={this.onChange}
                                 />
-                                <div style={{ marginTop: 10 }}>
-                                    <FormLabel component="legend" style={labelStyle}>{ `Style (${isTransparent ? "Transparent" : "Normal"})` }</FormLabel>
-                                    <BooleanInput
-                                        checked={isTransparent} 
-                                        onChange={this.onChange}
-                                        disabled={locked}
-                                        type={'isTransparent'}
-                                        id={'istransparent'}
-                                    />
-                                </div>
                             </EditLock>
                         </Col>
                     </Row>
