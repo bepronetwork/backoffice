@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React from 'react';
 import Fade from '@material-ui/core/Fade';
 import { compose } from 'lodash/fp';
 import PropTypes from 'prop-types';
@@ -11,18 +11,16 @@ import { AddOn, Bet, CasinoWhite, Reward, Rewards, Settings, Wallet } from '../.
 import { fromCodesToServices } from '../../controllers/services/services';
 import TabsContainer from '../../shared/components/tabs/Tabs';
 import HostingLink from './components/HostingLink';
-const AddOnsContainer = lazy(() => import('./AddOnPage'));
-const CurrenciesContainer = lazy(() => import('./CurrenciesPage/CurrenciesContainer'));
-const CustomizationContainer = lazy(() => import('./Customization/index.js'));
-const GameStorePageContainer = lazy(() => import('./GameStore/index.js'));
-const ThirdPartiesContainer = lazy(() => import('./ThirdParties/index.js'));
-const GamesContainer  = lazy(() => import('./components/GamesContainer'));
+import AddOnsContainer from './AddOnPage';
+import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
+import CustomizationContainer from './Customization/index.js';
+import GameStorePageContainer from './GameStore/index.js';
+import ThirdPartiesContainer from './ThirdParties/index.js';
+import GamesContainer from './components/GamesContainer';
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
 const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
-
-const loadingBetprotocol = `${process.env.PUBLIC_URL}/img/loading-betprotocol.gif`;
 
 const MobileWrapper = styled.section`
 
@@ -190,20 +188,11 @@ class ApplicationsContainer extends React.Component{
                                 <HostingLink/>
                             </Col>
                         </Row>
-                        <Suspense fallback={
-                            <div>					
-                                <div className={"load "}>
-                                    <div class="load__icon-wrap">
-                                        <img src={loadingBetprotocol} alt="loading..."/>
-                                    </div>
-                                </div>
-                            </div> }>
                         <TabsContainer 
                             items={
                                 this.getTabsPerPermission(permission)
                             }
                         />
-                        </Suspense> 
                     </div>   
                 </Col>
             </Row>

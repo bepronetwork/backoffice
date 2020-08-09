@@ -105,7 +105,7 @@ class TabsContainer extends React.Component{
                                         {filteredItems.map((item, index) => {
                                             return (
                                                 <ButtonBase>
-                                                    <Nav.Link eventKey={`item-${index}`} style={{ height: "65px", display: "flex", flexDirection: "column", width: "100%", margin: "5px 0px", alignItems: "center" }}>
+                                                    <Nav.Link eventKey={`item-${index}`} style={{ height: "65px", display: "flex", flexDirection: "column", width: "100%", margin: "5px 3px", alignItems: "center" }}>
                                                             {<MobileIcon>{item.icon}</MobileIcon>} &nbsp; <MobileTitle>{item.title}</MobileTitle>
                                                     </Nav.Link>
                                                 </ButtonBase>
