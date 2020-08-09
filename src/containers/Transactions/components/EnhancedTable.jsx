@@ -402,7 +402,7 @@ class EnhancedTable extends React.Component {
     const styles = {
         fitler: {
             padding: '20px 20px 30px 20px', border: "1px solid #d9d9d9", margin: '24px 14px 0 0',
-            backgroundColor: "#f2f4f7", borderRadius: 4, width: 330, position: 'absolute',
+            backgroundColor: "#f2f4f7", borderRadius: 4, width: '92%', maxWidth: 400, position: 'absolute',
             top: 0, right: 0, left: 'auto', zIndex: 10, display: showFilter ? 'block' : 'none'
         }
     };
@@ -433,8 +433,8 @@ class EnhancedTable extends React.Component {
                 </MaterialButton>
             </div>
             <div style={styles.fitler}>
-                <Row>
-                    <Col>
+                <Col>
+                    <Row>
                         <FormControl style={{width : '100%'}}>
                             <TextInput
                                 label={'ID'}
@@ -443,8 +443,8 @@ class EnhancedTable extends React.Component {
                                 defaultValue={idFilter}
                                 changeContent={this.handleChangeInputContent} />
                         </FormControl>
-                    </Col>
-                    <Col>
+                    </Row>
+                    <Row>
                         <FormControl style={{width : '100%'}}>
                             <TextInput
                                 label={'User'}
@@ -453,8 +453,8 @@ class EnhancedTable extends React.Component {
                                 defaultValue={userFilter}
                                 changeContent={this.handleChangeInputContent} />
                         </FormControl>
-                    </Col>
-                    <Col>
+                    </Row>
+                    <Row>
                         <FormControl style={{width : '100%', marginTop : 13}}>
                             <InputLabel id="currencyFilterLabel">Currency</InputLabel>
                             <Select labelId="currencyFilterLabel" id="currencyFilter" name="currencyFilter" value={currencyFilter} onChange={this.handleChangeDropDown}>
@@ -469,8 +469,8 @@ class EnhancedTable extends React.Component {
                                 }
                             </Select>
                         </FormControl>
-                    </Col>
-                    <Col>
+                    </Row>
+                    <Row>
                         <FormControl style={{width : '100%', marginTop : 13}}>
                             <InputLabel id="statusFilterLabel">Status</InputLabel>
                             <Select labelId="statusFilterLabel" id="statusFilter" name="statusFilter" value={statusFilter} onChange={this.handleChangeDropDown}>
@@ -485,8 +485,8 @@ class EnhancedTable extends React.Component {
                                 }
                             </Select>
                         </FormControl>
-                    </Col>
-                </Row>
+                    </Row>
+                </Col>
             </div>
             <div className={classes.tableWrapper}>
                 <Table className={classes.table} aria-labelledby="tableTitle">

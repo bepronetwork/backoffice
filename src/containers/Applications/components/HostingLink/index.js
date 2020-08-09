@@ -1,9 +1,9 @@
 import React from 'react';
 import { Col, Row, Card } from 'reactstrap';
-import { Button } from 'react-bootstrap';
 import { connect } from "react-redux";
 import _ from 'lodash';
 import styled from 'styled-components';
+import { Button } from '@material-ui/core';
 
 
 const ApplicationLink = styled.section`
@@ -29,25 +29,21 @@ const ApplicationLink = styled.section`
 `;
 
 const OpenAppButton = styled(Button)`
-    margin: 0px;
-    margin-left: 10px;
-    height: 100%;
-    border-radius: 6px;
-    background-color: #814c94;
-    min-width: 100px;
+    margin: 0px !important;
+    padding: 6px !important;
+    margin-left: 10px !important;
+    height: 100% !important;
+    border-radius: 6px !important;
+    background-color: #814c94 !important;
+    min-width: 100px !important;
+    box-shadow: none !important;
 
-    &.btn.icon {
-        padding-top: 8px;   
-    }
-
-    span {
-        font-family: Poppins;
-        font-size: 14px;
-        font-weight: 500;
-        color: #ffffff;
-        overflow: hidden;
-    }
-
+    text-transform: none !important;
+    font-family: Poppins !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    overflow: hidden !important;
 `;
 
 class HostingLink extends React.Component{
@@ -74,8 +70,8 @@ class HostingLink extends React.Component{
             <Card style={{ padding: 0 }}>
                 <ApplicationLink>
                     <h6> {link} </h6>
-                    <OpenAppButton className="icon" href={link} target={'__blank'}>
-                        <span>Open App</span>
+                    <OpenAppButton variant="contained" href={link} target={'__blank'}>
+                        Open App
                     </OpenAppButton>
                 </ApplicationLink>
                     {/* <Row>

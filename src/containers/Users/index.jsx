@@ -1,18 +1,17 @@
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
-import { translate } from 'react-i18next';
-import PropTypes from 'prop-types';
+import Fade from '@material-ui/core/Fade';
 import { connect } from "react-redux";
-import { compose } from 'lodash/fp'
+import { Col, Container, Row } from 'reactstrap';
+import { setUserView } from '../../redux/actions/userView';
+import store from '../App/store';
+import DataWidget from '../DataWidget/DataWidget';
+import UsersBalance from './components/UsersBalance';
 import UsersProfile from './components/UsersProfile';
 import UsersProfit from './components/UsersProfit';
 import UsersResumeEntries from './components/UsersResumeEntries';
-import VectorMap from './components/VectorMap';
-import DataWidget from '../DataWidget/DataWidget';
 import UsersTable from './components/UsersTable';
-import store from '../App/store';
-import { setUserView } from '../../redux/actions/userView';
-import UsersBalance from './components/UsersBalance';
+import VectorMap from './components/VectorMap';
+
 
 class UsersContainer extends React.Component{
 
@@ -33,60 +32,62 @@ class UsersContainer extends React.Component{
         const { isLoading } = this.props;
 
         return (
-            <Container className="dashboard">
-                <Row>
-                    <Col lg={3}>
-                        <DataWidget>
-                            <UsersResumeEntries data={this.props.profile.getApp().getSummaryData('usersInfoSummary')}/>
-                        </DataWidget>
-                    </Col>
-                    <Col lg={3}>
-                        <DataWidget>
-                            <UsersProfile data={this.props.profile.getApp().getSummaryData('usersInfoSummary')}/>
-                        </DataWidget>
-                    </Col>
-                    <Col lg={3}>
-                        <DataWidget>
-                            <UsersProfit isLoading={isLoading} data={{
-                                users : this.props.profile.getApp().getSummaryData('users'),
-                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                revenue : this.props.profile.getApp().getSummaryData('revenue')
-                            }}/>
-                        </DataWidget>
-                    </Col>
-                    <Col lg={3}>
-                        <DataWidget>
-                            <UsersBalance isLoading={isLoading} data={{
-                                users : this.props.profile.getApp().getSummaryData('users'),
-                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                revenue : this.props.profile.getApp().getSummaryData('revenue')
-                            }}/>
-                        </DataWidget>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col lg={12}>
-                        <DataWidget>
-                            <UsersTable 
-                                goToUserPage={this.goToUserPage}
-                                isLoading={isLoading}
-                                data={{
-                                    users : this.props.profile.getApp().getSummaryData('usersInfoSummary'),
-                                    usersOtherInfo : this.props.profile.getApp().getSummaryData('users'),
-                                    wallet : this.props.profile.getApp().getSummaryData('wallet')
-                                }}
-                            />
-                        </DataWidget>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col lg={12}>
-                        <DataWidget>
-                            <VectorMap/>
-                        </DataWidget>
-                    </Col>
-                </Row>
-          </Container>
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
+                <Container className="dashboard">
+                    <Row>
+                        <Col lg={3}>
+                            <DataWidget>
+                                <UsersResumeEntries data={this.props.profile.getApp().getSummaryData('usersInfoSummary')}/>
+                            </DataWidget>
+                        </Col>
+                        <Col lg={3}>
+                            <DataWidget>
+                                <UsersProfile data={this.props.profile.getApp().getSummaryData('usersInfoSummary')}/>
+                            </DataWidget>
+                        </Col>
+                        <Col lg={3}>
+                            <DataWidget>
+                                <UsersProfit isLoading={isLoading} data={{
+                                    users : this.props.profile.getApp().getSummaryData('users'),
+                                    wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                    revenue : this.props.profile.getApp().getSummaryData('revenue')
+                                }}/>
+                            </DataWidget>
+                        </Col>
+                        <Col lg={3}>
+                            <DataWidget>
+                                <UsersBalance isLoading={isLoading} data={{
+                                    users : this.props.profile.getApp().getSummaryData('users'),
+                                    wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                                    revenue : this.props.profile.getApp().getSummaryData('revenue')
+                                }}/>
+                            </DataWidget>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col lg={12}>
+                            <DataWidget>
+                                <UsersTable 
+                                    goToUserPage={this.goToUserPage}
+                                    isLoading={isLoading}
+                                    data={{
+                                        users : this.props.profile.getApp().getSummaryData('usersInfoSummary'),
+                                        usersOtherInfo : this.props.profile.getApp().getSummaryData('users'),
+                                        wallet : this.props.profile.getApp().getSummaryData('wallet')
+                                    }}
+                                />
+                            </DataWidget>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col lg={12}>
+                            <DataWidget>
+                                <VectorMap/>
+                            </DataWidget>
+                        </Col>
+                    </Row>
+            </Container>
+            </Fade>
         )
     }
 

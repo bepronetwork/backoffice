@@ -4,6 +4,7 @@ import Logo from './Logo';
 import Footer from '../components/Footer';
 import Colors from './Colors';
 import Fonts from './Fonts';
+import Tabs from './Tabs';
 
 export { 
     Banners,
@@ -11,5 +12,6 @@ export {
     Footer,
     Colors,
     Logo,
-    Fonts
+    Fonts,
+    Tabs
 }

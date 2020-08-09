@@ -597,6 +597,20 @@ class Connection {
         }
     }
 
+    editPointSystem = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/pointSystem/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editJackpot = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/jackpot/edge/edit`, {
@@ -852,6 +866,19 @@ class Connection {
     editFooterCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/footer`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editTopTabCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/topTab`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

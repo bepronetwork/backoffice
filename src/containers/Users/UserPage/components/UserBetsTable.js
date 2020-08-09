@@ -361,8 +361,8 @@ class UserBetsTable extends React.Component {
     }
     
     return (
-      <Paper elevation={0} className={classes.root} style={{ backgroundColor: "#fafcff" }}>
-            <div style={{ display: "flex", justifyContent: "flex-start"}}>
+      <Paper elevation={0} className={classes.root} style={{ backgroundColor: "#fafcff", marginTop: 0 }}>
+            <div style={{ display: "flex", justifyContent: "flex-end"}}>
                 <CSVLink data={csvData} filename={"user_bets.csv"} headers={headers}>
                     <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
                         <TableIcon style={{marginRight: 7}}/> CSV
@@ -372,6 +372,8 @@ class UserBetsTable extends React.Component {
                     <JsonIcon style={{marginRight: 7}}/> JSON
                 </MaterialButton>
             </div>
+            <br/>
+            <br/>
             <UserBetsFilter setData={this.setData} reset={this.reset} user={this.props.user} setFilter={this.setFilter} setLoading={this.setLoading} loading={this.state.isLoading}/>
             {isLoading ? (
                 <>

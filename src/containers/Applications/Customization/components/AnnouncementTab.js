@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
-import TextInput from '../../../../shared/components/TextInput';
 import BooleanInput from '../../../../shared/components/BooleanInput';
-import { Col, Row, Card, CardBody, CustomInput, Form } from 'reactstrap';
+import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
-import { FormControlLabel } from '@material-ui/core';
+import { FormLabel } from '@material-ui/core';
 import ColorPicker from '../../../../shared/components/color_picker_input/ColorPicker.js';
-import { TextField, Label } from './styles';
-import Switch from '../../../../shared/components/Switch.js';
+import { TextField } from './styles';
 
 const defaultState = {
     isActive: false,
@@ -16,6 +14,20 @@ const defaultState = {
     text: '',
     locked: true,
     isLoading: false
+}
+
+const labelStyle = {
+    fontFamily: "Poppins", 
+    fontSize: 16, 
+    color: "#646777"
+}
+
+const cardStyle = {
+    margin: 10, 
+    borderRadius: "10px", 
+    border: "solid 1px rgba(164, 161, 161, 0.35)", 
+    backgroundColor: "#fafcff", 
+    boxShadow: "none"
 }
 
 class AnnouncementTab extends Component {
@@ -38,9 +50,14 @@ class AnnouncementTab extends Component {
     }
 
     projectData = async (props) => {
-        const { topBar } = props.profile.getApp().getCustomization();
+        const { profile } = props;
+
+        const customization = profile.getApp().getCustomization();
+
+        const { topBar } = customization;
         const { isActive, backgroundColor, textColor, text } = topBar;
-        this.setState({...this.state, 
+
+        this.setState({ 
             isActive,
             backgroundColor,
             textColor,
@@ -54,33 +71,36 @@ class AnnouncementTab extends Component {
         })
     }
 
-    onChange = ({type, value}) => {
-        this.setState({...this.state, [type] : value })
+    onChange = ({ type, value }) => {
+        this.setState({ [type]: value })
     }
 
     unlockField = () => {
-        this.setState({...this.state, locked : false})
+        this.setState({ locked: false})
     }
 
     lockField = () => {
-        this.setState({...this.state, locked : true})
+        this.setState({ locked: true})
     }
 
     confirmChanges = async () => {
-        var { profile } = this.props;
-        this.setState({...this.state, isLoading : true});
+        const { profile } = this.props;
+
+        this.setState({ isLoading: true });
+
         await profile.getApp().editTopBarCustomization(this.state);
-        this.setState({...this.state, isLoading : false, locked: true})
+
+        this.setState({ isLoading: false, locked: true });
+
         this.projectData(this.props);
     }
-
 
     render() {
         const { isLoading, locked, isActive, textColor, backgroundColor, text } = this.state; 
 
         return (
             <Card>
-                <CardBody style={{ margin: "0px 15px", borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                <CardBody style={cardStyle}>
                     <Row>
                         <Col md={12}>
                             <EditLock 
@@ -91,16 +111,17 @@ class AnnouncementTab extends Component {
                                 type={'announcementTab'} 
                                 locked={locked}
                             >
-                                {/* <TextInput
-                                    label={'Announcement Text'}
-                                    name={'text'}
-                                    type={'text'} 
-                                    value={text}
-                                    defaultValue={text}
-                                    disabled={locked}
-                                    changeContent={(type, value) => this.onChange({type, value})}
-                                /> */}
-                                <Label>Announcement Text</Label>
+                                <div style={{ marginBottom: 10 }}>
+                                    <FormLabel component="legend" style={labelStyle}>{ isActive ? "Active" : "Inactive" }</FormLabel>
+                                    <BooleanInput
+                                        checked={isActive} 
+                                        onChange={this.onChange}
+                                        disabled={locked}
+                                        type={'isActive'}
+                                        id={'isactive'}
+                                    />
+                                </div>
+                                <FormLabel component="legend" style={labelStyle}>Announcement Text</FormLabel>
                                 <TextField placeholder="Type here" disabled={locked} value={text} onChange={(e) => this.onChangeText(e.target.value)}/>
                                 <ColorPicker 
                                     label={'Text Color'}
@@ -116,21 +137,6 @@ class AnnouncementTab extends Component {
                                     disabled={locked}
                                     onChange={this.onChange}
                                 />
-                                <FormControlLabel
-                                style={{margin: 0, padding: 0}}
-                                control={
-                                    <BooleanInput
-                                        checked={isActive} 
-                                        onChange={this.onChange}
-                                        disabled={locked}
-                                        type={'isActive'}
-                                        id={'check-active-101'}
-                                    />
-                                }
-                                label={isActive ? <h4 style={{fontSize: 16}}>Active</h4> 
-                                : <h4 style={{ fontSize: 16}}>Inactive</h4>}
-                                labelPlacement="top"
-                                />  
                             </EditLock>
                         </Col>
                     </Row>

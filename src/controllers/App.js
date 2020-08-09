@@ -526,13 +526,13 @@ class App{
         }
     }
 
-    editTopBarCustomization = async ({textColor, backgroundColor, text, isActive}) => {
+    editTopBarCustomization = async ({ textColor, backgroundColor, text, isActive }) => {
         try{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editTopBarCustomization({   
-                params : {
-                    admin : this.getAdminId(),
-                    app : this.getId(),
+                params: {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
                     textColor,
                     backgroundColor,
                     text,
@@ -617,14 +617,15 @@ class App{
         }
     }
 
-    editBannersCustomization = async ({banners, autoDisplay}) => {
+    editBannersCustomization = async ({ banners, autoDisplay, fullWidth }) => {
         try{
             let res = await ConnectionSingleton.editBannersCustomization({   
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId(),
                     banners,
-                    autoDisplay
+                    autoDisplay,
+                    fullWidth
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -784,6 +785,24 @@ class App{
                     app : this.getId(),
                     communityLinks,
                     supportLinks
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editTopTabCustomization = async ({ topTabParams, isTransparent }) => {
+        try{
+            let res = await ConnectionSingleton.editTopTabCustomization({   
+                params : {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    topTabParams,
+                    isTransparent
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -1195,6 +1214,23 @@ class App{
                 params : {
                     currency,
                     depositBonusParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editPointSystem = async ({ currency, pointSystemParams }) => {
+        try{
+            return await ConnectionSingleton.editPointSystem({   
+                params : {
+                    currency,
+                    pointSystemParams,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     

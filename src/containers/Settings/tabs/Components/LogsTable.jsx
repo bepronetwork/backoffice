@@ -19,6 +19,15 @@ import { Button as MaterialButton } from "@material-ui/core";
 import Skeleton from '@material-ui/lab/Skeleton';
 import FlagIcon from './FlagIcon';
 import LogsFilter from './LogsFilter';
+import styled from 'styled-components';
+
+const MobileWrapper = styled.section`
+
+  @media (max-width: 842px) {
+   display: none !important;
+  }
+
+`;
 
 function getSorting(data, order, orderBy) {
 
@@ -171,11 +180,13 @@ let EnhancedTableToolbar = props => {
             [classes.highlight]: numSelected > 0,
         })}
         >
-        <div className={classes.title}>
-            <Typography style={{ fontSize: '15px' }}variant="h6" id="tableTitle">
-                Restricted Countries
-            </Typography>
-        </div>
+        <MobileWrapper>
+            <div className={classes.title}>
+                <Typography style={{ fontSize: 15, width: 300 }}variant="h6" id="tableTitle">
+                    Restricted Countries
+                </Typography>
+            </div>
+        </MobileWrapper>
         <div className={classes.spacer} />
         </Toolbar>
     );
@@ -389,7 +400,6 @@ class EnhancedTable extends React.Component {
 
     return (
             <>
-            <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
             <div style={{ display: "flex", justifyContent: "flex-end"}}>
                 <CSVLink data={csvData} filename={"bets.csv"} headers={headers}>
                     <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
@@ -399,8 +409,9 @@ class EnhancedTable extends React.Component {
                 <MaterialButton onClick={() => export2JSON(jsonData, "bets")} variant="contained" size="small" style={{ textTransform: "none", boxShadow: "none", margin: 10}}>
                     <JsonIcon style={{marginRight: 7}}/> JSON
                 </MaterialButton>
-                <LogsFilter setData={this.setData} setFilter={this.setFilter} reset={this.reset} setLoading={this.setLoading} loading={this.state.isLoading}/>
             </div>
+            <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
+            <LogsFilter setData={this.setData} setFilter={this.setFilter} reset={this.reset} setLoading={this.setLoading} loading={this.state.isLoading}/>
             {isLoading ? (
                 <>
                 <Skeleton variant="rect" height={30} style={{ marginTop: 10, marginBottom: 20 }}/>

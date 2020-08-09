@@ -127,7 +127,7 @@ class Withdraw extends Component {
                     <ErrorMessage>
                         { error ? <Paragraph style={{ color: "#ec2727" }}>{error}</Paragraph> : null }
                     </ErrorMessage>
-                    <WithdrawButton disabled={ _.isEmpty(toAddress) || !amount || isLoading } onClick={() => this.createTokenWithdraw()}>
+                    <WithdrawButton variant="contained" disabled={ _.isEmpty(toAddress) || !amount || isLoading } onClick={() => this.createTokenWithdraw()}>
                        { isLoading ? <img src={loading} className={'loading_gif'} alt="Loading.."/> : <span>Withdraw</span> } 
                     </WithdrawButton>
                 { state ? <Paragraph>{withdrawMessage[state]}</Paragraph> : null }

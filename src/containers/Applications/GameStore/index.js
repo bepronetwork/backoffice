@@ -1,17 +1,14 @@
 import React from 'react';
-import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
-import { translate } from 'react-i18next';
-import PropTypes from 'prop-types';
-import { connect } from "react-redux";
-import { compose } from 'lodash/fp'
-import _ from 'lodash';
-import { ArrowExpandRightIcon, LockIcon, BankIcon } from 'mdi-react';
-import GameStoreContainer from './Game';
 import { Grid } from '@material-ui/core';
-import store from '../../App/store';
-import { setLoadingStatus } from '../../../redux/actions/loadingAction';
 import Skeleton from '@material-ui/lab/Skeleton';
+import _ from 'lodash';
+import { compose } from 'lodash/fp';
+import PropTypes from 'prop-types';
 
+import { translate } from 'react-i18next';
+import { connect } from "react-redux";
+import { Card, CardBody, Col } from 'reactstrap';
+import GameStoreContainer from './Game';
 
 const defaultState = {
     ecosystemGames : [],
@@ -84,25 +81,24 @@ class GameStorePageContainer extends React.Component{
                 <div>
                     <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                         {_.times(7, () => (
-                            <Grid item xs>
-                            <Col md={12} xl={12} lg={12} xs={12} style={{ minWidth: 288, maxWidth: 415, height: 230 }}>
-                            <Card className='game-container'>
-                                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
-                                    <Grid container direction='row' spacing={1}>
-                                        <Grid item xs={3}>
-                                            <Skeleton variant="circle" width={50} height={50} style={{ marginBottom: 10, marginLeft: 'auto', marginRight: 0 }}/>
+                                <Grid item xs>
+                                <Col md={12} xl={12} lg={12} xs={12} style={{ minWidth: 288, maxWidth: 415, height: 230 }}>
+                                <Card className='game-container'>
+                                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                                        <Grid container direction='row' spacing={1}>
+                                            <Grid item xs={3}>
+                                                <Skeleton variant="circle" width={50} height={50} style={{ marginBottom: 10, marginLeft: 'auto', marginRight: 0 }}/>
+                                            </Grid>
+                                            <Grid item xs={9}>
+                                                <Skeleton variant="rect" width="60%" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                                <Skeleton variant="rect" width="100%" height={20} style={{ marginTop: 10, marginBottom: 20 }}/>
+                                            </Grid>           
                                         </Grid>
-                                        <Grid item xs={9}>
-                                            <Skeleton variant="rect" width="60%" height={30} style={{ marginTop: 10, marginBottom: 10 }}/>
-                                            <Skeleton variant="rect" width="100%" height={20} style={{ marginTop: 10, marginBottom: 20 }}/>
-                                        </Grid>           
-                                    </Grid>
-                                    <Skeleton variant="rect" width="30%" height={30} style={{ marginBottom: 10 }}/>
-                                </CardBody>
-                            </Card>
-                            </Col>
-                        </Grid>
-
+                                        <Skeleton variant="rect" width="30%" height={30} style={{ marginBottom: 10 }}/>
+                                    </CardBody>
+                                </Card>
+                                </Col>
+                            </Grid>
                         ))}
                     </Grid>
                 </div>

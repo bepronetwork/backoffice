@@ -15,7 +15,6 @@ const defaultState = {
         background : true
     }
 }
-
 class Background extends Component {
     constructor(props){
         super(props);
@@ -42,10 +41,14 @@ class Background extends Component {
 
     renderBackgroundAddImage = () => {
         return(
-            <div className='dropzone-image' style={{ marginBottom: 40}}>
-                <Dropzone onDrop={this.onBackgroundAddedFile} width={200} ref={(el) => (this.dropzoneRef = el)} disabled={this.state.locks.background}>
-                    <img src={upload} className='image-info' style={{marginTop : 50}}/>
-                    <p className='text-center'> Drop the Background here</p>
+            <div style={{ marginBottom: 20 }}>
+                <Dropzone 
+                style={{ height: "100%", width: "100%", borderWidth: 2, borderolor: "#666666", borderStyle: "dashed", borderRadius: 5, padding: 10 }}
+                onDrop={this.onBackgroundAddedFile} 
+                ref={(el) => (this.dropzoneRef = el)}
+                disabled={this.state.locks.background}>
+                    <img src={upload} className='image-info' style={{ marginTop: 50 }}/>
+                    <p className='text-center' style={{ marginBottom: 20 }}> Drop the Background here</p>
                 </Dropzone>
             </div>
         )
@@ -119,8 +122,8 @@ class Background extends Component {
         
         return (
             <Card>
-                <CardBody style={{ margin: "0px 15px",  borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
-                    <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, height : 410, marginBottom : 30, padding : 30, maxWidth: 293 }}>
+                <CardBody style={{ margin: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    <div style={{ border: '1px solid rgba(0, 0, 0, 0.2)', backgroundColor: "white", borderRadius: 8, marginBottom : 30, padding : 30, maxWidth: 293 }}>
                         <EditLock 
                         isLoading={isLoading} 
                         unlockField={this.unlockField} 
@@ -133,7 +136,7 @@ class Background extends Component {
                                 <h6>Upload your background image</h6>
                             </div>
 
-                            <div style={{margin : 'auto'}}>
+                            <div>
                                 {
                                     backgroundItem ? 
                                     /* Background is Set */

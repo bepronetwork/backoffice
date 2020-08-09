@@ -31,15 +31,18 @@ class UserContainer extends React.Component {
     }
 
     projectData = async (props) => {
-        const { user } = props;
+        const { user, profile } = props;
 
         if (!_.isEmpty(this.state.user)) {
 
+            const app = await profile.getApp();
             const userData = await this.getUserInfo({ user_id: user });
 
             if (!_.isEmpty(userData)) {
                 this.setState({
-                    user: userData
+                    user: userData,
+                    ecosystemAddOns: app.params.storeAddOn,
+                    appAddOns: app.params.addOn
                 })
             } else {
                 this.setState({
@@ -50,15 +53,19 @@ class UserContainer extends React.Component {
     }
 
     setOpen = async () => {
-        const { user } = this.props;
+        const { user, profile } = this.props;
 
         if (_.isEmpty(this.state.user)) {
 
+            
+            const app = await profile.getApp();
             const userData = await this.getUserInfo({ user_id: user });
 
             this.setState({
                 user: userData,
-                open: true
+                open: true,
+                ecosystemAddOns: app.params.storeAddOn,
+                appAddOns: app.params.addOn
             })
         }
     }
@@ -100,13 +107,58 @@ class UserContainer extends React.Component {
         )
     }
 
+    renderPointsData = ({ addon, points, loading }) => {
+        if ( _.isEmpty(addon)) return null;
+
+        const { name } = addon;
+
+        return (
+            <Card>
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    <p className='text-small pink-text'> Points </p>
+                    {loading ? (
+                        <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    ) : (
+                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={0} font={'11pt'} number={points}/> <span className='text-x-small'>{ name }</span></h4>
+                    )}
+                </CardBody>
+            </Card>
+        )
+    }
+
+    hasAddOn = (addOn) => {
+        const { appAddOns } = this.state;
+
+        if(!_.isEmpty(appAddOns)) {
+            const isAdded = _.has(appAddOns, addOn);
+            const isNotEmpty = !_.isEmpty(appAddOns[addOn]);
+
+            return isAdded && isNotEmpty;
+
+        } else {
+            return false;
+        }
+    }
+
+    getAddOnObj = (addOn) => {
+        const { ecosystemAddOns, appAddOns } = this.state;
+
+        const addOnInfo = ecosystemAddOns.find(addon => addon.name.toLowerCase().includes(addOn.toLowerCase()));
+        const addOnData = appAddOns[Object.keys(appAddOns).find(k => k.toLowerCase() === addOn.toLowerCase())];
+
+        const addOnObj = _.merge({}, addOnInfo, addOnData);
+
+        return addOnObj;
+
+    }
+
     render() {
         const { currency } = this.props;
         const { open, user, isLoading } = this.state;
 
         if (!user || !currency) return null;
 
-        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, wallet, affiliateWallet } = user;
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, wallet, affiliateWallet, points } = user;
         const playBalance = wallet ? wallet.find(wallet => wallet.currency._id === currency._id).playBalance : undefined;
         
         let csvData = [{}];
@@ -232,6 +284,11 @@ class UserContainer extends React.Component {
                                     <Col sd={12} md={4} lg={3}>
                                         {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks ? affiliate.affiliatedLinks.length : 0, loading: isLoading, decimals: 0})}
                                     </Col>
+                                    { this.hasAddOn('pointSystem') && (
+                                        <Col sd={12} md={4} lg={3}>
+                                            { this.renderPointsData({ addon: this.getAddOnObj('pointSystem'), points: points, loading: isLoading }) } 
+                                        </Col>
+                                    )}
                                 </Row>
                             </Col>
                         </Row>

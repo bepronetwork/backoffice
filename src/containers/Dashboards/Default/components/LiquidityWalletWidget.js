@@ -57,14 +57,14 @@ class LiquidityWalletWidget extends PureComponent {
         const { isLoading } = this.props;
         
         return (
-            <Col md={12} xl={12} lg={12} xs={12}>
-                <Card>
+            <Col md={12} lg={12} xl={12}>
+                <Card style={{ minWidth: 200 }}>
                     <CardBody className="dashboard__card-widget dashboard_borderTop" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <Row>
                             <Col lg={4}>
                                 <img style={{borderRadius : 0}} className="company-logo-card" src={Ava} alt="avatar" />
                             </Col>
-                            <Col lg={8} style={{minWidth: `140px`}}>
+                            <Col lg={8} style={{ minWidth: 160 }}>
                             {isLoading ? (
                                 <Skeleton 
                                 variant="rect"

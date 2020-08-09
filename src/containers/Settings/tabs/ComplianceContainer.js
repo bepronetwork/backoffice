@@ -113,12 +113,11 @@ class ComplianceContainer extends React.Component{
         if (!restrictedCountries) { return null}
 
         return (
-            <div>               
+            <div style={{ margin: 10 }}>               
                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Compliance </p>
                 <hr/>
-                <Paper style={{ padding: 25, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }} >
+                <Paper style={{ padding: 15, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }} >
                     <Typography style={{ fontSize: 17 }} variant="h6" id="tableTitle">Restricted Countries</Typography>
-                    <Grid container spacing={2}>
                     <EditLock 
                         style={{ width: "100%"}}
                         unlockField={this.unlock} 
@@ -126,67 +125,65 @@ class ComplianceContainer extends React.Component{
                         confirmChanges={() => this.confirmChanges()} 
                         isLoading={this.state.loading}
                         locked={lock}>
-                                
-                    <Grid item xs={8}>
-                        <CountryMap 
-                        lock={lock}
-                        restrictedCountries={restrictedCountries} 
-                        add={this.addCountry} 
-                        remove={this.removeCountry} 
-                        setContent={this.setContent}/>
+                        
+                        <div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+                            <div style={{ display: "flex", flexDirection: "row", width: "100%", flexWrap: 'wrap'}}>
+                                <div style={{ display: "flex", flexDirection: "column", width: 250, padding: 15, alignSelf: "flex-end" }}>
+                                    <Typography style={{ fontSize: 15 }} variant="h6" id="tableTitle">Search country</Typography>
+                                    <br/>
+                                    <Autocomplete
+                                        id="country-select"
+                                        options={allCountries}
+                                        disabled={lock}
+                                        autoHighlight
+                                        onChange={(event, newValue) => {
+                                            if (newValue) {
+                                                this.addCountry(newValue.code)
+                                            }
+                                        }}
+                                        getOptionLabel={(option) => option.label}
+                                        renderOption={(option) => (
+                                        <>
+                                            {option.label}
+                                        </>
+                                        )}
+                                        renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            size="small"
+                                            label="Choose a country"
+                                            variant="filled"
+                                            inputProps={{
+                                            ...params.inputProps,
+                                            autoComplete: 'new-password', // disable autocomplete and autofill
+                                            }}
+                                        />
+                                        )}
+                                    />
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'center', flexWrap: "wrap", alignItems: "center", margin: "0px 10px" }}>
+                                    { restrictedCountries.map(country => (
+                                        <Chip
+                                        disabled={lock}
+                                        label={countriesObj[country]}
+                                        onDelete={() => this.removeCountry(country)}
+                                        style={{ backgroundColor: "#8c449b", color: "#ffffff", margin: 5 }}
+                                        />))}
+                                </div>
+                            </div>
+                            
+                            <div style={{ width: "100%", height: "100%" }}>
+                                <CountryMap 
+                                lock={lock}
+                                restrictedCountries={restrictedCountries} 
+                                add={this.addCountry} 
+                                remove={this.removeCountry} 
+                                setContent={this.setContent}/>
 
-                        <ReactTooltip>{content}</ReactTooltip>
-                    </Grid>
-                    <Grid item xs={4}>
-                    <Typography style={{ fontSize: 15 }} variant="h6" id="tableTitle">Search country</Typography>
-                    <br/>
-                    <Autocomplete
-                        id="country-select"
-                        style={{ width: 300 }}
-                        options={allCountries}
-                        disabled={lock}
-                        autoHighlight
-                        onChange={(event, newValue) => {
-                            if (newValue) {
-                                this.addCountry(newValue.code)
-                            }
-                          }}
-                        getOptionLabel={(option) => option.label}
-                        renderOption={(option) => (
-                        <>
-                            {option.label}
-                        </>
-                        )}
-                        renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Choose a country"
-                            variant="filled"
-                            inputProps={{
-                            ...params.inputProps,
-                            autoComplete: 'new-password', // disable autocomplete and autofill
-                            }}
-                        />
-                        )}
-                    />
-                        <hr/>
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        flexWrap: 'wrap'
-                    }}>
-                    {restrictedCountries.map(country => (
-                        <Chip
-                        disabled={lock}
-                        label={countriesObj[country]}
-                        onDelete={() => this.removeCountry(country)}
-                        style={{ backgroundColor: "#8c449b", color: "#ffffff", margin: 5 }}
-                        />
-                        ))}
-                    </div>
-                    </Grid>
+                                <ReactTooltip>{content}</ReactTooltip>
+                            </div>
+                        </div>
                     </EditLock>
-                    </Grid>
                 </Paper>
                 <br/>
           </div>

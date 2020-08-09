@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import WalletTabs from '../WalletTabs';
-import { Grid } from '@material-ui/core';
+import { Grid, ButtonBase } from '@material-ui/core';
 
 
 const Wallet = ({ data }) => {
@@ -13,13 +13,15 @@ const Wallet = ({ data }) => {
 
     return (
         <>
-        <WalletContainer>
-            <img className='application__game__image' style={{ display: 'block', marginLeft: 0, marginRight: 0, height: 50, width: 50 }} src={image} alt={currency.name}/>
-            <WalletDetails>
-                <h3>{`${currency.name} Wallet`}</h3>
-                <span>{playBalance.toFixed(2)}</span>
-            </WalletDetails>
-        </WalletContainer>
+        <ButtonBase>
+            <WalletContainer>
+                <img className='application__game__image' style={{ display: 'block', marginLeft: 0, marginRight: 0, height: 50, width: 50 }} src={image} alt={currency.name}/>
+                <WalletDetails>
+                    <h3>{`${currency.name} Wallet`}</h3>
+                    <span>{playBalance.toFixed(2)}</span>
+                </WalletDetails>
+            </WalletContainer>
+        </ButtonBase>
         </>
     )
 }
@@ -64,7 +66,7 @@ class LiquidityWalletContainer extends Component {
         if (!wallets) return null;
 
         return (
-            <>
+            <div style={{ margin: 10 }}>
                 <Container>
                     <Header>
                         <h3>Application</h3>
@@ -103,7 +105,7 @@ class LiquidityWalletContainer extends Component {
                     </Grid>
                     </Content>
                 </Container>
-            </>
+            </div>
         )
     }
 }

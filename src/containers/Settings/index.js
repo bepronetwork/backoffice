@@ -1,18 +1,15 @@
 import React from 'react';
-import { Container } from 'reactstrap';
-import { translate } from 'react-i18next';
+import { compose } from 'lodash/fp';
 import PropTypes from 'prop-types';
+import { translate } from 'react-i18next';
 import { connect } from "react-redux";
-import { compose } from 'lodash/fp'
-import _ from 'lodash';
-import { AccountIcon, CashMultipleIcon, FinanceIcon, ExitToAppIcon, AccessibilityIcon, UpdateIcon, CurrencyEthIcon, CurrencySignIcon, SettingsIcon, FilesIcon} from 'mdi-react';
-import { Tab, Nav, Sonnet } from 'react-bootstrap';
-import { SettingsRiskContainer, AddAdminContainer, AdminContainer, SettingsAccountContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
-// import { SettingsAccountContainer, SettingsRiskContainer, SettingsTransactionContainer, AddressManagementContainer, PlatformUpdates, TokenManager } from './tabs';
+import { Container } from 'reactstrap';
+import { Chat, Settings, User } from '../../components/Icons';
 import TabsContainer from '../../shared/components/tabs/Tabs.js';
+import { AdminContainer, SettingsAccountContainer } from './tabs';
 import ComplianceContainer from './tabs/ComplianceContainer';
 import LogsContainer from './tabs/LogsContainer';
-import { User, Settings, Chat } from '../../components/Icons';
+import Fade from '@material-ui/core/Fade';
 
 const defaultState = {
 }
@@ -40,6 +37,7 @@ class SettingsContainer extends React.Component{
     render = () => {
 
         return (
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
             <Container className="dashboard">
                 <TabsContainer 
                     items={
@@ -100,6 +98,7 @@ class SettingsContainer extends React.Component{
                     }
                 />
           </Container>
+          </Fade>
         )
     }
 

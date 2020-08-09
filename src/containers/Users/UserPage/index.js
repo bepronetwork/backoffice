@@ -1,18 +1,18 @@
 import React from 'react';
+import Fade from '@material-ui/core/Fade';
+import Skeleton from '@material-ui/lab/Skeleton';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import { Row, Col, Container, Card, CardBody } from 'reactstrap';
-import Skeleton from '@material-ui/lab/Skeleton';
-import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
-import _ from 'lodash';
-import Numbers from '../../../services/numbers';
+import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import HorizontalTabs from '../../HorizontalTabs';
-import UserTransactionsTable from './components/UserTransactionsTable';
+import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
 import AffiliateInfo from './components/AffiliateInfo';
-import { compareIDS } from '../../../lib/string';
-import UserBetsTable from './components/UserBetsTable';
 import TopUpBalance from './components/TopUpBalance';
-import { ProgressBar } from 'react-bootstrap';
+import UserBetsTable from './components/UserBetsTable';
+import UserTransactionsTable from './components/UserTransactionsTable';
+import UserPageSkeleton from './components/UserPageSkeleton';
+
 
 const defaultProps = {
     ticker : 'No Currency Chosen'
@@ -36,6 +36,7 @@ class UserPage extends React.Component{
     projectData = async (props) => {
         const { profile, currency, location } = props;
 
+        const app = await profile.getApp();
         const userId = location.state.userId;
 
         const currencyTicker = currency.ticker ? currency.ticker : defaultProps.ticker;
@@ -43,7 +44,9 @@ class UserPage extends React.Component{
 
         this.setState({...this.state, 
             currencyTicker,
-            user: user
+            user: user,
+            ecosystemAddOns: app.params.storeAddOn,
+            appAddOns: app.params.addOn
         })
     }
 
@@ -85,54 +88,20 @@ class UserPage extends React.Component{
         )
     }
 
-    renderBonusAmount = ({title, bonusAmount, incrementBetAmountForBonus, minBetAmountForBonusUnlocked, span, loading, decimals}) => {
+    
+    renderPointsData = ({ addon, points, loading }) => {
+        if ( _.isEmpty(addon)) return null;
 
-        const percenteToBonus = 100 * (incrementBetAmountForBonus / minBetAmountForBonusUnlocked);
+        const { name } = addon;
 
         return (
-            <Card style={{ minWidth: minBetAmountForBonusUnlocked > 0 ? 230 : 0 }}>
+            <Card>
                 <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
-                    <p className='text-small pink-text'> {title} </p>
+                    <p className='text-small pink-text'> Points </p>
                     {loading ? (
-                        minBetAmountForBonusUnlocked > 0 ? (
-                            <>
-                                <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
-                                <hr/>
-                                <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
-                                <Skeleton variant="rect" height={20} style={{ marginTop: 10, marginBottom: 10 }}/>
-                                <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
-                            </>
-                        ) : (
-                            <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
-                        )
+                        <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
                     ) : (
-                        <>
-                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={6} font={'11pt'} number={bonusAmount}/> <span className='text-x-small'>{span}</span></h4>
-                        { minBetAmountForBonusUnlocked > 0 ? (
-                            <>
-                            <hr/>
-                            <p className='text-small' style={{ fontSize: 8, margin: "0px 3px" }}>
-                                Progress to withdraw the full balance
-                            </p>
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0px" }}>
-                                <p className='text-small pink-text' style={{ fontSize: 10, margin: "0px 3px" }}>
-                                    {`Progress (${percenteToBonus.toFixed(2)}%)`}
-                                </p>
-                            </div>
-
-                            <ProgressBar striped variant="success" now={percenteToBonus}/>
-                                                    
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0px" }}>
-                                <h4 className='secondary-text'> 
-                                    <AnimationNumber decimals={decimals} font={'8pt'} number={incrementBetAmountForBonus}/> <span className='text-x-small'>{span}</span>
-                                </h4>
-                                <h4 className='secondary-text'> 
-                                    <AnimationNumber decimals={decimals} font={'8pt'} number={minBetAmountForBonusUnlocked}/> <span className='text-x-small'>{span}</span>
-                                </h4>
-                            </div>
-                            </>
-                        ) : null }
-                        </>
+                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={0} font={'11pt'} number={points}/> <span className='text-x-small'>{ name }</span></h4>
                     )}
                 </CardBody>
             </Card>
@@ -160,13 +129,40 @@ class UserPage extends React.Component{
         )
     }
 
+    hasAddOn = (addOn) => {
+        const { appAddOns } = this.state;
+
+        if(!_.isEmpty(appAddOns)) {
+            const isAdded = _.has(appAddOns, addOn);
+            const isNotEmpty = !_.isEmpty(appAddOns[addOn]);
+
+            return isAdded && isNotEmpty;
+
+        } else {
+            return false;
+        }
+    }
+
+    getAddOnObj = (addOn) => {
+        const { ecosystemAddOns, appAddOns } = this.state;
+
+        const addOnInfo = ecosystemAddOns.find(addon => addon.name.toLowerCase().includes(addOn.toLowerCase()));
+        const addOnData = appAddOns[Object.keys(appAddOns).find(k => k.toLowerCase() === addOn.toLowerCase())];
+
+        const addOnObj = _.merge({}, addOnInfo, addOnData);
+
+        return addOnObj;
+
+    }
+
     render = () => {
         const { user, currencyTicker } = this.state;
-        if(!user || _.isEmpty(user)){return null};
+        
+        if (!user || _.isEmpty(user)) { return <UserPageSkeleton/> };
 
         const { currency, isLoading } = this.props;
-        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount } = user;
-
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, points } = user;
+        
         const wallet = user.wallet.find(wallet => wallet.currency._id === currency._id);
 
         const playBalance = wallet.playBalance;
@@ -176,6 +172,7 @@ class UserPage extends React.Component{
         const affiliateWallet = affiliate.wallet.filter(w => w.currency._id === currency._id);
 
         return (
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
             <Container className="dashboard">
                 <Row>
                     <Col md={4}>
@@ -191,7 +188,7 @@ class UserPage extends React.Component{
                                         </Col>
                                         <Col sd={12} md={12} lg={8}>
                                             {/* UserInfo */}
-                                            <h5 className='pink-text'> @{username}</h5>
+                                            <h5 className='pink-text' style={{ marginTop: 10 }}> @{username}</h5>
                                             <hr></hr>
                                             <p className='secondary-text text-small'> {email}</p>
                                             <p className='text-small'> {address} </p>
@@ -217,10 +214,10 @@ class UserPage extends React.Component{
                                 {this.renderDataTitle({title : 'Profit', data :  profit ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length), decimals: 0})}
+                                {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length), loading: isLoading, decimals: 0})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length), decimals: 0})}
+                                {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length), loading: isLoading, decimals: 0})}
                             </Col>
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliateWallet) ? parseFloat(affiliateWallet[0].playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
@@ -228,14 +225,16 @@ class UserPage extends React.Component{
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length, loading: isLoading, decimals: 0})}
                             </Col>
-                            <Col sd={12} md={4} lg={3}>
-                                {this.renderBonusAmount({ title : 'Bonus', bonusAmount: wallet.bonusAmount, incrementBetAmountForBonus: wallet.incrementBetAmountForBonus, minBetAmountForBonusUnlocked: wallet.minBetAmountForBonusUnlocked, loading: isLoading, span: currencyTicker, decimals: 6 })}
-                            </Col>
+                            { this.hasAddOn('pointSystem') && (
+                                <Col sd={12} md={4} lg={3}>
+                                    { this.renderPointsData({ addon: this.getAddOnObj('pointSystem'), points: points, loading: isLoading }) } 
+                                </Col>
+                            )}
                         </Row>
                     </Col>
                 </Row>
                 <Card>
-                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", padding: 10 }}>
                         <HorizontalTabs
                             tabs={[
                                 {
@@ -264,6 +263,7 @@ class UserPage extends React.Component{
                 </Card>
               
             </Container>
+        </Fade>
         )
     }
 
