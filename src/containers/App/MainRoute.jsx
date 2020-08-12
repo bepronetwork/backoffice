@@ -4,7 +4,7 @@ import '../../scss/app.scss';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
 import Layout from '../Layout';
-import { Route } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 import Account from '../../controllers/Account';
 import routesStructure from './routes';
 import _ from 'lodash';
@@ -95,7 +95,7 @@ class MainRoute extends React.Component {
                 {routeHistory.map( (routePath, i) => {
                     let last = (i === routeHistory.length - 1);
                     if(i === 0){
-                        return <p className={`container__routing__info ${last ? 'routing__current' : null}`} key={i}> <a href = {routePath.path}> {routePath.name} </a> </p>
+                        return <p className={`container__routing__info ${last ? 'routing__current' : null}`} key={i}> <Link to={routePath.path}> {routePath.name} </Link> </p>
                     }else{
                         return (
                             <div className={''}>
