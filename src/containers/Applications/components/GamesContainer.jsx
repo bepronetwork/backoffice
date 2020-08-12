@@ -1,11 +1,11 @@
 /* eslint-disable react/no-array-index-key */
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { connect } from "react-redux";
 import { Col, Row } from 'reactstrap';
 import GameInfo from './GameInfo';
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
-class GamesContainer extends PureComponent {
+class GamesContainer extends React.Component {
  
     constructor() {
         super();

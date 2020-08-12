@@ -1,11 +1,10 @@
-/* eslint-disable react/no-array-index-key */
-import React, { PureComponent } from 'react';
-import { Card, CardBody, Col, Row, Button } from 'reactstrap';
+import React from 'react';
+import { Card, CardBody, Col, Row } from 'reactstrap';
 import { BankIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
 import EditLock from '../../Shared/EditLock';
 
-class CurrencyInfo extends PureComponent {
+class CurrencyInfo extends React.Component {
  
     constructor() {
         super();
