@@ -10,7 +10,7 @@ const Icon = styled.section`
 `;
 
 const SidebarLink = ({
-  title, icon, newLink, route, onClick, disabled
+  title, icon, route, onClick, disabled
 }) => (
     <ButtonBase>
         <NavLink
@@ -18,7 +18,6 @@ const SidebarLink = ({
             onClick={onClick}
             activeClassName={disabled ? "sidebar__link__not_active" : "sidebar__link-active"}
         >
-
             <div style={{ opacity : disabled ? 0.4 : 1 }} className={disabled ? "sidebar__link__not_active" : "sidebar__link"}>
                 <Icon>
                     {icon}

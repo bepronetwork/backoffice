@@ -27,7 +27,7 @@ const Sidebar = ({
         </div>
         <div className="sidebar__wrapper sidebar__wrapper--mobile">
           <SidebarContent
-            onClick={() => {}}
+            onClick={sidebar.show ? () => changeMobileSidebarVisibility() : () => {}}
             changeToDark={changeToDark}
             changeToLight={changeToLight}
           />
