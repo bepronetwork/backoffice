@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { AnnouncementTab, Banners, Logo, Footer, Colors, Fonts, Tabs } from './components';
 import TabsContainer from '../../../shared/components/tabs/Tabs';
-import { LayersOutlineIcon, AnnouncementIcon, BrandingWatermarkIcon, ColorizeIcon, PageLayoutFooterIcon, FormatFontIcon, ImageIcon } from 'mdi-react';
 import Background from './components/Background';
 import { Bet, Reward, Phone, Settings, Rewards, AddOn, Withdraw } from '../../../components/Icons';
 

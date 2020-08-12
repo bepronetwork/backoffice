@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { Card, CardBody, Col, Row, Button } from 'reactstrap';
 import { BankIcon, UploadIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
@@ -13,7 +13,7 @@ const currenciesEnum = Object.freeze({
     ETH: "5e108498049eba079930ae1c"
 })
 
-class VirtualCurrencyInfo extends PureComponent {
+class VirtualCurrencyInfo extends React.Component {
  
     constructor() {
         super();
