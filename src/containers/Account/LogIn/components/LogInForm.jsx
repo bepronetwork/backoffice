@@ -1,104 +1,77 @@
-import React, { PureComponent } from 'react';
-import { Field, reduxForm } from 'redux-form';
-import EyeIcon from 'mdi-react/EyeIcon';
-import KeyVariantIcon from 'mdi-react/KeyVariantIcon';
-import AccountOutlineIcon from 'mdi-react/AccountOutlineIcon';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import renderCheckBoxField from '../../../../shared/components/form/CheckBox';
-import Account from '../../../../controllers/Account';
-import { CheckboxMultipleBlankCircleIcon } from 'mdi-react';
-import TextInput from '../../../../shared/components/TextInput';
-import { EmailInput, InputAddOn, InputLabel, PasswordInput } from '../styles';
-import { InputGroup, InputGroupText, FormGroup, Label } from 'reactstrap';
+import { Input, Button, Link } from '../../../../components';
 
-const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
+import { Form, Label, ForgotPassword, Actions } from './styles';
 
-class LogInForm extends React.Component {
-  static propTypes = {
-        handleSubmit: PropTypes.func.isRequired,
-    };
+const LogInForm = props => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            showPassword: false,
-        };
-        this.showPassword = this.showPassword.bind(this);
-    }
+  const { onChangeUsername, onChangePassword, query, login, isLoading } = props;
 
-    componentDidMount(){
-        let {
-            username,
-            password
-        } = this.props.query;
-        this.setState({...this.state, username, password})
-    }
+  useEffect(() => {
+    const { username, password } = query;
 
-    showPassword(e) {
-        e.preventDefault();
-        this.setState({
-            showPassword: !this.state.showPassword,
-        });
-    }
+    setUsername(username);
+    setPassword(password);
+  }, []);
 
+  function handleSubmit() {
+    login();
+  }
 
-    goTo2FA = () => {
-        this.props.SW.nextStep();
-    }
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Label>Username or E-mail</Label>
+      <Input
+        label="Username or E-mail"
+        name="username"
+        type="text"
+        defaultValue={username}
+        onChange={e => onChangeUsername(e.target.value)}
+      />
+      <Label>Password</Label>
+      <Input
+        name="password"
+        label="Password"
+        type="password"
+        defaultValue={password}
+        onChange={e => onChangePassword(e.target.value)}
+      />
 
-    render() {
-        const { handleSubmit, onChangeUsername, onChangePassword } = this.props;
+      <ForgotPassword>
+        <Link to="/password/reset">
+          Forgot a password?
+          <span role="img" aria-label="confused">
+            {` 😕`}
+          </span>
+        </Link>
+      </ForgotPassword>
 
-        return (
-        <form className="form" onSubmit={handleSubmit}>
-            <div className="form__form-group">
-                <FormGroup>
-                    <InputLabel for="username">Username or E-mail</InputLabel>
-                <EmailInput
-                    label="Username or E-mail"
-                    icon={CheckboxMultipleBlankCircleIcon}
-                    name="username"
-                    type="text"
-                    defaultValue={this.state.username}
-                    onChange={(e) => onChangeUsername(e.target.value)}
-                />
-                </FormGroup>
-                <br/>
-                <FormGroup>
-                    <InputLabel for="password">Password</InputLabel>
-                <PasswordInput
-                    icon={KeyVariantIcon}
-                    name="password"
-                    label="Password"
-                    type="password"
-                    defaultValue={this.state.password}
-                    onChange={(e) => onChangePassword(e.target.value)}
-                />
-                </FormGroup>
-                  <div className="account__forgot-password" >
-                <a href="/password/reset" >Forgot a password?</a>
-            </div>    
-            </div>
-                 
-            <div className="account__btns" style={{marginTop  :40}}>
-            <button disabled={this.props.isLoading} className="btn btn-primary account__btn" onClick={ () => this.props.login() } >
-                {
-                    !this.props.isLoading ?
-                    'Log In'
-                    : 
-                    <img src={loading} className={'loading_gif'}></img>
-                }
-            </button>
-            <Link className='btn btn-outline-primary account__btn' to="/register">
-               Create Account
-            </Link>
-            </div>
-        </form>
-        );
-    }
-    }
+      <Actions>
+        <Button
+          variant="primary"
+          loading={isLoading}
+          type="submit"
+          onClick={() => login()}
+        >
+          Log In
+        </Button>
+        <Link to="/register">
+          <Button variant="secondary">Create Account</Button>
+        </Link>
+      </Actions>
+    </Form>
+  );
+};
 
-export default reduxForm({
-    form: 'log_in_form', // a unique identifier for this form
-})(LogInForm);
+LogInForm.propTypes = {
+  onChangeUsername: PropTypes.func,
+  onChangePassword: PropTypes.func,
+  login: PropTypes.func,
+  query: PropTypes.object,
+  isLoading: PropTypes.bool,
+};
+
+export default LogInForm;

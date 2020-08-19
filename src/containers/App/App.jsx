@@ -17,6 +17,8 @@ import Web3 from 'web3';
 import { ETHEREUM_NET_DEFAULT } from '../../config/apiConfig';
 import { Modal2FA, ModalError, AbstractModal, ModalAddCurrencyWallet } from '../Modals';
 
+import GlobalStyles from '../../styles/GlobalStyles';
+
 const loadingBetprotocol = `${process.env.PUBLIC_URL}/img/loading-betprotocol.gif`;
 
 i18next.init(i18nextConfig);
@@ -87,6 +89,8 @@ class App extends Component {
 	render() {
 		const { loaded, loading } = this.state;
 		return (
+            <>
+            <GlobalStyles/>
 			<Provider store={store}>
                 <BrowserRouter basename="/">
                     <I18nextProvider i18n={i18next}>
@@ -109,6 +113,7 @@ class App extends Component {
                     </I18nextProvider>
                 </BrowserRouter>
 			</Provider>
+            </>
 		);
 		}
 }

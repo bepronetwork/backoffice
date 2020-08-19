@@ -5,7 +5,7 @@
 
 label{
     @include themify($themes) {
-        color : themed('colorText') !important;
+        color : themed('colorText');
     }  
 }
 
