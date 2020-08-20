@@ -18,26 +18,28 @@ import Cash from './Cash';
 import Email from './Email';
 import Chat from './Chat';
 import Deposit from './Deposit';
+import WalletWhite from './WalletWhite';
 
-export { 
-    Casino, 
-    Wallet,
-    Phone,
-    User,
-    Arrow,
-    Confirmed,
-    Bet,
-    Hand,
-    Settings,
-    Reward,
-    LogOut,
-    Backoffice,
-    Rewards,
-    AddOn,
-    Withdraw,
-    CasinoWhite,
-    Cash,
-    Email,
-    Chat,
-    Deposit
+export {
+  Casino,
+  Wallet,
+  Phone,
+  User,
+  Arrow,
+  Confirmed,
+  Bet,
+  Hand,
+  Settings,
+  Reward,
+  LogOut,
+  Backoffice,
+  Rewards,
+  AddOn,
+  Withdraw,
+  CasinoWhite,
+  Cash,
+  Email,
+  Chat,
+  Deposit,
+  WalletWhite,
 };

@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
     * {
@@ -57,5 +57,8 @@ export default createGlobalStyle`
 
         --text-primary-color: #091439;
         --text-secondary-color: #828aa5;
+
+        --loss-color: #ff3049;
+        --gain-color: #00d60d;
     }
 `;
