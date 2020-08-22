@@ -813,6 +813,23 @@ class App{
         }
     }
 
+    editSubsectionsCustomization = async ({ subSections }) => {
+        try{
+            let res = await ConnectionSingleton.editSubsectionsCustomization({   
+                params : {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    subSections
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editGameImage = async ({image_url, game}) => {
         try{
             let res = await ConnectionSingleton.editGameImage({   
