@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import Colors from './Colors';
 import Fonts from './Fonts';
 import Tabs from './Tabs';
+import SubSections from './SubSections';
 
 export { 
     Banners,
@@ -13,5 +14,6 @@ export {
     Colors,
     Logo,
     Fonts,
-    Tabs
+    Tabs,
+    SubSections
 }
