@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
 import TabsContainer from '../../../shared/components/tabs/Tabs';
 import AddOnStorePageContainer from './AddOnStore';
 import AddOnContainer from './AddOnContainer';
 import { AddOn, Cash } from '../../../components/Icons';
 
-export default class AddOnsContainer extends Component {
+export default class AddOnsContainer extends React.PureComponent {
     render() {
         return (
-            <div>
+            <>
                 <TabsContainer 
                     items={
                         [
@@ -24,7 +24,7 @@ export default class AddOnsContainer extends Component {
                         ]
                     }
                 />
-            </div>
+            </>
         )
     }
 }

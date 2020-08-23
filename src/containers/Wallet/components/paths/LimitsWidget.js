@@ -88,7 +88,8 @@ class LimitsWidget extends React.Component{
     }
 
     confirmChanges = async ({field}) => {
-        var { profile, wallet } = this.props;
+        const { profile } = this.props;
+        const { wallet } = this.state;
 
         this.setState({
             ...this.state,

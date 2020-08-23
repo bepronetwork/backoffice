@@ -1,36 +1,26 @@
-import React, { Component, lazy, Suspense } from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import { I18nextProvider } from 'react-i18next';
-import i18next from 'i18next';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { hot } from 'react-hot-loader';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../../scss/app.scss';
-import Router from './Router';
-import store from './store';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
-import ScrollToTop from './ScrollToTop';
-import { config as i18nextConfig } from '../../translations';
 import Layout from '../Layout';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 import Account from '../../controllers/Account';
 import routesStructure from './routes';
 import _ from 'lodash';
 import { WalletContainer } from '../Wallet';
 import WalletWidget from '../Wallet/components/paths/WalletWidget';
-const UsersContainer = lazy(() => import('../Users'));
-const StatsContainer = lazy(() => import('../Stats'));
-const AffiliatesContainer = lazy(() => import('../Affiliates'));
-const Developers = lazy(() => import('../Developers'));
-const TransactionsContainer = lazy(() => import('../Transactions'));
-const BetsContainer = lazy(() => import('../Bets'));
-const GamePage = lazy(() => import('../Applications/GamePage'));
-const UserPage = lazy(() => import('../Users/UserPage'));
-const SettingsContainer = lazy(() => import('../Settings'));
-const DefaultDashboard= lazy(() => import('../Dashboards/Default/index'));
-const Applications = lazy(() => import('../Applications'));
+import UsersContainer from '../Users';
+import StatsContainer from '../Stats';
+import AffiliatesContainer from '../Affiliates';
+import Developers from '../Developers';
+import TransactionsContainer from '../Transactions';
+import BetsContainer from '../Bets';
+import GamePage from '../Applications/GamePage';
+import UserPage from '../Users/UserPage';
+import SettingsContainer from '../Settings';
+import DefaultDashboard from '../Dashboards/Default/index';
+import Applications from '../Applications';
 
 const loadingBetprotocol = `${process.env.PUBLIC_URL}/img/loading-betprotocol.gif`;
 
@@ -71,13 +61,13 @@ class MainRoute extends React.Component {
 
     getName(object, path){
         return object.filter(obj => {
-            return obj.path == path
+            return obj.path === path
         })[0]
     }
 
     getrouteHistoryObjects = (object, full_path) => {
-        let paths = full_path.split("/").filter(el =>  el != "");
-        let objectPaths = new Array();
+        let paths = full_path.split("/").filter(el =>  el !== "");
+        let objectPaths = [];
     
         for(var i = 0; i < paths.length; i++){
             let search_object = i < 1 ? object : objectPaths[i-1].children;
@@ -98,46 +88,37 @@ class MainRoute extends React.Component {
         let routeHistory = this.getrouteHistoryObjects(routesStructure, props.location.pathname);
         if(!profile.hasAppStats()) { return null; }
 
-        return(
-            <Suspense fallback={
-                <div>					
-                    <div className={"load "}>
-                        <div class="load__icon-wrap">
-                            <img src={loadingBetprotocol} alt="loading..."/>
-                        </div>
-                    </div>
-                </div> }>
-                <div>
-                <Layout />
-                <div className="container__wrap">
-                    {routeHistory.map( (routePath, i) => {
-                        let last = (i == routeHistory.length - 1);
-                        if(i == 0){
-                            return <p className={`container__routing__info ${last ? 'routing__current' : null}`} key={i}> <a href = {routePath.path}> {routePath.name} </a> </p>
-                        }else{
-                            return (
-                                <div className={''}>
-                                    <p className={`container__routing__info__dot ${last ? 'routing__current' : null}`}> > </p>
-                                    <p className={`container__routing__info__dot ${last ? 'routing__current' : null}`}> {routePath.name}</p>
-                                </div>
-                            )
-    
-                        }
-                    })}
-                    <Route path={'/home'} component={DefaultDashboard}/>	
-                    <Route path={'/users'} component={wrappedUserRoutes}/>	
-                    <Route path={'/application'} component={wrappedApplicationRoutes}/>	
-                    <Route path={'/developers'} component={Developers}/>	
-                    <Route path={'/transactions'} component={TransactionsContainer}/>
-                    <Route path={'/bets'} component={BetsContainer}/>
-                    <Route path={'/stats'} component={StatsContainer}/>	
-                    <Route path={'/wallet'} component={wrappedWalletRoutes}/>	
-                    <Route path={'/settings'} component={SettingsContainer}/>	
-                    <Route path={'/account-settings'} component={SettingsContainer}/>	
-                    <Route path={'/affiliates'} component={AffiliatesContainer}/>	
-                </div>
+        return (
+            <>
+            <Layout />
+            <div className="container__wrap">
+                {routeHistory.map( (routePath, i) => {
+                    let last = (i === routeHistory.length - 1);
+                    if(i === 0){
+                        return <p className={`container__routing__info ${last ? 'routing__current' : null}`} key={i}> <Link to={routePath.path}> {routePath.name} </Link> </p>
+                    }else{
+                        return (
+                            <div className={''}>
+                                <p className={`container__routing__info__dot ${last ? 'routing__current' : null}`}> &gt; </p>
+                                <p className={`container__routing__info__dot ${last ? 'routing__current' : null}`}> {routePath.name}</p>
+                            </div>
+                        )
+
+                    }
+                })}
+                <Route path={'/home'} component={DefaultDashboard}/>	
+                <Route path={'/users'} component={wrappedUserRoutes}/>	
+                <Route path={'/application'} component={wrappedApplicationRoutes}/>	
+                <Route path={'/developers'} component={Developers}/>	
+                <Route path={'/transactions'} component={TransactionsContainer}/>
+                <Route path={'/bets'} component={BetsContainer}/>
+                <Route path={'/stats'} component={StatsContainer}/>	
+                <Route path={'/wallet'} component={wrappedWalletRoutes}/>	
+                <Route path={'/settings'} component={SettingsContainer}/>	
+                <Route path={'/account-settings'} component={SettingsContainer}/>	
+                <Route path={'/affiliates'} component={AffiliatesContainer}/>	
             </div>
-            </Suspense>
+            </>
         )
     }
 

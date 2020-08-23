@@ -889,6 +889,19 @@ class Connection {
         }
     }
 
+    editSubsectionsCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/subSections`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getAppUsers = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/users`, {
