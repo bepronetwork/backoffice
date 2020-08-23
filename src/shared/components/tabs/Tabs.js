@@ -26,7 +26,7 @@ class TabsContainer extends React.PureComponent{
                                                     <Nav.Item key={index} style={{ margin: 7 }}>
                                                     <ButtonBase>
                                                         <Nav.Link eventKey={`item-${index}`} style={{ width: "220px", height: "40px" }}>
-                                                            <div style={{ display: "flex" }}>
+                                                            <div style={{ display: "flex", alignItems: "center" }}>
                                                                 {<Icon>{item.icon}</Icon>} &nbsp; <Title>{item.title}</Title>
                                                             </div>
                                                         </Nav.Link>
