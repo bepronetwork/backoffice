@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Button, Link } from '../../../../components';
+import { Input, Button, Link } from '../../../../../components';
 
 import { Form, Label, ForgotPassword, Actions } from './styles';
 
