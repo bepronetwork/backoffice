@@ -62,7 +62,7 @@ class GamesContainer extends React.Component {
                     })}
                 </Row>
             : 
-            <div style={{ margin: 10 }}>
+            <div style={{ margin: 20 }}>
                 <h4>You have no Games and/or Currencies enabled currently</h4>
                 <img src={image} style={{width :'30%', marginTop : 20}}/>
             </div>
