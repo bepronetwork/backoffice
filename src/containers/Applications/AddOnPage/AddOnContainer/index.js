@@ -53,7 +53,9 @@ class AddOnContainer extends PureComponent {
         const { profile } = this.props;
 
         const currencies = profile.getApp().getEcosystemCurrencies();
-        return !_.isEmpty(currencies);
+        const wallet = profile.App.params.wallet;
+
+        return !_.isEmpty(currencies) || !_.isEmpty(wallet);
     }
 
     getAddOnObj = (addOn) => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Col, Row } from 'reactstrap';
 import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
@@ -7,6 +6,8 @@ import { compose } from 'lodash/fp'
 import AddOnStoreContainer from "./AddOn";
 import { LockWrapper } from "../../../../shared/components/LockWrapper";
 import { Grid } from '@material-ui/core';
+
+import _ from 'lodash';
 
 class AddOnStorePageContainer extends React.Component{
 
@@ -44,16 +45,19 @@ class AddOnStorePageContainer extends React.Component{
         const { appAddOns } = this.state;
 
         return !!Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().replace(/\s+/g, '').includes(k.toLowerCase()));
-         
     }
 
     hasRestriction = (addOn, appUseVirtualCurrencies) => {
+        return addOn.name.toLowerCase().includes('autowithdraw') && appUseVirtualCurrencies;
+    }
 
-        if (addOn.name.toLowerCase().includes('autowithdraw') && appUseVirtualCurrencies) {
-            return true;
-        } else {
-            return false;
-        }
+    hasCurrenciesInstalled = () => {
+        const { profile } = this.props;
+
+        const currencies = profile.getApp().getEcosystemCurrencies();
+        const wallet = profile.App.params.wallet;
+
+        return !_.isEmpty(currencies) || !_.isEmpty(wallet);
     }
 
     render() {
@@ -70,7 +74,7 @@ class AddOnStorePageContainer extends React.Component{
                     {addOns.map(addOn => {
                         return (
                             <Grid item style={{ margin: 15, marginTop: 0 }}>
-                                <LockWrapper hasPermission={isSuperAdmin}>
+                                <LockWrapper hasPermission={isSuperAdmin && this.hasCurrenciesInstalled()}>
                                     <AddOnStoreContainer
                                         addOn={addOn}
                                         isAdded={this.isAdded(addOn)}
