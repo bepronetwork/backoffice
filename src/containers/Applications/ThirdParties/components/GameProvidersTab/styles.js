@@ -3,17 +3,27 @@ import { CardBody as Card, Input } from 'reactstrap';
 
 export const CardBody = styled(Card)`
     margin: 10px !important;
+    padding: 25px 15px 15px 15px !important;
     border-radius: 10px !important;
     background-color: #fafcff !important;
 
     border: solid 1px rgba(164, 161, 161, 0.35) !important;
     box-shadow: none !important;
+
+    > h1 {
+        font-family: Poppins;
+        font-size: 16px;
+        color: #212529;
+        font-weight: 500;
+        line-height: 24px;
+    }
 `;
 
 export const ProvidersList = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
     grid-gap: 15px;
+    justify-items: start;
 
     width: 100%;
     height: 100%;

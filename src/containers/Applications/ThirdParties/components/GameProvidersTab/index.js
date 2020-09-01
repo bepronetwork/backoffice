@@ -7,13 +7,14 @@ import { connect } from "react-redux";
 
 import _ from 'lodash';
 import Provider from './Provider';
-
+import AddProvider from './AddProvider';
 
 class GameProvidersTab extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            providers: []
+            providers: [],
+            isLoading: false
         };
     }
 
@@ -26,11 +27,14 @@ class GameProvidersTab extends React.Component {
     }
 
     projectData = async (props) => {
-        const { App } = props.profile;
+        const { profile } = props;
 
-        const providers = App.params.casino_providers;
+        this.setState({ isLoading: true })
 
-        this.setState({ providers: !_.isEmpty(providers) ? providers : [] })
+        const response = await profile.getApp().getAllGameProviders();
+        const providers = response.data.message ? response.data.message : [];
+
+        this.setState({ providers: !_.isEmpty(providers) ? providers : [], isLoading: false })
     }
 
     onChange = ({name, value}) => {
@@ -53,38 +57,50 @@ class GameProvidersTab extends React.Component {
         this.projectData(this.props);
     }
 
+    isAdded = ({ _id }) => {
+        const { profile } = this.props;
+
+        const appGameProviders = profile.App.params.casino_providers ? profile.App.params.casino_providers : [];
+        const provider = appGameProviders.find(provider => provider.providerEco === _id);
+
+        return !_.isEmpty(provider);
+    }
+
     addProvider = async ({ provider_id }) => {
         const { profile } = this.props;
 
         await profile.getApp().createProvider({ provider_id });
     }
 
+    editProvider = async ({ })
+
     render() {
         const { isLoading, locked, providers } = this.state; 
+        const { profile } = this.props;
+
+        const appGameProviders = profile.App.params.casino_providers ? profile.App.params.casino_providers : [];
 
         return (
             <Card>
                 <CardBody>
-                        {/* <div>
-                            <img style={{width : 70}} src={stream}></img>
-                            <p className="text-small text-left" style={{marginTop : 0}}><a href="https://getstream.io" target="_blank">https://getstream.io</a></p>
-                            <p className="text-left secondary-text" style={{marginTop: 40, marginBottom: 40}}> Add your API Key to integrate </p>
-                        </div>
+                    <h1>You can add a new provider or manage existing ones</h1>
+                    <br/>
 
-                        <TextInput
-                            label={'API Key'}
-                            name={'privateKey'}
-                            type={'text'} 
-                            value={privateKey}
-                            defaultValue={privateKey}
-                            disabled={locked}
-                            changeContent={(name, value) => this.onChange({name, value})}
-                        /> */}
-                        <ProvidersList>
-                            { !_.isEmpty(providers) && providers.map(provider => (
-                                <Provider data={provider} addProvider={this.addProvider}/>
-                            ))}
-                        </ProvidersList>
+                    <ProvidersList>
+                        { providers.filter(provider => this.isAdded({ _id: provider._id })).map(provider => (
+                            <AddProvider data={provider} addProvider={this.addProvider}/>
+                        ))}
+                    </ProvidersList>
+
+                    <br/>
+                    <hr/>
+                    <br/>
+
+                    <ProvidersList>
+                        { appGameProviders.map(provider => (
+                            <Provider data={provider} addProvider={this.addProvider}/>
+                        ))}
+                    </ProvidersList>
                 </CardBody>
             </Card>
             )
