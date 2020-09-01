@@ -9,7 +9,7 @@ import _ from 'lodash';
 import Provider from './Provider';
 
 
-class GamesProvidersTab extends React.Component {
+class GameProvidersTab extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -97,4 +97,4 @@ function mapStateToProps(state){
   };
 }
 
-export default connect(mapStateToProps)(GamesProvidersTab);
+export default connect(mapStateToProps)(GameProvidersTab);

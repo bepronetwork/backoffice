@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ChatTab, EmailTab, GamesProviders } from './components';
+import { ChatTab, EmailTab, GameProviders } from './components';
 import TabsContainer from '../../../shared/components/tabs/Tabs';
 import { ChatIcon, EmailIcon } from 'mdi-react';
 import { Chat, Email } from '../../../components/Icons';
@@ -22,8 +22,8 @@ export default class ThirdPartiesContainer extends Component {
                                 icon : <Email/>
                             },
                             {
-                                title : 'Games Providers',
-                                container :  <GamesProviders />,
+                                title : 'Game Providers',
+                                container :  <GameProviders />,
                                 icon : <Email/>
                             }
                          

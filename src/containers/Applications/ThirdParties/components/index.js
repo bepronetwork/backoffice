@@ -1,9 +1,9 @@
 import ChatTab from './ChatTab';
 import EmailTab from './EmailTab';
-import GamesProviders from './GamesProvidersTab'
+import GameProviders from './GameProvidersTab'
 
 export { 
     ChatTab,
     EmailTab,
-    GamesProviders
+    GameProviders
 }
