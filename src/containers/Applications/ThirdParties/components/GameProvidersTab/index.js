@@ -1,8 +1,6 @@
 import React from 'react'
-import EditLock from '../../../../Shared/EditLock.js';
-import TextInput from '../../../../../shared/components/TextInput';
 import { Card } from 'reactstrap';
-import { CardBody, ProvidersList, ProviderContainer, Header, Actions, ApiField } from './styles';
+import { CardBody, ProvidersList } from './styles';
 import { connect } from "react-redux";
 
 import _ from 'lodash';
@@ -37,26 +35,6 @@ class GameProvidersTab extends React.Component {
         this.setState({ providers: !_.isEmpty(providers) ? providers : [], isLoading: false })
     }
 
-    onChange = ({name, value}) => {
-        this.setState({...this.state, [name] : value })
-    }
-
-    unlockField = () => {
-        this.setState({...this.state, locked : false})
-    }
-
-    lockField = () => {
-        this.setState({...this.state, locked : true})
-    }
-
-    confirmChanges = async () => {
-        var { profile } = this.props;
-        this.setState({...this.state, isLoading : true});
-        await profile.getApp().editIntegration(this.state);
-        this.setState({...this.state, isLoading : false, locked: true})
-        this.projectData(this.props);
-    }
-
     isAdded = ({ _id }) => {
         const { profile } = this.props;
 
@@ -70,37 +48,62 @@ class GameProvidersTab extends React.Component {
         const { profile } = this.props;
 
         await profile.getApp().createProvider({ provider_id });
+
+        this.projectData(this.props);
     }
 
-    editProvider = async ({ })
+    editProvider = async ({ _id, api_key, activated, partner_id }) => {
+        const { profile } = this.props;
+
+        await profile.getApp().editProvider({ 
+            providerParams: { 
+                _id: _id, 
+                api_key: api_key,
+                activated: activated,
+                partner_id: partner_id
+            } 
+        });
+    }
 
     render() {
-        const { isLoading, locked, providers } = this.state; 
+        const { providers } = this.state; 
         const { profile } = this.props;
 
         const appGameProviders = profile.App.params.casino_providers ? profile.App.params.casino_providers : [];
+        const providersToAdd = providers.filter(provider => !this.isAdded({ _id: provider._id }));
 
         return (
             <Card>
                 <CardBody>
-                    <h1>You can add a new provider or manage existing ones</h1>
-                    <br/>
+                    { _.isEmpty(providersToAdd) ? (
+                        <h5 style={{ marginBottom: 20 }}>There are no new providers available or all have already been added</h5>
+                     ) : (
+                         <>
+                            <h5 style={{ marginBottom: 20 }}>Available game providers</h5>
+                            <ProvidersList>
+                                { providersToAdd.map(provider => (
+                                    <AddProvider data={provider} addProvider={this.addProvider}/>
+                                ))}
+                            </ProvidersList> 
+                            <br/>
+                        </>
+                    )}
 
-                    <ProvidersList>
-                        { providers.filter(provider => this.isAdded({ _id: provider._id })).map(provider => (
-                            <AddProvider data={provider} addProvider={this.addProvider}/>
-                        ))}
-                    </ProvidersList>
-
-                    <br/>
                     <hr/>
                     <br/>
-
-                    <ProvidersList>
-                        { appGameProviders.map(provider => (
-                            <Provider data={provider} addProvider={this.addProvider}/>
-                        ))}
-                    </ProvidersList>
+                    
+                    { _.isEmpty(appGameProviders) ? (
+                        <h5 style={{ marginBottom: 20 }}>You have no added providers currently</h5>
+                    ) : (
+                        <>
+                            <h5 style={{ marginBottom: 20 }}>Currently enabled game providers</h5>
+                            <ProvidersList>
+                                { appGameProviders.map(provider => (
+                                    <Provider data={provider} editProvider={this.editProvider}/>
+                                ))}
+                            </ProvidersList>
+                        </>
+                    )}
                 </CardBody>
             </Card>
             )
