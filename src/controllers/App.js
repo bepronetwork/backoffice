@@ -892,6 +892,26 @@ class App{
         }
     }
 
+    editProvider = async ({ providerParams }) => {
+        try{
+            let res = await ConnectionSingleton.editProvider({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    providerParams,
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     cancelWithdraw = async () => {
         try{
             /* Cancel Withdraw Response */
