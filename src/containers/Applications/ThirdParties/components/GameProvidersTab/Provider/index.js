@@ -8,7 +8,7 @@ const Provider = ({ data, addProvider }) => {
 
     const [apiKey, setApikey] = useState(api_key);
     const [isActivated, setIsActivated] = useState(activated);
-    const [locked, setLocked] = useState(false);
+    const [locked, setLocked] = useState(true);
     const [loading, setLoading] = useState(false);
 
     async function handleAddProvider() {
@@ -28,11 +28,11 @@ const Provider = ({ data, addProvider }) => {
             locked={locked}>
                 <Header>
                     <img src={logo} alt={name} />
-                    <p className="text-small text-left" style={{ marginTop: 0 }}><a href={api_url} target="_blank">{api_url}</a></p>
+                    <p className="text-small text-left" style={{ marginTop: 0 }}><a style={{ pointerEvents: locked || loading ? "none" : "unset" }} href={api_url} target="_blank">{api_url}</a></p>
                 </Header>
                 <Actions>
                     <p>Add your API Key to integrate</p>
-                    <ApiField value={apiKey} onChange={(e) => setApikey(e.target.value)}/>
+                    <ApiField disabled={locked || loading} value={apiKey} onChange={(e) => setApikey(e.target.value)}/>
                 </Actions>
             </EditLock>
         </ProviderContainer>
