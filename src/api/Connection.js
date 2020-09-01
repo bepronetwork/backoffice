@@ -915,6 +915,17 @@ class Connection {
         }
     }
 
+    getAllGameProviders = async () => {
+        try{
+            const response = await fetch( URL + `/api/app/providerEcosystem/get`, {
+                method: 'GET'
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getAppUsers = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/users`, {

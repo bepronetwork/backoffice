@@ -906,6 +906,14 @@ class App{
         }
     }
 
+    getAllGameProviders = async () => {
+        try {
+            return await ConnectionSingleton.getAllGameProviders();
+        } catch(err) {
+            throw err;
+        }
+    }
+
     getGamesAsync = async ({currency}) => {
         try{
             /* Cancel Withdraw Response */
