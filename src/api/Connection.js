@@ -902,6 +902,43 @@ class Connection {
         }
     }
 
+    createProvider = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/provider/create`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editProvider = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/provider/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getAllGameProviders = async () => {
+        try{
+            const response = await fetch( URL + `/api/app/providerEcosystem/get`, {
+                method: 'GET'
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getAppUsers = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/users`, {

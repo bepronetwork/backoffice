@@ -872,6 +872,46 @@ class App{
         }
     }
 
+    createProvider = async ({ provider_id }) => {
+        try{
+            let res = await ConnectionSingleton.createProvider({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    provider_id,
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editProvider = async ({ providerParams }) => {
+        try{
+            let res = await ConnectionSingleton.editProvider({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    providerParams,
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     cancelWithdraw = async () => {
         try{
             /* Cancel Withdraw Response */
@@ -882,6 +922,14 @@ class App{
             });
 
         }catch(err){
+            throw err;
+        }
+    }
+
+    getAllGameProviders = async () => {
+        try {
+            return await ConnectionSingleton.getAllGameProviders();
+        } catch(err) {
             throw err;
         }
     }
