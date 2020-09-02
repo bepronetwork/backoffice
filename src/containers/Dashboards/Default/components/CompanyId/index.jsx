@@ -1,13 +1,14 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
 import { Card, CardBody } from 'reactstrap';
-import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { DirectionsIcon, EditIcon } from 'mdi-react';
 import { emptyObject } from '../../../../../lib/misc';
 import { compareIDS } from '../../../../../lib/string';
-
 import { Container, AppDetails, Edit, EditButton, BankAddress } from './styles';
+import EditDialog from './EditDialog';
+import { connect } from 'react-redux';
+
 const Ava = `${process.env.PUBLIC_URL}/img/dashboard/brand.jpg`;
 
 const defaultProps = {
@@ -27,7 +28,7 @@ class CompanyId extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = { ...defaultProps};
+        this.state = { ...defaultProps, open: false };
     }
 
     componentDidMount(){
@@ -51,7 +52,7 @@ class CompanyId extends PureComponent {
         const link_url = wallet ? wallet.link_url : null;
 
         this.setState({...this.state, 
-            platformAddress : bank_address ? `${bank_address.substring(0, 10)}...${bank_address.substring(bank_address.length - 2)}` : defaultProps.platformAddress,
+            platformAddress : bank_address ? `${bank_address.substring(0, 6)}...${bank_address.substring(bank_address.length - 2)}` : defaultProps.platformAddress,
             platformId  : app.getId(),
             ticker : currency.ticker ? currency.ticker : defaultProps.ticker,
             currencyImage: currency.image ? currency.image : null,
@@ -60,11 +61,28 @@ class CompanyId extends PureComponent {
         })
     }
 
+    handleOpenDialog = () => {
+        this.setState({ open: true });
+    }
+
+    handleCloseDialog = () => {
+        this.setState({ open: false });
+    }
+
+    setAppInfo = ({ name, description }) => {
+        this.setState({
+            platformName: name,
+            platformDescription: description
+        })
+    }
 
     render() {
         let { app } = this.props;
+        const { profile } = this.props;
         let { platformName } = this.state;
-        const { ticker, currencyImage, platformAddressLink, platformAddress, platformDescription } = this.state;
+        const { ticker, currencyImage, platformAddressLink, platformAddress, platformDescription, open } = this.state;
+
+        const isSuperAdmin = profile.User.permission.super_admin;
 
         platformName =  app.getName() ? app.getName() : platformName;
 
@@ -78,26 +96,28 @@ class CompanyId extends PureComponent {
                                 <h4 className={"bold-text dashboard__total-stat"} style={{ margin: 0, padding: 0 }}>{platformName}</h4>
                                 <p className="dashboard__total-stat">{platformDescription}</p>
                             </div>
-                            <Edit>
-                                <EditButton style={{ margin: 0, marginTop: 10 }}>
-                                    <p style={{ color: "white", fontSize: 12 }}><EditIcon className="deposit-icon"/> Edit </p> 
-                                </EditButton>
-                            </Edit>
                         </AppDetails>
                         <BankAddress>
-                            <div style={{ display: "flex", alignItems: "center", padding: "5px 10px" }}>
-                                { currencyImage && (
-                                    <img src={currencyImage} style={{ width: 25, height: 25 }}/>
-                                )}
-                                <p className='text-small' style={{margin: 5, alignSelf: "center" }}>{ticker}</p>
-                            </div>
-                            { platformAddressLink ?
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                { platformAddressLink ?
                                 <a target={'__blank'} className='ethereum-address-a' href={platformAddressLink}>
                                     <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{platformAddress}</p>
                                 </a>
-                            :
-                                <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{platformAddress}</p>
-                            }
+                                :
+                                    <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{platformAddress}</p>
+                                }
+                                { currencyImage && (
+                                    <img src={currencyImage} style={{ width: 20, height: 20, marginTop: 3 }}/>
+                                )}
+                            </div>
+                            { isSuperAdmin && (
+                                <Edit>
+                                    <EditDialog open={open} handleCloseDialog={this.handleCloseDialog} setAppInfo={this.setAppInfo}/>
+                                    <EditButton style={{ margin: 0, marginTop: 10 }} onClick={() => this.handleOpenDialog()}>
+                                        <p style={{ color: "white", fontSize: 12 }}><EditIcon className="deposit-icon"/> Edit </p> 
+                                    </EditButton>
+                                </Edit>
+                            )}
                         </BankAddress>
                     </Container>
                 </CardBody>
@@ -106,4 +126,10 @@ class CompanyId extends PureComponent {
     }
 }
 
-export default translate('common')(CompanyId);
+function mapStateToProps(state){
+    return {
+        profile: state.profile
+    };
+}
+
+export default connect(mapStateToProps)(CompanyId);
