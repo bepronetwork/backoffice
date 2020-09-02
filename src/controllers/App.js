@@ -176,6 +176,26 @@ class App{
         }
     }
 
+    editApp = async ({ editParams }) => {
+        try{
+            let res = await ConnectionSingleton.editApp({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    editParams,
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     setGamesAsync = async () => {
         try{
             const { currency } = store.getState();
