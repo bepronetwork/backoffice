@@ -615,6 +615,29 @@ class App{
         }
     }
 
+    
+    editCrispIntegration = async ({ isActive, key, cripsr_id }) => {
+        try{
+            let res = await ConnectionSingleton.editCrispIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    isActive,
+                    key,
+                    cripsr_id
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editEmailIntegration = async ({apiKey, templateIds}) => {
         try{
             /* Cancel Withdraw Response */ 
