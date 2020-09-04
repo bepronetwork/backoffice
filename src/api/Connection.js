@@ -148,6 +148,19 @@ class Connection {
         }
     }
 
+    editApp =  async ({params, headers}) => {
+        try{
+            let response = await fetch(URL+ '/api/app/edit', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editTableLimit = async ({admin, app, game, tableLimit, wallet, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/games/editTableLimit', {
@@ -720,6 +733,19 @@ class Connection {
         }
     }
 
+    editCrispIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/integrations/cripsr/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editEmailIntegration = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/integrations/mailSender/edit`, {
@@ -895,6 +921,43 @@ class Connection {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    createProvider = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/provider/create`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editProvider = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/provider/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getAllGameProviders = async () => {
+        try{
+            const response = await fetch( URL + `/api/app/providerEcosystem/get`, {
+                method: 'GET'
             });            
             return response.json();
         }catch(err){

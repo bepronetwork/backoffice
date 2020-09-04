@@ -7,6 +7,8 @@ import AutoWithdraw from './AddOn/AutoWithdraw';
 import Jackpot from './AddOn/Jackpot';
 import { Grid } from '@material-ui/core';
 
+const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
+
 class AddOnContainer extends PureComponent {
  
     constructor() {
@@ -47,6 +49,15 @@ class AddOnContainer extends PureComponent {
         }
     }
 
+    hasCurrenciesInstalled = () => {
+        const { profile } = this.props;
+
+        const currencies = profile.getApp().getEcosystemCurrencies();
+        const wallet = profile.App.params.wallet;
+
+        return !_.isEmpty(currencies) || !_.isEmpty(wallet);
+    }
+
     getAddOnObj = (addOn) => {
         const { ecosystemAddOns, appAddOns } = this.state;
 
@@ -62,9 +73,20 @@ class AddOnContainer extends PureComponent {
     render() {
        const { isLoading, currency, profile } = this.props;
        const { appAddOns } = this.state;
+
        const appUseVirtualCurrencies = profile.App.params.virtual;
+       const appHasCurrenciesInstalled = this.hasCurrenciesInstalled();
 
         if (_.isEmpty(appAddOns)){return null}
+
+        if (!appHasCurrenciesInstalled) {
+            return (
+                <div style={{ padding: 15 }}>
+                    <h4>You have no currencies installed currently</h4>
+                    <img src={image} alt="" style={{ width: "30%", marginTop: 20 }}/>
+                </div>
+            )
+        } 
 
         return (
             <Grid container direction="row" justify="flex-start" alignItems="flex-start">

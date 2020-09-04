@@ -19,10 +19,6 @@ import RevenueChart from './components/RevenueChart';
 import TurnoverResume from './components/TurnoverResume';
 import VisitorsSessions from './components/VisitorsSessions';
 
-
-
-
-
 class DefaultDashboard extends React.Component{
 
     constructor(props){
