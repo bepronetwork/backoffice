@@ -13,7 +13,7 @@ export const AppDetails = styled.section`
 
     > img {
         justify-self: center;
-        margin: 5px;
+        margin: 0px 5px;
     }
 
     > div {
@@ -25,7 +25,7 @@ export const AppDetails = styled.section`
             padding: 0px 10px;
 
             > p {
-                margin: 10px 0px;
+                margin: 5px 0px;
                 padding: 0;
                 height: auto;
             }
@@ -37,8 +37,6 @@ export const Edit = styled.section`
     display: flex;
     justify-content: flex-end;
     flex: auto;
-
-    padding: 0px 10px;
 `;
 
 export const BankAddress = styled.section`
@@ -53,7 +51,7 @@ export const BankAddress = styled.section`
 `;
 
 export const EditButton = styled(MaterialButton)`
-    margin: 7px 0px !important;
+    margin: 0px !important;
 
     text-transform: none !important;
     background-color: #894798 !important;

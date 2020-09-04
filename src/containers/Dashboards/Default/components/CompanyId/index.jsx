@@ -98,16 +98,16 @@ class CompanyId extends PureComponent {
                             </div>
                         </AppDetails>
                         <BankAddress>
-                            <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ display: "flex", alignItems: "flex-end" }}>
                                 { platformAddressLink ?
                                 <a target={'__blank'} className='ethereum-address-a' href={platformAddressLink}>
-                                    <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{platformAddress}</p>
+                                    <p className="ethereum-address-name" style={{ padding: '0px 5px' }}> <DirectionsIcon className='icon-ethereum-address' />{platformAddress}</p>
                                 </a>
                                 :
-                                    <p className="ethereum-address-name"> <DirectionsIcon className='icon-ethereum-address' />{platformAddress}</p>
+                                    <p className="ethereum-address-name" style={{ padding: '0px 5px' }}> <DirectionsIcon className='icon-ethereum-address' />{platformAddress}</p>
                                 }
                                 { currencyImage && (
-                                    <img src={currencyImage} style={{ width: 20, height: 20, marginTop: 3 }}/>
+                                    <img src={currencyImage} style={{ width: 20, height: 20, margin: "2px 5px"}}/>
                                 )}
                             </div>
                             { isSuperAdmin && (
