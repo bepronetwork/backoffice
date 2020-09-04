@@ -23,7 +23,8 @@ class UsersProfile extends PureComponent {
     render() {
         const { profile } = this.props;
         const params = profile.getApp().params;
-        const users = params.external_users ? params.external_users.length : Object.keys(this.props.data.data).length;
+
+        const users = params.external_users ? params.external_users : 0;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
@@ -35,7 +36,7 @@ class UsersProfile extends PureComponent {
                             }><AnimationNumber decimals={0} number={users ? users : 0}/></p>
                         </div>
                         <div className="dashboard__visitors-chart">
-                            <p className="dashboard__visitors-chart-title"> Registerd Users <span> All </span></p>
+                            <p className="dashboard__visitors-chart-title"> Registered Users <span> All </span></p>
                         </div>
                     </CardBody>
                 </Card>
