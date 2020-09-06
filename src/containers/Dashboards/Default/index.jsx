@@ -25,7 +25,7 @@ class DefaultDashboard extends React.Component{
         super(props);
         this.state = {
             isDeployed : false,
-            periodicity : 'Weekly',
+            periodicity : 'Daily',
             currency : {}
         }
     }

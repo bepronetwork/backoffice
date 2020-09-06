@@ -29,10 +29,10 @@ class TimePicker extends React.Component{
                 <Grid container spacing={3}>
                     <Grid item>
                         <ButtonGroup size="small" aria-label="small button group">
-                        <Button disabled={periodicity == 'daily'}  onClick={() => this.change('daily')}> Daily </Button>
-                            <Button disabled={periodicity == 'weekly'}  onClick={() => this.change('weekly')}> Weekly </Button>
-                            <Button disabled={periodicity == 'monthly'}  onClick={() => this.change('monthly')}> Monthly </Button>
-                            <Button disabled={periodicity == 'all'} onClick={() => this.change('all')}> All </Button>
+                        <Button disabled={periodicity === 'daily'}  onClick={() => this.change('daily')}> Daily </Button>
+                            <Button disabled={periodicity === 'weekly'}  onClick={() => this.change('weekly')}> Weekly </Button>
+                            {/* <Button disabled={periodicity === 'monthly'}  onClick={() => this.change('monthly')}> Monthly </Button>
+                            <Button disabled={periodicity === 'all'} onClick={() => this.change('all')}> All </Button> */}
                         </ButtonGroup>
                     </Grid>
                 </Grid>
