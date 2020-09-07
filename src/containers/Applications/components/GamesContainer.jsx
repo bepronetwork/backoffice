@@ -3,6 +3,9 @@ import React from 'react';
 import { connect } from "react-redux";
 import { Col, Row } from 'reactstrap';
 import GameInfo from './GameInfo';
+
+import _ from 'lodash';
+
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
 class GamesContainer extends React.Component {
@@ -25,15 +28,16 @@ class GamesContainer extends React.Component {
     }
 
     projectData = async (props) => {
+        const { data, profile } = props; 
 
-            const gamesInfo = await props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
-            const games = await getAllGames(props.data.games.data, gamesInfo);
-            const wallet = props.data.wallet.data;
+        const gamesInfo = await profile.getApp().getSummaryData('gamesInfo').data.data.message;
+        const games = !_.isNull(data.games.data) && (typeof data.games.data !== 'string') ? await getAllGames(data.games.data, gamesInfo) : [];
+        const wallet = data.wallet.data;
 
-            this.setState({...this.state, 
-                wallet,
-                games
-            })
+        this.setState({...this.state, 
+            wallet,
+            games
+        })
     }
 
     hasRestriction(game) {
@@ -46,12 +50,12 @@ class GamesContainer extends React.Component {
 
     render() {
        const { wallet, games } = this.state;
-       const { isLoading } = this.props;
+       const { isLoading, data } = this.props;
 
        const myGames = games.filter(game => !this.hasRestriction(game));
         
         return (
-            (myGames.length > 0) ? 
+            (myGames.length > 0) && !_.isNull(data.games.data) ? 
                 <Row md={12} xl={12} lg={12} xs={12}>
                     {myGames.map(game => {
                         return (
