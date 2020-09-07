@@ -26,7 +26,7 @@ class App{
         const { periodicity, currency } = state;
 
         try{
-            let res = await Promise.all([
+            let res = [
                 !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
                     params : {
                         admin : this.getAdminId(),
@@ -47,7 +47,7 @@ class App{
                     },
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }) : currency,
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
+                !_.isEmpty(currency) ? await ConnectionSingleton.getSummary({
                     params : {
                         admin : this.getAdminId(),
                         app : this.getId(),
@@ -57,7 +57,7 @@ class App{
                     },
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }) : currency,
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
+                !_.isEmpty(currency) ? await ConnectionSingleton.getSummary({
                     params : {
                         admin : this.getAdminId(),
                         app : this.getId(),
@@ -67,7 +67,7 @@ class App{
                     },
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }) : currency,
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
+                !_.isEmpty(currency) ? await ConnectionSingleton.getSummary({
                     params : {
                         admin : this.getAdminId(),
                         app : this.getId(),
@@ -77,25 +77,25 @@ class App{
                     },
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }) : currency,
-                ConnectionSingleton.getApp({
+                await ConnectionSingleton.getApp({
                     admin : this.getAdminId(),
                     app : this.getId(),
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
-                ConnectionSingleton.getTransactions({
+                await ConnectionSingleton.getTransactions({
                     admin : this.getAdminId(),
                     app : this.getId(),
                     filters : [],
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
-                this.getGamesAsync({currency : currency._id}),
-                this.getUsersAsync({size: 100, offset: 0 }),
-                this.getWithdrawsAsync({size : 1000, currency : currency._id})
-            ]);
+                await this.getGamesAsync({currency : currency._id}),
+                await this.getUsersAsync({size: 100, offset: 0 }),
+                await this.getWithdrawsAsync({size : 1000, currency : currency._id})
+            ];
 
             let serverApiInfo = {
-                users : res[0].data ? res[0].data.message : [],
-                games : res[1].data ? res[1].data.message : [],
+                users : res[0] && res[0].data ? res[0].data.message : null,
+                games : res[1] && res[1].data ? res[1].data.message : null,
                 bets : res[2].data ? res[2].data.message : [],
                 revenue : res[3].data ? res[3].data.message : [],
                 wallet : res[4].data && this.hasPermission(res[4]) ? res[4].data.message[0] : [],        

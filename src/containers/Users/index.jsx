@@ -12,6 +12,7 @@ import UsersResumeEntries from './components/UsersResumeEntries';
 import UsersTable from './components/UsersTable';
 import VectorMap from './components/VectorMap';
 
+import _ from 'lodash';
 
 class UsersContainer extends React.Component{
 
@@ -29,7 +30,11 @@ class UsersContainer extends React.Component{
 
     render = () => {
 
-        const { isLoading } = this.props;
+        const { isLoading, profile } = this.props;
+        
+        const revenue = profile.getApp().getSummaryData('revenue');
+        const wallet = profile.getApp().getSummaryData('wallet');
+        const users = profile.getApp().getSummaryData('users');
 
         return (
             <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
@@ -45,24 +50,29 @@ class UsersContainer extends React.Component{
                                 <UsersProfile data={this.props.profile.getApp().getSummaryData('usersInfoSummary')}/>
                             </DataWidget>
                         </Col>
-                        <Col lg={3}>
-                            <DataWidget>
-                                <UsersProfit isLoading={isLoading} data={{
-                                    users : this.props.profile.getApp().getSummaryData('users'),
-                                    wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                    revenue : this.props.profile.getApp().getSummaryData('revenue')
-                                }}/>
-                            </DataWidget>
-                        </Col>
-                        <Col lg={3}>
-                            <DataWidget>
-                                <UsersBalance isLoading={isLoading} data={{
-                                    users : this.props.profile.getApp().getSummaryData('users'),
-                                    wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                    revenue : this.props.profile.getApp().getSummaryData('revenue')
-                                }}/>
-                            </DataWidget>
-                        </Col>
+                        { !_.isNull(users.data) && wallet && revenue && (
+                            <Col lg={3}>
+                                <DataWidget>
+                                    <UsersProfit isLoading={isLoading} data={{
+                                        users : users,
+                                        wallet : wallet,
+                                        revenue : revenue
+                                    }}/>
+                                </DataWidget>
+                            </Col>
+                        )}
+
+                        { !_.isNull(users.data) && wallet && revenue && (
+                            <Col lg={3}>
+                                <DataWidget>
+                                    <UsersBalance isLoading={isLoading} data={{
+                                        users : users,
+                                        wallet : wallet,
+                                        revenue : revenue
+                                    }}/>
+                                </DataWidget>
+                            </Col> 
+                        )}
                     </Row>
                     <Row>
                         <Col lg={12}>
