@@ -96,8 +96,10 @@ class App{
                 }
             };
 
-            this.getUsersSummary();
-            this.getGamesSummary();
+            if (currency) {
+                this.getUsersSummary(currency);
+                this.getGamesSummary(currency);
+            }
 
             return res;
         }catch(err){
@@ -105,9 +107,9 @@ class App{
 		}
     }
 
-    getUsersSummary = async () => {
+    getUsersSummary = async (currency) => {
         const state = store.getState();
-        const { periodicity, currency } = state;
+        const { periodicity } = state;
 
         const response = await ConnectionSingleton.getSummary({
             params : {
@@ -120,12 +122,12 @@ class App{
             headers : authHeaders(this.getBearerToken(), this.getAdminId())
         })
 
-        response.data && typeof response.data.message !== 'string' ? setUsersData(response.data.message) : setUsersData([])
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setUsersData(response.data.message)) : store.dispatch(setUsersData([]))
     }
 
-    getGamesSummary = async () => {
+    getGamesSummary = async (currency) => {
         const state = store.getState();
-        const { periodicity, currency } = state;
+        const { periodicity } = state;
 
         const response = await ConnectionSingleton.getSummary({
             params : {
@@ -138,7 +140,7 @@ class App{
             headers : authHeaders(this.getBearerToken(), this.getAdminId())
         })
 
-        response.data && typeof response.data.message !== 'string' ? setGamesData(response.data.message) : setGamesData([])
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setGamesData(response.data.message)) : store.dispatch(setGamesData([]))
     }
 
     updateAppInfoAsync = async () => {
