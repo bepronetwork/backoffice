@@ -4,6 +4,7 @@ import Numbers from "../services/numbers";
 import { getNonce } from "../lib/number";
 import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
+import { setGamesData, setUsersData } from "../redux/actions/summaryActions";
 import { getAuthFromCookies } from "./services/services";
 import _ from 'lodash';
 
@@ -26,27 +27,7 @@ class App{
         const { periodicity, currency } = state;
 
         try{
-            let res = [
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'USERS',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'GAMES',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
+            let res = await Promise.all([
                 !_.isEmpty(currency) ? await ConnectionSingleton.getSummary({
                     params : {
                         admin : this.getAdminId(),
@@ -91,21 +72,19 @@ class App{
                 await this.getGamesAsync({currency : currency._id}),
                 await this.getUsersAsync({size: 100, offset: 0 }),
                 await this.getWithdrawsAsync({size : 1000, currency : currency._id})
-            ];
+            ]);
 
             let serverApiInfo = {
-                users : res[0] && res[0].data ? res[0].data.message : null,
-                games : res[1] && res[1].data ? res[1].data.message : null,
-                bets : res[2].data ? res[2].data.message : [],
-                revenue : res[3].data ? res[3].data.message : [],
-                wallet : res[4].data && this.hasPermission(res[4]) ? res[4].data.message[0] : [],        
-                affiliates : res[5].data.message ? res[5].data.message.affiliateSetup : null,
-                app : res[5].data.message ? res[5].data.message : null,
-                walletSimple : res[5].data.message ? res[5].data.message.wallet : null,
-                transactions :  res[6].data && this.hasPermission(res[6]) ? res[6].data.message[0] : null,
-                gamesInfo : res[7],
-                usersInfoSummary : res[8],
-                withdraws : res[9]
+                bets : res[0].data ? res[0].data.message : [],
+                revenue : res[1].data ? res[1].data.message : [],
+                wallet : res[2].data && this.hasPermission(res[2]) ? res[2].data.message[0] : [],        
+                affiliates : res[3].data.message ? res[3].data.message.affiliateSetup : null,
+                app : res[3].data.message ? res[3].data.message : null,
+                walletSimple : res[3].data.message ? res[3].data.message.wallet : null,
+                transactions :  res[4].data && this.hasPermission(res[4]) ? res[4].data.message[0] : null,
+                gamesInfo : res[5],
+                usersInfoSummary : res[6],
+                withdraws : res[7]
             } 
             this.params = serverApiInfo.app;
             this.params.users = serverApiInfo.usersInfoSummary;
@@ -117,10 +96,49 @@ class App{
                 }
             };
 
+            this.getUsersSummary();
+            this.getGamesSummary();
+
             return res;
         }catch(err){
             throw err;
 		}
+    }
+
+    getUsersSummary = async () => {
+        const state = store.getState();
+        const { periodicity, currency } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'USERS',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? setUsersData(response.data.message) : setUsersData([])
+    }
+
+    getGamesSummary = async () => {
+        const state = store.getState();
+        const { periodicity, currency } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'GAMES',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? setGamesData(response.data.message) : setGamesData([])
     }
 
     updateAppInfoAsync = async () => {
@@ -1195,9 +1213,27 @@ class App{
     }
   
     getSummaryData(type){
-        return {
-            data :  this.data.summary[type],
-            type : type
+        if (type === 'users') {
+            const state = store.getState();
+            const { summary } = state;
+
+             return {
+                data: summary.users,
+                type: type
+            }
+        } else if (type === 'games') {
+            const state = store.getState();
+            const { summary } = state;
+
+             return {
+                data: summary.games,
+                type: type
+            }
+        } else {
+            return {
+                data:  this.data.summary[type],
+                type: type
+            }
         }
     }
 
