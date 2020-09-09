@@ -63,7 +63,7 @@ class App{
                 }
             };
 
-            if (currency) {
+            if (!_.isEmpty(currency)) {
                 await this.getSummaryAsync(currency);
             }
 
@@ -1245,8 +1245,6 @@ class App{
     getSummaryData(type){
         const state = store.getState();
         const { summary } = state;
-
-        console.log(summary)
 
         switch (type) {
             case 'users':
