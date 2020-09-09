@@ -1,6 +1,9 @@
 const initialState = {
     users: [],
-    games: []
+    games: [],
+    bets: [],
+    revenue: [],
+    wallet: []
 };
 
 export default function (state = initialState, action) {
@@ -9,7 +12,13 @@ export default function (state = initialState, action) {
             return { ...state, users: action.payload }
         case 'SET_GAMES_DATA':
             return { ...state, games: action.payload }
+        case 'SET_BETS_DATA':
+            return { ...state, bets: action.payload }
+        case 'SET_REVENUE_DATA':
+            return { ...state, revenue: action.payload }
+        case 'SET_WALLET_DATA':
+            return { ...state, wallet: action.payload }
       default:
         return state;
     }
-  }
+}
