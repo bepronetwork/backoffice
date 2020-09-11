@@ -4,6 +4,7 @@ import Numbers from "../services/numbers";
 import { getNonce } from "../lib/number";
 import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
+import { setGamesData, setUsersData, setBetsData, setRevenueData, setWalletData } from "../redux/actions/summaryActions";
 import { getAuthFromCookies } from "./services/services";
 import _ from 'lodash';
 
@@ -23,89 +24,34 @@ class App{
     getSummary = async () => {
         // grab current state
         const state = store.getState();
-        const { periodicity, currency } = state;
+        const { currency } = state;
 
         try{
-            let res = [
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'USERS',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'GAMES',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                !_.isEmpty(currency) ? await ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'BETS',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                !_.isEmpty(currency) ? await ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'REVENUE',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                !_.isEmpty(currency) ? await ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'WALLET',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                await ConnectionSingleton.getApp({
+            let res = await Promise.all([
+                ConnectionSingleton.getApp({
                     admin : this.getAdminId(),
                     app : this.getId(),
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
-                await ConnectionSingleton.getTransactions({
+                ConnectionSingleton.getTransactions({
                     admin : this.getAdminId(),
                     app : this.getId(),
                     filters : [],
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
-                await this.getGamesAsync({currency : currency._id}),
-                await this.getUsersAsync({size: 100, offset: 0 }),
-                await this.getWithdrawsAsync({size : 1000, currency : currency._id})
-            ];
+                this.getGamesAsync({currency : currency._id}),
+                this.getUsersAsync({size: 100, offset: 0 }),
+                this.getWithdrawsAsync({size : 1000, currency : currency._id})
+            ]);
 
-            let serverApiInfo = {
-                users : res[0] && res[0].data ? res[0].data.message : null,
-                games : res[1] && res[1].data ? res[1].data.message : null,
-                bets : res[2].data ? res[2].data.message : [],
-                revenue : res[3].data ? res[3].data.message : [],
-                wallet : res[4].data && this.hasPermission(res[4]) ? res[4].data.message[0] : [],        
-                affiliates : res[5].data.message ? res[5].data.message.affiliateSetup : null,
-                app : res[5].data.message ? res[5].data.message : null,
-                walletSimple : res[5].data.message ? res[5].data.message.wallet : null,
-                transactions :  res[6].data && this.hasPermission(res[6]) ? res[6].data.message[0] : null,
-                gamesInfo : res[7],
-                usersInfoSummary : res[8],
-                withdraws : res[9]
+            let serverApiInfo = {   
+                affiliates : res[0].data.message ? res[0].data.message.affiliateSetup : null,
+                app : res[0].data.message ? res[0].data.message : null,
+                walletSimple : res[0].data.message ? res[0].data.message.wallet : null,
+                transactions :  res[1].data && this.hasPermission(res[1]) ? res[1].data.message[0] : null,
+                gamesInfo : res[2],
+                usersInfoSummary : res[3],
+                withdraws : res[4]
             } 
             this.params = serverApiInfo.app;
             this.params.users = serverApiInfo.usersInfoSummary;
@@ -117,10 +63,112 @@ class App{
                 }
             };
 
+            if (!_.isEmpty(currency)) {
+                await this.getSummaryAsync(currency);
+            }
+
             return res;
         }catch(err){
             throw err;
 		}
+    }
+
+    getSummaryAsync = async (currency) => {
+        await this.getUsersSummary(currency);
+        await this.getGamesSummary(currency);
+        await this.getBetsSummary(currency);
+        await this.getRevenueSummary(currency);
+        await this.getWalletSummary(currency);
+    }
+
+    getUsersSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'USERS',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setUsersData(response.data.message)) : store.dispatch(setUsersData([]))
+    }
+
+    getGamesSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'GAMES',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setGamesData(response.data.message)) : store.dispatch(setGamesData([]))
+    }
+
+    getBetsSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'BETS',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setBetsData(response.data.message)) : store.dispatch(setBetsData([]))
+    }
+
+    getRevenueSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'REVENUE',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setRevenueData(response.data.message)) : store.dispatch(setRevenueData([]))
+    }
+
+    getWalletSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'WALLET',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' && this.hasPermission(response) ? store.dispatch(setWalletData(response.data.message[0])) : store.dispatch(setWalletData([]))
     }
 
     updateAppInfoAsync = async () => {
@@ -1195,9 +1243,22 @@ class App{
     }
   
     getSummaryData(type){
-        return {
-            data :  this.data.summary[type],
-            type : type
+        const state = store.getState();
+        const { summary } = state;
+
+        switch (type) {
+            case 'users':
+                return { data: summary.users, type: type }
+            case 'games':
+                return { data: summary.games, type: type }
+            case 'bets':
+                return { data: summary.bets, type: type }
+            case 'revenue':
+                return { data: summary.revenue, type: type }
+            case 'wallet':
+                return { data: summary.wallet, type: type }
+            default:
+                return { data: this.data.summary[type], type: type };
         }
     }
 
