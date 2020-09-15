@@ -618,6 +618,27 @@ class App{
         }
     }
 
+    editSkinTypeCustomization = async ({ skinParams }) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editSkinTypeCustomization({   
+                params: {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    skinParams
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editTypography = async (typography) => {
         try{
             let res = await ConnectionSingleton.editTypography({   
@@ -1117,6 +1138,14 @@ class App{
     getEcosystemVariables = async () => {
         try{
             return await ConnectionSingleton.getEcosystemVariables();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getEcosystemSkins = async () => {
+        try{
+            return await ConnectionSingleton.getEcosystemSkins();
         }catch(err){
             throw err;
         }
