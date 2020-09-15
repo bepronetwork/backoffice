@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AnnouncementTab, Banners, Logo, Footer, Colors, Fonts, Tabs, SubSections } from './components';
+import { AnnouncementTab, Banners, Logo, Footer, Colors, Fonts, Tabs, SubSections, Skins } from './components';
 import TabsContainer from '../../../shared/components/tabs/Tabs';
 import Background from './components/Background';
 import { Bet, Reward, Phone, Settings, Rewards, AddOn, Withdraw } from '../../../components/Icons';
@@ -9,8 +9,11 @@ export default class CustomizationContainer extends Component {
         return (
             <div>
                 <TabsContainer 
-                    items={
-                        [
+                    items={[{
+                                title : 'Skin',
+                                container : <Skins/>,
+                                icon : <Rewards/>
+                            },
                             {
                                 title : 'Announc. Tab',
                                 container :  <AnnouncementTab />,

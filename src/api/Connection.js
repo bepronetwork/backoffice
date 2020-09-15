@@ -244,6 +244,19 @@ class Connection {
         }
     }
 
+    getEcosystemSkins = async () => {
+        try{
+            let response = await fetch(URL+ `/api/app/skinEcosystem/get`, {
+                method : 'GET',
+                headers : addHeaders(config),
+            });
+
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getDepositInfo = async ({id, headers}) => {
         try{
             let response = await fetch(URL+ `/api/deposit/${id}/info`, {
@@ -697,6 +710,19 @@ class Connection {
     editTopBarCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/topBar`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editSkinTypeCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/skin`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

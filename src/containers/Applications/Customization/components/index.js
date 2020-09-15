@@ -6,6 +6,7 @@ import Colors from './Colors';
 import Fonts from './Fonts';
 import Tabs from './Tabs';
 import SubSections from './SubSections';
+import Skins from './Skins'
 
 export { 
     Banners,
@@ -15,5 +16,6 @@ export {
     Logo,
     Fonts,
     Tabs,
-    SubSections
+    SubSections,
+    Skins
 }
