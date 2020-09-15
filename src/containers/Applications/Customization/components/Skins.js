@@ -66,10 +66,12 @@ class SkinsTab extends Component {
         const { params } = app;
 
         const selected_skin = params.customization.skin.skin_type;
+        const _id = params.customization.skin._id;
 
         this.setState({ 
             skins: skins.data ? skins.data.message : [], 
-            selected_skin: selected_skin ? selected_skin : "default" 
+            selected_skin: selected_skin ? selected_skin : "default",
+            _id: _id 
         })
     }
 
@@ -87,14 +89,14 @@ class SkinsTab extends Component {
 
     confirmChanges = async () => {
         const { profile } = this.props;
-        const { selected_skin, skins } = this.state;
+        const { selected_skin, skins, _id } = this.state;
 
         this.setState({ isLoading: true });
 
         const skin = skins.find(skin => skin.skin_type === selected_skin);
 
         await profile.getApp().editSkinTypeCustomization({ skinParams: {
-            _id: skin._id,
+            _id: _id,
             skin_type: skin.skin_type,
             name: skin.name
         }});
