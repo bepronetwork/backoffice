@@ -12,17 +12,30 @@ import TopUpBalance from './components/TopUpBalance';
 import UserBetsTable from './components/UserBetsTable';
 import UserTransactionsTable from './components/UserTransactionsTable';
 import UserPageSkeleton from './components/UserPageSkeleton';
+import { Button } from '@material-ui/core';
+import { ArrowUpIcon, SearchIcon } from 'mdi-react';
 
 
 const defaultProps = {
     ticker : 'No Currency Chosen'
 }
 
+const kycButtonStyle = {
+    textTransform: "none", 
+    backgroundColor: "#894798", 
+    color: "#ffffff", 
+    boxShadow: "none", 
+    height: 25,
+    margin: "10px 0px"
+}
+
 class UserPage extends React.Component{
 
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+            loading: false
+        };
     }
 
     componentDidMount(){
@@ -155,13 +168,28 @@ class UserPage extends React.Component{
 
     }
 
+    askForUserKYC = async () => {
+        const { profile } = this.props;
+        const { App } = profile;
+        const { user } = this.state;
+
+        if (user) {
+            this.setState({ loading: true })
+
+            await App.editUserKYC({ user: user._id, kyc_needed: true });
+            await this.projectData(this.props);
+
+            this.setState({ loading: false })
+        }
+    }
+
     render = () => {
-        const { user, currencyTicker } = this.state;
+        const { user, currencyTicker, loading } = this.state;
         
         if (!user || _.isEmpty(user)) { return <UserPageSkeleton/> };
 
         const { currency, isLoading } = this.props;
-        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, points } = user;
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, points, kyc_status, kyc_needed } = user;
         
         const wallet = user.wallet.find(wallet => wallet.currency._id === currency._id);
 
@@ -189,10 +217,23 @@ class UserPage extends React.Component{
                                         <Col sd={12} md={12} lg={8}>
                                             {/* UserInfo */}
                                             <h5 className='pink-text' style={{ marginTop: 10 }}> @{username}</h5>
-                                            <hr></hr>
+                                            <hr/>
                                             <p className='secondary-text text-small'> {email}</p>
                                             <p className='text-small'> {address} </p>
                                             <p className='text-x-small'> #{_id} </p>
+
+                                            { kyc_status !== undefined && kyc_needed !== undefined && (
+                                                <>
+                                                <hr/>
+
+                                                <h5 className='pink-text' style={{ marginTop: 10, fontSize: 13 }}>KYC status (<span style={{ color: 'black' }}> {kyc_status} </span>)</h5>
+                                                { !kyc_needed && (
+                                                    <Button onClick={() => this.askForUserKYC()} variant="outlined" size="small" style={kycButtonStyle} disabled={loading}>
+                                                        { loading ? "Sending..." : <><SearchIcon style={{marginRight: 3}}/>Ask for KYC</> }
+                                                    </Button>
+                                                )}
+                                                </>
+                                            )}
                                         </Col>
                                     </Row>
                                 </CardBody>

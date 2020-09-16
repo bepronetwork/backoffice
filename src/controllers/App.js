@@ -730,6 +730,25 @@ class App{
         }
     }
 
+    
+    editUserKYC = async ({ user, kyc_needed }) => {
+        try{
+            let res = await ConnectionSingleton.editUserKYC({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    user: user,
+                    kyc_needed: kyc_needed
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editEmailIntegration = async ({apiKey, templateIds}) => {
         try{
             /* Cancel Withdraw Response */ 

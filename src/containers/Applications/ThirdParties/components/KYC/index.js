@@ -86,8 +86,6 @@ class KYC extends Component {
         const { profile } = this.props;
         const { _id, isActive, clientId, flowId } = this.state;
 
-        console.log(this.state)
-
         this.setState({ isLoading: true});
         
         await profile.getApp().editKYCIntegration({
