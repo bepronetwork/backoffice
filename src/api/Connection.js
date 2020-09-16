@@ -785,6 +785,19 @@ class Connection {
         }
     }
 
+    editKYCIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/integrations/kyc/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editBannersCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/banners`, {
