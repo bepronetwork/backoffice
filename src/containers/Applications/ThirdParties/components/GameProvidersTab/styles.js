@@ -42,7 +42,8 @@ export const ProviderContainer = styled.div`
 
 export const Header = styled.section`
     > img {
-        width: 100px !important;
+        height: 100px;
+        width: auto;
         margin: 5px 0px !important;
     }
 `;
