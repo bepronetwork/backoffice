@@ -925,6 +925,24 @@ class App{
         }
     }
 
+    editIconsCustomization = async ({ icon_id, icons }) => {
+        try{
+            let res = await ConnectionSingleton.editIconsCustomization({   
+                params : {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    icon_id,
+                    icons
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editSubsectionsCustomization = async ({ subSections }) => {
         try{
             let res = await ConnectionSingleton.editSubsectionsCustomization({   
