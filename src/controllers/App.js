@@ -730,6 +730,28 @@ class App{
         }
     }
 
+    editMoonPayIntegration = async ({ moonpay_id, isActive, key }) => {
+        try{
+            let res = await ConnectionSingleton.editMoonPayIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    moonpay_id,
+                    isActive,
+                    key
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     
     editUserKYC = async ({ user, kyc_needed }) => {
         try{
