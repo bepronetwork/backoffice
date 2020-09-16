@@ -707,6 +707,48 @@ class App{
         }
     }
 
+    editKYCIntegration = async ({ kyc_id, isActive, clientId, flowId }) => {
+        try{
+            let res = await ConnectionSingleton.editKYCIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    kyc_id,
+                    isActive,
+                    clientId, 
+                    flowId
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
+    editUserKYC = async ({ user, kyc_needed }) => {
+        try{
+            let res = await ConnectionSingleton.editUserKYC({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    user: user,
+                    kyc_needed: kyc_needed
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editEmailIntegration = async ({apiKey, templateIds}) => {
         try{
             /* Cancel Withdraw Response */ 
