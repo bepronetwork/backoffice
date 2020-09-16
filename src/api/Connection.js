@@ -941,6 +941,19 @@ class Connection {
         }
     }
 
+    editIconsCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/icons`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editSubsectionsCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/subSections`, {

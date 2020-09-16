@@ -7,6 +7,7 @@ import Fonts from './Fonts';
 import Tabs from './Tabs';
 import SubSections from './SubSections';
 import Skins from './Skins'
+import Icons from '../components/Icons'
 
 export { 
     Banners,
@@ -17,5 +18,6 @@ export {
     Fonts,
     Tabs,
     SubSections,
-    Skins
+    Skins,
+    Icons
 }
