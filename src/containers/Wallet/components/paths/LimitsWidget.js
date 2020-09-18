@@ -56,7 +56,6 @@ class LimitsWidget extends React.Component{
 
         let currencyTicker, maxDeposit, maxWithdrawal, minWithdrawal, affiliateMinWithdrawal;
         currencyTicker = wallet.currency.ticker;
-        await props.profile.getApp().getSummary();
         wallet = props.profile.getApp().getSummaryData('walletSimple').data.find(c => {return c.currency.ticker === currencyTicker });
         
         currencyTicker = wallet.currency.ticker;
