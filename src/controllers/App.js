@@ -1522,6 +1522,24 @@ class App{
         }
     }
 
+    convertPoints = async ({ currency, user, isAbsolut }) => {
+        try{
+            return await ConnectionSingleton.convertPoints({   
+                params : {
+                    currency,
+                    user,
+                    isAbsolut,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     editJackpot = async ({edge}) => {
         try{
             return await ConnectionSingleton.editJackpot({   
