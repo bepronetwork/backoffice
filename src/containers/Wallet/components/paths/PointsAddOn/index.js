@@ -2,12 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone'
 import EditLock from '../../../../Shared/EditLock';
-import RangeSlider from 'react-bootstrap-range-slider';
 import _ from 'lodash';
 
 import './styles.css';
-import { Container, EditImage, Image, Label, TextField, Logo } from './styles';
+import { Container, EditImage, Image, Label, TextField, Logo, ConvertContainer } from './styles';
 import BooleanInput from '../components/utils/BooleanInput';
+import { Box, Button, ButtonBase, Popover } from '@material-ui/core';
+import { SwapHorizontalIcon } from 'mdi-react';
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
 const image2base64 = require('image-to-base64');
@@ -18,13 +19,48 @@ const dropzoneStyle = {
     backgroundColor: "white"
 };
 
+const ButtonStyle = {
+    textTransform: "none", 
+    backgroundColor: "#894798", 
+    color: "#ffffff", 
+    boxShadow: "none", 
+    height: 35,
+    marginTop: -55
+}
+
+const AbsoluteButtonStyle = {
+    textTransform: "none", 
+    border: "2px solid #894798", 
+    color: "#894798", 
+    backgroundColor: "#8947981a",
+    boxShadow: "none", 
+    height: 35,
+    width: 95,
+    margin: "0px 10px"
+}
+
+const RatioButtonStyle = {
+    textTransform: "none", 
+    border: "2px solid #894798", 
+    color: "#894798", 
+    backgroundColor: "#8947981a",
+    boxShadow: "none", 
+    height: 35,
+    width: 95,
+    margin: "0px 10px"
+}
+
 class PointsAddOn extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             isLoading: false,
-            locked: true
+            locked: true,
+            loadingConversion: false,
+            anchorEl: null,
+            selectingAbsolute: false,
+            selectingRatio: false
         };
       }
 
@@ -145,14 +181,49 @@ class PointsAddOn extends React.Component {
 
         this.setState({
             isLoading: false,
-            locked: true
+            locked: true,
+            anchorEl: null
         })
     }
 
+    setOpen = event => {
+        this.setState({ anchorEl: event.currentTarget })
+    }
+
+    setClose = () => {
+        this.setState({ anchorEl: null, selectingAbsolute: false, selectingRatio: false })
+    }
+
+    handleConvertPoints = async ({ isAbsolut }) => {
+        const { profile } = this.props;
+
+        this.setState({ loadingConversion: true, isLoading: true });
+
+        const { currency } = this.state;
+
+        if (currency) {
+            await profile.getApp().convertPoints({ currency: currency, isAbsolut: isAbsolut, user: 'all' });
+
+            await profile.getApp().updateAppInfoAsync();
+            await profile.update();
+        }
+
+        this.setState({ loadingConversion: false, isLoading: false, locked: true, anchorEl: null });
+
+        this.setClose()
+    }
+
     render() {
-        const { locked, isLoading, currency, isValid, logo, name, ratio } = this.state;
+        const { locked, isLoading, currency, isValid, logo, name, ratio, loadingConversion, anchorEl, selectingAbsolute, selectingRatio } = this.state;
 
         if (_.isEmpty(currency)) return null;
+
+        const open = Boolean(anchorEl);
+
+        const wallet = this.props.profile.App.params.wallet;
+        const walletSelected = wallet.find(c => c.currency._id === currency);
+
+        const ticker = walletSelected.currency.ticker;
 
         return (
             <Container>
@@ -162,7 +233,7 @@ class PointsAddOn extends React.Component {
                     confirmChanges={this.confirmChanges} 
                     isLoading={isLoading}
                     locked={locked}>
-
+                    
                     <h4 style={{ margin: 0, fontSize: 14 }}>Point System</h4>
                     <BooleanInput
                         checked={isValid === true}
@@ -173,6 +244,52 @@ class PointsAddOn extends React.Component {
                         inputProps={{ 'aria-label': 'primary checkbox' }}
                     />
 
+                    { isValid && (
+                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                        <Button onClick={event => this.setOpen(event)} variant="outlined" size="small" style={ButtonStyle} disabled={loadingConversion || locked}>
+                            <SwapHorizontalIcon style={{marginRight: 3}}/> Convert points
+                        </Button>
+                        <Popover
+                            id={"convert"}
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={this.setClose}
+                            anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',   
+                            }}
+                        >
+                            <ConvertContainer>
+                                <h4 style={{ margin: 0, fontSize: 16 }}>Ratio</h4>
+                                <hr/>
+                                <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center"}}>
+                                    <Button onClick={() => this.setState({ selectingAbsolute: true, selectingRatio: false })} variant="outlined" size="small" style={AbsoluteButtonStyle} disabled={loadingConversion || locked || selectingAbsolute}>
+                                        Absolute
+                                    </Button>
+                                    <h4 style={{ margin: 0, fontSize: 14 }}>{`1 point = 1.00 ${ticker}`}</h4>
+                                </div>
+                                    { selectingAbsolute && <ButtonBase style={{ margin: "20px 10px"}} onClick={() => this.handleConvertPoints({ isAbsolut: true })}>
+                                        <a style={{ fontSize: 14, color: "#894798" }}>{ loadingConversion && selectingAbsolute ? "Converting..." : `Yes, substitue all points for ${ticker}` }</a>
+                                    </ButtonBase> }
+                                
+                                <br/>
+                                <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center"}}>
+                                    <Button onClick={() => this.setState({ selectingAbsolute: false, selectingRatio: true })} variant="outlined" size="small" style={RatioButtonStyle} disabled={loadingConversion || locked || selectingRatio}>
+                                        Ratio based
+                                    </Button>
+                                    <h4 style={{ margin: 0, fontSize: 14 }}>{`1 point = ${(1 / parseFloat(ratio)).toFixed(2)} ${ticker}`}</h4>
+                                </div>
+                                    { selectingRatio && <ButtonBase style={{ margin: "20px 10px"}} onClick={() => this.handleConvertPoints({ isAbsolut: false })}>
+                                        <a style={{ fontSize: 14, color: "#894798" }}>{ loadingConversion && selectingRatio ? "Converting..." : `Yes, substitue all points for ${ticker}` }</a>
+                                    </ButtonBase> }
+                            </ConvertContainer>
+                        </Popover>
+                        </div>
+                    )}
                     <hr/>
 
                     <EditImage>
