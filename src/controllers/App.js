@@ -22,7 +22,6 @@ class App{
     }
 
     getSummary = async () => {
-        // grab current state
         const state = store.getState();
         const { currency } = state;
 
@@ -39,9 +38,9 @@ class App{
                     filters : [],
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
-                this.getGamesAsync({currency : currency._id}),
+                this.getGamesAsync({ currency: currency._id }),
                 this.getUsersAsync({size: 100, offset: 0 }),
-                this.getWithdrawsAsync({size : 1000, currency : currency._id})
+                !_.isEmpty(currency) ? this.getWithdrawsAsync({ size: 1000, currency: currency._id }) : []
             ]);
 
             let serverApiInfo = {   
@@ -618,6 +617,27 @@ class App{
         }
     }
 
+    editSkinTypeCustomization = async ({ skinParams }) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editSkinTypeCustomization({   
+                params: {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    skinParams
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editTypography = async (typography) => {
         try{
             let res = await ConnectionSingleton.editTypography({   
@@ -679,6 +699,70 @@ class App{
 
             /* Update App Info Async */
             await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editKYCIntegration = async ({ kyc_id, isActive, clientId, flowId }) => {
+        try{
+            let res = await ConnectionSingleton.editKYCIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    kyc_id,
+                    isActive,
+                    clientId, 
+                    flowId
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editMoonPayIntegration = async ({ moonpay_id, isActive, key }) => {
+        try{
+            let res = await ConnectionSingleton.editMoonPayIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    moonpay_id,
+                    isActive,
+                    key
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
+    editUserKYC = async ({ user, kyc_needed }) => {
+        try{
+            let res = await ConnectionSingleton.editUserKYC({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    user: user,
+                    kyc_needed: kyc_needed
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
 
             return res;
         }catch(err){
@@ -904,6 +988,24 @@ class App{
         }
     }
 
+    editIconsCustomization = async ({ icon_id, icons }) => {
+        try{
+            let res = await ConnectionSingleton.editIconsCustomization({   
+                params : {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    icon_id,
+                    icons
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editSubsectionsCustomization = async ({ subSections }) => {
         try{
             let res = await ConnectionSingleton.editSubsectionsCustomization({   
@@ -1027,7 +1129,6 @@ class App{
 
     getGamesAsync = async ({currency}) => {
         try{
-            /* Cancel Withdraw Response */
             return await ConnectionSingleton.getGames({       
                 params : {
                     admin : this.getAdminId(),
@@ -1117,6 +1218,14 @@ class App{
     getEcosystemVariables = async () => {
         try{
             return await ConnectionSingleton.getEcosystemVariables();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getEcosystemSkins = async () => {
+        try{
+            return await ConnectionSingleton.getEcosystemSkins();
         }catch(err){
             throw err;
         }
@@ -1400,6 +1509,24 @@ class App{
                 params : {
                     currency,
                     pointSystemParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    convertPoints = async ({ currency, user, isAbsolut }) => {
+        try{
+            return await ConnectionSingleton.convertPoints({   
+                params : {
+                    currency,
+                    user,
+                    isAbsolut,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     

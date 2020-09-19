@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormGroup, Col } from 'reactstrap';
-import { TabCard, TabCardContent, InputField, TabImage, InputLabel, AddTabButton } from './styles';
+import { IconCard, IconCardContent, InputField, IconImage, InputLabel, AddIconButton } from './styles';
 import _ from 'lodash';
 import Dropzone from 'react-dropzone'
 import { PlusIcon } from 'mdi-react';
@@ -14,13 +14,12 @@ const dropzoneStyle = {
     backgroundColor: "white"
 };
 
-class AddTab extends React.Component {
+class AddIcon extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             newName: "",
-            newLink: "",
-            newIcon: ""
+            newLink: ""
         };
     }
 
@@ -34,11 +33,11 @@ class AddTab extends React.Component {
 
 
     projectData = async (props) => {
-        const { tabs } = props;
+        const { icons } = props;
 
-        if (!_.isEmpty(tabs)) {
+        if (!_.isEmpty(icons)) {
             this.setState({
-                tabs: tabs
+                icons: icons
             })
         }
     }
@@ -63,29 +62,17 @@ class AddTab extends React.Component {
         }
     }
 
-    onChangeNewLink = ({ value }) => {
-        if (value) {
-            this.setState({
-                newLink: value
-            })
-        } else {
-            this.setState({
-                newLink: ""
-            })
-        }
-    }
-
     onAddedNewFile = async ({ files }) => {
         const file = files[0];
         
         let blob = await image2base64(file.preview) // you can also to use url
 
         this.setState({
-            newIcon: blob
+            newLink: blob
         })
     }
 
-    renderAddNewImage = () => {
+    renderAddNewIcon = () => {
         const { locked } = this.props;
 
         return(
@@ -98,32 +85,28 @@ class AddTab extends React.Component {
 
     removeNewIcon = () => {
         this.setState({
-            newIcon: ""
+            newLink: ""
         })
     }
 
-    addNewTab = () => {
-        const { newName, newLink, newIcon } = this.state;
-        const { setTabs, tabs } = this.props;
+    addNewIcon = () => {
+        const { newName, newLink } = this.state;
+        const { setIcons, icons } = this.props;
         
-        const newTabObj = { name: newName, link_url: newLink, icon: newIcon, _id: Math.random().toString(36).substr(2, 9) }
+        const newIconObj = { _id: Math.random().toString(36).substr(2, 9), name: newName, link: newLink, position: icons.length }
 
-        const newTabs = tabs ? [...tabs, newTabObj] : [newTabObj];
+        const newIcons = icons ? [...icons, newIconObj] : [newIconObj];
 
         this.setState({
             newName: "",
-            newLink: "",
-            newIcon: ""
+            newLink: ""
         })
 
-        setTabs({
-            newTabs: newTabs,
-        })
-
+        setIcons({ newIcons: newIcons })
     }
 
     render() {
-        const { newName, newLink, newIcon } = this.state;
+        const { newName, newLink } = this.state;
         const { locked } = this.props;
 
         const hasEmptyValues = _.isEmpty(newName) || _.isEmpty(newLink);
@@ -131,9 +114,9 @@ class AddTab extends React.Component {
         return (
             <>
             <Col md={3} style={{ minWidth: 178, maxWidth: 230, padding: 0, margin: "10px 15px" }}>
-                <TabCard>
-                    <TabCardContent>
-                        { newIcon ? 
+                <IconCard>
+                    <IconCardContent>
+                        { newLink ? 
                         <>  
                             <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: -10, marginBottom: -30 }}>
                                 <button
@@ -144,14 +127,15 @@ class AddTab extends React.Component {
                                     <img src={trash} style={{width : 15, height : 15}}/>
                                 </button>
                             </div>
-                            <img className='application__game__image' style={{ display: 'block', width: 100, height: 100 }} src={this.renderImage(newIcon)}/> 
+                            <img className='application__game__image' style={{ display: 'block', width: 100, height: 100 }} src={this.renderImage(newLink)}/> 
                         </>
                         : 
-                        <TabImage>
-                            { this.renderAddNewImage() }
-                        </TabImage> }
+                        <IconImage>
+                            { this.renderAddNewIcon() }
+                        </IconImage> }
+                        <br/>
                         <FormGroup>
-                            <InputLabel for="name">Title</InputLabel>
+                            <InputLabel for="name">Name</InputLabel>
                         <InputField
                             label="Name"
                             name="name"
@@ -162,25 +146,12 @@ class AddTab extends React.Component {
                             onChange={(e) => this.onChangeNewName({ value: e.target.value })}
                         />
                         </FormGroup>
-                        <FormGroup>
-                            <InputLabel for="link">Link</InputLabel>
-                        <InputField
-                            label="Link"
-                            name="link"
-                            type="text"
-                            value={newLink}
-                            disabled={locked}
-                            // defaultValue={href}
-                            onChange={(e) => this.onChangeNewLink({ value: e.target.value })}
-                        />
-                        </FormGroup>
+                        <AddIconButton disabled={locked || hasEmptyValues} onClick={() => this.addNewIcon()}>
+                            <PlusIcon/> Add icon
+                        </AddIconButton>
 
-                        <AddTabButton disabled={locked || hasEmptyValues} onClick={() => this.addNewTab()}>
-                            <PlusIcon/> Add tab
-                        </AddTabButton>
-
-                    </TabCardContent>
-                </TabCard>
+                    </IconCardContent>
+                </IconCard>
             </Col>
             </>
         )
@@ -188,4 +159,4 @@ class AddTab extends React.Component {
 
 }
     
-export default AddTab;
+export default AddIcon;

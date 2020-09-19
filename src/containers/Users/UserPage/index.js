@@ -12,17 +12,65 @@ import TopUpBalance from './components/TopUpBalance';
 import UserBetsTable from './components/UserBetsTable';
 import UserTransactionsTable from './components/UserTransactionsTable';
 import UserPageSkeleton from './components/UserPageSkeleton';
+import { Button, ButtonBase, Popover } from '@material-ui/core';
+import { ArrowUpIcon, SearchIcon, SwapHorizontalIcon } from 'mdi-react';
 
+import { ConvertContainer } from './styles'
 
 const defaultProps = {
     ticker : 'No Currency Chosen'
+}
+
+const kycButtonStyle = {
+    textTransform: "none", 
+    backgroundColor: "#894798", 
+    color: "#ffffff", 
+    boxShadow: "none", 
+    height: 25,
+    margin: "10px 0px"
+}
+
+const ButtonStyle = {
+    textTransform: "none", 
+    backgroundColor: "#894798", 
+    color: "#ffffff", 
+    boxShadow: "none", 
+    height: 25
+}
+
+const AbsoluteButtonStyle = {
+    textTransform: "none", 
+    border: "2px solid #894798", 
+    color: "#894798", 
+    backgroundColor: "#8947981a",
+    boxShadow: "none", 
+    height: 35,
+    width: 95,
+    margin: "0px 10px"
+}
+
+const RatioButtonStyle = {
+    textTransform: "none", 
+    border: "2px solid #894798", 
+    color: "#894798", 
+    backgroundColor: "#8947981a",
+    boxShadow: "none", 
+    height: 35,
+    width: 95,
+    margin: "0px 10px"
 }
 
 class UserPage extends React.Component{
 
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+            loading: false,
+            loadingConversion: false,
+            anchorEl: null,
+            selectingAbsolute: false,
+            selectingRatio: false
+        };
     }
 
     componentDidMount(){
@@ -88,20 +136,108 @@ class UserPage extends React.Component{
         )
     }
 
+    setOpen = event => {
+        this.setState({ anchorEl: event.currentTarget })
+    }
+
+    setClose = () => {
+        this.setState({ anchorEl: null, selectingAbsolute: false, selectingRatio: false })
+    }
+
+    
+    handleConvertPoints = async ({ isAbsolut }) => {
+        const { profile, currency } = this.props;
+        const { user } = this.state;
+
+        this.setState({ loadingConversion: true });
+
+        if (currency) {
+            await profile.getApp().convertPoints({ currency: currency._id, isAbsolut: isAbsolut, user: user._id });
+
+            await profile.getApp().updateAppInfoAsync();
+            await profile.update();
+        }
+
+        this.setState({ loadingConversion: false, locked: true, anchorEl: null });
+
+        this.setClose()
+    }
+
     
     renderPointsData = ({ addon, points, loading }) => {
         if ( _.isEmpty(addon)) return null;
 
-        const { name } = addon;
+        const { profile, currency } = this.props;
+        const { name, ratio, isValid } = addon;
+
+        const { anchorEl, loadingConversion, selectingAbsolute, selectingRatio } = this.state;
+
+        const open = Boolean(anchorEl);
+        const wallet = profile.App.params.wallet;
+        const walletSelected = wallet.find(c => c.currency._id === currency._id);
+
+        const ticker = walletSelected.currency.ticker;
+
+        const selectedRatio = ratio.find(r => r.currency === currency._id);
 
         return (
             <Card>
-                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", paddingRight: 10 }}>
                     <p className='text-small pink-text'> Points </p>
                     {loading ? (
                         <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
                     ) : (
                         <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={0} font={'11pt'} number={points}/> <span className='text-x-small'>{ name }</span></h4>
+                    )}
+
+                    { isValid && (
+                        <>
+                        <hr/>
+                        <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                            <Button onClick={event => this.setOpen(event)} variant="outlined" size="small" style={ButtonStyle} disabled={loadingConversion}>
+                                <SwapHorizontalIcon style={{marginRight: 3}}/> Convert points
+                            </Button>
+                            <Popover
+                                id={"convert"}
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={this.setClose}
+                                anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                                }}
+                                transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',   
+                                }}
+                            >
+                                <ConvertContainer>
+                                    <h4 style={{ margin: 0, fontSize: 16 }}>Ratio</h4>
+                                    <hr/>
+                                    <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center"}}>
+                                        <Button onClick={() => this.setState({ selectingAbsolute: true, selectingRatio: false })} variant="outlined" size="small" style={AbsoluteButtonStyle} disabled={loadingConversion || selectingAbsolute}>
+                                            Absolute
+                                        </Button>
+                                        <h4 style={{ margin: 0, fontSize: 14 }}>{`1 point = 1.00 ${ticker}`}</h4>
+                                    </div>
+                                        { selectingAbsolute && <ButtonBase style={{ margin: "20px 10px"}} onClick={() => this.handleConvertPoints({ isAbsolut: true })}>
+                                            <a style={{ fontSize: 14, color: "#894798" }}>{ loadingConversion && selectingAbsolute ? "Converting..." : `Yes, substitue all points for ${ticker}` }</a>
+                                        </ButtonBase> }
+                                    
+                                    <br/>
+                                    <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center"}}>
+                                        <Button onClick={() => this.setState({ selectingAbsolute: false, selectingRatio: true })} variant="outlined" size="small" style={RatioButtonStyle} disabled={loadingConversion || selectingRatio}>
+                                            Ratio based
+                                        </Button>
+                                        <h4 style={{ margin: 0, fontSize: 14 }}>{`1 point = ${(1 / parseFloat(selectedRatio.value)).toFixed(2)} ${ticker}`}</h4>
+                                    </div>
+                                        { selectingRatio && <ButtonBase style={{ margin: "20px 10px"}} onClick={() => this.handleConvertPoints({ isAbsolut: false })}>
+                                            <a style={{ fontSize: 14, color: "#894798" }}>{ loadingConversion && selectingRatio ? "Converting..." : `Yes, substitue all points for ${ticker}` }</a>
+                                        </ButtonBase> }
+                                </ConvertContainer>
+                            </Popover>
+                        </div>
+                    </>
                     )}
                 </CardBody>
             </Card>
@@ -152,16 +288,30 @@ class UserPage extends React.Component{
         const addOnObj = _.merge({}, addOnInfo, addOnData);
 
         return addOnObj;
+    }
 
+    askForUserKYC = async () => {
+        const { profile } = this.props;
+        const { App } = profile;
+        const { user } = this.state;
+
+        if (user) {
+            this.setState({ loading: true })
+
+            await App.editUserKYC({ user: user._id, kyc_needed: true });
+            await this.projectData(this.props);
+
+            this.setState({ loading: false })
+        }
     }
 
     render = () => {
-        const { user, currencyTicker } = this.state;
+        const { user, currencyTicker, loading } = this.state;
         
         if (!user || _.isEmpty(user)) { return <UserPageSkeleton/> };
 
         const { currency, isLoading } = this.props;
-        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, points } = user;
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, points, kyc_status, kyc_needed } = user;
         
         const wallet = user.wallet.find(wallet => wallet.currency._id === currency._id);
 
@@ -189,10 +339,23 @@ class UserPage extends React.Component{
                                         <Col sd={12} md={12} lg={8}>
                                             {/* UserInfo */}
                                             <h5 className='pink-text' style={{ marginTop: 10 }}> @{username}</h5>
-                                            <hr></hr>
+                                            <hr/>
                                             <p className='secondary-text text-small'> {email}</p>
                                             <p className='text-small'> {address} </p>
                                             <p className='text-x-small'> #{_id} </p>
+
+                                            { kyc_status !== undefined && kyc_needed !== undefined && (
+                                                <>
+                                                <hr/>
+
+                                                <h5 className='pink-text' style={{ marginTop: 10, fontSize: 13 }}>KYC status (<span style={{ color: 'black' }}> { kyc_status === 'no kyc' && kyc_needed ? 'Waiting for KYC' : kyc_status } </span>)</h5>
+                                                { !kyc_needed && (
+                                                    <Button onClick={() => this.askForUserKYC()} variant="outlined" size="small" style={kycButtonStyle} disabled={loading}>
+                                                        { loading ? "Sending..." : <><SearchIcon style={{marginRight: 3}}/>Ask for KYC</> }
+                                                    </Button>
+                                                )}
+                                                </>
+                                            )}
                                         </Col>
                                     </Row>
                                 </CardBody>
