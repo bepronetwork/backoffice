@@ -1,6 +1,5 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
-import {  Col, Row } from 'reactstrap';
 import { connect } from "react-redux";
 import _ from 'lodash';
 import AutoWithdraw from './AddOn/AutoWithdraw';
@@ -31,8 +30,9 @@ class AddOnContainer extends PureComponent {
         const { profile } = props;
 
         const app = await profile.getApp();
+        const currencies = profile.getApp().getEcosystemCurrencies();
 
-        this.setState({ ecosystemAddOns: app.params.storeAddOn, appAddOns: app.params.addOn });
+        this.setState({ ecosystemAddOns: app.params.storeAddOn, appAddOns: app.params.addOn, currencies: currencies });
     }
 
     hasAddOn = (addOn) => {
@@ -51,8 +51,8 @@ class AddOnContainer extends PureComponent {
 
     hasCurrenciesInstalled = () => {
         const { profile } = this.props;
+        const { currencies } = this.state;
 
-        const currencies = profile.getApp().getEcosystemCurrencies();
         const wallet = profile.App.params.wallet;
 
         return !_.isEmpty(currencies) || !_.isEmpty(wallet);
