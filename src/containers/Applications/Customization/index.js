@@ -10,7 +10,7 @@ export default class CustomizationContainer extends Component {
             <div>
                 <TabsContainer 
                     items={[{
-                                title : 'Skin',
+                                title : 'Skins',
                                 container : <Skins/>,
                                 icon : <Rewards/>
                             },
