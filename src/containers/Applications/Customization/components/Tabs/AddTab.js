@@ -126,7 +126,7 @@ class AddTab extends React.Component {
         const { newName, newLink, newIcon } = this.state;
         const { locked } = this.props;
 
-        const hasEmptyValues = _.isEmpty(newName) || _.isEmpty(newLink) || _.isEmpty(newIcon);
+        const hasEmptyValues = _.isEmpty(newName) || _.isEmpty(newLink);
 
         return (
             <>
