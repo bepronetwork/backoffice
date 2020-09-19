@@ -22,7 +22,6 @@ class App{
     }
 
     getSummary = async () => {
-        // grab current state
         const state = store.getState();
         const { currency } = state;
 
@@ -39,9 +38,9 @@ class App{
                     filters : [],
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
-                this.getGamesAsync({currency : currency._id}),
+                this.getGamesAsync({ currency: currency._id }),
                 this.getUsersAsync({size: 100, offset: 0 }),
-                this.getWithdrawsAsync({size : 1000, currency : currency._id})
+                !_.isEmpty(currency) ? this.getWithdrawsAsync({ size: 1000, currency: currency._id }) : []
             ]);
 
             let serverApiInfo = {   
@@ -1130,7 +1129,6 @@ class App{
 
     getGamesAsync = async ({currency}) => {
         try{
-            /* Cancel Withdraw Response */
             return await ConnectionSingleton.getGames({       
                 params : {
                     admin : this.getAdminId(),
