@@ -158,7 +158,7 @@ class SkinsTab extends Component {
                                 </div>
                             { !_.isEmpty(skins) && (
                                     <MuiThemeProvider theme={theme}>
-                                        <RadioGroup row aria-label="previewType" name="previewType" value={previewType} onChange={this.handleChangePreviewType}>
+                                        {/* <RadioGroup row aria-label="previewType" name="previewType" value={previewType} onChange={this.handleChangePreviewType}>
                                             <StyledFormControlLabel value={"desktop"} control={<Radio color="primary" size="small" />} label={"Desktop"} disabled={locked}/>
 
                                             <StyledFormControlLabel value={"mobile"} control={<Radio color="primary" size="small" />} label={"Mobile"} disabled={locked}/>
@@ -188,7 +188,7 @@ class SkinsTab extends Component {
                                             <div></div>
                                         </MobileSkinsContainer>
                                         ) : (
-                                            <>
+                                            <> */}
                                             <ButtonBase onClick={() => this.setState({ selected_skin: 'default' })} disabled={locked}>
                                                 <SkinPreview selected={selected_skin === 'default'}>
                                                     <Header>
@@ -210,8 +210,8 @@ class SkinsTab extends Component {
                                                     <img src={digitalHome} alt="Digital home" />
                                                 </SkinPreview>
                                             </ButtonBase>
-                                            </>
-                                        )}
+                                            {/* </>
+                                        )} */}
                                     </MuiThemeProvider>
                                 )}
                             </Container>
