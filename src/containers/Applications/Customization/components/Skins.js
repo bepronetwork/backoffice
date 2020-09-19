@@ -4,8 +4,12 @@ import { Col, Row, Card, CardBody, Label } from 'reactstrap';
 import { connect } from "react-redux";
 import { createMuiTheme, FormControlLabel, MuiThemeProvider, Radio, RadioGroup, withStyles } from '@material-ui/core';
 import styled from 'styled-components';
-
 import _ from 'lodash';
+
+const digitalHome = `${process.env.PUBLIC_URL}/img/landing/digital-home.png`;
+const digitalDeposit = `${process.env.PUBLIC_URL}/img/landing/digital-deposit.png`;
+const digitalMobile = `${process.env.PUBLIC_URL}/img/landing/digital-withdraw-mobile.png`;
+
 
 const theme = createMuiTheme({
     palette: {
@@ -31,8 +35,18 @@ const cardStyle = {
 }
 
 export const InputLabel = styled(Label)`
-    font-size: 16px;
+    font-size: 18px;
     font-family: Poppins;
+
+    margin-bottom: 35px;
+`;
+
+const ImagesGrid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2);
+    grid-gap: 20px;
+
+    padding: 20px 0px;
 `;
 
 class SkinsTab extends Component {
@@ -132,10 +146,20 @@ class SkinsTab extends Component {
                                     <MuiThemeProvider theme={theme}>
                                         <InputLabel>Skin type</InputLabel>
                                         <br/>
-                                        <RadioGroup row aria-label="position" name="position" value={selected_skin} onChange={this.handleChangeSkinType}>
-                                            {skins.map(skin => (
-                                                <StyledFormControlLabel value={skin.skin_type} control={<Radio color="primary" size="small" />} label={`${skin.name}`} disabled={locked}/>
-                                            ))}
+                                        <RadioGroup aria-label="skin" name="skin" value={selected_skin} onChange={this.handleChangeSkinType}>
+                                        <StyledFormControlLabel value={"default"} control={<Radio color="primary" size="small" />} label={"Default"} disabled={locked}/>
+                                        <ImagesGrid>
+                                            {/* <img src={digitalHome} style={{ width: "100%" }}/>
+                                            <img src={digitalDeposit} style={{ width: "100%" }}/> */}
+                                        </ImagesGrid>
+
+                                        <br/>
+
+                                        <StyledFormControlLabel value={"digital"} control={<Radio color="primary" size="small" />} label={"Digital"} disabled={locked}/>
+                                        <ImagesGrid>
+                                            <img src={digitalHome} style={{ width: "100%" }}/>
+                                            <img src={digitalDeposit} style={{ width: "100%" }}/>
+                                        </ImagesGrid>
                                         </RadioGroup>
                                     </MuiThemeProvider>
                                 )}
