@@ -8,7 +8,7 @@ import './styles.css';
 import { Container, EditImage, Image, Label, TextField, Logo, ConvertContainer } from './styles';
 import BooleanInput from '../components/utils/BooleanInput';
 import { Box, Button, ButtonBase, Popover } from '@material-ui/core';
-import { SwapHorizontalIcon } from 'mdi-react';
+import { AlertCircleOutlineIcon, SwapHorizontalIcon } from 'mdi-react';
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
 const image2base64 = require('image-to-base64');
@@ -225,6 +225,8 @@ class PointsAddOn extends React.Component {
 
         const ticker = walletSelected.currency.ticker;
 
+        const ratioExample = (1 / parseFloat(ratio)).toFixed(2);
+
         return (
             <Container>
                 <EditLock 
@@ -281,7 +283,7 @@ class PointsAddOn extends React.Component {
                                     <Button onClick={() => this.setState({ selectingAbsolute: false, selectingRatio: true })} variant="outlined" size="small" style={RatioButtonStyle} disabled={loadingConversion || locked || selectingRatio}>
                                         Ratio based
                                     </Button>
-                                    <h4 style={{ margin: 0, fontSize: 14 }}>{`1 point = ${(1 / parseFloat(ratio)).toFixed(2)} ${ticker}`}</h4>
+                                    <h4 style={{ margin: 0, fontSize: 14 }}>{`1 point = ${ratioExample} ${ticker}`}</h4>
                                 </div>
                                     { selectingRatio && <ButtonBase style={{ margin: "20px 10px"}} onClick={() => this.handleConvertPoints({ isAbsolut: false })}>
                                         <a style={{ fontSize: 14, color: "#894798" }}>{ loadingConversion && selectingRatio ? "Converting..." : `Yes, substitue all points for ${ticker}` }</a>
@@ -323,6 +325,10 @@ class PointsAddOn extends React.Component {
                     <TextField placeholder="" disabled={locked} value={ratio} onChange={(e) => this.onChangeRatio(e.target.value)}/>
 
                     <br/>
+                    <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                        { isFinite(ratioExample) && !isNaN(ratioExample) ? <span>{`1 point = ${(1 / parseFloat(ratio)).toFixed(2)} ${ticker}`}</span> : <span>Invalid ratio</span> }
+                        <AlertCircleOutlineIcon size={18} style={{ marginLeft: 5 }}/>
+                    </div>
                 </EditLock>
             </Container>
         )

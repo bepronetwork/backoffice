@@ -182,7 +182,7 @@ class UserPage extends React.Component{
 
         return (
             <Card>
-                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", padding: 10 }}>
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", paddingRight: 10 }}>
                     <p className='text-small pink-text'> Points </p>
                     {loading ? (
                         <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
@@ -348,7 +348,7 @@ class UserPage extends React.Component{
                                                 <>
                                                 <hr/>
 
-                                                <h5 className='pink-text' style={{ marginTop: 10, fontSize: 13 }}>KYC status (<span style={{ color: 'black' }}> {kyc_status} </span>)</h5>
+                                                <h5 className='pink-text' style={{ marginTop: 10, fontSize: 13 }}>KYC status (<span style={{ color: 'black' }}> { kyc_status === 'no kyc' && kyc_needed ? 'Waiting for KYC' : kyc_status } </span>)</h5>
                                                 { !kyc_needed && (
                                                     <Button onClick={() => this.askForUserKYC()} variant="outlined" size="small" style={kycButtonStyle} disabled={loading}>
                                                         { loading ? "Sending..." : <><SearchIcon style={{marginRight: 3}}/>Ask for KYC</> }
