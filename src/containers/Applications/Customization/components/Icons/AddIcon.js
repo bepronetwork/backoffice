@@ -4,6 +4,9 @@ import { IconCard, IconCardContent, InputField, IconImage, InputLabel, AddIconBu
 import _ from 'lodash';
 import Dropzone from 'react-dropzone'
 import { PlusIcon } from 'mdi-react';
+
+import enumIcons from './enumIcons';
+
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
 const image2base64 = require('image-to-base64');
@@ -18,8 +21,9 @@ class AddIcon extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            newName: "",
-            newLink: ""
+            newName: enumIcons[0].name,
+            newLink: "",
+            isSVG: false
         };
     }
 
@@ -43,8 +47,10 @@ class AddIcon extends React.Component {
     }
 
     renderImage = (src) => {
+        const { isSVG } = this.state;
+
         if(!src.includes("https")){
-            src = "data:image;base64," + src;
+            src = isSVG ? "data:image/svg+xml;base64," + src : "data:image;base64," + src;
         }
 
         return src;
@@ -64,6 +70,12 @@ class AddIcon extends React.Component {
 
     onAddedNewFile = async ({ files }) => {
         const file = files[0];
+
+        this.setState({ isSVG: false })
+
+        if (file.type === 'image/svg+xml') {
+            this.setState({ isSVG: true })
+        }
         
         let blob = await image2base64(file.preview) // you can also to use url
 
@@ -90,15 +102,18 @@ class AddIcon extends React.Component {
     }
 
     addNewIcon = () => {
-        const { newName, newLink } = this.state;
+        const { newName, newLink, isSVG } = this.state;
         const { setIcons, icons } = this.props;
-        
-        const newIconObj = { _id: Math.random().toString(36).substr(2, 9), name: newName, link: newLink, position: icons.length }
 
+        const icon = enumIcons.find(icon => icon.name === newName);
+        
+        const newIconObj = { _id: Math.random().toString(36).substr(2, 9), name: newName, link: newLink, position: icon.position, isSVG: isSVG };
         const newIcons = icons ? [...icons, newIconObj] : [newIconObj];
 
+        const filteredIcons = enumIcons.filter(icon => !icons.map(i => i.name).includes(icon.name));
+
         this.setState({
-            newName: "",
+            newName: filteredIcons[0].name,
             newLink: ""
         })
 
@@ -107,7 +122,9 @@ class AddIcon extends React.Component {
 
     render() {
         const { newName, newLink } = this.state;
-        const { locked } = this.props;
+        const { locked, icons } = this.props;
+
+        const filteredIcons = enumIcons.filter(icon => !icons.map(i => i.name).includes(icon.name));
 
         const hasEmptyValues = _.isEmpty(newName) || _.isEmpty(newLink);
 
@@ -139,12 +156,15 @@ class AddIcon extends React.Component {
                         <InputField
                             label="Name"
                             name="name"
-                            type="text"
+                            type="select"
                             value={newName}
                             disabled={locked}
-                            // defaultValue={name}
                             onChange={(e) => this.onChangeNewName({ value: e.target.value })}
-                        />
+                        >
+                            { filteredIcons.map(icon => (
+                                <option>{icon.name}</option>
+                            ))}
+                        </InputField>
                         </FormGroup>
                         <AddIconButton disabled={locked || hasEmptyValues} onClick={() => this.addNewIcon()}>
                             <PlusIcon/> Add icon

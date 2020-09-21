@@ -925,14 +925,15 @@ class App{
         }
     }
 
-    editIconsCustomization = async ({ icon_id, icons }) => {
+    editIconsCustomization = async ({ icon_id, icons, useDefaultIcons }) => {
         try{
             let res = await ConnectionSingleton.editIconsCustomization({   
                 params : {
                     admin: this.getAdminId(),
                     app: this.getId(),
                     icon_id,
-                    icons
+                    icons,
+                    useDefaultIcons: useDefaultIcons
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });

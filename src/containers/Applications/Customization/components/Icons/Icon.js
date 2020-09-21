@@ -4,6 +4,8 @@ import { Cancel, IconCard, IconCardContent, IconImage, InputField, InputLabel, R
 import _ from 'lodash';
 import Dropzone from 'react-dropzone'
 import { TrashCanOutlineIcon } from 'mdi-react';
+import enumIcons from './enumIcons';
+
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
 const image2base64 = require('image-to-base64');
@@ -18,7 +20,8 @@ class Icon extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            removing: false
+            removing: false,
+            isSVG: false
         };
     }
 
@@ -39,14 +42,17 @@ class Icon extends React.Component {
                 _id: icon._id,
                 name: icon.name,
                 link: icon.link,
-                position: icon.position
+                position: icon.position,
+                isSVG: icon.isSVG
             })
         }
     }
 
     renderImage = (src) => {
+        const { isSVG } = this.state;
+
         if(!src.includes("https")){
-            src = "data:image;base64," + src;
+            src = isSVG ? "data:image/svg+xml;base64," + src : "data:image;base64," + src;
         }
 
         return src;
@@ -56,6 +62,12 @@ class Icon extends React.Component {
         const { icons } = this.state;
         const { setIcons } = this.props;
         const file = files[0];
+
+        this.setState({ isSVG: false })
+
+        if (file.type === 'image/svg+xml') {
+            this.setState({ isSVG: true })
+        }
         
         let blob = await image2base64(file.preview) // you can also to use url
 
@@ -81,12 +93,15 @@ class Icon extends React.Component {
         const { icons } = this.state;
         const { setIcons } = this.props;
 
+        const icon = enumIcons.find(icon => icon.name === value);
+
         if (value) {
             const index = icons.findIndex(icon => icon._id === id);
-            const newTabs = [...icons];
-            newTabs[index].name = value;
-    
-            setIcons({ newTabs: newTabs })
+            const newIcons = [...icons];
+            newIcons[index].name = value;
+            newIcons[index].position = icon.position;
+        
+            setIcons({ newIcons: newIcons })
         } else {
             const index = icons.findIndex(icon => icon._id === id);
             const newIcons = [...icons];
@@ -153,7 +168,11 @@ class Icon extends React.Component {
 
     render() {
         const { _id, name, link, removing } = this.state;
-        const { locked } = this.props;
+        const { locked, icons } = this.props;
+
+        if (!name) return null
+
+        const filteredIcons = enumIcons.filter(icon => !icons.map(i => i.name).includes(icon.name)).concat([enumIcons.find(i => i.name === name)]);
 
         return (
             <>
@@ -183,11 +202,15 @@ class Icon extends React.Component {
                         <InputField
                             label="Name"
                             name="name"
-                            type="text"
-                            defaultValue={name}
+                            type="select"
+                            value={name}
                             disabled={locked}
                             onChange={(e) => this.onChangeName({ id: _id, value: e.target.value })}
-                        />
+                        >
+                            { filteredIcons && filteredIcons.map(icon => (
+                                <option>{icon.name}</option>
+                            ))}
+                        </InputField>
                         </FormGroup>
                         { !removing ?  
                         <RemoveIcon disabled={locked} onClick={() => this.removeIcon({ id: _id })}>
