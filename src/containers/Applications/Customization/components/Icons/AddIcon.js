@@ -110,7 +110,7 @@ class AddIcon extends React.Component {
         const newIconObj = { _id: Math.random().toString(36).substr(2, 9), name: newName, link: newLink, position: icon.position, isSVG: isSVG };
         const newIcons = icons ? [...icons, newIconObj] : [newIconObj];
 
-        const filteredIcons = enumIcons.filter(icon => !icons.map(i => i.name).includes(icon.name));
+        const filteredIcons = _.without(enumIcons.filter(icon => !icons.map(i => i.name).includes(icon.name)), icon);
 
         this.setState({
             newName: filteredIcons[0].name,
