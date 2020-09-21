@@ -13,6 +13,7 @@ import { BasicNotification } from '../../shared/components/Notification';
 import jsPDF from 'jspdf';
 import TermsConditions from '../Wallet/TermsConditions';
 import { emptyObject } from '../../lib/misc';
+import { AlertCircleOutlineIcon } from 'mdi-react';
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 const defaultState = {
@@ -20,7 +21,7 @@ const defaultState = {
     setWallet : false,
     setWalletEnable : false,
     enableClose : false,
-    passhrase : null,
+    passphrase : null,
     keyResponse : null,
     isLoading : false
 }
@@ -71,7 +72,7 @@ class ModalAddCurrencyWallet extends React.Component{
                 setWallet : false,
                 setWalletEnable : false,
                 enableClose : false,
-                passhrase : null,
+                passphrase : null,
                 keyResponse : null,
                 isLoading : false
             });
@@ -167,7 +168,7 @@ class ModalAddCurrencyWallet extends React.Component{
 
     render = () => {
         const { isActive } = this.props.addCurrencyWallet;
-        const { accepted, setWallet, setWalletEnable, enableClose, isLoading } = this.state;
+        const { accepted, setWallet, setWalletEnable, enableClose, isLoading, passphrase } = this.state;
 
         if(!isActive){return null};
 
@@ -189,16 +190,22 @@ class ModalAddCurrencyWallet extends React.Component{
                         placeholder="Passphrase to unlock the wallet"
                         changeContent={(name, value) => this.onChangeText({name, value})}
                     />
+
+                    <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", padding: "10px 0px" }}>
+                        <AlertCircleOutlineIcon size={18} style={{ marginRight: 5 }}/>
+                        <span>The passphrase must be at least 10 characters</span>
+                    </div>
+                    
                     <div style={{opacity: (isLoading) ? "0.5" : null, backgroundColor: (isLoading) ? "#ddd" : null, borderRadius: 5}}>
                         {isLoading ?
                             <div style={{position: "absolute", marginTop: 16, marginLeft: 324}}>
                                 <img src={loading} style={{width : 40, height : 40}}/>
                             </div>
-                        :
+                        :   
                             null
                         }
                         <div style={{textAlign : "left", marginTop : 20}}>
-                            <Switch color="primary" name="accepted" checked={accepted} onChange={(event) => this.handleChange({key : 'accepted', value : event.target.checked})}/>
+                            <Switch color="primary" name="accepted" checked={accepted} onChange={(event) => this.handleChange({key : 'accepted', value : event.target.checked})} disabled={passphrase == null || passphrase.length < 10}/>
                             <span>Accept Terms & Conditions</span>
                         </div>
                         <div style={{textAlign : "left", opacity : (setWalletEnable ? null : 0.2)}}>
