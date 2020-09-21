@@ -124,7 +124,7 @@ class AddIcon extends React.Component {
         const { newName, newLink } = this.state;
         const { locked, icons } = this.props;
 
-        const filteredIcons = enumIcons.filter(icon => !icons.map(i => i.name).includes(icon.name));
+        const filteredIcons = _.without(enumIcons.filter(icon => !icons.map(i => i.name).includes(icon.name)), undefined);
 
         const hasEmptyValues = _.isEmpty(newName) || _.isEmpty(newLink);
 
@@ -161,8 +161,8 @@ class AddIcon extends React.Component {
                             disabled={locked}
                             onChange={(e) => this.onChangeNewName({ value: e.target.value })}
                         >
-                            { filteredIcons.map(icon => (
-                                <option>{icon.name}</option>
+                            { filteredIcons && filteredIcons.map(icon => (
+                                <option key={icon.name}>{icon.name}</option>
                             ))}
                         </InputField>
                         </FormGroup>
