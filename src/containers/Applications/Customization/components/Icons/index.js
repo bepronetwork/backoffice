@@ -66,7 +66,7 @@ class IconsTab extends Component {
 
         this.setState({ 
             useDefaultIcons: params.customization.icons.useDefaultIcons,
-            icons: !_.isEmpty(icons) ? icons : [],
+            icons: !_.isEmpty(icons) ? icons.filter(icon => !_.isEmpty(icon.name) && !_.isEmpty(icon.link)) : [],
             icon_id: icon_id
         })
     }
