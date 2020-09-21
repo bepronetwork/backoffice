@@ -29,7 +29,4 @@ export default [{ position: 0, name: "User Profile" },
 { position: 26, name: "Jackpot BigWin" },
 { position: 27, name: "Copy" },
 { position: 28, name: "Country Restricted" },
-{ position: 29, name: "Logout" },
-{ position: 30, name: "Eng-Flag" },
-{ position: 31, name: "Chi-Flag" },
-{ position: 32, name: "Jap-Flag" }]
+{ position: 29, name: "Logout" }]
