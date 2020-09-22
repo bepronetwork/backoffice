@@ -982,6 +982,19 @@ class Connection {
         }
     }
 
+    editSocialLinksCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/socialLink`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editTopTabCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/topTab`, {

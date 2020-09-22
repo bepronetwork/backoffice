@@ -970,6 +970,24 @@ class App{
         }
     }
 
+    editSocialLinksCustomization = async ({ social_link_id, links }) => {
+        try{
+            let res = await ConnectionSingleton.editSocialLinksCustomization({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    social_link_id,
+                    links
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editTopTabCustomization = async ({ topTabParams, isTransparent }) => {
         try{
             let res = await ConnectionSingleton.editTopTabCustomization({   
