@@ -207,7 +207,7 @@ class Icon extends React.Component {
                             disabled={locked}
                             onChange={(e) => this.onChangeName({ id: _id, value: e.target.value })}
                         >
-                            { filteredIcons && filteredIcons.map(icon => (
+                            { filteredIcons && _.sortBy(filteredIcons, ['name']).map(icon => (
                                 <option>{icon.name}</option>
                             ))}
                         </InputField>
