@@ -144,7 +144,8 @@ class ModalAddCurrencyWallet extends React.Component{
                             accepted : value,
                             setWallet : (value) ? setWallet : false,
                             keyResponse,
-                            isLoading: false
+                            isLoading: false,
+                            enableClose: currency.erc20 ? true : false
                         });
                     }
                 };
@@ -171,6 +172,8 @@ class ModalAddCurrencyWallet extends React.Component{
         const { accepted, setWallet, setWalletEnable, enableClose, isLoading, passphrase } = this.state;
 
         if(!isActive){return null};
+
+        const { currency } = this.props;
 
         return (
             <ModalContainer overflowY="scroll" onClose={this.closeModal.bind(this)} title={'Activate your wallet'} height="500" width="800">
@@ -208,10 +211,12 @@ class ModalAddCurrencyWallet extends React.Component{
                             <Switch color="primary" name="accepted" checked={accepted} onChange={(event) => this.handleChange({key : 'accepted', value : event.target.checked})} disabled={passphrase == null || passphrase.length < 10}/>
                             <span>Accept Terms & Conditions</span>
                         </div>
-                        <div style={{textAlign : "left", opacity : (setWalletEnable ? null : 0.2)}}>
-                            <Switch color="primary" name="setWallet" checked={setWallet} onChange={(event) => this.handleChange({key : 'setWallet', value : event.target.checked})} disabled={!setWalletEnable}/>
-                            <span>I set my Wallet Offline. Download PDF.</span>
-                        </div>
+                        { !currency.erc20 && (
+                            <div style={{textAlign : "left", opacity : (setWalletEnable ? null : 0.2)}}>
+                                <Switch color="primary" name="setWallet" checked={setWallet} onChange={(event) => this.handleChange({key : 'setWallet', value : event.target.checked})} disabled={!setWalletEnable}/>
+                                <span>I set my Wallet Offline. Download PDF.</span>
+                            </div>
+                        )}
                     </div>
                     <div style={{marginTop : 20}}>
                         <Button color="primary" type="submit" onClick={this.closeModal.bind(this)} disabled={(!enableClose && setWalletEnable) || !setWalletEnable}>
