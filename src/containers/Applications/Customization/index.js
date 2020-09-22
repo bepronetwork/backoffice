@@ -65,7 +65,7 @@ export default class CustomizationContainer extends Component {
                                 icon : <Withdraw/>
                             },
                             {
-                                title : 'Social links',
+                                title : 'Social Links',
                                 container : <Social/>,
                                 icon : <User/>
                             },
