@@ -74,3 +74,8 @@ export const Logo = styled.section`
     border-style: dashed;
     margin-bottom: 10px;
 `;
+
+export const ConvertContainer = styled.div`
+    padding: 25px;
+    width: 300px;
+`;

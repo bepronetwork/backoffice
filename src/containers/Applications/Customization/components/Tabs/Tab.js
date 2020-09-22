@@ -163,12 +163,11 @@ class Tab extends React.Component {
         this.setState({
             removing: false
         })
-        
+
         setTabs({
-            newTabs: newTabs.filter(tab => !_.isEmpty(tab))
+            newTabs: newTabs ? newTabs.filter(tab => !_.isEmpty(tab)) : []
         })
     }
-
 
     render() {
         const { _id, name, icon, link_url, removing } = this.state;
@@ -237,7 +236,6 @@ class Tab extends React.Component {
             </>
         )
     }
-
 }
 
     

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { ChatTab, EmailTab, GameProviders } from './components';
+import { ChatTab, EmailTab, GameProviders, KYC, PaymentTab } from './components';
 import TabsContainer from '../../../shared/components/tabs/Tabs';
-import { Chat, Email, Hand } from '../../../components/Icons';
+import { Chat, Email, Hand, Wallet } from '../../../components/Icons';
 
 export default class ThirdPartiesContainer extends Component {
     render() {
@@ -24,6 +24,16 @@ export default class ThirdPartiesContainer extends Component {
                                 title : 'Game Providers',
                                 container :  <GameProviders />,
                                 icon : <Hand/>
+                            },
+                            {
+                                title : 'KYC',
+                                container :  <KYC />,
+                                icon : <Chat/>
+                            },
+                            {
+                                title : 'Payment',
+                                container :  <PaymentTab />,
+                                icon : <Wallet/>
                             }
                          
                         ]

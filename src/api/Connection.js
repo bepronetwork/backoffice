@@ -637,6 +637,21 @@ class Connection {
         }
     }
 
+    
+    convertPoints = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/convert/points`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editJackpot = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/jackpot/edge/edit`, {
@@ -775,6 +790,45 @@ class Connection {
     editEmailIntegration = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/integrations/mailSender/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editKYCIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/integrations/kyc/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editMoonPayIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/integrations/moonpay/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editUserKYC = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/user/kyc_needed/edit`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

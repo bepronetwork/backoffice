@@ -170,9 +170,9 @@ class Icon extends React.Component {
         const { _id, name, link, removing } = this.state;
         const { locked, icons } = this.props;
 
-        if (!name) return null
+        if (!name || !icons) return null
 
-        const filteredIcons = enumIcons.filter(icon => !icons.map(i => i.name).includes(icon.name)).concat([enumIcons.find(i => i.name === name)]);
+        const filteredIcons = _.without(enumIcons.filter(icon => !icons.map(i => i.name).includes(icon.name)).concat([enumIcons.find(i => i.name === name)]), undefined);
 
         return (
             <>
@@ -208,7 +208,7 @@ class Icon extends React.Component {
                             onChange={(e) => this.onChangeName({ id: _id, value: e.target.value })}
                         >
                             { filteredIcons && _.sortBy(filteredIcons, ['name']).map(icon => (
-                                <option>{icon.name}</option>
+                                <option key={icon.name}>{icon.name}</option>
                             ))}
                         </InputField>
                         </FormGroup>

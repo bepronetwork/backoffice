@@ -28,9 +28,12 @@ class AddOnStorePageContainer extends React.Component{
     }
 
     projectData = (props) => {
-        const { params } = props.profile.App;
+        const { profile } = props;
+        const { params } = profile.App;
 
-        this.setState({ ecosystemAddOns: params.storeAddOn, appAddOns: params.addOn });
+        const currencies = profile.getApp().getEcosystemCurrencies();
+
+        this.setState({ ecosystemAddOns: params.storeAddOn, appAddOns: params.addOn, currencies: currencies });
     }
 
     addAddOn = async (url) => {
@@ -53,8 +56,8 @@ class AddOnStorePageContainer extends React.Component{
 
     hasCurrenciesInstalled = () => {
         const { profile } = this.props;
+        const { currencies } = this.state;
 
-        const currencies = profile.getApp().getEcosystemCurrencies();
         const wallet = profile.App.params.wallet;
 
         return !_.isEmpty(currencies) || !_.isEmpty(wallet);
