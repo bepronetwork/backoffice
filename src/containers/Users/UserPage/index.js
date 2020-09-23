@@ -55,11 +55,14 @@ class UserPage extends React.Component{
         const currencyTicker = currency.ticker ? currency.ticker : defaultProps.ticker;
         const user = await profile.getApp().getUserAsync({ user: userId, currency: currency });
 
+        const { kyc } = app.params.integrations;
+
         this.setState({...this.state, 
             currencyTicker,
             user: user,
             ecosystemAddOns: app.params.storeAddOn,
-            appAddOns: app.params.addOn
+            appAddOns: app.params.addOn,
+            kycActive: kyc ? kyc.isActive : false
         })
     }
 
@@ -184,7 +187,7 @@ class UserPage extends React.Component{
     }
 
     render = () => {
-        const { user, currencyTicker, loading } = this.state;
+        const { user, currencyTicker, loading, kycActive } = this.state;
         
         if (!user || _.isEmpty(user)) { return <UserPageSkeleton/> };
 
@@ -222,7 +225,7 @@ class UserPage extends React.Component{
                                             <p className='text-small'> {address} </p>
                                             <p className='text-x-small'> #{_id} </p>
 
-                                            { kyc_status !== undefined && kyc_needed !== undefined && (
+                                            { kyc_status !== undefined && kyc_needed !== undefined && kycActive && (
                                                 <>
                                                 <hr/>
 
