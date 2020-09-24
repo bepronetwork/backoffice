@@ -8,6 +8,7 @@ import Tabs from './Tabs';
 import SubSections from './SubSections';
 import Skins from './Skins'
 import Icons from '../components/Icons'
+import Social from '../components/Social'
 
 export { 
     Banners,
@@ -19,5 +20,6 @@ export {
     Tabs,
     SubSections,
     Skins,
-    Icons
+    Icons,
+    Social
 }

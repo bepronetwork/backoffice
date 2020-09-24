@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { AnnouncementTab, Banners, Logo, Footer, Colors, Fonts, Tabs, SubSections, Skins, Icons } from './components';
+import { AnnouncementTab, Banners, Logo, Footer, Colors, Fonts, Tabs, SubSections, Skins, Icons, Social } from './components';
 import TabsContainer from '../../../shared/components/tabs/Tabs';
 import Background from './components/Background';
-import { Bet, Reward, Phone, Settings, Rewards, AddOn, Withdraw } from '../../../components/Icons';
+import { Bet, Reward, Phone, Settings, Rewards, AddOn, Withdraw, User } from '../../../components/Icons';
 
 export default class CustomizationContainer extends Component {
     render() {
@@ -63,6 +63,11 @@ export default class CustomizationContainer extends Component {
                                 title : 'Footer',
                                 container : <Footer/>,
                                 icon : <Withdraw/>
+                            },
+                            {
+                                title : 'Social Links',
+                                container : <Social/>,
+                                icon : <User/>
                             },
                          
                         ]

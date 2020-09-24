@@ -128,7 +128,7 @@ class PaymentTab extends Component {
 
                         <p className="text-left secondary-text" style={{ margin: "15px 0px" }}> Add your credentials to integrate </p>
 
-                        <p>API Key</p>
+                        <p>Secret key</p>
                         <InputField disabled={locked || isLoading} value={key} onChange={(e) => this.handleChangeAPIkey(e.target.value)}/>
                     </Actions>
                 </EditLock>

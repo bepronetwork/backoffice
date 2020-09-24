@@ -10,12 +10,22 @@ import AddIcon from './AddIcon'
 import _ from 'lodash';
 import EditLock from '../../../../Shared/EditLock';
 
+import enumIcons from './enumIcons';
+import { FormLabel } from '@material-ui/core';
+import BooleanInput from '../../../../../shared/components/BooleanInput';
+
 const cardStyle = {
     margin: 10, 
     borderRadius: "10px", 
     border: "solid 1px rgba(164, 161, 161, 0.35)", 
     backgroundColor: "#fafcff", 
     boxShadow: "none"
+}
+
+const labelStyle = {
+    fontFamily: "Poppins", 
+    fontSize: 16, 
+    color: "#646777"
 }
 
 export const InputLabel = styled(Label)`
@@ -55,7 +65,8 @@ class IconsTab extends Component {
         const icon_id =  params.customization.icons._id;
 
         this.setState({ 
-            icons: !_.isEmpty(icons) ? icons : [],
+            useDefaultIcons: params.customization.icons.useDefaultIcons,
+            icons: !_.isEmpty(icons) ? icons.filter(icon => !_.isEmpty(icon.name) && !_.isEmpty(icon.link)) : [],
             icon_id: icon_id
         })
     }
@@ -74,18 +85,18 @@ class IconsTab extends Component {
     }
 
     confirmChanges = async () => {
-        const { icons, icon_id } = this.state;
+        const { icons, icon_id, useDefaultIcons } = this.state;
         const { profile } = this.props;
 
         const filteredIcons = icons.map(icon => ({ 
             name: icon.name, 
             link: icon.link, 
-            position: icons.indexOf(icon) 
+            position: enumIcons.find(i => i.name === icon.name).position
         }));
         
         this.setState({ isLoading: true })
 
-        await profile.getApp().editIconsCustomization({ icon_id: icon_id, icons: filteredIcons });
+        await profile.getApp().editIconsCustomization({ icon_id: icon_id, icons: filteredIcons, useDefaultIcons: useDefaultIcons });
 
         await profile.getApp().updateAppInfoAsync();
         await profile.update();
@@ -94,6 +105,10 @@ class IconsTab extends Component {
             isLoading: false,
             locked: true
         })
+    }
+
+    onChange = ({ type, value }) => {
+        this.setState({ [type]: value })
     }
 
     unlockField = () => {
@@ -105,7 +120,7 @@ class IconsTab extends Component {
     }
 
     render() {
-        const { isLoading, locked, icons } = this.state; 
+        const { isLoading, locked, icons, useDefaultIcons } = this.state; 
 
         return (
             <Card>
@@ -120,6 +135,17 @@ class IconsTab extends Component {
                                 type={'skinType'} 
                                 locked={locked}
                             >
+                                <div style={{ marginBottom: 10 }}>
+                                    <FormLabel component="legend" style={labelStyle}>{ useDefaultIcons ? "Use default icons" : "Use custom icons" }</FormLabel>
+                                    <BooleanInput
+                                        checked={useDefaultIcons === true} 
+                                        onChange={this.onChange}
+                                        disabled={locked}
+                                        type={'useDefaultIcons'}
+                                        id={'useDefaultIcons'}
+                                    />
+                                </div>
+                                <hr/>
                                 <IconsList>
                                     <AddIcon icons={icons} setIcons={this.setIcons} locked={locked}/>
                                     { !_.isEmpty(icons) && icons.map(icon => (
