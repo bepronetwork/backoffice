@@ -36,16 +36,15 @@ class AddAdminCard extends Component {
         const { profile, setAdmins } = this.props;
 
         if (email) {
-            this.setState({...this.state, loading: true });
+            this.setState({ loading: true });
 
             await profile.addAdmin({ email: email });
+            
+            await setAdmins();
 
-            const admins = await profile.getAdminByApp();
-
-            setAdmins(admins.reverse());
-
-            this.setState({...this.state, loading: false });
+            this.setState({ loading: false });
             this.lock();
+
         } else {
             this.lock();
         }
@@ -75,7 +74,8 @@ class AddAdminCard extends Component {
                     lockField={this.lock} 
                     confirmChanges={this.confirmChanges} 
                     isLoading={loading}
-                    locked={lock}>
+                    locked={lock}
+                    add={true}>
 
                 <TextField
                     disabled={lock}
