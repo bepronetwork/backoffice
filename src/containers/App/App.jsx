@@ -6,6 +6,8 @@ import i18next from 'i18next';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { hot } from 'react-hot-loader';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import '../../scss/app.scss';
 import './App.css';
 import GlobalStyle from './GlobalStyles';

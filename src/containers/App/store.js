@@ -20,7 +20,8 @@ import {
   addCurrencyWalletReducer,
   videogamesReducer,
   seriesReducer,
-  matchesReducer
+  matchesReducer,
+  summaryReducer
 } from '../../redux/reducers/index';
 
 
@@ -45,7 +46,8 @@ const reducer = combineReducers({
     addCurrencyWallet : addCurrencyWalletReducer,
     videogames: videogamesReducer,
     series: seriesReducer,
-    matches: matchesReducer
+    matches: matchesReducer,
+    summary: summaryReducer
 });
 const store = createStore(reducer);
 

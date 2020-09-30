@@ -409,9 +409,9 @@ class UsersTable extends React.Component {
         const { showFilter, data, order, orderBy, selected, rowsPerPage, page, usernameFilter, emailFilter, idFilter, loading } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
         const styles = {
-            fitler: {
+            filter: {
                 padding: '30px 20px', border: "1px solid #d9d9d9", margin: '24px 14px 0 0',
-                backgroundColor: "#f2f4f7", borderRadius: 4, width: 400, position: 'absolute',
+                backgroundColor: "#f2f4f7", borderRadius: 4, width: '92%', maxWidth: 400, position: 'absolute',
                 top: 0, right: 0, left: 'auto', zIndex: 10, display: showFilter ? 'block' : 'none'
             }
         };
@@ -452,7 +452,7 @@ class UsersTable extends React.Component {
                     </>
                     ) : (
                     <>
-                    <div style={styles.fitler}>
+                    <div style={styles.filter}>
                         <Col>
                             <Row>
                                 <FormControl style={{width : '100%', padding: 8 }}>

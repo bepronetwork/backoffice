@@ -4,6 +4,11 @@ import Logo from './Logo';
 import Footer from '../components/Footer';
 import Colors from './Colors';
 import Fonts from './Fonts';
+import Tabs from './Tabs';
+import SubSections from './SubSections';
+import Skins from './Skins'
+import Icons from '../components/Icons'
+import Social from '../components/Social'
 
 export { 
     Banners,
@@ -11,5 +16,10 @@ export {
     Footer,
     Colors,
     Logo,
-    Fonts
+    Fonts,
+    Tabs,
+    SubSections,
+    Skins,
+    Icons,
+    Social
 }

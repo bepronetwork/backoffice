@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { NavLink, Input, InputGroupText } from 'reactstrap';
 import { Button } from 'react-bootstrap';
+import { Button as MaterialButton } from '@material-ui/core';
 
 export const StyledNavLink = styled(NavLink)`
     /* margin: 0px 20px; */
@@ -75,26 +76,21 @@ export const DepositAddress = styled.section`
     }
 `;
 
-export const CopyButton = styled(Button)`
-    margin: 0px;
-    margin-left: 10px;
-    height: 100%;
-    border-radius: 6px;
-    background-color: #814c94;
-    min-width: 100px;
+export const CopyButton = styled(MaterialButton)`
+    margin: 0px !important;
+    margin-left: 10px !important;
+    height: 100% !important;
+    border-radius: 6px !important;
+    background-color: #814c94 !important;
+    min-width: 100px !important;
+    text-transform: none !important;
+    box-shadow: none !important;
 
-    &.btn.icon {
-        padding-top: 8px;   
-    }
-
-    span {
-        font-family: Poppins;
-        font-size: 14px;
-        font-weight: 500;
-        color: #ffffff;
-        overflow: hidden;
-    }
-
+    font-family: Poppins !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    overflow: hidden !important;
 `;
 
 export const WithdrawContent = styled.section`
@@ -147,23 +143,21 @@ export const InputAddOn = styled(InputGroupText)`
     }
 `;
 
-export const WithdrawButton = styled(Button)`
-    margin: 42px 0px;
-    margin-bottom: 10px;
-    height: 50px;
-    width: 100%;
-    border-radius: 6px;
-    background-color: #814c94;
-
-    &.btn.icon {
-        padding-top: 8px;   
-    }
+export const WithdrawButton = styled(MaterialButton)`
+    margin: 42px 0px !important;
+    margin-bottom: 10px !important;
+    height: 50px !important;
+    width: 100% !important;
+    border-radius: 6px !important;
+    background-color: #814c94 !important;
+    text-transform: none !important;
+    box-shadow: none !important;
 
     span {
-        font-family: Poppins;
-        font-size: 18px;
-        font-weight: 400;
-        color: #ffffff;
+        font-family: Poppins !important;
+        font-size: 18px !important;
+        font-weight: 400 !important;
+        color: #ffffff !important;
     }
 
 `;

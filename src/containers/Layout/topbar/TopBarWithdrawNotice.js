@@ -1,10 +1,9 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import BoxDownIcon from 'mdi-react/BoxDownIcon';
 import { connect } from "react-redux";
 import _ from 'lodash';
-import { Chat, Withdraw } from '../../../components/Icons';
+import { Withdraw } from '../../../components/Icons';
 
 class TopbarWithdrawNotice extends Component {
 
@@ -24,13 +23,14 @@ class TopbarWithdrawNotice extends Component {
     }
     
     projectData = async (props) => {
-        let user = !_.isEmpty(props.profile) ? props.profile : null ;
-        if(user){
-            let withdraws = user.getApp().getSummaryData('withdraws').data;
-            let withdrawsInQueue = withdraws.filter( w => w.status == 'Queue');
-            this.setState({openWithdraws :  withdrawsInQueue.length})
+        const user = !_.isEmpty(props.profile) ? props.profile : null;
+
+        if(user && user !== null) {
+            const withdraws = user.getApp().getSummaryData('withdraws').data;
+            const withdrawsInQueue = withdraws ? withdraws.filter( w => w.status === 'Queue') : [];
+
+            this.setState({ openWithdraws:  withdrawsInQueue.length });
         }
-        
     }
 
     render() {

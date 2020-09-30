@@ -1,12 +1,14 @@
 /* eslint-disable react/no-array-index-key */
-import React, { PureComponent } from 'react';
-import {  Col, Row } from 'reactstrap';
-import GameInfo from './GameInfo';
+import React from 'react';
 import { connect } from "react-redux";
-import store from '../../App/store';
+import { Col, Row } from 'reactstrap';
+import GameInfo from './GameInfo';
+
+import _ from 'lodash';
+
 const image = `${process.env.PUBLIC_URL}/img/dashboard/empty.png`;
 
-class GamesContainer extends PureComponent {
+class GamesContainer extends React.Component {
  
     constructor() {
         super();
@@ -26,15 +28,16 @@ class GamesContainer extends PureComponent {
     }
 
     projectData = async (props) => {
+        const { data, profile } = props; 
 
-            const gamesInfo = await props.profile.getApp().getSummaryData('gamesInfo').data.data.message;
-            const games = await getAllGames(props.data.games.data, gamesInfo);
-            const wallet = props.data.wallet.data;
+        const gamesInfo = await profile.getApp().getSummaryData('gamesInfo').data.data.message;
+        const games = !_.isNull(data.games.data) && (typeof data.games.data !== 'string') ? await getAllGames(data.games.data, gamesInfo) : [];
+        const wallet = data.wallet.data;
 
-            this.setState({...this.state, 
-                wallet,
-                games
-            })
+        this.setState({...this.state, 
+            wallet,
+            games
+        })
     }
 
     hasRestriction(game) {
@@ -47,24 +50,23 @@ class GamesContainer extends PureComponent {
 
     render() {
        const { wallet, games } = this.state;
-       const { isLoading } = this.props;
+       const { isLoading, data } = this.props;
 
        const myGames = games.filter(game => !this.hasRestriction(game));
         
         return (
-            (myGames.length > 0) ? 
+            (myGames.length > 0) && !_.isNull(data.games.data) ? 
                 <Row md={12} xl={12} lg={12} xs={12}>
                     {myGames.map(game => {
                         return (
                             <Col lg={4} style={{ minWidth: 290 }}>
                                 <GameInfo game={game} isLoading={isLoading} wallet={wallet} {...this.props}/>
                             </Col>
-
                         )                  
                     })}
                 </Row>
             : 
-            <div>
+            <div style={{ margin: 20 }}>
                 <h4>You have no Games and/or Currencies enabled currently</h4>
                 <img src={image} style={{width :'30%', marginTop : 20}}/>
             </div>

@@ -4,6 +4,7 @@ import Numbers from "../services/numbers";
 import { getNonce } from "../lib/number";
 import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
+import { setGamesData, setUsersData, setBetsData, setRevenueData, setWalletData } from "../redux/actions/summaryActions";
 import { getAuthFromCookies } from "./services/services";
 import _, { identity } from 'lodash';
 import { getVideoGamesAll, getAllVideogames, getMatchesAll, getSeriesMatches, getSpecificMatch, setBookedMatch, removeBookedMatch, getTeamStats, getPlayerStats, getBookedMatches, getBookedSeriesMatches } from "../esports/services";
@@ -22,62 +23,11 @@ class App{
     }
 
     getSummary = async () => {
-        // grab current state
         const state = store.getState();
-        const { periodicity, currency } = state;
+        const { currency } = state;
 
         try{
             let res = await Promise.all([
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'USERS',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'GAMES',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'BETS',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'REVENUE',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
-                !_.isEmpty(currency) ? ConnectionSingleton.getSummary({
-                    params : {
-                        admin : this.getAdminId(),
-                        app : this.getId(),
-                        type : 'WALLET',
-                        periodicity : periodicity,
-                        currency : currency._id,
-                    },
-                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
-                }) : currency,
                 ConnectionSingleton.getApp({
                     admin : this.getAdminId(),
                     app : this.getId(),
@@ -89,24 +39,19 @@ class App{
                     filters : [],
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 }),
-                this.getGamesAsync({currency : currency._id}),
+                this.getGamesAsync({ currency: currency._id }),
                 this.getUsersAsync({size: 100, offset: 0 }),
-                this.getWithdrawsAsync({size : 1000, currency : currency._id})
+                !_.isEmpty(currency) ? this.getWithdrawsAsync({ size: 1000, currency: currency._id }) : []
             ]);
 
-            let serverApiInfo = {
-                users : res[0].data ? res[0].data.message : [],
-                games : res[1].data ? res[1].data.message : [],
-                bets : res[2].data ? res[2].data.message : [],
-                revenue : res[3].data ? res[3].data.message : [],
-                wallet : res[4].data && this.hasPermission(res[4]) ? res[4].data.message[0] : [],        
-                affiliates : res[5].data.message ? res[5].data.message.affiliateSetup : null,
-                app : res[5].data.message ? res[5].data.message : null,
-                walletSimple : res[5].data.message ? res[5].data.message.wallet : null,
-                transactions :  res[6].data && this.hasPermission(res[6]) ? res[6].data.message[0] : null,
-                gamesInfo : res[7],
-                usersInfoSummary : res[8],
-                withdraws : res[9]
+            let serverApiInfo = {   
+                affiliates : res[0].data.message ? res[0].data.message.affiliateSetup : null,
+                app : res[0].data.message ? res[0].data.message : null,
+                walletSimple : res[0].data.message ? res[0].data.message.wallet : null,
+                transactions :  res[1].data && this.hasPermission(res[1]) ? res[1].data.message[0] : null,
+                gamesInfo : res[2],
+                usersInfoSummary : res[3],
+                withdraws : res[4]
             } 
             this.params = serverApiInfo.app;
             this.params.users = serverApiInfo.usersInfoSummary;
@@ -118,10 +63,112 @@ class App{
                 }
             };
 
+            if (!_.isEmpty(currency)) {
+                await this.getSummaryAsync(currency);
+            }
+
             return res;
         }catch(err){
             throw err;
 		}
+    }
+
+    getSummaryAsync = async (currency) => {
+        await this.getUsersSummary(currency);
+        await this.getGamesSummary(currency);
+        await this.getBetsSummary(currency);
+        await this.getRevenueSummary(currency);
+        await this.getWalletSummary(currency);
+    }
+
+    getUsersSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'USERS',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setUsersData(response.data.message)) : store.dispatch(setUsersData([]))
+    }
+
+    getGamesSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'GAMES',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setGamesData(response.data.message)) : store.dispatch(setGamesData([]))
+    }
+
+    getBetsSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'BETS',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setBetsData(response.data.message)) : store.dispatch(setBetsData([]))
+    }
+
+    getRevenueSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'REVENUE',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' ? store.dispatch(setRevenueData(response.data.message)) : store.dispatch(setRevenueData([]))
+    }
+
+    getWalletSummary = async (currency) => {
+        const state = store.getState();
+        const { periodicity } = state;
+
+        const response = await ConnectionSingleton.getSummary({
+            params : {
+                admin : this.getAdminId(),
+                app : this.getId(),
+                type : 'WALLET',
+                periodicity : periodicity,
+                currency : currency._id,
+            },
+            headers : authHeaders(this.getBearerToken(), this.getAdminId())
+        })
+
+        response.data && typeof response.data.message !== 'string' && this.hasPermission(response) ? store.dispatch(setWalletData(response.data.message[0])) : store.dispatch(setWalletData([]))
     }
 
     updateAppInfoAsync = async () => {
@@ -172,6 +219,26 @@ class App{
                     },
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editApp = async ({ editParams }) => {
+        try{
+            let res = await ConnectionSingleton.editApp({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    editParams,
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
         }catch(err){
             throw err;
         }
@@ -527,17 +594,38 @@ class App{
         }
     }
 
-    editTopBarCustomization = async ({textColor, backgroundColor, text, isActive}) => {
+    editTopBarCustomization = async ({ textColor, backgroundColor, text, isActive }) => {
         try{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editTopBarCustomization({   
-                params : {
-                    admin : this.getAdminId(),
-                    app : this.getId(),
+                params: {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
                     textColor,
                     backgroundColor,
                     text,
                     isActive
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editSkinTypeCustomization = async ({ skinParams }) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editSkinTypeCustomization({   
+                params: {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    skinParams
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -596,6 +684,93 @@ class App{
         }
     }
 
+    
+    editCrispIntegration = async ({ isActive, key, cripsr_id }) => {
+        try{
+            let res = await ConnectionSingleton.editCrispIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    isActive,
+                    key,
+                    cripsr_id
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editKYCIntegration = async ({ kyc_id, isActive, clientId, flowId }) => {
+        try{
+            let res = await ConnectionSingleton.editKYCIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    kyc_id,
+                    isActive,
+                    clientId, 
+                    flowId
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editMoonPayIntegration = async ({ moonpay_id, isActive, key }) => {
+        try{
+            let res = await ConnectionSingleton.editMoonPayIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    moonpay_id,
+                    isActive,
+                    key
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
+    editUserKYC = async ({ user, kyc_needed }) => {
+        try{
+            let res = await ConnectionSingleton.editUserKYC({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    user: user,
+                    kyc_needed: kyc_needed
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editEmailIntegration = async ({apiKey, templateIds}) => {
         try{
             /* Cancel Withdraw Response */ 
@@ -618,14 +793,15 @@ class App{
         }
     }
 
-    editBannersCustomization = async ({banners, autoDisplay}) => {
+    editBannersCustomization = async ({ banners, autoDisplay, fullWidth }) => {
         try{
             let res = await ConnectionSingleton.editBannersCustomization({   
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId(),
                     banners,
-                    autoDisplay
+                    autoDisplay,
+                    fullWidth
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -814,6 +990,78 @@ class App{
         }
     }
 
+    editSocialLinksCustomization = async ({ social_link_id, links }) => {
+        try{
+            let res = await ConnectionSingleton.editSocialLinksCustomization({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    social_link_id,
+                    links
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editTopTabCustomization = async ({ topTabParams, isTransparent }) => {
+        try{
+            let res = await ConnectionSingleton.editTopTabCustomization({   
+                params : {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    topTabParams,
+                    isTransparent
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editIconsCustomization = async ({ icon_id, icons, useDefaultIcons }) => {
+        try{
+            let res = await ConnectionSingleton.editIconsCustomization({   
+                params : {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    icon_id,
+                    icons,
+                    useDefaultIcons: useDefaultIcons
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editSubsectionsCustomization = async ({ subSections }) => {
+        try{
+            let res = await ConnectionSingleton.editSubsectionsCustomization({   
+                params : {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    subSections
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editGameImage = async ({image_url, game}) => {
         try{
             let res = await ConnectionSingleton.editGameImage({   
@@ -856,6 +1104,46 @@ class App{
         }
     }
 
+    createProvider = async ({ provider_id }) => {
+        try{
+            let res = await ConnectionSingleton.createProvider({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    provider_id,
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editProvider = async ({ providerParams }) => {
+        try{
+            let res = await ConnectionSingleton.editProvider({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    providerParams,
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     cancelWithdraw = async () => {
         try{
             /* Cancel Withdraw Response */
@@ -870,9 +1158,16 @@ class App{
         }
     }
 
+    getAllGameProviders = async () => {
+        try {
+            return await ConnectionSingleton.getAllGameProviders();
+        } catch(err) {
+            throw err;
+        }
+    }
+
     getGamesAsync = async ({currency}) => {
         try{
-            /* Cancel Withdraw Response */
             return await ConnectionSingleton.getGames({       
                 params : {
                     admin : this.getAdminId(),
@@ -962,6 +1257,14 @@ class App{
     getEcosystemVariables = async () => {
         try{
             return await ConnectionSingleton.getEcosystemVariables();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getEcosystemSkins = async () => {
+        try{
+            return await ConnectionSingleton.getEcosystemSkins();
         }catch(err){
             throw err;
         }
@@ -1102,9 +1405,22 @@ class App{
     }
   
     getSummaryData(type){
-        return {
-            data :  this.data.summary[type],
-            type : type
+        const state = store.getState();
+        const { summary } = state;
+
+        switch (type) {
+            case 'users':
+                return { data: summary.users, type: type }
+            case 'games':
+                return { data: summary.games, type: type }
+            case 'bets':
+                return { data: summary.bets, type: type }
+            case 'revenue':
+                return { data: summary.revenue, type: type }
+            case 'wallet':
+                return { data: summary.wallet, type: type }
+            default:
+                return { data: this.data.summary[type], type: type };
         }
     }
 
@@ -1229,6 +1545,41 @@ class App{
                 params : {
                     currency,
                     depositBonusParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editPointSystem = async ({ currency, pointSystemParams }) => {
+        try{
+            return await ConnectionSingleton.editPointSystem({   
+                params : {
+                    currency,
+                    pointSystemParams,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    convertPoints = async ({ currency, user, isAbsolut }) => {
+        try{
+            return await ConnectionSingleton.convertPoints({   
+                params : {
+                    currency,
+                    user,
+                    isAbsolut,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     

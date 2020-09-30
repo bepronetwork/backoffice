@@ -1,15 +1,24 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { ButtonBase, Dialog, DialogContent } from '@material-ui/core';
+import { Button, ButtonBase, Dialog, DialogContent } from '@material-ui/core';
 import { Row, Col, Card, CardBody } from 'reactstrap';
 import _ from 'lodash';
 import AnimationNumber from '../../../containers/UI/Typography/components/AnimationNumber';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { CloseIcon, TableIcon, JsonIcon } from 'mdi-react';
+import { CloseIcon, TableIcon, JsonIcon, SearchIcon } from 'mdi-react';
 import { DialogHeader, CloseButton } from './styles';
 import { CSVLink } from 'react-csv';
 import { Button as MaterialButton } from "@material-ui/core";
 import { export2JSON } from '../../../utils/export2JSON';
+
+const kycButtonStyle = {
+    textTransform: "none", 
+    backgroundColor: "#894798", 
+    color: "#ffffff", 
+    boxShadow: "none", 
+    height: 25,
+    margin: "10px 0px"
+}
 
 class UserContainer extends React.Component {
  
@@ -18,7 +27,8 @@ class UserContainer extends React.Component {
         this.state = {
             open: false,
             user: {},
-            isLoading: false
+            isLoading: false,
+            loading: false
         };
     }
 
@@ -31,15 +41,18 @@ class UserContainer extends React.Component {
     }
 
     projectData = async (props) => {
-        const { user } = props;
+        const { user, profile } = props;
 
         if (!_.isEmpty(this.state.user)) {
 
+            const app = await profile.getApp();
             const userData = await this.getUserInfo({ user_id: user });
 
             if (!_.isEmpty(userData)) {
                 this.setState({
-                    user: userData
+                    user: userData,
+                    ecosystemAddOns: app.params.storeAddOn,
+                    appAddOns: app.params.addOn
                 })
             } else {
                 this.setState({
@@ -50,15 +63,18 @@ class UserContainer extends React.Component {
     }
 
     setOpen = async () => {
-        const { user } = this.props;
+        const { user, profile } = this.props;
 
         if (_.isEmpty(this.state.user)) {
-
+            
+            const app = await profile.getApp();
             const userData = await this.getUserInfo({ user_id: user });
 
             this.setState({
                 user: userData,
-                open: true
+                open: true,
+                ecosystemAddOns: app.params.storeAddOn,
+                appAddOns: app.params.addOn
             })
         }
     }
@@ -100,13 +116,72 @@ class UserContainer extends React.Component {
         )
     }
 
+    renderPointsData = ({ addon, points, loading }) => {
+        if ( _.isEmpty(addon)) return null;
+
+        const { name } = addon;
+
+        return (
+            <Card>
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    <p className='text-small pink-text'> Points </p>
+                    {loading ? (
+                        <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                    ) : (
+                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={0} font={'11pt'} number={points}/> <span className='text-x-small'>{ name }</span></h4>
+                    )}
+                </CardBody>
+            </Card>
+        )
+    }
+
+    hasAddOn = (addOn) => {
+        const { appAddOns } = this.state;
+
+        if(!_.isEmpty(appAddOns)) {
+            const isAdded = _.has(appAddOns, addOn);
+            const isNotEmpty = !_.isEmpty(appAddOns[addOn]);
+
+            return isAdded && isNotEmpty;
+
+        } else {
+            return false;
+        }
+    }
+
+    getAddOnObj = (addOn) => {
+        const { ecosystemAddOns, appAddOns } = this.state;
+
+        const addOnInfo = ecosystemAddOns.find(addon => addon.name.toLowerCase().includes(addOn.toLowerCase()));
+        const addOnData = appAddOns[Object.keys(appAddOns).find(k => k.toLowerCase() === addOn.toLowerCase())];
+
+        const addOnObj = _.merge({}, addOnInfo, addOnData);
+
+        return addOnObj;
+
+    }
+
+    askForUserKYC = async () => {
+        const { profile } = this.props;
+        const { App } = profile;
+        const { user } = this.state;
+
+        if (user) {
+            this.setState({ loading: true })
+
+            await App.editUserKYC({ user: user._id, kyc_needed: true });
+            
+            this.setState({ loading: false })
+        }
+    }
+
     render() {
         const { currency } = this.props;
-        const { open, user, isLoading } = this.state;
+        const { open, user, isLoading, loading } = this.state;
 
         if (!user || !currency) return null;
 
-        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, wallet, affiliateWallet } = user;
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, wallet, affiliateWallet, points, kyc_status, kyc_needed } = user;
         const playBalance = wallet ? wallet.find(wallet => wallet.currency._id === currency._id).playBalance : undefined;
         
         let csvData = [{}];
@@ -200,6 +275,19 @@ class UserContainer extends React.Component {
                                                     <p className='secondary-text text-small'> {email}</p>
                                                     <p className='text-small'> {address} </p>
                                                     <p className='text-x-small'> #{_id} </p>
+
+                                                    { kyc_status !== undefined && kyc_needed !== undefined && (
+                                                        <>
+                                                        <hr/>
+
+                                                        <h5 className='pink-text' style={{ marginTop: 10, fontSize: 13 }}>KYC status (<span style={{ color: 'black' }}> {kyc_status} </span>)</h5>
+                                                        { !kyc_needed && (
+                                                            <Button onClick={() => this.askForUserKYC()} variant="outlined" size="small" style={kycButtonStyle} disabled={loading}>
+                                                                { loading ? "Sending..." : <><SearchIcon style={{marginRight: 3}}/>Ask for KYC</> }
+                                                            </Button>
+                                                        )}
+                                                        </>
+                                                    )}
                                                 </Col>
                                             </Row>
                                         </CardBody>
@@ -232,6 +320,11 @@ class UserContainer extends React.Component {
                                     <Col sd={12} md={4} lg={3}>
                                         {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks ? affiliate.affiliatedLinks.length : 0, loading: isLoading, decimals: 0})}
                                     </Col>
+                                    { this.hasAddOn('pointSystem') && (
+                                        <Col sd={12} md={4} lg={3}>
+                                            { this.renderPointsData({ addon: this.getAddOnObj('pointSystem'), points: points, loading: isLoading }) } 
+                                        </Col>
+                                    )}
                                 </Row>
                             </Col>
                         </Row>

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Col, Row, Card } from 'reactstrap';
+import { Card } from 'reactstrap';
 import { connect } from "react-redux";
-import _ from 'lodash';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 
@@ -29,45 +28,24 @@ const ApplicationLink = styled.section`
 `;
 
 const OpenAppButton = styled(Button)`
-    height: 100%;
-    padding: 5px !important; 
-    border-radius: 6px;
+    margin: 0px !important;
+    padding: 6px !important;
+    margin-left: 10px !important;
+    height: 100% !important;
+    border-radius: 6px !important;
     background-color: #814c94 !important;
     min-width: 100px !important;
-    text-transform: none !important;
     box-shadow: none !important;
 
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-
-    &:hover {
-      background-color: transparent
-    };
-
+    text-transform: none !important;
     font-family: Poppins !important;
-    font-size: 13px !important;
+    font-size: 14px !important;
     font-weight: 500 !important;
     color: #ffffff !important;
     overflow: hidden !important;
 `;
 
-class HostingLink extends React.Component{
-
-    constructor(props){
-        super(props)
-    }
-    
-    componentDidMount(){
-
-    }
-
-    componentWillReceiveProps(){
-
-    }
-
-
-    
+class HostingLink extends React.PureComponent{
 
     render = () => {
         let link = this.props.profile.getApp().getAppLink();
@@ -76,7 +54,7 @@ class HostingLink extends React.Component{
             <Card style={{ padding: 0 }}>
                 <ApplicationLink>
                     <h6> {link} </h6>
-                    <OpenAppButton disableRipple variant="contained" href={link} target={'__blank'}>
+                    <OpenAppButton variant="contained" href={link} target={'__blank'}>
                         Open App
                     </OpenAppButton>
                 </ApplicationLink>

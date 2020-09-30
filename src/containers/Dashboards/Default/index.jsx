@@ -1,26 +1,23 @@
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
-import { translate } from 'react-i18next';
-import PropTypes from 'prop-types';
-
-import RevenueChart from './components/RevenueChart';
-import VisitorsSessions from './components/VisitorsSessions';
-import BounceRateArea from './components/BounceRateArea';
-import BetsStatistics from './components/BetsStatistics';
-import CompanyId from './components/CompanyId';
-import ProfitResume from './components/ProfitResume';
-import TurnoverResume from './components/TurnoverResume';
-import LiquidityWalletWidget from './components/LiquidityWalletWidget';
-
-import { connect } from "react-redux";
-import { compose } from 'lodash/fp'
-import DataWidget from '../../DataWidget/DataWidget';
+import Fade from '@material-ui/core/Fade';
 import _ from 'lodash';
-import NoData from '../../NoData';
-
-import store from '../../App/store';
+import { compose } from 'lodash/fp';
+import PropTypes, { string } from 'prop-types';
+import { translate } from 'react-i18next';
+import { connect } from "react-redux";
+import { Col, Container, Row } from 'reactstrap';
 import { setLoadingStatus } from '../../../redux/actions/loadingAction';
-
+import store from '../../App/store';
+import DataWidget from '../../DataWidget/DataWidget';
+import NoData from '../../NoData';
+import BetsStatistics from './components/BetsStatistics';
+import BounceRateArea from './components/BounceRateArea';
+import CompanyId from './components/CompanyId';
+import LiquidityWalletWidget from './components/LiquidityWalletWidget';
+import ProfitResume from './components/ProfitResume';
+import RevenueChart from './components/RevenueChart';
+import TurnoverResume from './components/TurnoverResume';
+import VisitorsSessions from './components/VisitorsSessions';
 
 class DefaultDashboard extends React.Component{
 
@@ -28,7 +25,7 @@ class DefaultDashboard extends React.Component{
         super(props);
         this.state = {
             isDeployed : false,
-            periodicity : 'Weekly',
+            periodicity : 'Daily',
             currency : {}
         }
     }
@@ -57,78 +54,105 @@ class DefaultDashboard extends React.Component{
     }
 
     asyncCalls = async () => {
+        const { profile } = this.props;
+
         store.dispatch(setLoadingStatus(true));
-        await this.props.profile.getApp().getSummary();
-        await this.props.profile.update();
+        await profile.getApp().getSummary();
+        await profile.update();
         store.dispatch(setLoadingStatus(false));
     }
 
     render = () => {
-
         const { isDeployed } = this.state;
-        const { periodicity, currency, isLoading } = this.props;
+        const { periodicity, currency, isLoading, profile } = this.props;
+
+        const revenue = profile.getApp().getSummaryData('revenue');
+        const wallet = profile.getApp().getSummaryData('wallet');
+        const users = profile.getApp().getSummaryData('games');
+        const bets = profile.getApp().getSummaryData('bets');
                         
         return (
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
             <Container className="dashboard">   
-                <Row>
-                    <Col lg={3}>
-                        <CompanyId currency={currency} app={this.props.profile.getApp()}  data={{
-                            wallet : this.props.profile.getApp().getSummaryData('wallet')
-                        }} />
-                    </Col>  
-                    <Col lg={3}>
-                        <DataWidget>
-                            <LiquidityWalletWidget currency={currency} isLoading={isLoading} data={this.props.profile.getApp().getSummaryData('wallet')} />
-                        </DataWidget>
-                    </Col>
-                    <Col lg={3}>
-                        <DataWidget>
-                            <ProfitResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
-                                revenue : this.props.profile.getApp().getSummaryData('revenue'),
-                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
+                    <Row>
+                        { wallet && (
+                            <Col lg={3}>
+                                <CompanyId currency={currency} app={this.props.profile.getApp()}  data={{
+                                    wallet : wallet
                                 }} />
-                        </DataWidget>
-                    </Col> 
-                    <Col lg={3}>
-                        <DataWidget>
-                            <TurnoverResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
-                                revenue : this.props.profile.getApp().getSummaryData('revenue'),
-                                wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                            }} />
-                        </DataWidget>
-                    </Col>
-                </Row>
+                            </Col>
+                        )}
+
+                        { wallet && (
+                            <Col lg={3}>
+                                <DataWidget>
+                                    <LiquidityWalletWidget currency={currency} isLoading={isLoading} data={wallet} />
+                                </DataWidget>
+                            </Col>
+                        )}
+                        
+                        { revenue && wallet && (
+                            <Col lg={3}>
+                                <DataWidget>
+                                    <ProfitResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
+                                        revenue : revenue,
+                                        wallet : wallet,
+                                        }} />
+                                </DataWidget>
+                            </Col> 
+                        )}
+                        
+                        { revenue && wallet && (
+                            <Col lg={3}>
+                                <DataWidget>
+                                    <TurnoverResume currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
+                                        revenue : revenue,
+                                        wallet : wallet,
+                                    }} />
+                                </DataWidget>
+                            </Col>
+                        )}
+                        
+                    </Row>
                 { isDeployed ? 
                     <div>
                         <Row>
-                            <Col lg={12}>
-                                <DataWidget>
-                                    <RevenueChart currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
-                                        revenue : this.props.profile.getApp().getSummaryData('revenue'),
-                                        wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                                    }} 
-                                    />
-                                </DataWidget>
-                            </Col>    
+                            { revenue && wallet && (
+                                <Col lg={12}>
+                                    <DataWidget>
+                                        <RevenueChart currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
+                                            revenue : revenue,
+                                            wallet : wallet,
+                                        }} 
+                                        />
+                                    </DataWidget>
+                                </Col>   
+                            )}
                         </Row>
                         <Row>
-                            <Col md={6}>
-                                <DataWidget>
-                                    <BetsStatistics currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
-                                        bets : this.props.profile.getApp().getSummaryData('bets'),
-                                        wallet : this.props.profile.getApp().getSummaryData('wallet')
+                            { bets && wallet && (
+                                <Col md={6}>
+                                    <DataWidget>
+                                        <BetsStatistics currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
+                                            bets : bets,
+                                            wallet : wallet
+                                            }}/>
+                                    </DataWidget>
+                                </Col>
+                            )}
+
+                            { !_.isNull(users.data) && (typeof users.data !== 'string') && bets && wallet && (
+                                <Col md={6}>
+                                    <DataWidget>
+                                        <VisitorsSessions currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
+                                            users : users,
+                                            bets : bets,
+                                            wallet : wallet
                                         }}/>
-                                </DataWidget>
-                            </Col>
-                            <Col md={6}>
-                                <DataWidget>
-                                    <VisitorsSessions currency={currency} periodicity={periodicity} isLoading={isLoading} data={{
-                                        users : this.props.profile.getApp().getSummaryData('games'),
-                                        bets : this.props.profile.getApp().getSummaryData('bets'),
-                                        wallet : this.props.profile.getApp().getSummaryData('wallet')
-                                    }}/>
-                                </DataWidget>
-                            </Col>
+                                    </DataWidget>
+                                </Col>
+                            )}
+                           
                             <Col md={4}>
                                 <DataWidget>
                                     <BounceRateArea currency={currency} />
@@ -143,15 +167,11 @@ class DefaultDashboard extends React.Component{
                 }
                 
         </Container>
+        </Fade>
         )
     }
 
 }
-
-
-
-
-
 
 function mapStateToProps(state){
     return {

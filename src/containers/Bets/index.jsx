@@ -1,15 +1,15 @@
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
-import { translate } from 'react-i18next';
-import PropTypes from 'prop-types';
-import { connect } from "react-redux";
+import Fade from '@material-ui/core/Fade';
 import { compose } from 'lodash/fp';
-import BetsTable from './components/BetsTable';
-import BetsProfile from './components/BetsProfile';
-import _ from 'lodash';
-import Won from './components/Won';
+import PropTypes from 'prop-types';
+import { translate } from 'react-i18next';
+import { connect } from "react-redux";
+import { Col, Container, Row } from 'reactstrap';
 import AverageBet from './components/AverageBet';
 import AverageReturn from './components/AverageReturn';
+import BetsProfile from './components/BetsProfile';
+import BetsTable from './components/BetsTable';
+import Won from './components/Won';
 
 import styled from 'styled-components';
 
@@ -54,7 +54,8 @@ class BetsContainer extends React.Component{
         if (!currency) {return null}
 
         return (
-            <Container className="dashboard">
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
+                <Container className="dashboard">
                 <Row>
                     <Col lg={3}>
                         <BetsProfile periodicity={periodicity} isLoading={isLoading}/>
@@ -93,8 +94,8 @@ class BetsContainer extends React.Component{
                         </Tabs>
                     </Col>
                 </Row>
-                
-          </Container>
+                </Container>
+            </Fade>
         )
     }
 

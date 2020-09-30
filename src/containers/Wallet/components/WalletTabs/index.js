@@ -8,13 +8,16 @@ import Withdraw from './Withdraw';
 import LimitsWidget from '../../components/paths/LimitsWidget';
 import FeesWidget from '../../components/paths/FeesWidget';
 import BonusWidget from '../../components/paths/BonusWidget';
+import { ButtonBase } from '@material-ui/core';
+import PointsWidget from '../paths/PointsWidget';
 
 const tabs = [
     { name: "Deposit", container: (wallet) => <Deposit data={wallet}/> },
     { name: "Withdraw", container: (wallet) => <Withdraw data={wallet}/> },
     { name: "Limits", container: (wallet) => <LimitsWidget data={wallet}/> },
     { name: "Fees", container: (wallet) => <FeesWidget data={wallet}/> },
-    { name: "Bonus", container: (wallet) => <BonusWidget data={wallet}/> }  
+    { name: "Bonus", container: (wallet) => <BonusWidget data={wallet}/> },
+    { name: "Points", container: (wallet) => <PointsWidget data={wallet}/> }  
 ]
 
 class WalletTabs extends Component {
@@ -34,9 +37,10 @@ class WalletTabs extends Component {
 
     projectData = (props) => {
         const { wallet } = props;
+        const { activeTab } = this.state;
 
         this.setState({
-            activeTab: tabs[0].name,
+            activeTab: activeTab ? activeTab : tabs[0].name,
             wallet: wallet
         })
 
@@ -65,6 +69,8 @@ class WalletTabs extends Component {
                 return this.isAdded('TxFee');
             case 'Bonus':
                 return this.isAdded('DepositBonus');
+            case 'Points':
+                return this.isAdded('PointSystem');
             default:
                 return true;
         }
@@ -75,7 +81,7 @@ class WalletTabs extends Component {
 
         if (!wallet) return null
 
-        const isAppWithFakeMoney = wallet.currency.name === 'Gold';
+        const isAppWithFakeMoney = wallet.currency.virtual;
         const filteredTabs = !isAppWithFakeMoney ? tabs.filter(tab => this.hasPermission(tab.name)) : tabs.filter(tab => tab.name === 'Limits');
 
         return (
@@ -83,18 +89,20 @@ class WalletTabs extends Component {
            <Nav pills style={{ justifyContent: "space-around" }}>
                 {filteredTabs.map(tab => (
                     <NavItem style={{ height: 80, marginTop: "20px" }}>
-                        <StyledNavLink
-                            className={classnames({ active: this.state.activeTab === tab.name })}
-                            onClick={() => {
-                            this.toggle(tab.name);
-                            }}
-                        >
-                            <span>{`${tab.name}`}</span>
-                        </StyledNavLink>
+                        <ButtonBase>
+                            <StyledNavLink
+                                className={classnames({ active: this.state.activeTab === tab.name })}
+                                onClick={() => {
+                                this.toggle(tab.name);
+                                }}
+                            >
+                                <span>{`${tab.name}`}</span>
+                            </StyledNavLink>
+                        </ButtonBase>
                     </NavItem>
                 ))}
             </Nav>
-            <TabsContainer>
+            <TabsContainer style={{ minWidth: 305 }}>
                 <TabContent activeTab={this.state.activeTab}>
                     {filteredTabs.map(tab => (
                     <TabPane tabId={tab.name}>

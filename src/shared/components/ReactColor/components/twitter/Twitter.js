@@ -12,7 +12,7 @@ export const Twitter = ({ onChange, onSwatchHover, hex, colors, width, triangle,
   const styles = reactCSS(merge({
     'default': {
       card: {
-        width: '100%',
+        // width: '100%',
         background: '#fafcff',
         // border: '0 solid rgba(0,0,0,0.25)',
         // boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
@@ -20,9 +20,9 @@ export const Twitter = ({ onChange, onSwatchHover, hex, colors, width, triangle,
         position: 'relative',
       },
       body: {
-        padding: '15px 9px 9px 15px',
       },
       label: {
+        fontFamily: 'Poppins',
         fontSize: '18px',
         color: '#fff',
       },
@@ -56,6 +56,7 @@ export const Twitter = ({ onChange, onSwatchHover, hex, colors, width, triangle,
       input: {
         width: '100px',
         fontSize: '14px',
+        fontFamily: 'Poppins',
         color: '#666',
         border: '0px',
         outline: 'none',

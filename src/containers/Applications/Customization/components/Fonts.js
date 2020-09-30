@@ -70,9 +70,9 @@ class Fonts extends Component {
         const { isLoading, locked, url, name } = this.state; 
         return (
             <Card>
-                <CardBody style={{ margin: "0px 15px", borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                <CardBody style={{ margin: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <Row>
-                        <Col md={12}>
+                        <Col md={12} style={{ padding: 0 }}>
                             <EditLock 
                                 isLoading={isLoading} 
                                 unlockField={this.unlockField} 
@@ -85,7 +85,7 @@ class Fonts extends Component {
                                 <div style={{marginBottom: 40}}>
                                     <p className="text-small text-left" style={{marginTop : 0}}><a href="https://fonts.google.com" target="_blank">https://fonts.google.com</a></p>
                                     <p className="text-left secondary-text" style={{marginTop: 20, marginBottom: 30}}> Choose a Google Font to install </p>
-                                    <img style={{width : 650}} src={saveFontImg}></img>
+                                    <img style={{ width: "100%"}} src={saveFontImg}/>
                                 </div>
 
                                 <TextInput

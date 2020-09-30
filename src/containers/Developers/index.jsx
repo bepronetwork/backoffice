@@ -8,6 +8,8 @@ import DocsContainer from './components/DocsContainer';
 import BearerTokenTableApiKeys from './components/BearerTokenTableApiKeys';
 import TableKey from './components/TableKey';
 
+import Fade from '@material-ui/core/Fade';
+
 const defaultProps = {
     platformId : 'N/A',
     apiKey : 'N/A'
@@ -43,7 +45,7 @@ class DevelopersContainer extends React.Component{
         const { platformId, apiKey} = this.state;
 
         return (
-            
+            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
             <Container className="dashboard">
                 <Row>
                     <Col lg={12}>
@@ -62,6 +64,7 @@ class DevelopersContainer extends React.Component{
                     </Col>
                 </Row>
           </Container>
+          </Fade>
         )
     }
 

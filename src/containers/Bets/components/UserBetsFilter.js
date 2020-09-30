@@ -158,7 +158,7 @@ class UserBetsFilter extends Component {
         return (
             <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end', paddingBottom: 20}}>
                 <ClickAwayListener onClickAway={this.handleClickAway}>
-                <ExpansionPanel elevation={0} expanded={open} style={{position: 'absolute', zIndex: 10, width: 300, marginTop: '-40px', border: '1px solid rgba(0, 0, 0, 0.2)'}}>
+                <ExpansionPanel elevation={0} expanded={open} style={{position: 'absolute', zIndex: 10, marginTop: -40, width: 300, border: '1px solid rgba(0, 0, 0, 0.2)'}}>
                     <ExpansionPanelSummary
                     onClick={() => this.setState({ open: !open })}
                     expandIcon={<ExpandMoreIcon/>}

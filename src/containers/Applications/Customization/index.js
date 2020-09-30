@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { AnnouncementTab, Banners, Logo, Footer, Colors, Fonts } from './components';
+import { AnnouncementTab, Banners, Logo, Footer, Colors, Fonts, Tabs, SubSections, Skins, Icons, Social } from './components';
 import TabsContainer from '../../../shared/components/tabs/Tabs';
-import { LayersOutlineIcon, AnnouncementIcon, BrandingWatermarkIcon, ColorizeIcon, PageLayoutFooterIcon, FormatFontIcon, ImageIcon } from 'mdi-react';
 import Background from './components/Background';
-import { Bet, Reward, Phone, Settings, Rewards, AddOn, Withdraw } from '../../../components/Icons';
+import { Bet, Reward, Phone, Settings, Rewards, AddOn, Withdraw, User } from '../../../components/Icons';
 import EsportsMainPage from './components/EsportsMainPage';
 
 export default class CustomizationContainer extends Component {
@@ -11,8 +10,16 @@ export default class CustomizationContainer extends Component {
         return (
             <div>
                 <TabsContainer 
-                    items={
-                        [
+                    items={[{
+                                title : 'Skins',
+                                container : <Skins/>,
+                                icon : <Rewards/>
+                            },
+                            {
+                                title : 'Icons',
+                                container : <Icons/>,
+                                icon : <AddOn/>
+                            },
                             {
                                 title : 'Announc. Tab',
                                 container :  <AnnouncementTab />,
@@ -27,6 +34,16 @@ export default class CustomizationContainer extends Component {
                                 title : 'Background',
                                 container : <Background/>,
                                 icon : <Phone/>
+                            },
+                            {
+                                title : 'Tabs',
+                                container : <Tabs/>,
+                                icon : <Settings/>
+                            },
+                            {
+                                title : 'Subsections',
+                                container : <SubSections/>,
+                                icon : <Settings/>
                             },
                             {
                                 title : 'Banners',
@@ -51,7 +68,12 @@ export default class CustomizationContainer extends Component {
                             {
                                 title : 'Esports',
                                 container : <EsportsMainPage/>,
-                                icon : <Reward/>
+                                icon : <Reward/> 
+                            },
+                            {
+                                title : 'Social Links',
+                                container : <Social/>,
+                                icon : <User/>
                             },
                          
                         ]

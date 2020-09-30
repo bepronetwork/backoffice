@@ -79,7 +79,7 @@ class CurrencyStore extends React.Component{
 
         if ((_.isEmpty(currencies) && isLoading) || loading ) {
             return (
-                <>
+                <div style={{ margin: 10 }}>
                 <Header style={{ paddingLeft: 10 }}>
                     <h3>Currency Store</h3>
                     <p>Available Currencies to Integrate</p>
@@ -101,12 +101,12 @@ class CurrencyStore extends React.Component{
                         ))}
                     </Row>
                 </div>
-            </>
+            </div>
             )
         }
 
         return (
-            <>
+            <div style={{ margin: 10 }}>
                 <Header style={{ paddingLeft: 10 }}>
                     <h3>Currency Store</h3>
                     <p>Available Currencies to Integrate</p>
@@ -122,7 +122,7 @@ class CurrencyStore extends React.Component{
                         })}
                     </Row>
                 </div>
-            </>
+            </div>
         )
     }
 

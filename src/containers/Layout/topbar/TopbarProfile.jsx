@@ -4,7 +4,6 @@ import { Collapse } from 'reactstrap';
 import TopbarMenuLink from './TopbarMenuLink';
 
 import { connect } from "react-redux";
-import PropTypes from 'prop-types';
 import Cache from '../../../services/cache';
 import store from '../../App/store';
 import { addCurrencyWallet } from '../../../redux/actions/addCurrencyWallet';
@@ -24,7 +23,6 @@ class TopbarProfile extends PureComponent {
     };
     
     logout = () => {
-		console.log("logout");
 		store.dispatch(addCurrencyWallet({isActive : false, success: false}));
         Cache.setToCache('Auth', null);
 

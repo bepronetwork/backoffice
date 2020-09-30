@@ -148,6 +148,19 @@ class Connection {
         }
     }
 
+    editApp =  async ({params, headers}) => {
+        try{
+            let response = await fetch(URL+ '/api/app/edit', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editTableLimit = async ({admin, app, game, tableLimit, wallet, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/games/editTableLimit', {
@@ -234,6 +247,19 @@ class Connection {
     getEcosystemVariables = async () => {
         try{
             let response = await fetch(URL+ `/api/ecosystem/all`, {
+                method : 'GET',
+                headers : addHeaders(config),
+            });
+
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getEcosystemSkins = async () => {
+        try{
+            let response = await fetch(URL+ `/api/app/skinEcosystem/get`, {
                 method : 'GET',
                 headers : addHeaders(config),
             });
@@ -610,6 +636,35 @@ class Connection {
         }
     }
 
+    editPointSystem = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/pointSystem/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    
+    convertPoints = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/convert/points`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editJackpot = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/jackpot/edge/edit`, {
@@ -693,6 +748,19 @@ class Connection {
         }
     }
 
+    editSkinTypeCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/skin`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editTypography = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/typography`, {
@@ -719,9 +787,61 @@ class Connection {
         }
     }
 
+    editCrispIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/integrations/cripsr/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editEmailIntegration = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/integrations/mailSender/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editKYCIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/integrations/kyc/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editMoonPayIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/integrations/moonpay/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editUserKYC = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/user/kyc_needed/edit`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -881,6 +1001,95 @@ class Connection {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editSocialLinksCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/socialLink`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editTopTabCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/topTab`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editIconsCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/icons`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editSubsectionsCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/subSections`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    createProvider = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/provider/create`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editProvider = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/provider/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getAllGameProviders = async () => {
+        try{
+            const response = await fetch( URL + `/api/app/providerEcosystem/get`, {
+                method: 'GET'
             });            
             return response.json();
         }catch(err){

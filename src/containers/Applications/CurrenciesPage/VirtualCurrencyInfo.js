@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { Card, CardBody, Col, Row, Button } from 'reactstrap';
 import { BankIcon, UploadIcon } from 'mdi-react';
 import TextInput from '../../../shared/components/TextInput';
@@ -13,7 +13,7 @@ const currenciesEnum = Object.freeze({
     ETH: "5e108498049eba079930ae1c"
 })
 
-class VirtualCurrencyInfo extends PureComponent {
+class VirtualCurrencyInfo extends React.Component {
  
     constructor() {
         super();
@@ -163,7 +163,7 @@ class VirtualCurrencyInfo extends PureComponent {
         
         return (
             <Card className='game-container' style={{ width: 307 }}>
-                <CardBody className="dashboard__card-widget dashboard_borderTop" style={{ width: 370 , paddingBottom: 10 }}>
+                <CardBody className="dashboard__card-widget" style={{ width: 370 , paddingBottom: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <EditLock 
                             unlockField={this.unlock} 
                             lockField={this.lock} 
