@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import EditLock from '../../../../Shared/EditLock.js';
-import TextInput from '../../../../../shared/components/TextInput';
 import { connect } from "react-redux";
+
+import { Actions, InputField } from './styles'
+import { FormLabel } from '@material-ui/core';
+import BooleanInput from '../../../../../shared/components/BooleanInput.js';
 
 const defaultState = {
     isActive: true,
@@ -10,6 +13,12 @@ const defaultState = {
     key: '',
     integration_type: 'chat',
     locked: true
+}
+
+const labelStyle = {
+    fontFamily: "Poppins", 
+    fontSize: 14, 
+    color: "#646777"
 }
 
 const crisp = `${process.env.PUBLIC_URL}/img/landing/crisp.png`;
@@ -44,8 +53,12 @@ class Crisp extends Component {
         })
     }
 
-    onChange = ({name, value}) => {
-        this.setState({...this.state, [name] : value })
+    handleChangeActive = value => {
+        this.setState({ isActive: value })
+    }
+
+    handleChangeAPIKey = value => {
+        this.setState({ key: value })
     }
 
     unlockField = () => {
@@ -60,7 +73,7 @@ class Crisp extends Component {
         const { profile } = this.props;
         const { id, key, isActive} = this.state;
 
-        this.setState({...this.state, isLoading : true});
+        this.setState({ isLoading: true});
         
         await profile.getApp().editCrispIntegration({
             isActive: isActive,
@@ -68,13 +81,13 @@ class Crisp extends Component {
             cripsr_id: id
         });
 
-        this.setState({...this.state, isLoading : false, locked: true})
+        this.setState({ isLoading: false, locked: true})
         this.projectData(this.props);
     }
 
 
     render() {
-        const { isLoading, locked, key } = this.state; 
+        const { isLoading, locked, key, isActive } = this.state; 
 
         return (
             <EditLock 
@@ -88,18 +101,25 @@ class Crisp extends Component {
                 <div>
                     <img style={{width: 90}} src={crisp}></img>
                     <p className="text-small text-left" style={{marginTop: 8}}><a href="https://crisp.chat/en" target="_blank">https://crisp.chat/en</a></p>
-                    <p className="text-left secondary-text" style={{marginTop: 40, marginBottom: 40}}> Add your API Key to integrate </p>
                 </div>
 
-                <TextInput
-                    label={'API Key'}
-                    name={'key'}
-                    type={'text'} 
-                    value={key}
-                    defaultValue={key}
-                    disabled={locked}
-                    changeContent={(name, value) => this.onChange({name, value})}
-                />
+                <Actions>
+                    <div style={{ margin: "10px 0px" }}>
+                        <FormLabel component="legend" style={labelStyle}>{ isActive ? "Active" : "Inactive" }</FormLabel>
+                        <BooleanInput
+                            checked={isActive} 
+                            onChange={() => this.handleChangeActive(!isActive)}
+                            disabled={locked || isLoading}
+                            type={'isActive'}
+                            id={'isActive'}
+                        />
+                    </div>
+
+                    <p className="text-left secondary-text" style={{ margin: "15px 0px" }}> Add your credentials to integrate </p>
+
+                    <p>API Key</p>
+                    <InputField disabled={locked || isLoading} value={key} onChange={(e) => this.handleChangeAPIKey(e.target.value)}/>
+                </Actions>
             </EditLock>
         )
     }
