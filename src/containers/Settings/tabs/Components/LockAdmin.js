@@ -1,6 +1,6 @@
 import React from 'react';
-import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
-import { ArrowExpandRightIcon, LockIcon, BankIcon } from 'mdi-react';
+import { Button } from 'reactstrap';
+import { ArrowExpandRightIcon, LockIcon } from 'mdi-react';
 
 const LockAdmin = (props) => {
     return(
@@ -17,9 +17,15 @@ const LockAdmin = (props) => {
                             <p><LockIcon className="deposit-icon"/> Lock </p>
                         </Button>
                         <Button size="sm" style={{ margin: 0, backgroundColor: "white" }} disabled={props.isLoading} onClick={() => props.confirmChanges({field : props.type})} className="icon" outline>
-                            <p><ArrowExpandRightIcon className="deposit-icon"/>
-                                {props.isLoading ? 'Updating..' : 'Confirm'}
-                            </p>
+                            { props.add ? (
+                                <p style={{ color: props.isLoading ? "black" : "unset" }}><ArrowExpandRightIcon style={{ color: props.isLoading ? "black" : "unset" }}  className="deposit-icon"/>
+                                    {props.isLoading ? 'Sending..' : 'Send'}
+                                </p>
+                            ) : (
+                                <p style={{ color: props.isLoading ? "black" : "unset" }}><ArrowExpandRightIcon style={{ color: props.isLoading ? "black" : "unset" }}  className="deposit-icon"/>
+                                    {props.isLoading ? 'Updating..' : 'Confirm'}
+                                </p>
+                            )}
                         </Button>
                     </div>
                 }
