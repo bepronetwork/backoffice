@@ -11,16 +11,45 @@ import BetsProfile from './components/BetsProfile';
 import BetsTable from './components/BetsTable';
 import Won from './components/Won';
 
+import styled from 'styled-components';
+
+import { Tabs } from 'antd';
+import EsportsBetsTable from './components/EsportsBetsTable';
+import { CasinoWhite, EsportsWhite } from '../../components/Icons';
+const { TabPane } = Tabs;
+
+const TabContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+const Icon = styled.section`
+    height: 35px;
+    width: 35px;
+    filter: ${props => props.isActive ? 'grayscale(0)' : 'grayscale(1)' };
+`;
+
 
 class BetsContainer extends React.Component{
 
     constructor(props){
         super(props)
+
+        this.state = {
+            activeTab: 1
+        }
+    }
+
+    handleChangeTab = tab => {
+        this.setState({
+            activeTab: parseInt(tab)
+        })
     }
 
     render = () => {
-
         const { periodicity, isLoading, currency } = this.props;
+        const { activeTab } = this.state;
 
         if (!currency) {return null}
 
@@ -41,11 +70,28 @@ class BetsContainer extends React.Component{
                         <AverageReturn periodicity={periodicity} isLoading={isLoading} currency={currency}/>
                     </Col>
                     <Col lg={12}>
-                        <BetsTable
-                                data={{
-                                    bets: this.props.profile.getApp().getAllBets({ filters: {}})
-                                }}
-                            />
+                        <Tabs defaultActiveKey="1" type="card" size="large" style={{ margin: 15 }} onChange={this.handleChangeTab}>
+                            <TabPane tab={
+                                <TabContainer>
+                                    <Icon isActive={activeTab === 1}>
+                                        <CasinoWhite />
+                                    </Icon>
+                                    <span>Casino</span>
+                                </TabContainer>
+                            } key="1">
+                                <BetsTable />
+                            </TabPane>
+                            <TabPane tab={
+                                <TabContainer>
+                                    <Icon isActive={activeTab === 2}>
+                                        <EsportsWhite/>
+                                    </Icon>
+                                    <span>Esports</span>
+                                </TabContainer>
+                            } key="2">
+                                <EsportsBetsTable />
+                            </TabPane>
+                        </Tabs>
                     </Col>
                 </Row>
                 </Container>
@@ -58,7 +104,6 @@ class BetsContainer extends React.Component{
 
 
 function mapStateToProps(state){
-    console.log(state)
     return {
         profile: state.profile,
         periodicity: state.periodicity,

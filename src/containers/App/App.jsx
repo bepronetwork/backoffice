@@ -9,6 +9,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import '../../scss/app.scss';
+import './App.css';
+import GlobalStyle from './GlobalStyles';
+
 import Router from './Router';
 import store from './store';
 import ScrollToTop from './ScrollToTop';
@@ -104,6 +107,7 @@ class App extends Component {
                         <ModalError/>
                         <AbstractModal/>
                         <Router />
+                        <GlobalStyle/>
                     </div>
                     </ScrollToTop>
                     </I18nextProvider>

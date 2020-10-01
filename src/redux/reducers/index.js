@@ -15,6 +15,9 @@ import modalReducer from './modalReducer';
 import currencyReducer from './currencyReducer';
 import walletReducer from './walletReducer';
 import addCurrencyWalletReducer from './addCurrencyWalletReducer';
+import videogamesReducer from './videogamesReducer';
+import seriesReducer from './seriesReducer';
+import matchesReducer from './matchesReducer';
 import summaryReducer from './summaryReducer';
 
 export {
@@ -35,5 +38,8 @@ export {
     profileReducer,
     appCreationReducer,
     addCurrencyWalletReducer,
+    videogamesReducer,
+    seriesReducer,
+    matchesReducer,
     summaryReducer
 };

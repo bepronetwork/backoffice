@@ -7,6 +7,8 @@ import { FormLabel } from '@material-ui/core';
 import ColorPicker from '../../../../shared/components/color_picker_input/ColorPicker.js';
 import { TextField } from './styles';
 
+import './styles.css';
+
 const defaultState = {
     isActive: false,
     backgroundColor: '#000',

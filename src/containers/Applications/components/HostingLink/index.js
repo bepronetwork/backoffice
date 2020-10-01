@@ -1,7 +1,6 @@
 import React from 'react';
-import { Col, Row, Card } from 'reactstrap';
+import { Card } from 'reactstrap';
 import { connect } from "react-redux";
-import _ from 'lodash';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 
@@ -46,22 +45,7 @@ const OpenAppButton = styled(Button)`
     overflow: hidden !important;
 `;
 
-class HostingLink extends React.Component{
-
-    constructor(props){
-        super(props)
-    }
-    
-    componentDidMount(){
-
-    }
-
-    componentWillReceiveProps(){
-
-    }
-
-
-    
+class HostingLink extends React.PureComponent{
 
     render = () => {
         let link = this.props.profile.getApp().getAppLink();
