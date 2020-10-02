@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { Card, CardBody } from 'reactstrap';
 
 import { Actions, InputField } from './styles'
+import { FormLabel } from '@material-ui/core';
+import BooleanInput from '../../../../../shared/components/BooleanInput.js';
 
 const defaultState = {
     _id: '',
@@ -18,6 +20,12 @@ const cardBodyStyle = {
     border: "solid 1px rgba(164, 161, 161, 0.35)", 
     backgroundColor: "#fafcff",
     boxShadow: "none"
+}
+
+const labelStyle = {
+    fontFamily: "Poppins", 
+    fontSize: 14, 
+    color: "#646777"
 }
 
 const analytics = `${process.env.PUBLIC_URL}/img/landing/google-analytics-logo.png`;
@@ -42,11 +50,12 @@ class Analytics extends Component {
 
         const analytics = App.params.analytics;
 
-        const { _id, google_tracking_id } = analytics;
+        const { _id, google_tracking_id, isActive } = analytics;
         
         this.setState({
             _id: _id,
-            google_tracking_id: google_tracking_id
+            google_tracking_id: google_tracking_id,
+            isActive: isActive
         })
     }
     
@@ -58,19 +67,24 @@ class Analytics extends Component {
         this.setState({ locked: true })
     }
 
+    handleChangeActive = value => {
+        this.setState({ isActive: value })
+    }
+
     handleChangeTrackingID = value => {
         this.setState({ google_tracking_id: value })
     }
 
     confirmChanges = async () => {
         const { profile } = this.props;
-        const { _id, google_tracking_id } = this.state;
+        const { _id, google_tracking_id, isActive } = this.state;
 
         this.setState({ isLoading: true});
         
         await profile.getApp().editAnalyticsIntegration({
             analytics_id: _id,
-            google_tracking_id: google_tracking_id
+            google_tracking_id: google_tracking_id,
+            isActive: isActive
         });
 
         this.setState({ isLoading: false, locked: true})
@@ -80,7 +94,7 @@ class Analytics extends Component {
 
 
     render() {
-        const { isLoading, locked, google_tracking_id } = this.state; 
+        const { isLoading, locked, google_tracking_id, isActive } = this.state; 
 
         return (
             <Card>
@@ -99,6 +113,16 @@ class Analytics extends Component {
                     </div>
 
                     <Actions>
+                        <div style={{ margin: "10px 0px" }}>
+                            <FormLabel component="legend" style={labelStyle}>{ isActive ? "Active" : "Inactive" }</FormLabel>
+                            <BooleanInput
+                                checked={isActive} 
+                                onChange={() => this.handleChangeActive(!isActive)}
+                                disabled={locked || isLoading}
+                                type={'isActive'}
+                                id={'isActive'}
+                            />
+                        </div>
                         <p className="text-left secondary-text" style={{ margin: "15px 0px" }}> Add your credentials to integrate </p>
 
                         <p>Tracking ID</p>

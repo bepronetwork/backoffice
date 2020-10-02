@@ -730,14 +730,15 @@ class App{
         }
     }
 
-    editAnalyticsIntegration = async ({ analytics_id, google_tracking_id }) => {
+    editAnalyticsIntegration = async ({ analytics_id, google_tracking_id, isActive }) => {
         try{
             let res = await ConnectionSingleton.editAnalyticsIntegration({   
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId(),
                     analytics_id,
-                    google_tracking_id
+                    google_tracking_id,
+                    isActive: isActive
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
