@@ -94,7 +94,7 @@ class Analytics extends Component {
                     locked={locked}>
 
                     <div>
-                        <img style={{ width: 150 }} alt="mati" src={analytics}></img>
+                        <img style={{ width: 150 }} alt="Google Analytics" src={analytics}></img>
                         <p className="text-small text-left" style={{ marginTop: 8 }}><a href="https://analytics.google.com" target="_blank">https://analytics.google.com</a></p>
                     </div>
 
