@@ -730,6 +730,27 @@ class App{
         }
     }
 
+    editAnalyticsIntegration = async ({ analytics_id, google_tracking_id }) => {
+        try{
+            let res = await ConnectionSingleton.editAnalyticsIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    analytics_id,
+                    google_tracking_id
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editMoonPayIntegration = async ({ moonpay_id, isActive, key }) => {
         try{
             let res = await ConnectionSingleton.editMoonPayIntegration({   

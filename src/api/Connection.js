@@ -826,6 +826,19 @@ class Connection {
         }
     }
 
+    editAnalyticsIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/analytics/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editMoonPayIntegration = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/integrations/moonpay/edit`, {
