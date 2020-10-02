@@ -402,6 +402,7 @@ class UserPage extends React.Component{
                 <Card>
                     <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", padding: 10 }}>
                         <HorizontalTabs
+                            padding={true}
                             tabs={[
                                 {
                                     label : 'Transactions',
