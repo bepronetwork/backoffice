@@ -10,6 +10,7 @@ import FeesWidget from '../../components/paths/FeesWidget';
 import BonusWidget from '../../components/paths/BonusWidget';
 import { ButtonBase } from '@material-ui/core';
 import PointsWidget from '../paths/PointsWidget';
+import FreeCurrencyWidget from '../paths/FreeCurrencyWidget'
 
 const tabs = [
     { name: "Deposit", container: (wallet) => <Deposit data={wallet}/> },
@@ -17,7 +18,8 @@ const tabs = [
     { name: "Limits", container: (wallet) => <LimitsWidget data={wallet}/> },
     { name: "Fees", container: (wallet) => <FeesWidget data={wallet}/> },
     { name: "Bonus", container: (wallet) => <BonusWidget data={wallet}/> },
-    { name: "Points", container: (wallet) => <PointsWidget data={wallet}/> }  
+    { name: "Points", container: (wallet) => <PointsWidget data={wallet}/> },  
+    { name: "Free currency", container: (wallet) => <FreeCurrencyWidget data={wallet}/> }  
 ]
 
 class WalletTabs extends Component {
@@ -71,6 +73,8 @@ class WalletTabs extends Component {
                 return this.isAdded('DepositBonus');
             case 'Points':
                 return this.isAdded('PointSystem');
+            case 'Free Currency':
+                return this.isAdded('freeCurrency');
             default:
                 return true;
         }
