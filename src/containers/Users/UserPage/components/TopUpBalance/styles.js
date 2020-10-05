@@ -30,7 +30,7 @@ export const CardHeader = styled.section`
     h1 {
         margin-bottom: 10px;
         font-family: Poppins;
-        font-size: 18px;
+        font-size: 16px;
     }
 `;
 
@@ -41,13 +41,23 @@ export const CardContent = styled.section`
     height: 30%;
 
     h1 {
-        margin-top: 10px;
         font-family: Poppins;
-        font-size: 18px;
+        font-size: 16px;
     }
 `;
 
 export const AmountInput = styled(Input)`
+    margin: 12px 0px;
+    border-radius: 6px;
+    border: solid 1px rgba(164, 161, 161, 0.35);
+    background-color: #fafcff;
+    font-family: Poppins;
+    font-size: 14px;
+    line-height: 24px;
+    color: #828282;
+`;
+
+export const ReasonInput = styled(Input)`
     margin: 12px 0px;
     border-radius: 6px;
     border: solid 1px rgba(164, 161, 161, 0.35);
@@ -82,6 +92,10 @@ export const ConfirmButton = styled(Button)`
     width: 100%;
     border-radius: 6px;
     background-color: #814c94;
+
+    &:disabled {
+        pointer-events: none;
+    }
 
     &.btn.icon {
         padding-top: 8px;   

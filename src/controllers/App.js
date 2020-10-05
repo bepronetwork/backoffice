@@ -1665,13 +1665,15 @@ class App{
         }
     }
 
-    modifyUserBalance = async ({ user, wallet, newBalance }) => {
+    modifyUserBalance = async ({ user, wallet, currency, newBalance, reason }) => {
         try{
             return await ConnectionSingleton.modifyUserBalance({   
                 params : {
                     user,
                     wallet,
+                    currency,
                     newBalance,
+                    reason,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     
