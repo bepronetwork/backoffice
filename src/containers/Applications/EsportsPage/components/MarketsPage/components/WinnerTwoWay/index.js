@@ -178,11 +178,11 @@ class WinnerTwoWay extends React.Component {
                         <MarketName>
                             Winner 2-Way - MATCH
                         </MarketName>
-                        <Graph>
+                        {/* <Graph>
                             <Button type="link" onClick={() => this.toggleModal()}>
                                 See graph <LineChartOutlined style={{ fontSize: '16px' }} /> 
                             </Button>
-                        </Graph>
+                        </Graph> */}
                         <Status>
                             { matchStatus && <Tag backgroundColor={matchStatus.backgroundColor} textColor={matchStatus.textColor}>
                                 { matchStatus.text }
