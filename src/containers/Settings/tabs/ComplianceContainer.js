@@ -3,11 +3,16 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp'
-import { Paper, Typography, Chip, Grid, TextField } from '@material-ui/core';
+import { Paper, Typography, Chip, TextField } from '@material-ui/core';
 import CountryMap from './Components/CountryMap';
 import ReactTooltip from 'react-tooltip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import EditLock from './Components/EditLock';
+
+import { DatePicker } from 'antd';
+import moment from 'moment';
+
+const { RangePicker } = DatePicker;
 
 const countries = require("i18n-iso-countries");
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
@@ -107,6 +112,12 @@ class ComplianceContainer extends React.Component{
 
     }
 
+    onChangeDate = (_value, dateString) => {
+        const [begin_at, end_at] = dateString;
+
+        console.log(begin_at, end_at)
+    }
+
     render = () => {
         const { restrictedCountries, content, lock } = this.state;
 
@@ -115,6 +126,16 @@ class ComplianceContainer extends React.Component{
         return (
             <div style={{ margin: 10 }}>               
                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Compliance </p>
+                <RangePicker 
+                    onChange={this.onChangeDate} 
+                    // onOk={this.onOk}
+                    ranges={{
+                        'Today': [moment().utc(), moment().utc()],
+                        'Yesterday': [moment().subtract(1, 'days').utc(), moment().subtract(1, 'days').utc()],
+                        'Last 7 days': [moment().subtract(7, 'days').utc(), moment().utc()],
+                        'Last 15 days': [moment().subtract(15, 'days').utc(), moment().utc()],
+                        'Last month': [moment().subtract(1, 'month').utc(), moment().utc()]
+                      }}/>
                 <hr/>
                 <Paper style={{ padding: 15, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }} >
                     <Typography style={{ fontSize: 17 }} variant="h6" id="tableTitle">Restricted Countries</Typography>
