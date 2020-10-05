@@ -7,6 +7,8 @@ import { Actions, Container } from './styles'
 import { Button, Paper, Typography } from '@material-ui/core';
 import { TableIcon } from 'mdi-react';
 
+import _ from 'lodash'
+
 const { RangePicker } = DatePicker;
 
 const paperStyle = {
@@ -46,9 +48,15 @@ class ExportCompliance extends React.Component{
         })
     }
 
-    openInNewTab = (url) => {
-        const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
-        if (newWindow) newWindow.opener = null
+    downloadFiles = (files) => {
+        files && files.forEach(function (value, idx) {
+            const response = {
+              file: value.link,
+            };
+            setTimeout(() => {
+                window.location.href = response.file;
+            }, idx * 100)
+        })
     }
 
     handleDownloadFile = async () => {
@@ -68,10 +76,9 @@ class ExportCompliance extends React.Component{
 
         if (response.data.message) {
             const list = response.data.message.list;
-            const link = list[0] ? list[0].link : undefined;
 
-            if (list && link) {
-                this.openInNewTab(link)
+            if (!_.isEmpty(list)) {
+                this.downloadFiles(list.concat(list))
             }
         }
 
