@@ -97,8 +97,6 @@ class Analytics extends Component {
     render() {
         const { isLoading, locked, google_tracking_id, isActive } = this.state; 
 
-        console.log(this.state)
-
         return (
             <Card>
                 <CardBody style={cardBodyStyle}>
