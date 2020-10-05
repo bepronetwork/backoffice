@@ -107,7 +107,7 @@ class Crisp extends Component {
                     <div style={{ margin: "10px 0px" }}>
                         <FormLabel component="legend" style={labelStyle}>{ isActive ? "Active" : "Inactive" }</FormLabel>
                         <BooleanInput
-                            checked={isActive} 
+                            checked={isActive === true} 
                             onChange={() => this.handleChangeActive(!isActive)}
                             disabled={locked || isLoading}
                             type={'isActive'}

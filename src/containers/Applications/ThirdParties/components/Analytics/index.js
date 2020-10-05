@@ -9,6 +9,7 @@ import BooleanInput from '../../../../../shared/components/BooleanInput.js';
 
 const defaultState = {
     _id: '',
+    isActive: true,
     google_tracking_id: '',
     integration_type: 'analytics',
     locked: true
@@ -96,6 +97,8 @@ class Analytics extends Component {
     render() {
         const { isLoading, locked, google_tracking_id, isActive } = this.state; 
 
+        console.log(this.state)
+
         return (
             <Card>
                 <CardBody style={cardBodyStyle}>
@@ -116,7 +119,7 @@ class Analytics extends Component {
                         <div style={{ margin: "10px 0px" }}>
                             <FormLabel component="legend" style={labelStyle}>{ isActive ? "Active" : "Inactive" }</FormLabel>
                             <BooleanInput
-                                checked={isActive} 
+                                checked={isActive === true} 
                                 onChange={() => this.handleChangeActive(!isActive)}
                                 disabled={locked || isLoading}
                                 type={'isActive'}
