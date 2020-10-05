@@ -73,7 +73,7 @@ class WalletTabs extends Component {
                 return this.isAdded('DepositBonus');
             case 'Points':
                 return this.isAdded('PointSystem');
-            case 'Free Currency':
+            case 'Free currency':
                 return this.isAdded('freeCurrency');
             default:
                 return true;
