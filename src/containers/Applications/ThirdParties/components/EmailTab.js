@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
-import TextInput from '../../../../shared/components/TextInput';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
 import { EditableTable } from '../../../../components/index.js';
 import { throwUIError } from '../../../../lib/errors';
-import _ from 'lodash';
+
+import { Actions, InputField } from './styles'
 
 
 const defaultState = {
@@ -44,8 +44,8 @@ class EmailTab extends Component {
         }
     }
 
-    onChangeApiKey = ({name, value}) => {
-        this.setState({...this.state, [name] : value })
+    handleChangeAPIKey = value => {
+        this.setState({ apiKey: value })
     }
 
     onChangeTemplates = async (new_data) => {
@@ -103,35 +103,31 @@ class EmailTab extends Component {
             <Card>
                 <CardBody style={{ margin: 10, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                 <EditLock 
-                                isLoading={isLoading} 
-                                unlockField={this.unlockField} 
-                                lockField={this.lockField} 
-                                confirmChanges={this.confirmChanges} 
-                                type={'emailTab'} 
-                                locked={locked}
-                            >
+                    isLoading={isLoading} 
+                    unlockField={this.unlockField} 
+                    lockField={this.lockField} 
+                    confirmChanges={this.confirmChanges} 
+                    type={'emailTab'} 
+                    locked={locked}
+                    >
                     <Row>
                         <Col md={12}>
                                 <div>
                                     <img style={{width : 150, marginTop : 10}} src={sendinblue}></img>
                                     <p className="text-small text-left" style={{marginTop : 10}}><a href="https://www.sendinblue.com" target="_blank">https://www.sendinblue.com</a></p>
-                                    <p className="text-left secondary-text" style={{marginTop: 40, marginBottom: 40}}> Add your API Key to integrate </p>
                                 </div>
 
-                                <TextInput
-                                    label={'API Key'}
-                                    name={'apiKey'}
-                                    type={'text'} 
-                                    value={apiKey}
-                                    defaultValue={apiKey}
-                                    disabled={locked}
-                                    changeContent={(name, value) => this.onChangeApiKey({name, value})}
-                                />
+                                <Actions>
+                                    <p className="text-left secondary-text" style={{ margin: "15px 0px" }}> Add your credentials to integrate </p>
+
+                                    <p>API Key</p>
+                                    <InputField disabled={locked || isLoading} value={apiKey} onChange={(e) => this.handleChangeAPIKey(e.target.value)}/>
+                                </Actions>
                         </Col>
                     </Row>
                  
                     <Row>
-                        <Col md={12} style={{ padding: 0 }}>
+                        <Col md={12} style={{ padding: 0, marginTop: 15 }}>
                             <div>
                                 <EditableTable
                                     title={''}

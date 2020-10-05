@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import EditLock from '../../../../Shared/EditLock.js';
-import TextInput from '../../../../../shared/components/TextInput';
 import { connect } from "react-redux";
+import BooleanInput from '../../../../../shared/components/BooleanInput.js';
+import { FormLabel } from '@material-ui/core';
+
+import { Actions, InputField } from './styles'
 
 const defaultState = {
     isActive: true,
@@ -10,6 +13,12 @@ const defaultState = {
     privateKey: '',
     integration_type: 'chat',
     locked: true
+}
+
+const labelStyle = {
+    fontFamily: "Poppins", 
+    fontSize: 14, 
+    color: "#646777"
 }
 
 const stream = `${process.env.PUBLIC_URL}/img/landing/stream.png`;
@@ -30,6 +39,7 @@ class Stream extends Component {
 
     projectData = async (props) => {
         const chat = props.profile.getApp().getChatIntegration();
+
         const { isActive, privateKey, publicKey } = chat;
         this.setState({...this.state, 
             integration_id : chat._id,
@@ -39,8 +49,16 @@ class Stream extends Component {
         })
     }
 
-    onChange = ({name, value}) => {
-        this.setState({...this.state, [name] : value })
+    handleChangeActive = value => {
+        this.setState({ isActive: value })
+    }
+
+    handleChangePublicKey = value => {
+        this.setState({ publicKey: value })
+    }
+
+    handleChangePrivateKey = value => {
+        this.setState({ privateKey: value })
     }
 
     unlockField = () => {
@@ -60,7 +78,7 @@ class Stream extends Component {
     }
 
     render() {
-        const { isLoading, locked, privateKey } = this.state; 
+        const { isLoading, locked, isActive, publicKey, privateKey } = this.state; 
 
         return (
             <EditLock 
@@ -74,18 +92,28 @@ class Stream extends Component {
                 <div>
                     <img style={{width : 70}} src={stream}></img>
                     <p className="text-small text-left" style={{marginTop : 0}}><a href="https://getstream.io" target="_blank">https://getstream.io</a></p>
-                    <p className="text-left secondary-text" style={{marginTop: 40, marginBottom: 40}}> Add your API Key to integrate </p>
                 </div>
 
-                <TextInput
-                    label={'API Key'}
-                    name={'privateKey'}
-                    type={'text'} 
-                    value={privateKey}
-                    defaultValue={privateKey}
-                    disabled={locked}
-                    changeContent={(name, value) => this.onChange({name, value})}
-                />
+                <Actions>
+                    <div style={{ margin: "10px 0px" }}>
+                        <FormLabel component="legend" style={labelStyle}>{ isActive ? "Active" : "Inactive" }</FormLabel>
+                        <BooleanInput
+                            checked={isActive} 
+                            onChange={() => this.handleChangeActive(!isActive)}
+                            disabled={locked || isLoading}
+                            type={'isActive'}
+                            id={'isActive'}
+                        />
+                    </div>
+
+                    <p className="text-left secondary-text" style={{ margin: "15px 0px" }}> Add your credentials to integrate </p>
+
+                    <p>Public Key</p>
+                    <InputField disabled={locked || isLoading} value={publicKey} onChange={(e) => this.handleChangePublicKey(e.target.value)}/>
+
+                    <p>Private Key</p>
+                    <InputField disabled={locked || isLoading} value={privateKey} onChange={(e) => this.handleChangePrivateKey(e.target.value)}/>
+                </Actions>
             </EditLock>
         )
     }
