@@ -1573,6 +1573,25 @@ class App{
         }
     }
 
+    editFreeCurrency = async ({ activated, currency, time, value }) => {
+        try{
+            return await ConnectionSingleton.editFreeCurrency({   
+                params : {
+                    activated,
+                    currency,
+                    time,
+                    value,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     convertPoints = async ({ currency, user, isAbsolut }) => {
         try{
             return await ConnectionSingleton.convertPoints({   
