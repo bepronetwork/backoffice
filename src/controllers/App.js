@@ -1701,6 +1701,25 @@ class App{
         }
     }
 
+    getComplianceFile = async ({ size=200, offset=0, begin_at, end_at }) => {
+        try{
+            let res = await ConnectionSingleton.getComplianceFile({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    size,
+                    offset,
+                    begin_at,
+                    end_at
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     getEcosystemGames = async () => {
         try{
             return (await ConnectionSingleton.getEcosystemGames()).data.message;

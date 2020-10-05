@@ -10,7 +10,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import EditLock from './Components/EditLock';
 
 import { DatePicker } from 'antd';
-import moment from 'moment';
+import ExportCompliance from './ExportCompliance';
 
 const { RangePicker } = DatePicker;
 
@@ -112,12 +112,6 @@ class ComplianceContainer extends React.Component{
 
     }
 
-    onChangeDate = (_value, dateString) => {
-        const [begin_at, end_at] = dateString;
-
-        console.log(begin_at, end_at)
-    }
-
     render = () => {
         const { restrictedCountries, content, lock } = this.state;
 
@@ -125,17 +119,7 @@ class ComplianceContainer extends React.Component{
 
         return (
             <div style={{ margin: 10 }}>               
-                <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> Compliance </p>
-                <RangePicker 
-                    onChange={this.onChangeDate} 
-                    // onOk={this.onOk}
-                    ranges={{
-                        'Today': [moment().utc(), moment().utc()],
-                        'Yesterday': [moment().subtract(1, 'days').utc(), moment().subtract(1, 'days').utc()],
-                        'Last 7 days': [moment().subtract(7, 'days').utc(), moment().utc()],
-                        'Last 15 days': [moment().subtract(15, 'days').utc(), moment().utc()],
-                        'Last month': [moment().subtract(1, 'month').utc(), moment().utc()]
-                      }}/>
+                <ExportCompliance />
                 <hr/>
                 <Paper style={{ padding: 15, borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }} >
                     <Typography style={{ fontSize: 17 }} variant="h6" id="tableTitle">Restricted Countries</Typography>

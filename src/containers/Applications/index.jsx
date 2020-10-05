@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Col, Container, Row, Nav, NavItem, TabContent, TabPane } from 'reactstrap';
 import Fade from '@material-ui/core/Fade';
 
@@ -13,14 +13,14 @@ import { Bet, Reward, Settings, Rewards, AddOn, Wallet, CasinoWhite, EsportsWhit
 
 import styled from 'styled-components';
 import { TabContainer, StyledNavLink, CasinoCard, CasinoContainer, Icon, Link, MobileWrapper } from './styles';
-
-import EsportsPage from './EsportsPage';
 import classnames from 'classnames';
 
 import CustomizationContainer from './Customization/index.js';
 import GameStorePageContainer from './GameStore/index.js';
 import ThirdPartiesContainer from './ThirdParties/index.js';
 import GamesContainer from './components/GamesContainer';
+
+const EsportsPage = React.lazy(() => import('./EsportsPage'));
 
 const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
@@ -232,6 +232,7 @@ class ApplicationsContainer extends React.Component{
                             </Row>
                             <TabContainer>
                                 <TabContent activeTab={this.state.activeTab}>
+                                <Suspense fallback={<div>Loading...</div>}>
                                     <TabPane tabId={'platform'} style={{ paddingTop: 30 }}>
                                         <TabsContainer 
                                             items={
@@ -247,8 +248,9 @@ class ApplicationsContainer extends React.Component{
                                         />
                                     </TabPane>
                                     <TabPane tabId={'esports'} style={{ paddingTop: 30 }}>
-                                        <EsportsPage/>
+                                        { this.state.activeTab === 'esports' && <EsportsPage/> }
                                     </TabPane>
+                                </Suspense>
                                 </TabContent>
                             </TabContainer>
                         </div>   
