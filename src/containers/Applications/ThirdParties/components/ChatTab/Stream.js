@@ -11,7 +11,7 @@ const defaultState = {
     integration_id: '',
     publicKey: '',
     privateKey: '',
-    integration_type: 'chat',
+    integration_type: 'live_chat',
     locked: true
 }
 
