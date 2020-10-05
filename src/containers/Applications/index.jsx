@@ -26,6 +26,8 @@ const bitcoin = `${process.env.PUBLIC_URL}/img/landing/bitcoin.png`;
 const back_2 = `${process.env.PUBLIC_URL}/img/landing/back-2.png`;
 const casino = `${process.env.PUBLIC_URL}/img/landing/casino.png`;
 
+const loading = `${process.env.PUBLIC_URL}/img/loading-betprotocol.gif`;
+
 const EsportsIcon = styled.section`
     height: 50px;
     width: 50px;
@@ -232,7 +234,11 @@ class ApplicationsContainer extends React.Component{
                             </Row>
                             <TabContainer>
                                 <TabContent activeTab={this.state.activeTab}>
-                                <Suspense fallback={<div>Loading...</div>}>
+                                <Suspense fallback={<div class="load">
+                                                        <div class="load__icon-wrap">
+                                                        <img src={loading} alt="loading..."/>
+                                                        </div>
+                                                    </div>}>
                                     <TabPane tabId={'platform'} style={{ paddingTop: 30 }}>
                                         <TabsContainer 
                                             items={
