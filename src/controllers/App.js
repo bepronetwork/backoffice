@@ -1209,7 +1209,7 @@ class App{
             return await ConnectionSingleton.getUserBets({   
                 params : {
                     user,
-                    ...filters,
+                    ..._.pickBy(filters, identity),
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     
