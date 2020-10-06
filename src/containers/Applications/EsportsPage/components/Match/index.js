@@ -70,54 +70,70 @@ class Match extends React.Component {
     }
 
     getTwoWayOdds = odds => {
-        switch (true) {
-            case _.isArray(odds):
-                const odd = odds.find(odd => odd.template === 'winner-2-way');
-
-                if (odd !== undefined) {
-                    const { selections } = odd;
-                    return [1/(selections[0].probability), null, 1/(selections[1].probability)];
-        
-                } else {
-                    return [];
-                }
-            case !_.isEmpty(odds.markets):
-                const market = odds.markets.find(market => market.template === 'winner-2-way');
-
-                if (market !== undefined && market.selections !== undefined) {
-                    return [1/(market.selections[0].probability), null, 1/(market.selections[1].probability)];
-                    
-                } else {
-                    return [];
-                }
-            default:
+        if (odds.winnerTwoWay) {
+            if (_.isEmpty(odds.winnerTwoWay)) {
                 return [];
+            } else {
+                return [parseFloat(odds.winnerTwoWay[0].odd), null, parseFloat(odds.winnerTwoWay[1].odd)];
+            }
+        } else {
+            switch (true) {
+                case _.isArray(odds):
+                    const odd = odds.find(odd => odd.template === 'winner-2-way');
+    
+                    if (odd !== undefined) {
+                        const { selections } = odd;
+                        return [1/(selections[0].probability), null, 1/(selections[1].probability)];
+            
+                    } else {
+                        return [];
+                    }
+                case !_.isEmpty(odds.markets):
+                    const market = odds.markets.find(market => market.template === 'winner-2-way');
+    
+                    if (market !== undefined && market.selections !== undefined) {
+                        return [1/(market.selections[0].probability), null, 1/(market.selections[1].probability)];
+                        
+                    } else {
+                        return [];
+                    }
+                default:
+                    return [];
+            }
         }
     }
 
     getThreeWayOdds = odds => {
-        switch (true) {
-            case _.isArray(odds):
-                const odd = odds.find(odd => odd.template === 'winner-3-way');
-
-                if (odd !== undefined) {
-                    const { selections } = odd;
-                    return [1/(selections[0].probability), 1/(selections[1].probability), 1/(selections[2].probability)];
-        
-                } else {
-                    return [];
-                }
-            case !_.isEmpty(odds.markets):
-                const market = odds.markets.find(market => market.template === 'winner-3-way');
-
-                if (market !== undefined && market.selections !== undefined) {
-                    return [1/(market.selections[0].probability), 1/(market.selections[1].probability), 1/(market.selections[2].probability)];
-                    
-                } else {
-                    return [];
-                }
-            default:
+        if (odds.winnerThreeWay) {
+            if (_.isEmpty(odds.winnerThreeWay)) {
                 return [];
+            } else {
+                return [parseFloat(odds.winnerThreeWay[0].odd), parseFloat(odds.winnerThreeWay[1].odd), parseFloat(odds.winnerThreeWay[2].odd)];
+            }
+        } else {
+            switch (true) {
+                case _.isArray(odds):
+                    const odd = odds.find(odd => odd.template === 'winner-3-way');
+
+                    if (odd !== undefined) {
+                        const { selections } = odd;
+                        return [1/(selections[0].probability), 1/(selections[1].probability), 1/(selections[2].probability)];
+            
+                    } else {
+                        return [];
+                    }
+                case !_.isEmpty(odds.markets):
+                    const market = odds.markets.find(market => market.template === 'winner-3-way');
+
+                    if (market !== undefined && market.selections !== undefined) {
+                        return [1/(market.selections[0].probability), 1/(market.selections[1].probability), 1/(market.selections[2].probability)];
+                        
+                    } else {
+                        return [];
+                    }
+                default:
+                    return [];
+            }
         }
     }
 
