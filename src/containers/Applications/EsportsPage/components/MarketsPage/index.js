@@ -4,6 +4,7 @@ import { MarketsContainer } from './styles';
 import _ from 'lodash';
 
 import WinnerTwoWay from './components/WinnerTwoWay';
+import WinnerThreeWay from './components/WinnerThreeWay';
 
 class MarketsPage extends React.Component {
     constructor(props) {
@@ -45,6 +46,16 @@ class MarketsPage extends React.Component {
         return market ? market.selections : [];
     }
 
+    getWinnerThreeWay = () => {
+        const { markets } = this.state;
+
+        if (!markets) return [];
+
+        const market = markets.find(market => market.name === 'Winner 3-way');
+
+        return market ? market.selections : [];
+    }
+
     render() {
         const { markets, status, teamOne, teamTwo } = this.state;
         
@@ -55,6 +66,7 @@ class MarketsPage extends React.Component {
             <>
             <MarketsContainer>
                 <WinnerTwoWay selections={this.getWinnerTwoWay()} status={status} teamOneName={teamOne.name} teamTwoName={teamTwo.name}/>
+                <WinnerThreeWay selections={this.getWinnerThreeWay()} status={status} teamOneName={teamOne.name} teamTwoName={teamTwo.name}/>
             </MarketsContainer>
             </>
         )
