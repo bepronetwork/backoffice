@@ -9,9 +9,9 @@ const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
 
 const defaultState = {
-    logoItem: null,
-    faviconItem: null,
-    loadingGifItem: null,
+    logoItem: "",
+    faviconItem: "",
+    loadingGifItem: "",
     isLoading: false,
     locks : {
         logo : true,
@@ -30,21 +30,21 @@ class Logo extends Component {
         this.projectData(this.props);
     }
 
-    onLogoAddedFile = async (files) => {
+    onLogoAddedFile = async ({ files }) => {
         const file = files[0];
-        let blob = await image2base64(file.preview) // you can also to use url
+        let blob = await image2base64(file.preview)
         this.setState({logoItem : blob});
     }
 
-    onFaviconAddedFile = async (files) => {
+    onFaviconAddedFile = async ({ files }) => {
         const file = files[0];
-        let blob = await image2base64(file.preview) // you can also to use url
+        let blob = await image2base64(file.preview)
         this.setState({faviconItem : blob});
     }
 
-    onLoadingGifAddedFile = async (files) => {
+    onLoadingGifAddedFile = async ({ files }) => {
         const file = files[0];
-        let blob = await image2base64(file.preview) // you can also to use url
+        let blob = await image2base64(file.preview)
         this.setState({loadingGifItem : blob});
     }
 
@@ -52,16 +52,16 @@ class Logo extends Component {
         const { logo, topIcon, loadingGif } = props.profile.getApp().getCustomization();
 
         this.setState({...this.state, 
-            logoItem : logo ? logo.id : null,
-            faviconItem : topIcon ? topIcon.id : null,
-            loadingGifItem : loadingGif ? loadingGif.id : null
+            logoItem : logo ? logo.id : "",
+            faviconItem : topIcon ? topIcon.id : "",
+            loadingGifItem : loadingGif ? loadingGif.id : ""
         })
     }
 
     renderLogoAddImage = () => {
         return(
             <div className='dropzone-image' style={{ marginBottom: 40}}>
-                <Dropzone onDrop={this.onLogoAddedFile} width={200} ref={(el) => (this.dropzoneRef = el)}>
+                <Dropzone disabled={this.state.locks.logo} width={200} onDrop={(files) => this.onLogoAddedFile({ files: files })} ref={(el) => (this.dropzoneRef = el)}>
                     <img src={upload} className='image-info' style={{marginTop : 50}}/>
                     <p className='text-center'> Drop the Logo here</p>
                 </Dropzone>
@@ -72,7 +72,7 @@ class Logo extends Component {
     renderFaviconAddImage = () => {
         return(
             <div className='dropzone-image' style={{ marginBottom: 40}}>
-                <Dropzone onDrop={this.onFaviconAddedFile} width={200} ref={(el) => (this.dropzoneRef = el)}>
+                <Dropzone disabled={this.state.locks.favicon} width={200} onDrop={(files) => this.onFaviconAddedFile({ files: files })} ref={(el) => (this.dropzoneRef = el)}>
                     <img src={upload} className='image-info' style={{marginTop : 50}}/>
                     <p className='text-center'> Drop the Favicon here</p>
                 </Dropzone>
@@ -83,7 +83,7 @@ class Logo extends Component {
     renderLoadingGifAddImage = () => {
         return(
             <div className='dropzone-image' style={{ marginBottom: 40}}>
-                <Dropzone onDrop={this.onLoadingGifAddedFile} width={200} ref={(el) => (this.dropzoneRef = el)}>
+                <Dropzone disabled={this.state.locks.loadingGif} width={200} onDrop={(files) => this.onLoadingGifAddedFile({ files: files })} ref={(el) => (this.dropzoneRef = el)}>
                     <img src={upload} className='image-info' style={{marginTop : 50}}/>
                     <p className='text-center'> Drop the Loading Image here</p>
                 </Dropzone>
@@ -95,16 +95,16 @@ class Logo extends Component {
 
         switch(field){
             case 'logo' : {
-                this.setState({logoItem : null})
+                this.setState({logoItem : ""})
                 break;
             };
             case 'favicon' : {
-                this.setState({faviconItem : null})
+                this.setState({faviconItem : ""})
                 break;
             }
             ;
             case 'loadingGif' : {
-                this.setState({loadingGifItem : null})
+                this.setState({loadingGifItem : ""})
                 break;
             }
         }
@@ -200,7 +200,7 @@ class Logo extends Component {
 
                                     <div style={{margin : 'auto'}}>
                                         {
-                                            logoItem ? 
+                                            logoItem && logoItem !== ""? 
                                             /* Logo is Set */
                                             this.renderImage(logoItem, 'logo')
                                             : 
