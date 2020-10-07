@@ -9,15 +9,6 @@ label{
     }  
 }
 
-div{
-    &::after{
-        @include themify($themes) {
-            border-bottom : 2px solid themed('colorBetProtocol') !important;
-        }
-       
-    }
-}
-
 .form {
   display: flex;
   flex-wrap: wrap;

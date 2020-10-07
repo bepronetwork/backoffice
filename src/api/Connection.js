@@ -187,6 +187,19 @@ class Connection {
         }
     }
 
+    editVideogamesEdge = async ({admin, app, esports_edge, headers}) => {
+        try{
+            let response = await fetch(URL+ '/api/app/videogames/editEdge', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify({admin, app, esports_edge})
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editRestrictedCountries = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/restrictedCountries/edit`, {
@@ -637,7 +650,20 @@ class Connection {
         }
     }
 
-    
+    editFreeCurrency = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/freeCurrency/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     convertPoints = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/convert/points`, {
@@ -813,6 +839,19 @@ class Connection {
         }
     }
 
+    editAnalyticsIntegration = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/analytics/edit`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     editMoonPayIntegration = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/integrations/moonpay/edit`, {
@@ -842,6 +881,19 @@ class Connection {
     editBannersCustomization = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/customization/banners`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editEsportsPageCustomization = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/esportsScrenner`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -1139,6 +1191,19 @@ class Connection {
     editAdminType = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/admins/editType`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });            
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getComplianceFile = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/compliance/get`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

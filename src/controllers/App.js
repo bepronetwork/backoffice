@@ -6,7 +6,8 @@ import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
 import { setGamesData, setUsersData, setBetsData, setRevenueData, setWalletData } from "../redux/actions/summaryActions";
 import { getAuthFromCookies } from "./services/services";
-import _ from 'lodash';
+import _, { identity } from 'lodash';
+import { getVideoGamesAll, getAllVideogames, getMatchesAll, getSeriesMatches, getSpecificMatch, setBookedMatch, removeBookedMatch, getTeamStats, getPlayerStats, getBookedMatches, getBookedSeriesMatches } from "../esports/services";
 
 class App{    
     constructor(params){
@@ -729,6 +730,28 @@ class App{
         }
     }
 
+    editAnalyticsIntegration = async ({ analytics_id, google_tracking_id, isActive }) => {
+        try{
+            let res = await ConnectionSingleton.editAnalyticsIntegration({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    analytics_id,
+                    google_tracking_id,
+                    isActive: isActive
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editMoonPayIntegration = async ({ moonpay_id, isActive, key }) => {
         try{
             let res = await ConnectionSingleton.editMoonPayIntegration({   
@@ -808,6 +831,25 @@ class App{
             /* Update App Info Async */
             await this.updateAppInfoAsync();
 
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editEsportsPageCustomization = async ({ link_url, button_text, title, subtitle }) => {
+        try{
+            let res = await ConnectionSingleton.editEsportsPageCustomization({   
+                params: {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    link_url,
+                    button_text,
+                    title,
+                    subtitle
+                },         
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            });
             return res;
         }catch(err){
             throw err;
@@ -1167,7 +1209,7 @@ class App{
             return await ConnectionSingleton.getUserBets({   
                 params : {
                     user,
-                    ...filters,
+                    ..._.pickBy(filters, identity),
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     
@@ -1183,7 +1225,7 @@ class App{
         try{
             return await ConnectionSingleton.getAllBets({   
                 params : {
-                    ...filters,
+                    ..._.pickBy(filters, identity),
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     
@@ -1257,6 +1299,20 @@ class App{
                 app : this.getId(),
                 game,
                 edge,
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editVideogamesEdge = async ({ esports_edge }) => {
+        try{
+            return await ConnectionSingleton.editVideogamesEdge({
+                admin : this.getAdminId(),            
+                app : this.getId(),
+                esports_edge: parseFloat(esports_edge),
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
@@ -1539,6 +1595,25 @@ class App{
         }
     }
 
+    editFreeCurrency = async ({ activated, currency, time, value }) => {
+        try{
+            return await ConnectionSingleton.editFreeCurrency({   
+                params : {
+                    activated,
+                    currency,
+                    time,
+                    value,
+                    admin : this.getAdminId(),
+                    app : this.getId()
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
     convertPoints = async ({ currency, user, isAbsolut }) => {
         try{
             return await ConnectionSingleton.convertPoints({   
@@ -1590,13 +1665,15 @@ class App{
         }
     }
 
-    modifyUserBalance = async ({ user, wallet, newBalance }) => {
+    modifyUserBalance = async ({ user, wallet, currency, newBalance, reason }) => {
         try{
             return await ConnectionSingleton.modifyUserBalance({   
                 params : {
                     user,
                     wallet,
+                    currency,
                     newBalance,
+                    reason,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     
@@ -1624,6 +1701,25 @@ class App{
         }
     }
 
+    getComplianceFile = async ({ size=200, offset=0, begin_at, end_at }) => {
+        try{
+            let res = await ConnectionSingleton.getComplianceFile({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    size,
+                    offset,
+                    begin_at,
+                    end_at
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     getEcosystemGames = async () => {
         try{
             return (await ConnectionSingleton.getEcosystemGames()).data.message;
@@ -1644,6 +1740,185 @@ class App{
         try{
             return (await ConnectionSingleton.getEcosystemVariables()).data.message.addresses[0].address
         }catch(err){
+            throw err;
+        }
+    }
+
+    // Esports services
+
+    getVideoGamesAll = async () => {
+        try {
+            await getVideoGamesAll({
+                params:{
+                    admin: this.getAdminId()
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getAllVideogames = async () => {
+        try {
+            const res = await getAllVideogames({
+                params:{
+                    admin: this.getAdminId()
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getMatchesAll = async ({ filters, isPagination=false }) => {
+        try {
+            await getMatchesAll({
+                params: {
+                    admin: this.getAdminId(),
+                    ..._.pickBy(filters, _.identity)
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getMatchesAll = async ({ filters, isPagination=false }) => {
+        try {
+            await getMatchesAll({
+                params: {
+                    admin: this.getAdminId(),
+                    ..._.pickBy(filters, _.identity)
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getBookedMatches = async ({ filters, isPagination=false }) => {
+        try {
+            await getBookedMatches({
+                params: {
+                    admin: this.getAdminId(),
+                    ..._.pickBy(filters, _.identity)
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getSpecificMatch = async ({ match_id }) => {
+        try {
+            return await getSpecificMatch({
+                params:{
+                    admin: this.getAdminId(),
+                    match_id
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getSeriesMatches = async ({ filters, isPagination=false }) => {
+        try {
+            await getSeriesMatches({
+                params: {
+                    admin: this.getAdminId(),
+                    ..._.pickBy(filters, _.identity)
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getBookedSeriesMatches = async ({ filters, isPagination=false }) => {
+        try {
+            await getBookedSeriesMatches({
+                params: {
+                    admin: this.getAdminId(),
+                    ..._.pickBy(filters, _.identity)
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId()),
+                isPagination
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    setBookedMatch = async ({ match_external_id }) => {
+        try {
+            return await setBookedMatch({
+                params:{
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    match_external_id
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    removeBookedMatch = async ({ match_external_id }) => {
+        try {
+            return await removeBookedMatch({
+                params:{
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    match_external_id
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getTeamStats = async ({ slug, team_id }) => {
+        try {
+            return await getTeamStats({
+                params: {
+                    admin: this.getAdminId(),
+                    slug,
+                    team_id
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getPlayerStats = async ({ slug, player_id }) => {
+        try {
+            return await getPlayerStats({
+                params: {
+                    admin: this.getAdminId(),
+                    slug,
+                    player_id
+                },
+                headers: authHeaders(this.getBearerToken(), this.getAdminId())
+            })
+        } catch (err) {
             throw err;
         }
     }

@@ -40,7 +40,7 @@ const StyledTab = withStyles(theme => ({
 
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const { children, value, index, padding, ...other } = props;
   
     return (
       <div
@@ -51,7 +51,7 @@ function TabPanel(props) {
         aria-labelledby={`full-width-tab-${index}`}
         {...other}
       >
-        <Box p={3}>{children}</Box>
+        <Box p={3} style={{ padding: padding === false ? 0 : 24 }}>{children}</Box>
       </div>
     );
   }
@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function HorizontalTabs({tabs}) {
+export default function HorizontalTabs({tabs, padding}) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const theme = useTheme();
@@ -100,7 +100,7 @@ export default function HorizontalTabs({tabs}) {
             >
                 {tabs.map( (t, index) => {
                     return (
-                        <TabPanel value={value} index={index} dir={theme.direction}>
+                        <TabPanel value={value} index={index} dir={theme.direction} padding={padding}>
                             {t.tab}
                         </TabPanel>
                     )

@@ -4,11 +4,15 @@ import { compose } from 'lodash/fp';
 import PropTypes from 'prop-types';
 import { translate } from 'react-i18next';
 import { connect } from "react-redux";
-import { Col, Container, Row } from 'reactstrap';
+import { CardBody, Col, Container, Row } from 'reactstrap';
 import DataWidget from '../DataWidget/DataWidget';
 import EnhancedTable from './components/EnhancedTable';
 import TransactionsOpen from './components/TransactionsOpen';
 import TransactionsProfile from './components/TransactionsProfile';
+
+import DepositsTable from './components/deposit/DepositsTable'
+
+import HorizontalTabs from '../HorizontalTabs'
 
 
 class TransactionsContainer extends React.Component{
@@ -39,7 +43,27 @@ class TransactionsContainer extends React.Component{
         await profile.update();
     }
 
+    confirmDeposit = async (depositObject) => {
+        const { currency, profile } = this.props;
+
+        var { transactionHash, amount } = depositObject;
+        try{
+            await profile.getApp().updateWallet({amount, transactionHash, currency_id : currency._id});
+            await profile.getData();
+            this.projectData(this.props);
+        }catch(err){
+            // TO DO : Raise Notification System
+            throw err;
+        }
+      }
+
     render = () => {
+        const { profile } = this.props;
+        const app = profile.getApp();
+
+        const deposits = app.params.deposits;
+        const currencies = app.params.currencies;
+
         return (
             <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
             <Container className="dashboard">
@@ -64,16 +88,32 @@ class TransactionsContainer extends React.Component{
                 </Row>
                 <Row>
                     <Col lg={12}>
-                        <DataWidget> 
-                            <EnhancedTable
-                                allowWithdraw={this.allowWithdraw}
-                                cancelWithdraw={this.cancelWithdraw}
-                                data={{
-                                    withdraws : this.props.profile.getApp().getSummaryData('withdraws'),
-                                    wallet : this.props.profile.getApp().getSummaryData('wallet')
-                                }}
-                            />
-                        </DataWidget>
+                    <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none", padding: 10 }}>
+                        <HorizontalTabs
+                            padding={false}
+                            tabs={[
+                                {
+                                    label : 'Deposits',
+                                    tab : <DepositsTable
+                                    disabled={false}
+                                    confirmDeposit={this.confirmDeposit} 
+                                    currencies={currencies} data={deposits}
+                                    />
+                                },
+                                {
+                                    label : 'Withdrawals',
+                                    tab : <EnhancedTable
+                                    allowWithdraw={this.allowWithdraw}
+                                    cancelWithdraw={this.cancelWithdraw}
+                                    data={{
+                                        withdraws : this.props.profile.getApp().getSummaryData('withdraws'),
+                                        wallet : this.props.profile.getApp().getSummaryData('wallet')
+                                    }}
+                                />
+                                } 
+                            ]}
+                        />
+                    </CardBody>
                     </Col>
                 </Row>
           </Container>
@@ -87,7 +127,8 @@ class TransactionsContainer extends React.Component{
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        currency: state.currency
     };
 }
 

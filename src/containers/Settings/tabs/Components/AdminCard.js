@@ -94,7 +94,9 @@ class AdminCard extends Component {
                     lockField={this.lock} 
                     confirmChanges={this.confirmChanges} 
                     isLoading={loading}
-                    locked={lock}>
+                    locked={lock}
+                    add={false}
+                    >
                         <FormControlLabel
                         style={{margin: 0, marginTop: 10 }}
                         control={

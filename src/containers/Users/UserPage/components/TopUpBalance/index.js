@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Dialog, DialogContent, Button } from '@material-ui/core';
 import _ from 'lodash';
 import { CloseIcon, ArrowUpIcon } from 'mdi-react';
-import { DialogHeader, CloseButton, Container, CardHeader, CardContent, InputAddOn, AmountInput, ConfirmButton } from './styles';
+import { DialogHeader, CloseButton, Container, CardHeader, CardContent, InputAddOn, AmountInput, ConfirmButton, ReasonInput } from './styles';
 import { Row, Col, InputGroup, InputGroupAddon } from 'reactstrap';
 import AnimationNumber from '../../../../UI/Typography/components/AnimationNumber';
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
@@ -72,17 +72,21 @@ class UserContainer extends React.Component {
         }
     }
 
+    handleChangeReason = value => {
+        this.setState({ reason: value ? value : null })
+    }
+
     confirmChanges = async () => {
         const { profile } = this.props;
         const { App } = profile;
-        const { user, wallet, amount } = this.state;
+        const { user, wallet, amount, reason } = this.state;
 
-        if (amount) {
+        if (amount && reason) {
             this.setState({
                 isLoading: true
             })
 
-            await App.modifyUserBalance({ user: user._id, wallet: wallet._id, newBalance: amount });
+            await App.modifyUserBalance({ user: user._id, wallet: wallet._id, currency: wallet.currency._id, newBalance: amount, reason: reason });
             await profile.getApp().updateAppInfoAsync();
             await profile.update();
 
@@ -95,7 +99,7 @@ class UserContainer extends React.Component {
 
 
     render() {
-        const { open, user, wallet, isLoading, amount } = this.state;
+        const { open, user, wallet, isLoading, amount, reason } = this.state;
 
         return(
             <>
@@ -129,6 +133,7 @@ class UserContainer extends React.Component {
                                     </Col>
                                 </Row>
                             </CardHeader>
+                            <hr/>
                             <CardContent>
                                 <h1>New balance</h1>
                                 <InputGroup>
@@ -138,22 +143,17 @@ class UserContainer extends React.Component {
                                             <img className='application__game__image' style={{ display: 'block', marginLeft: 0, marginRight: 0, height: 20, width: 20 }} src={wallet.currency.image} alt={wallet.currency.name}/>
                                         </InputAddOn>
                                     </InputGroupAddon>
-                                    <AmountInput name="amount" onChange={(e) => this.onChangeAmount(e.target.value)}/>
+                                    <AmountInput name="amount" type="number" onChange={(e) => this.onChangeAmount(e.target.value)}/>
                                 </InputGroup>
-                                <ConfirmButton disabled={ !amount || isLoading } onClick={this.confirmChanges}>
+                                <h1>Reason</h1>
+                                <ReasonInput name="reason" type="text" onChange={(e) => this.handleChangeReason(e.target.value)}/>
+                                <ConfirmButton disabled={ !amount || !reason || isLoading } onClick={this.confirmChanges}>
                                     { isLoading ? <img src={loading} className={'loading_gif'} alt="Confirming..."/> : <span>Confirm</span> } 
                                 </ConfirmButton>
                             </CardContent>
                         </Container>
                       
                     </DialogContent>
-                    {/* <DialogActions>
-                    <button disabled={isLoading[withdraw._id]}className={`clean_button button-normal button-hover`} style={{ height: "35px", backgroundColor: "#63c965", margin: "25px", pointerEvents: isLoading[withdraw._id] ? 'none' : 'all' }} onClick={this.onSubmit}> 
-                        { !isLoading[withdraw._id] ?
-                        <p className='text-small text-white'>Yes, confirm withdraw</p>
-                        : <p className='text-small text-white'>Confirming...</p> }
-                    </button>
-                    </DialogActions> */}
                 </Dialog> : null }
             </>
         )

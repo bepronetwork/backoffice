@@ -1,5 +1,4 @@
 import React from 'react';
-import { Row, Col } from 'reactstrap';
 import { Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
 import _ from 'lodash';
@@ -59,8 +58,11 @@ class AdminContainer extends React.Component{
         })
     }
 
-    setAdmins = (admins) => {
-        this.setState({ admins: admins });
+    setAdmins = async () => {
+        const { profile } = this.props;
+        
+        await profile.getApp().updateAppInfoAsync();
+        await profile.update();
     }
 
     onChangeFilter = _.debounce((filter) => {

@@ -7,7 +7,6 @@ import { compose } from 'lodash/fp'
 import CurrencyBox from './components/CurrencyBox';
 import DepositsTable from './deposit/Table';
 import _ from 'lodash';
-import { getNonce } from '../../../../lib/number';
 
 const defaultState = {
     ticker : 'N/A',

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select, Button, SvgIcon, Dialog, DialogTitle, Divider, DialogContent, DialogActions, FormLabel, RadioGroup } from '@material-ui/core';
+import { TableBody, TableCell, TableHead, TablePagination,TableRow, TableSortLabel, InputLabel, Select, Button, SvgIcon, Dialog, DialogTitle, Divider, DialogContent, DialogActions, FormLabel, RadioGroup, ClickAwayListener, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import { Col, Row } from 'reactstrap';
 import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,7 +15,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import TextInput from '../../../shared/components/TextInput';
 import { AddressConcat } from '../../../lib/string';
-import { FilterListIcon, TableIcon, JsonIcon } from 'mdi-react';
+import { FilterListIcon, TableIcon, JsonIcon, ExpandMoreIcon } from 'mdi-react';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { compose } from 'lodash/fp';
@@ -184,20 +184,7 @@ let EnhancedTableToolbar = props => {
             [classes.highlight]: numSelected > 0,
         })}
         >
-        <div className={classes.title}>
-            <Typography variant="h6" id="tableTitle">
-                Transactions
-            </Typography>
-        </div>
         <div className={classes.spacer} />
-        <div className={classes.actions} onClick={filterClick}>
-            <div style={{position: "absolute", right: 0, margin: "14px 70px 0 0", cursor: "pointer"}}><p>Filter List</p></div>
-            <Tooltip title="Filter list">
-                <IconButton aria-label="Filter list">
-                <FilterListIcon />
-                </IconButton>
-            </Tooltip>
-        </div>
         </Toolbar>
     );
 };
@@ -242,7 +229,8 @@ class EnhancedTable extends React.Component {
             showFilter: false,
             open: false,
             openConfirm: false,
-            withdraw: null
+            withdraw: null,
+            openFilter: false
         };
     }
 
@@ -361,6 +349,10 @@ class EnhancedTable extends React.Component {
         this.closeDialog();
     }
 
+    handleClickAway = () => {
+        this.setState({ openFilter: false });
+    };
+
     handleChangePage = (event, page) => {
         this.setState({ page });
     };
@@ -374,6 +366,9 @@ class EnhancedTable extends React.Component {
     }
 
     handleChangeDropDown = event => {
+        event.stopPropagation();
+        event.preventDefault();
+
         const field = event.target.name;
 
         this.setState({ [field]: event.target.value });
@@ -389,7 +384,7 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { withdraw, isLoadingCancel, isLoading, open, openConfirm, showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter } = this.state;
+    const { withdraw, isLoadingCancel, isLoading, open, openConfirm, showFilter, data, order, orderBy, selected, rowsPerPage, page, idFilter, userFilter, currencyFilter, statusFilter, openFilter } = this.state;
     const dataFiltered = data.filter(n => 
         (_.isEmpty(statusFilter) || n.status == statusFilter) && 
         (_.isEmpty(currencyFilter) || n.currency._id == currencyFilter) &&
@@ -402,7 +397,7 @@ class EnhancedTable extends React.Component {
     const styles = {
         fitler: {
             padding: '20px 20px 30px 20px', border: "1px solid #d9d9d9", margin: '24px 14px 0 0',
-            backgroundColor: "#f2f4f7", borderRadius: 4, width: '92%', maxWidth: 400, position: 'absolute',
+            backgroundColor: "#f2f4f7", borderRadius: 4, width: '92%', maxWidth: 400,
             top: 0, right: 0, left: 'auto', zIndex: 10, display: showFilter ? 'block' : 'none'
         }
     };
@@ -420,9 +415,8 @@ class EnhancedTable extends React.Component {
     const jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'transactionHash', 'creation_timestamp', 'amount', 'status']));
 
     return (
-        <Paper className={classes.root} style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
-            <EnhancedTableToolbar numSelected={selected.length} filterClick={this.handleFilterClick}/>
-            <div style={{ display: "flex", justifyContent: "flex-end"}}>
+        <>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <CSVLink data={csvData} filename={"transactions.csv"} headers={headers}>
                 <MaterialButton variant="contained" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
                         <TableIcon style={{marginRight: 7}}/> CSV
@@ -432,62 +426,78 @@ class EnhancedTable extends React.Component {
                     <JsonIcon style={{marginRight: 7}}/> JSON
                 </MaterialButton>
             </div>
-            <div style={styles.fitler}>
-                <Col>
-                    <Row>
-                        <FormControl style={{width : '100%'}}>
-                            <TextInput
-                                label={'ID'}
-                                name={'idFilter'}
-                                type={'text'} 
-                                defaultValue={idFilter}
-                                changeContent={this.handleChangeInputContent} />
-                        </FormControl>
-                    </Row>
-                    <Row>
-                        <FormControl style={{width : '100%'}}>
-                            <TextInput
-                                label={'User'}
-                                name={'userFilter'}
-                                type={'text'} 
-                                defaultValue={userFilter}
-                                changeContent={this.handleChangeInputContent} />
-                        </FormControl>
-                    </Row>
-                    <Row>
-                        <FormControl style={{width : '100%', marginTop : 13}}>
-                            <InputLabel id="currencyFilterLabel">Currency</InputLabel>
-                            <Select labelId="currencyFilterLabel" id="currencyFilter" name="currencyFilter" value={currencyFilter} onChange={this.handleChangeDropDown}>
-                                <MenuItem value="">All</MenuItem>
-                                {
-                                    data.map(s => {
-                                        if(!currencyMap.has(s.currency) && s.currency){
-                                            currencyMap.set(s.currency, true); 
-                                            return (<MenuItem value={s.currency._id}>{s.currency.name}</MenuItem>)
-                                        }
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                    </Row>
-                    <Row>
-                        <FormControl style={{width : '100%', marginTop : 13}}>
-                            <InputLabel id="statusFilterLabel">Status</InputLabel>
-                            <Select labelId="statusFilterLabel" id="statusFilter" name="statusFilter" value={statusFilter} onChange={this.handleChangeDropDown}>
-                                <MenuItem value="">All</MenuItem>
-                                {
-                                    data.map(s => {
-                                        if(!statusMap.has(s.status)){
-                                            statusMap.set(s.status, true); 
-                                            return (<MenuItem value={s.status}>{s.status}</MenuItem>)
-                                        }
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                    </Row>
-                </Col>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 50 }}>
+                <ExpansionPanel elevation={0} expanded={openFilter} style={{position: 'absolute', zIndex: 10, width: "100%", maxWidth: 250, border: '1px solid rgba(0, 0, 0, 0.2)'}}>
+                    <ExpansionPanelSummary
+                    onClick={() => this.setState({ openFilter: !openFilter })}
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="filters"
+                    id="filter-head"
+                    >
+                    <h6>Show filters</h6>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails style={{ width: "100%", maxWidth: 250 }}>
+                    <Col>
+                        <Row>
+                            <FormControl style={{width : '100%'}}>
+                                <TextInput
+                                    label={'ID'}
+                                    name={'idFilter'}
+                                    type={'text'} 
+                                    defaultValue={idFilter}
+                                    changeContent={this.handleChangeInputContent} />
+                            </FormControl>
+                        </Row>
+                        <Row>
+                            <FormControl style={{width : '100%'}}>
+                                <TextInput
+                                    label={'User'}
+                                    name={'userFilter'}
+                                    type={'text'} 
+                                    defaultValue={userFilter}
+                                    changeContent={this.handleChangeInputContent} />
+                            </FormControl>
+                        </Row>
+                        <Row>
+                            <FormControl style={{width : '100%', marginTop : 13}}>
+                                <InputLabel id="currencyFilterLabel">Currency</InputLabel>
+                                <Select labelId="currencyFilterLabel" id="currencyFilter" name="currencyFilter" value={currencyFilter} onChange={this.handleChangeDropDown}>
+                                    <MenuItem value="">All</MenuItem>
+                                    {
+                                        data.map(s => {
+                                            if(!currencyMap.has(s.currency) && s.currency){
+                                                currencyMap.set(s.currency, true); 
+                                                return (<MenuItem value={s.currency._id}>{s.currency.name}</MenuItem>)
+                                            }
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        </Row>
+                        <Row>
+                            <FormControl style={{width : '100%', marginTop : 13}}>
+                                <InputLabel id="statusFilterLabel">Status</InputLabel>
+                                <Select labelId="statusFilterLabel" id="statusFilter" name="statusFilter" value={statusFilter} onChange={this.handleChangeDropDown}>
+                                    <MenuItem value="">All</MenuItem>
+                                    {
+                                        data.map(s => {
+                                            if(!statusMap.has(s.status)){
+                                                statusMap.set(s.status, true); 
+                                                return (<MenuItem value={s.status}>{s.status}</MenuItem>)
+                                            }
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        </Row>
+                    </Col>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
             </div>
+            <br/>
+            <hr/>
+            
             <div className={classes.tableWrapper}>
                 <Table className={classes.table} aria-labelledby="tableTitle">
                     <EnhancedTableHead
@@ -594,7 +604,7 @@ class EnhancedTable extends React.Component {
                 onChangePage={this.handleChangePage}
                 onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
-        </Paper>
+        </>
     );
   }
 }

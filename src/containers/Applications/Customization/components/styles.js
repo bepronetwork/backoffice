@@ -34,3 +34,7 @@ export const Label = styled.span`
     text-align: left;
     color: #463e3e;
 `;
+
+export const InputLabel = styled.h4`
+  font-size: 16px;
+`;
