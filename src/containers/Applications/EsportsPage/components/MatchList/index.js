@@ -256,10 +256,10 @@ class MatchList extends React.Component {
         return (
             <>
             <Container>
-                <EsportsNotEnable>
+                { !hasEsports && <EsportsNotEnable>
                     <img src={esports} alt="esports"/>
                     <span>Esports is not currently enabled</span>
-                </EsportsNotEnable>
+                </EsportsNotEnable> }
                 <Filters>
                     <DateFilter>
                     <RangePicker 
