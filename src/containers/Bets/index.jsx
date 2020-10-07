@@ -37,17 +37,24 @@ export const EsportsNotEnable = styled.div`
     justify-content: flex-start;
     align-items: center;
 
+    > div {
+        &.spanGroup {
+            display: flex;
+            flex-direction: column;
+
+            > span {
+                font-size: 17px;
+                font-weight: 500;
+                color: #814c94;
+            }
+        }
+    }
+
     > img {
         height: 70px;
         width: 70px;
 
         margin: 0px 10px;
-    }
-
-    > span {
-        font-size: 18px;
-        font-weight: 500;
-        color: #814c94;
     }
 `;
 
@@ -112,7 +119,13 @@ class BetsContainer extends React.Component{
                                     <span>Esports</span>
                                 </TabContainer>
                             } key="2">
-                              { hasEsports ? <EsportsBetsTable/> : <EsportsNotEnable> <img src={esports} alt="esports"/> <span>Esports is not currently enabled</span></EsportsNotEnable> }
+                              { hasEsports ? <EsportsBetsTable/> : <EsportsNotEnable>
+                                <img src={esports} alt="esports"/>
+                                <div className="spanGroup">
+                                    <span>Esports is not enabled</span>
+                                    <span>Contact the sales team to activate Esports</span>
+                                </div>
+                            </EsportsNotEnable> }
                             </TabPane>
                         </Tabs>
                     </Col>
