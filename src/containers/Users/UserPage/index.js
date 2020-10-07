@@ -18,7 +18,9 @@ import { ArrowUpIcon, SearchIcon, SwapHorizontalIcon } from 'mdi-react';
 import BetsTable from './components/BetsTable'
 import EsportsBetsTable from './components/EsportsBetsTable'
 
-import { ConvertContainer } from './styles'
+import { ConvertContainer, EsportsNotEnable } from './styles'
+
+const esports = `${process.env.PUBLIC_URL}/img/landing/sports_small.png`;
 
 const defaultProps = {
     ticker : 'No Currency Chosen'
@@ -316,7 +318,7 @@ class UserPage extends React.Component{
         
         if (!user || _.isEmpty(user)) { return <UserPageSkeleton/> };
 
-        const { currency, isLoading } = this.props;
+        const { currency, isLoading, profile } = this.props;
         const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, points, kyc_status, kyc_needed } = user;
         
         const wallet = user.wallet.find(wallet => wallet.currency._id === currency._id);
@@ -326,6 +328,9 @@ class UserPage extends React.Component{
         const transactions = withdraws.map( w => {return {...w, isWithdraw : true}}).concat(deposits);
         const bets = this.props.user.bets;
         const affiliateWallet = affiliate.wallet.filter(w => w.currency._id === currency._id);
+
+        const app = profile.getApp();
+        const hasEsports = app.hasEsportsPermission();
 
         return (
             <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
@@ -421,7 +426,7 @@ class UserPage extends React.Component{
                                 },
                                 {
                                     label : 'Esports Bets',
-                                    tab : <EsportsBetsTable user={user}/>
+                                    tab : hasEsports ? <EsportsBetsTable user={user}/> : <EsportsNotEnable> <img src={esports} alt="esports"/> <span>Esports is not currently enabled</span></EsportsNotEnable>
                                 },
                                 {
                                     label : 'Affiliate',

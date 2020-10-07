@@ -1746,6 +1746,13 @@ class App{
 
     // Esports services
 
+    hasEsportsPermission = () => {
+        const ESPORTS_API_URL = process.env.REACT_APP_API_ESPORTS;
+        const WEBSOCKET_ESPORTS_URL = process.env.REACT_APP_WEBSOCKET_ESPORTS;
+
+        return (!_.isEmpty(ESPORTS_API_URL) && !_.isEmpty(WEBSOCKET_ESPORTS_URL))
+    }
+
     getVideoGamesAll = async () => {
         try {
             await getVideoGamesAll({
