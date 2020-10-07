@@ -37,7 +37,7 @@ export const MatchContainer = styled.div`
     padding-top: 8px;
 
     &:hover {
-        transform: scale(1.005);
+        transform: ${props => props.disableHover ? 'none' : 'scale(1.005)'};
     }
 `;
 
