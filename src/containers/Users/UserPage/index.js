@@ -426,7 +426,13 @@ class UserPage extends React.Component{
                                 },
                                 {
                                     label : 'Esports Bets',
-                                    tab : hasEsports ? <EsportsBetsTable user={user}/> : <EsportsNotEnable> <img src={esports} alt="esports"/> <span>Esports is not currently enabled</span></EsportsNotEnable>
+                                    tab : hasEsports ? <EsportsBetsTable user={user}/> : <EsportsNotEnable>
+                                        <img src={esports} alt="esports"/>
+                                        <div className="spanGroup">
+                                            <span>Esports is not enabled</span>
+                                            <span>Contact the sales team to activate Esports</span>
+                                        </div>
+                                    </EsportsNotEnable>
                                 },
                                 {
                                     label : 'Affiliate',

@@ -258,7 +258,10 @@ class MatchList extends React.Component {
             <Container>
                 { !hasEsports && <EsportsNotEnable>
                     <img src={esports} alt="esports"/>
-                    <span>Esports is not currently enabled</span>
+                    <div className="spanGroup">
+                        <span>Esports is not enabled</span>
+                        <span>Contact the sales team to activate Esports</span>
+                    </div>
                 </EsportsNotEnable> }
                 <Filters>
                     <DateFilter>
