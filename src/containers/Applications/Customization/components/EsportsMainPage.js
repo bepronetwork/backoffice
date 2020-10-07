@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import EditLock from '../../../Shared/EditLock.js';
 import { Col, Row, Card, CardBody } from 'reactstrap';
 import { connect } from "react-redux";
-import { TextField, InputLabel } from './styles';
+import { TextField, InputLabel, EsportsNotEnable } from './styles';
 
 import './styles.css';
+
+const esports = `${process.env.PUBLIC_URL}/img/landing/sports_small.png`;
 
 class EsportsMainPage extends Component {
     constructor(props){
@@ -83,34 +85,42 @@ class EsportsMainPage extends Component {
 
     render() {
         const { isLoading, locked, link_url, button_text, title, subtitle } = this.state; 
+        const { profile } = this.props;
+
+        const app = profile.getApp();
+        const hasEsports = app.hasEsportsPermission();
 
         return (
             <Card>
                 <CardBody style={{ margin: "0px 15px", borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                     <Row>
-                        <Col md={12}>
-                        <EditLock 
-                            isLoading={isLoading} 
-                            unlockField={this.unlockField} 
-                            lockField={this.lockField} 
-                            confirmChanges={this.confirmChanges} 
-                            type={'EsportsMainPage'} 
-                            locked={locked}>
+                        { hasEsports ? (
+                            <Col md={12}>
+                            <EditLock 
+                                isLoading={isLoading} 
+                                unlockField={this.unlockField} 
+                                lockField={this.lockField} 
+                                confirmChanges={this.confirmChanges} 
+                                type={'EsportsMainPage'} 
+                                locked={locked}>
 
-                            <InputLabel>Link URL</InputLabel>
-                            <TextField placeholder="" disabled={locked} value={link_url} onChange={(e) => this.onChangeLinkURL(e.target.value)}/>
+                                <InputLabel>Link URL</InputLabel>
+                                <TextField placeholder="" disabled={locked} value={link_url} onChange={(e) => this.onChangeLinkURL(e.target.value)}/>
 
-                            <InputLabel>Button Text</InputLabel>
-                            <TextField placeholder="" disabled={locked} value={button_text} onChange={(e) => this.onChangeButtonText(e.target.value)}/>
+                                <InputLabel>Button Text</InputLabel>
+                                <TextField placeholder="" disabled={locked} value={button_text} onChange={(e) => this.onChangeButtonText(e.target.value)}/>
 
-                            <InputLabel>Title</InputLabel>
-                            <TextField placeholder="" disabled={locked} value={title} onChange={(e) => this.onChangeTitle(e.target.value)}/>
+                                <InputLabel>Title</InputLabel>
+                                <TextField placeholder="" disabled={locked} value={title} onChange={(e) => this.onChangeTitle(e.target.value)}/>
 
-                            <InputLabel>Subtitle</InputLabel>
-                            <TextField placeholder="" disabled={locked} value={subtitle} onChange={(e) => this.onChangeSubtitle(e.target.value)}/>
+                                <InputLabel>Subtitle</InputLabel>
+                                <TextField placeholder="" disabled={locked} value={subtitle} onChange={(e) => this.onChangeSubtitle(e.target.value)}/>
 
-                        </EditLock>
+                            </EditLock>
                         </Col>
+                        ) : (
+                            <EsportsNotEnable> <img src={esports} alt="esports"/> <span>Esports is not currently enabled</span></EsportsNotEnable>
+                        )}
                     </Row>
                 </CardBody>
             </Card>

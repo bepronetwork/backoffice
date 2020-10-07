@@ -16,7 +16,9 @@ import styled from 'styled-components';
 import { Tabs } from 'antd';
 import EsportsBetsTable from './components/EsportsBetsTable';
 import { CasinoWhite, EsportsWhite } from '../../components/Icons';
+
 const { TabPane } = Tabs;
+const esports = `${process.env.PUBLIC_URL}/img/landing/sports_small.png`;
 
 const TabContainer = styled.div`
     display: flex;
@@ -30,6 +32,24 @@ const Icon = styled.section`
     filter: ${props => props.isActive ? 'grayscale(0)' : 'grayscale(1)' };
 `;
 
+export const EsportsNotEnable = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    > img {
+        height: 70px;
+        width: 70px;
+
+        margin: 0px 10px;
+    }
+
+    > span {
+        font-size: 18px;
+        font-weight: 500;
+        color: #814c94;
+    }
+`;
 
 class BetsContainer extends React.Component{
 
@@ -48,10 +68,13 @@ class BetsContainer extends React.Component{
     }
 
     render = () => {
-        const { periodicity, isLoading, currency } = this.props;
+        const { periodicity, isLoading, currency, profile } = this.props;
         const { activeTab } = this.state;
 
         if (!currency) {return null}
+
+        const app = profile.getApp();
+        const hasEsports = app.hasEsportsPermission();
 
         return (
             <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
@@ -89,7 +112,7 @@ class BetsContainer extends React.Component{
                                     <span>Esports</span>
                                 </TabContainer>
                             } key="2">
-                                <EsportsBetsTable />
+                              { hasEsports ? <EsportsBetsTable/> : <EsportsNotEnable> <img src={esports} alt="esports"/> <span>Esports is not currently enabled</span></EsportsNotEnable> }
                             </TabPane>
                         </Tabs>
                     </Col>

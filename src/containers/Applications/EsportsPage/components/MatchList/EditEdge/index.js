@@ -66,6 +66,10 @@ class EditEdge extends React.Component {
 
     render() {
         const { edge, newEdge, isLoading } = this.state;
+        const { profile } = this.props;
+        const app = profile.getApp();
+
+        const hasEsports = app.hasEsportsPermission();
 
         return (
             <Container>
@@ -76,6 +80,7 @@ class EditEdge extends React.Component {
                     <Row style={{ width: "100%" }}>
                         <Col>
                         <Slider
+                            disabled={!hasEsports}
                             style={{ width: 100 }}
                             defaultValue={edge}
                             min={0}
@@ -87,6 +92,7 @@ class EditEdge extends React.Component {
                         </Col>
                         <Col>
                         <InputNumber
+                            disabled={!hasEsports}
                             defaultValue={edge}
                             min={0}
                             max={20}
@@ -98,7 +104,7 @@ class EditEdge extends React.Component {
                             onChange={this.onChangeEdge}
                         />
                          { edge !== newEdge && (
-                            <ButtonBase style={{ margin: "0px 5px" }} disabled={isLoading} onClick={this.resetNewEdge}>
+                            <ButtonBase style={{ margin: "0px 5px" }} disabled={isLoading || !hasEsports} onClick={this.resetNewEdge}>
                                 <CloseOutlined/>
                             </ButtonBase>) }
                         </Col>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Header, Videogame, Date, Status, Winner, Filters, DateFilter, StatusFilter, BookedFilter, Edge } from './styles';
+import { Container, Header, Videogame, Date, Status, Winner, Filters, DateFilter, StatusFilter, BookedFilter, Edge, EsportsNotEnable } from './styles';
 import Match from '../Match';
 import _, { keys } from 'lodash';
 import moment from 'moment';
@@ -18,6 +18,8 @@ import EditEdge from './EditEdge';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
+const esports = `${process.env.PUBLIC_URL}/img/landing/sports_small.png`;
+
 class MatchList extends React.Component {
     constructor(props) {
         super(props);
@@ -29,11 +31,25 @@ class MatchList extends React.Component {
       }
 
     componentDidMount(){
-        this.projectData(this.props);
+        const { profile } = this.props;
+        const app = profile.getApp();
+
+        const hasEsports = app.hasEsportsPermission();
+
+        if (hasEsports) {
+            this.projectData(this.props);
+        }
     }
 
     componentWillReceiveProps(props){
-        this.projectData(props);
+        const { profile } = this.props;
+        const app = profile.getApp();
+
+        const hasEsports = app.hasEsportsPermission();
+
+        if (hasEsports) {
+            this.projectData(props);
+        }
     }
 
     projectData = (props) => {
@@ -231,15 +247,23 @@ class MatchList extends React.Component {
     }
 
     render() {
-        const { isLoading, setMatchPage, showOnlyBookedMatches, setBookedFilter } = this.props;
+        const { isLoading, setMatchPage, showOnlyBookedMatches, setBookedFilter, profile } = this.props;
         const { matches, series, isLoadingMatches } = this.state;
+
+        const app = profile.getApp();
+        const hasEsports = app.hasEsportsPermission();
         
         return (
             <>
             <Container>
+                <EsportsNotEnable>
+                    <img src={esports} alt="esports"/>
+                    <span>Esports is not currently enabled</span>
+                </EsportsNotEnable>
                 <Filters>
                     <DateFilter>
                     <RangePicker 
+                    disabled={!hasEsports}
                     onChange={this.onChangeDate} 
                     // onOk={this.onOk}
                     ranges={{
@@ -252,6 +276,7 @@ class MatchList extends React.Component {
                     </DateFilter>
                     <StatusFilter>
                     <Select
+                        disabled={!hasEsports}
                         mode="multiple"
                         style={{ minWidth: 150 }}
                         placeholder="Match Status"
@@ -263,7 +288,7 @@ class MatchList extends React.Component {
                     </Select>
                     </StatusFilter>
                     <BookedFilter>
-                        <Checkbox checked={showOnlyBookedMatches} onChange={setBookedFilter}>Show only Booked Matches</Checkbox>
+                        <Checkbox disabled={!hasEsports} checked={showOnlyBookedMatches} onChange={setBookedFilter}>Show only Booked Matches</Checkbox>
                     </BookedFilter>
                     <Edge>
                         <EditEdge/>
@@ -283,8 +308,8 @@ class MatchList extends React.Component {
                         <span>Match winner</span>
                     </Winner>
                 </Header>
-                 { isLoading && _.isEmpty(matches) ? (
-                    _.times(10, () => <MatchSkeleton/>))
+                 { (isLoading && _.isEmpty(matches)) || !hasEsports ? (
+                    _.times(hasEsports ? 10 : 3, () => <MatchSkeleton hasEsports={hasEsports}/>))
                 : (
                     !_.isEmpty(matches) && !_.isEmpty(series) ? (
                         <InfiniteScroll
