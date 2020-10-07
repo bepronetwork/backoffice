@@ -34,7 +34,7 @@
     "i18n-iso-countries": "^5.2.0",
     "i18next": "^11.9.0",
     "identity-obj-proxy": "3.0.0",
-    "image-to-base64": "^2.1.1",
+    "image-to-base64": "^2.0.1",
     "immutability-helper": "^2.8.1",
     "jest": "23.6.0",
     "jest-pnp-resolver": "1.0.1",
