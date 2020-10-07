@@ -40,19 +40,34 @@ class EsportsPage extends React.Component {
       }
 
     componentDidMount(){
-        this.createSocketConnection(this.props);
-        this.projectData(this.props);
+        const { profile } = this.props;
+        const app = profile.getApp();
+
+        const hasEsports = app.hasEsportsPermission();
+
+        if (hasEsports) {
+            this.createSocketConnection(this.props);
+            this.projectData(this.props);
+        }
     }
 
     componentWillReceiveProps(props){
-       this.projectData(props);
+        const { profile } = this.props;
+        const app = profile.getApp();
+
+        const hasEsports = app.hasEsportsPermission();
+
+        if (hasEsports) {
+            this.projectData(props);
+        }
     }
 
     createSocketConnection = () => {
         const { connection } = this.context;
 
-        connection.on("matchUpdate", _.debounce(this.updateMatch, 10000));
-        // connection.on("serieUpdate", this.showData);
+        if (connection) {
+            connection.on("matchUpdate", _.debounce(this.updateMatch, 10000));
+        }
     }
 
     updateMatch = async (data) => {
@@ -342,11 +357,17 @@ class EsportsPage extends React.Component {
 
     render() {
         const { collapsed, showMatchPage, match, videogames, seriesSelected, selectedVideogames, isLoadingMatches, begin_at, end_at, statusSelected, showOnlyBookedMatches } = this.state;
+        const { profile } = this.props;
+
+        const app = profile.getApp();
+        const hasEsports = app.hasEsportsPermission();
 
         return (
             <>
             <Container collapsed={collapsed}>
-                <Tabs>
+                { hasEsports ? (
+                    <>
+                    <Tabs>
                     { _.isEmpty(videogames) ? (
                         <VideoGameTabSkeleton/>
                     ) : (
@@ -431,6 +452,26 @@ class EsportsPage extends React.Component {
                         isLoading={isLoadingMatches}/>
                     )}
                 </Content>
+                </>
+                ) : (
+                <>
+                <Tabs>
+                    <VideoGameTabSkeleton hasEsports={hasEsports}/>
+                </Tabs>
+                <Content>
+                    <MatchList 
+                        setDateFilter={this.setDateFilter}
+                        setStatusFilter={this.setStatusFilter}
+                        beginAt={begin_at}
+                        endAt={end_at}
+                        showOnlyBookedMatches={showOnlyBookedMatches}
+                        setBookedFilter={this.setBookedFilter}
+                        statusSelected={statusSelected}
+                        setMatchPage={this.setMatchPage}
+                        seriesSelected={seriesSelected}
+                        isLoading={isLoadingMatches}/>
+                </Content>
+                </>)}
             </Container>
             </>
         )
