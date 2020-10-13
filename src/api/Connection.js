@@ -257,6 +257,20 @@ class Connection {
         }
     }
 
+    
+    getEcosystemLanguages = async () => {
+        try{
+            let response = await fetch(URL+ `/api/app/languageEcosystem/get`, {
+                method : 'GET',
+                headers : addHeaders(config),
+            });
+
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getEcosystemSkins = async () => {
         try{
             let response = await fetch(URL+ `/api/app/skinEcosystem/get`, {
@@ -1190,6 +1204,19 @@ class Connection {
     addAdmin = async ({params, headers}) => {
         try{
             let response = await fetch( URL + `/api/app/admins/add`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            return response.json();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    addLanguage = async ({params, headers}) => {
+        try{
+            let response = await fetch( URL + `/api/app/customization/language/add`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)

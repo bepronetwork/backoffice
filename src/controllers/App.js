@@ -1309,6 +1309,14 @@ class App{
         }
     }
 
+    getEcosystemLanguages = async () => {
+        try{
+            return await ConnectionSingleton.getEcosystemLanguages();
+        }catch(err){
+            throw err;
+        }
+    }
+
     getEcosystemSkins = async () => {
         try{
             return await ConnectionSingleton.getEcosystemSkins();
@@ -1526,6 +1534,22 @@ class App{
                     admin : this.getAdminId(),
                     app : this.getId(),
                     game
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    addLanguage = async ({ prefix }) => {
+        try{
+            return await ConnectionSingleton.addLanguage({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    prefix
                 },     
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
