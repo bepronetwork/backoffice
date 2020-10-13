@@ -7,7 +7,13 @@ import { FormLabel } from '@material-ui/core';
 import ColorPicker from '../../../../shared/components/color_picker_input/ColorPicker.js';
 import { TextField } from './styles';
 
+import styled from 'styled-components'
+
+import { Select, Checkbox } from 'antd';
+
 import './styles.css';
+
+const { Option } = Select;
 
 const defaultState = {
     isActive: false,
@@ -15,13 +21,15 @@ const defaultState = {
     textColor: '#000',
     text: '',
     locked: true,
-    isLoading: false
+    isLoading: false,
+    language: 'EN'
 }
 
 const labelStyle = {
     fontFamily: "Poppins", 
     fontSize: 16, 
-    color: "#646777"
+    color: "#646777",
+    marginBottom: 10
 }
 
 const cardStyle = {
@@ -31,6 +39,11 @@ const cardStyle = {
     backgroundColor: "#fafcff", 
     boxShadow: "none"
 }
+
+const Text = styled.span`
+    font-family: Poppins;
+    font-size: 13px;
+`;
 
 class AnnouncementTab extends Component {
     constructor(props){
@@ -52,14 +65,27 @@ class AnnouncementTab extends Component {
     }
 
     projectData = async (props) => {
-        const { profile } = props;
+        const { language } = this.state;
+        
+        await this.fetchLanguagesData(language);
+    }
+
+    fetchLanguagesData = async (language) => {
+        const { profile } = this.props;
 
         const customization = profile.getApp().getCustomization();
 
         const { topBar } = customization;
-        const { isActive, backgroundColor, textColor, text } = topBar;
+
+        const languages = topBar.languages.map(l => l.language);
+        const bar = topBar.languages.find(l => l.language.prefix === language);
+
+        const { isActive, backgroundColor, textColor, text, useStandardLanguage } = bar;
 
         this.setState({ 
+            language,
+            languages: languages,
+            useStandardLanguage: useStandardLanguage,
             isActive,
             backgroundColor,
             textColor,
@@ -67,10 +93,25 @@ class AnnouncementTab extends Component {
         })
     }
 
+    getLanguageImage = language => (
+        <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+            <img src={language.logo} alt={language.logo} style={{ height: 20, width: 20, margin: "0px 5px" }}/>
+            <Text>{language.name}</Text>
+        </div>
+    )
+
     onChangeText = (value) => {
         this.setState({
             text: value ? value : ""
         })
+    }
+
+    onChangeLanguage = async (value) => {
+        this.setState({
+            language: value ? value : ""
+        })
+
+        await this.fetchLanguagesData(value)
     }
 
     onChange = ({ type, value }) => {
@@ -87,10 +128,13 @@ class AnnouncementTab extends Component {
 
     confirmChanges = async () => {
         const { profile } = this.props;
+        const { textColor, backgroundColor, text, isActive, language, useStandardLanguage, languages } = this.state;
+
+        const lang = languages.find(l => l.prefix === language)
 
         this.setState({ isLoading: true });
 
-        await profile.getApp().editTopBarCustomization(this.state);
+        await profile.getApp().editTopBarCustomization({ textColor, backgroundColor, text, isActive, language: lang._id, useStandardLanguage });
 
         this.setState({ isLoading: false, locked: true });
 
@@ -98,7 +142,7 @@ class AnnouncementTab extends Component {
     }
 
     render() {
-        const { isLoading, locked, isActive, textColor, backgroundColor, text } = this.state; 
+        const { isLoading, locked, isActive, textColor, backgroundColor, text, languages, useStandardLanguage } = this.state;
 
         return (
             <Card>
@@ -112,7 +156,22 @@ class AnnouncementTab extends Component {
                                 confirmChanges={this.confirmChanges} 
                                 type={'announcementTab'} 
                                 locked={locked}
-                            >
+                            >   <FormLabel component="legend" style={labelStyle}>Language</FormLabel>
+                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", margin: "5px 0px", marginTop: 20 }}>
+                                    <Select
+                                    defaultValue="EN"
+                                    style={{ minWidth: 130 }}    
+                                    placeholder="Language"
+                                    onChange={this.onChangeLanguage}
+                                    disabled={isLoading || locked}
+                                    >
+                                        { languages && languages.map(language => (
+                                            <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
+                                        ))}
+                                    </Select>
+                                    <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                                </div>
+                                <br/>
                                 <div style={{ marginBottom: 10 }}>
                                     <FormLabel component="legend" style={labelStyle}>{ isActive ? "Active" : "Inactive" }</FormLabel>
                                     <BooleanInput

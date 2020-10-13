@@ -9,9 +9,15 @@ import { GridList, withStyles, FormLabel } from '@material-ui/core';
 import BooleanInput from '../../../../shared/components/BooleanInput';
 import { styles } from './styles';
 
+import styled from 'styled-components'
+import { Select, Checkbox } from 'antd';
+import { BrandingWatermarkSharp } from '@material-ui/icons';
+
 const image2base64 = require('image-to-base64');
 const upload = `${process.env.PUBLIC_URL}/img/dashboard/upload.png`;
 const trash = `${process.env.PUBLIC_URL}/img/dashboard/clear.png`;
+
+const { Option } = Select;
 
 const defaultState = {
     autoDisplay: false,
@@ -19,8 +25,22 @@ const defaultState = {
     links: [],
     banners: [],
     locked: true,
-    isLoading: false
+    isLoading: false,
+    language: 'EN'
 }
+
+const labelStyle = {
+    fontFamily: "Poppins", 
+    fontSize: 16, 
+    color: "#646777",
+    padding: 10
+}
+
+const Text = styled.span`
+    font-family: Poppins;
+    font-size: 13px;
+`;
+
 
 class Banners extends Component {
     constructor(props){
@@ -50,10 +70,23 @@ class Banners extends Component {
     }
 
     projectData = async (props) => {
-        const { banners } = props.profile.getApp().getCustomization();
-        const { ids, autoDisplay, fullWidth } = banners;
+        const { language } = this.state;
 
-        this.setState({...this.state, 
+        await this.fetchLanguageData(language);
+    }
+
+    fetchLanguageData = async (language) => {
+        const { banners } = this.props.profile.getApp().getCustomization();
+
+        const banner = banners.languages.find(l => l.language.prefix === language);
+        const languages = banners.languages.map(l => l.language);
+
+        const { ids, autoDisplay, fullWidth, useStandardLanguage } = banner;
+
+        this.setState({...this.state,
+            language, 
+            languages: languages,
+            useStandardLanguage,
             banners : ids,
             autoDisplay,
             fullWidth: fullWidth
@@ -77,6 +110,13 @@ class Banners extends Component {
 
         this.setState({ banners });
     }
+
+    getLanguageImage = language => (
+        <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+            <img src={language.logo} alt={language.logo} style={{ height: 20, width: 20, margin: "0px 5px" }}/>
+            <Text>{language.name}</Text>
+        </div>
+    )
 
     renderImage = (src, index) => {
         const banners = this.state.banners;
@@ -172,6 +212,14 @@ class Banners extends Component {
         this.setState({...this.state, banners })
     }
 
+    onChangeLanguage = async (value) => {
+        this.setState({
+            language: value ? value : ""
+        })
+
+        await this.fetchLanguageData(value)
+    }
+
     unlockField = () => {
         this.setState({...this.state, locked : false})
     }
@@ -188,13 +236,17 @@ class Banners extends Component {
 
     confirmChanges = async () => {
         var { profile } = this.props;
-        const { banners, fullWidth } = this.state;
+        const { banners, fullWidth, languages, language, useStandardLanguage } = this.state;
+
+        const lang = languages.find(l => l.prefix === language)
 
         this.setState({...this.state, isLoading : true});
         const postData = {
             banners,
             autoDisplay: false,
-            fullWidth: fullWidth
+            fullWidth: fullWidth,
+            language: lang._id, 
+            useStandardLanguage
         }
         await profile.getApp().editBannersCustomization(postData);
         this.setState({...this.state, isLoading : false, locked: true})
@@ -204,7 +256,7 @@ class Banners extends Component {
     handleOnDragStart = (e) => e.preventDefault()
 
     render() {
-        const { isLoading, locked, autoDisplay, banners, fullWidth } = this.state; 
+        const { isLoading, locked, autoDisplay, banners, fullWidth, languages, useStandardLanguage } = this.state; 
         const { classes } = this.props;
         
         return (
@@ -220,6 +272,22 @@ class Banners extends Component {
                                 type={'announcementTab'} 
                                 locked={locked}
                             >
+                                <FormLabel component="legend" style={labelStyle}>Language</FormLabel>
+                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", margin: "5px 0px", marginTop: 20, padding: "0px 10px" }}>
+                                    <Select
+                                    defaultValue="EN"
+                                    style={{ minWidth: 130 }}    
+                                    placeholder="Language"
+                                    onChange={this.onChangeLanguage}
+                                    disabled={isLoading || locked}
+                                    >
+                                        { languages && languages.map(language => (
+                                            <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
+                                        ))}
+                                    </Select>
+                                    <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                                </div>
+                                <br/>
                                 <div style={{width : '96%', margin : 'auto'}}>
                                     <div style={{ marginTop: 10 }}>
                                         <FormLabel component="legend">Show full width banner</FormLabel>

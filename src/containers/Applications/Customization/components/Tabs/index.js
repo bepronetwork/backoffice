@@ -11,18 +11,30 @@ import Tab from './Tab.js';
 import { ButtonBase, FormLabel } from '@material-ui/core';
 import BooleanInput from '../../../../../shared/components/BooleanInput.js';
 
+import { Select, Checkbox } from 'antd';
+import styled from 'styled-components'
+
+const { Option } = Select;
+
 const labelStyle = {
     fontFamily: "Poppins", 
     fontSize: 16, 
     color: "#646777"
 }
 
+const TextImage = styled.span`
+    font-family: Poppins;
+    font-size: 13px;
+`;
+
+
 class Tabs extends Component {
     constructor(props){
         super(props);
         this.state = {
             isLoading: false,
-            locked: true
+            locked: true,
+            language: 'EN'
         };
     }
 
@@ -35,14 +47,27 @@ class Tabs extends Component {
     }
 
     projectData = async (props) => {
-        const { profile } = props;
+        const { language } = this.state;
+
+        await this.fetchLanguageData(language)
+    }
+
+    fetchLanguageData = async (language) => {
+        const { profile } = this.props;
 
         const customization = await profile.getApp().getCustomization();
 
         const { topTab } = customization;
-        const { ids, isTransparent } = topTab;
+
+        const languages = topTab.languages.map(l => l.language);
+        const tab = topTab.languages.find(l => l.language.prefix === language);
+
+        const { ids, isTransparent, useStandardLanguage } = tab;
 
         this.setState({
+            language,
+            languages,
+            useStandardLanguage,
             tabs: !_.isEmpty(ids) ? ids : [],
             isTransparent: isTransparent
         })
@@ -54,7 +79,21 @@ class Tabs extends Component {
         })
     }
 
-    
+    getLanguageImage = language => (
+        <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+            <img src={language.logo} alt={language.logo} style={{ height: 20, width: 20, margin: "0px 5px" }}/>
+            <TextImage>{language.name}</TextImage>
+        </div>
+    )
+
+    onChangeLanguage = async (value) => {
+        this.setState({
+            language: value ? value : ""
+        })
+
+        await this.fetchLanguageData(value)
+    }
+
     renderImage = (src) => {
         if(!src.includes("https")){
             src = "data:image;base64," + src;
@@ -64,16 +103,18 @@ class Tabs extends Component {
     }
 
     confirmChanges = async () => {
-        const { tabs, isTransparent } = this.state;
+        const { tabs, isTransparent, languages, language, useStandardLanguage } = this.state;
         const { profile } = this.props;
 
         const filteredTabs = tabs.map(({_id, ...rest}) => rest);
+
+        const lang = languages.find(l => l.prefix === language)
         
         this.setState({
             isLoading: true
         })
 
-        await profile.getApp().editTopTabCustomization({ topTabParams: filteredTabs, isTransparent: isTransparent });
+        await profile.getApp().editTopTabCustomization({ topTabParams: filteredTabs, isTransparent: isTransparent, language: lang._id, useStandardLanguage });
 
         await profile.getApp().updateAppInfoAsync();
         await profile.update();
@@ -101,7 +142,7 @@ class Tabs extends Component {
     }
 
     render() {
-        const { isLoading, locked, tabs, isTransparent } = this.state;
+        const { isLoading, locked, tabs, isTransparent, languages, useStandardLanguage } = this.state;
         
         return (
             <Container>
@@ -111,6 +152,22 @@ class Tabs extends Component {
                 lockField={this.lockField} 
                 confirmChanges={this.confirmChanges} 
                 locked={locked}>
+                    <FormLabel component="legend" style={labelStyle}>Language</FormLabel>
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", margin: "5px 0px", marginTop: 20 }}>
+                            <Select
+                            defaultValue="EN"
+                            style={{ minWidth: 130 }}    
+                            placeholder="Language"
+                            onChange={this.onChangeLanguage}
+                            disabled={isLoading || locked}
+                            >
+                                { languages && languages.map(language => (
+                                    <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
+                                ))}
+                            </Select>
+                            <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                        </div>
+                        <br/>
                     <div style={{ margin: "10px 0px" }}>
                         <FormLabel component="legend" style={labelStyle}>{ `Style (${isTransparent ? "Transparent" : "Normal"})` }</FormLabel>
                         <BooleanInput

@@ -9,7 +9,7 @@ import HostingLink from './components/HostingLink';
 import AddOnsContainer from './AddOnPage';
 import CurrenciesContainer from './CurrenciesPage/CurrenciesContainer';
 
-import { Bet, Reward, Settings, Rewards, AddOn, Wallet, CasinoWhite, EsportsWhite, SettingsWhite } from '../../components/Icons';
+import { Bet, Reward, Settings, Rewards, AddOn, Wallet, CasinoWhite, EsportsWhite, SettingsWhite, Chat } from '../../components/Icons';
 
 import styled from 'styled-components';
 import { TabContainer, StyledNavLink, CasinoCard, CasinoContainer, Icon, Link, MobileWrapper } from './styles';
@@ -19,6 +19,7 @@ import CustomizationContainer from './Customization/index.js';
 import GameStorePageContainer from './GameStore/index.js';
 import ThirdPartiesContainer from './ThirdParties/index.js';
 import GamesContainer from './components/GamesContainer';
+import LanguageStorePageContainer from './LanguagesPage/'
 
 const EsportsPage = React.lazy(() => import('./EsportsPage'));
 
@@ -113,6 +114,14 @@ class ApplicationsContainer extends React.Component{
                     
                 ),
                 icon : <Wallet/>
+            },
+            languages: {
+                title : 'Languages ',
+                container : (
+                    <LanguageStorePageContainer />
+                    
+                ),
+                icon : <Chat/>
             }
         }
     }
@@ -146,7 +155,7 @@ class ApplicationsContainer extends React.Component{
 
         switch (true) {
             case permission.super_admin:
-                return [tabs.customization, tabs.thirdParties, tabs.addOns, tabs.currencies];
+                return [tabs.customization, tabs.thirdParties, tabs.addOns, tabs.currencies, tabs.languages];
             
             case permission.customization && permission.financials:
                 return [tabs.customization, tabs.addOns, tabs.currencies];

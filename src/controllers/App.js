@@ -594,7 +594,30 @@ class App{
         }
     }
 
-    editTopBarCustomization = async ({ textColor, backgroundColor, text, isActive }) => {
+    editLanguage = async ({ language_id, logo, isActivated }) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editLanguage({   
+                params: {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    language_id, 
+                    logo, 
+                    isActivated
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    editTopBarCustomization = async ({ textColor, backgroundColor, text, isActive, language, useStandardLanguage }) => {
         try{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editTopBarCustomization({   
@@ -604,7 +627,9 @@ class App{
                     textColor,
                     backgroundColor,
                     text,
-                    isActive
+                    isActive,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -815,7 +840,7 @@ class App{
         }
     }
 
-    editBannersCustomization = async ({ banners, autoDisplay, fullWidth }) => {
+    editBannersCustomization = async ({ banners, autoDisplay, fullWidth, language, useStandardLanguage }) => {
         try{
             let res = await ConnectionSingleton.editBannersCustomization({   
                 params : {
@@ -823,7 +848,9 @@ class App{
                     app : this.getId(),
                     banners,
                     autoDisplay,
-                    fullWidth
+                    fullWidth,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -994,14 +1021,16 @@ class App{
         }
     }
 
-    editFooterCustomization = async ({communityLinks, supportLinks}) => {
+    editFooterCustomization = async ({communityLinks, supportLinks, language, useStandardLanguage }) => {
         try{
             let res = await ConnectionSingleton.editFooterCustomization({   
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId(),
                     communityLinks,
-                    supportLinks
+                    supportLinks,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -1030,14 +1059,16 @@ class App{
         }
     }
 
-    editTopTabCustomization = async ({ topTabParams, isTransparent }) => {
+    editTopTabCustomization = async ({ topTabParams, isTransparent, language, useStandardLanguage }) => {
         try{
             let res = await ConnectionSingleton.editTopTabCustomization({   
                 params : {
                     admin: this.getAdminId(),
                     app: this.getId(),
                     topTabParams,
-                    isTransparent
+                    isTransparent,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -1067,13 +1098,15 @@ class App{
         }
     }
 
-    editSubsectionsCustomization = async ({ subSections }) => {
+    editSubsectionsCustomization = async ({ subSections, language, useStandardLanguage }) => {
         try{
             let res = await ConnectionSingleton.editSubsectionsCustomization({   
                 params : {
                     admin: this.getAdminId(),
                     app: this.getId(),
-                    subSections
+                    subSections,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -1279,6 +1312,14 @@ class App{
     getEcosystemVariables = async () => {
         try{
             return await ConnectionSingleton.getEcosystemVariables();
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getEcosystemLanguages = async () => {
+        try{
+            return await ConnectionSingleton.getEcosystemLanguages();
         }catch(err){
             throw err;
         }
@@ -1501,6 +1542,22 @@ class App{
                     admin : this.getAdminId(),
                     app : this.getId(),
                     game
+                },     
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    addLanguage = async ({ prefix }) => {
+        try{
+            return await ConnectionSingleton.addLanguage({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    prefix
                 },     
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
