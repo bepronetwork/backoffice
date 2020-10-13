@@ -19,7 +19,8 @@ class SubSections extends Component {
             locked: true,
             open: false,
             openNewSubSection: false,
-            editedSubSection: null
+            editedSubSection: null,
+            language: 'EN'
         };
     }
 
@@ -32,12 +33,16 @@ class SubSections extends Component {
     }
 
     projectData = async (props) => {
+        const { language } = this.state;
         const { profile } = props;
 
         const customization = await profile.getApp().getCustomization();
 
         const { subSections } = customization;
-        const { ids } = subSections;
+
+        const sections = subSections.languages.find(l => l.language.prefix === language);
+
+        const { ids } = sections;
 
         this.setState({ subSections: !_.isEmpty(ids) ? ids : [] })
     }

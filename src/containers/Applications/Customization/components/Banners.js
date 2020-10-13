@@ -19,7 +19,8 @@ const defaultState = {
     links: [],
     banners: [],
     locked: true,
-    isLoading: false
+    isLoading: false,
+    language: 'EN'
 }
 
 class Banners extends Component {
@@ -50,8 +51,12 @@ class Banners extends Component {
     }
 
     projectData = async (props) => {
+        const { language } = this.state;
         const { banners } = props.profile.getApp().getCustomization();
-        const { ids, autoDisplay, fullWidth } = banners;
+
+        const banner = banners.languages.find(l => l.language.prefix === language);
+
+        const { ids, autoDisplay, fullWidth } = banner;
 
         this.setState({...this.state, 
             banners : ids,

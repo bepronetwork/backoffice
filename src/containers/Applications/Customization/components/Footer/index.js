@@ -7,7 +7,9 @@ import { Title } from './styles';
 class Footer extends React.Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+            language: 'EN'
+        };
     }
 
     componentDidMount(){
@@ -20,9 +22,13 @@ class Footer extends React.Component {
 
 
     projectData = async (props) => {
-        const { profile } = this.props;
+        const { language } = this.state;
+        const { profile } = props;
         const { footer } = profile.getApp().getCustomization();
-        const { communityLinks, supportLinks } = footer;
+
+        const links = footer.languages.find(l => l.language.prefix === language);
+
+        const { communityLinks, supportLinks } = links;
 
         this.setState({
             supportLinks: supportLinks.map( c => { return { name : c.name, href : c.href, image_url: c.image_url ? c.image_url : "" } } ),

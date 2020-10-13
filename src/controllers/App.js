@@ -594,7 +594,7 @@ class App{
         }
     }
 
-    editTopBarCustomization = async ({ textColor, backgroundColor, text, isActive }) => {
+    editTopBarCustomization = async ({ textColor, backgroundColor, text, isActive, language, useStandardLanguage }) => {
         try{
             /* Cancel Withdraw Response */ 
             let res = await ConnectionSingleton.editTopBarCustomization({   
@@ -604,7 +604,9 @@ class App{
                     textColor,
                     backgroundColor,
                     text,
-                    isActive
+                    isActive,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });

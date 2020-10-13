@@ -22,7 +22,8 @@ class Tabs extends Component {
         super(props);
         this.state = {
             isLoading: false,
-            locked: true
+            locked: true,
+            language: 'EN'
         };
     }
 
@@ -35,12 +36,16 @@ class Tabs extends Component {
     }
 
     projectData = async (props) => {
+        const { language } = this.state;
         const { profile } = props;
 
         const customization = await profile.getApp().getCustomization();
 
         const { topTab } = customization;
-        const { ids, isTransparent } = topTab;
+
+        const tab = topTab.languages.find(l => l.language.prefix === language);
+
+        const { ids, isTransparent } = tab;
 
         this.setState({
             tabs: !_.isEmpty(ids) ? ids : [],
