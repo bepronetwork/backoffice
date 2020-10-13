@@ -840,7 +840,7 @@ class App{
         }
     }
 
-    editBannersCustomization = async ({ banners, autoDisplay, fullWidth }) => {
+    editBannersCustomization = async ({ banners, autoDisplay, fullWidth, language, useStandardLanguage }) => {
         try{
             let res = await ConnectionSingleton.editBannersCustomization({   
                 params : {
@@ -848,7 +848,9 @@ class App{
                     app : this.getId(),
                     banners,
                     autoDisplay,
-                    fullWidth
+                    fullWidth,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -1019,14 +1021,16 @@ class App{
         }
     }
 
-    editFooterCustomization = async ({communityLinks, supportLinks}) => {
+    editFooterCustomization = async ({communityLinks, supportLinks, language, useStandardLanguage }) => {
         try{
             let res = await ConnectionSingleton.editFooterCustomization({   
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId(),
                     communityLinks,
-                    supportLinks
+                    supportLinks,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -1055,14 +1059,16 @@ class App{
         }
     }
 
-    editTopTabCustomization = async ({ topTabParams, isTransparent }) => {
+    editTopTabCustomization = async ({ topTabParams, isTransparent, language, useStandardLanguage }) => {
         try{
             let res = await ConnectionSingleton.editTopTabCustomization({   
                 params : {
                     admin: this.getAdminId(),
                     app: this.getId(),
                     topTabParams,
-                    isTransparent
+                    isTransparent,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
@@ -1092,13 +1098,15 @@ class App{
         }
     }
 
-    editSubsectionsCustomization = async ({ subSections }) => {
+    editSubsectionsCustomization = async ({ subSections, language, useStandardLanguage }) => {
         try{
             let res = await ConnectionSingleton.editSubsectionsCustomization({   
                 params : {
                     admin: this.getAdminId(),
                     app: this.getId(),
-                    subSections
+                    subSections,
+                    language,
+                    useStandardLanguage
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });

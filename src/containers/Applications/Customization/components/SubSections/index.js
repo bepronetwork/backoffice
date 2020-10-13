@@ -6,10 +6,30 @@ import _ from 'lodash';
 import './styles.css';
 import { Container, Header, Content, SubSectionsList, CreateNewSubSection } from './styles';
 
+
+import { Select, Checkbox } from 'antd';
+
 import SubSection from './SubSection';
 import AddSection from './AddSection';
 import EditSubSection from './EditSubSection';
 import { PlusIcon } from 'mdi-react';
+
+import styled from 'styled-components'
+import { FormLabel } from '@material-ui/core';
+
+const { Option } = Select;
+
+const labelStyle = {
+    fontFamily: "Poppins", 
+    fontSize: 16, 
+    color: "#646777",
+    padding: 10
+}
+
+const Text = styled.span`
+    font-family: Poppins;
+    font-size: 13px;
+`;
 
 class SubSections extends Component {
     constructor(props){
@@ -34,32 +54,52 @@ class SubSections extends Component {
 
     projectData = async (props) => {
         const { language } = this.state;
-        const { profile } = props;
+
+        await this.fetchLanguageData(language)
+    }
+    
+    fetchLanguageData = async (language) => {
+        const { profile } = this.props;
 
         const customization = await profile.getApp().getCustomization();
 
         const { subSections } = customization;
 
+        const languages = subSections.languages.map(l => l.language);
         const sections = subSections.languages.find(l => l.language.prefix === language);
 
-        const { ids } = sections;
+        const { ids, useStandardLanguage } = sections;
 
-        this.setState({ subSections: !_.isEmpty(ids) ? ids : [] })
+        this.setState({ 
+            language,
+            languages,
+            useStandardLanguage,
+            subSections: !_.isEmpty(ids) ? ids : [] 
+        })
     }
+
+    getLanguageImage = language => (
+        <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+            <img src={language.logo} alt={language.logo} style={{ height: 20, width: 20, margin: "0px 5px" }}/>
+            <Text>{language.name}</Text>
+        </div>
+    )
 
     setSubSections = ({ newSubSections }) => {
         this.setState({ subSections: newSubSections })
     }
 
     confirmChanges = async () => {
-        const { subSections } = this.state;
+        const { subSections, language, languages, useStandardLanguage } = this.state;
         const { profile } = this.props;
 
         const filteredSubsections = subSections.map(({_id, ...rest}) => rest);
         
         this.setState({ isLoading: true })
 
-        await profile.getApp().editSubsectionsCustomization({ subSections: filteredSubsections });
+        const lang = languages.find(l => l.prefix === language)
+
+        await profile.getApp().editSubsectionsCustomization({ subSections: filteredSubsections, language: lang._id, useStandardLanguage });
 
         await profile.getApp().updateAppInfoAsync();
         await profile.update();
@@ -79,6 +119,14 @@ class SubSections extends Component {
         this.setState({ [type]: value })
     }
 
+    onChangeLanguage = async (value) => {
+        this.setState({
+            language: value ? value : ""
+        })
+
+        await this.fetchLanguageData(value)
+    }
+
     handleOpen = ({ id }) => {
         const { subSections } = this.state;
 
@@ -96,7 +144,7 @@ class SubSections extends Component {
     }
 
     render() {
-        const { isLoading, locked, subSections, editedSubSection, open, openNewSubSection } = this.state;
+        const { isLoading, locked, subSections, editedSubSection, open, openNewSubSection, languages, useStandardLanguage } = this.state;
         
         return (
             <Container>
@@ -106,6 +154,22 @@ class SubSections extends Component {
                 lockField={this.lockField} 
                 confirmChanges={this.confirmChanges} 
                 locked={locked}>
+                    <FormLabel component="legend" style={labelStyle}>Language</FormLabel>
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", margin: "5px 0px", marginTop: 20, padding: "0px 10px" }}>
+                            <Select
+                            defaultValue="EN"
+                            style={{ minWidth: 130 }}    
+                            placeholder="Language"
+                            onChange={this.onChangeLanguage}
+                            disabled={isLoading || locked}
+                            >
+                                { languages && languages.map(language => (
+                                    <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
+                                ))}
+                            </Select>
+                            <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                        </div>
+                        <br/>
                     <Header>
                         <h1>You can create a new subsection or edit existing ones</h1>
                         <br/>

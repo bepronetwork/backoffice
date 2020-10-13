@@ -66,7 +66,12 @@ class AnnouncementTab extends Component {
 
     projectData = async (props) => {
         const { language } = this.state;
-        const { profile } = props;
+        
+        await this.fetchLanguagesData(language);
+    }
+
+    fetchLanguagesData = async (language) => {
+        const { profile } = this.props;
 
         const customization = profile.getApp().getCustomization();
 
@@ -78,6 +83,7 @@ class AnnouncementTab extends Component {
         const { isActive, backgroundColor, textColor, text, useStandardLanguage } = bar;
 
         this.setState({ 
+            language,
             languages: languages,
             useStandardLanguage: useStandardLanguage,
             isActive,
@@ -100,12 +106,12 @@ class AnnouncementTab extends Component {
         })
     }
 
-    onChangeLanguage = (value) => {
+    onChangeLanguage = async (value) => {
         this.setState({
             language: value ? value : ""
         })
 
-        this.projectData(this.props)
+        await this.fetchLanguagesData(value)
     }
 
     onChange = ({ type, value }) => {

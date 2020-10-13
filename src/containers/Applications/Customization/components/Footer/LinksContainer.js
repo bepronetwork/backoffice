@@ -63,20 +63,22 @@ class LinksContainer extends React.Component {
 
     confirmChanges = async () => {
         const { type, links, complement } = this.state;
-        const { profile } = this.props;
+        const { profile, language, languages, useStandardLanguage } = this.props;
 
         const filteredLinks = links.map(({_id, ...rest}) => rest);
+
+        const lang = languages.find(l => l.prefix === language)
         
         this.setState({
             isLoading: true
         })
 
         if (type === 'supportLinks') {
-                await profile.getApp().editFooterCustomization({ supportLinks: filteredLinks, communityLinks: complement });
+                await profile.getApp().editFooterCustomization({ supportLinks: filteredLinks, communityLinks: complement, language: lang._id, useStandardLanguage });
             };
 
         if (type === 'communityLinks') {
-                await profile.getApp().editFooterCustomization({ supportLinks: complement, communityLinks: filteredLinks });
+                await profile.getApp().editFooterCustomization({ supportLinks: complement, communityLinks: filteredLinks, language: lang._id, useStandardLanguage });
             };
 
         await profile.getApp().updateAppInfoAsync();
