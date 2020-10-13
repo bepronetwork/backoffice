@@ -594,6 +594,29 @@ class App{
         }
     }
 
+    editLanguage = async ({ language_id, logo, isActivated }) => {
+        try{
+            /* Cancel Withdraw Response */ 
+            let res = await ConnectionSingleton.editLanguage({   
+                params: {
+                    admin: this.getAdminId(),
+                    app: this.getId(),
+                    language_id, 
+                    logo, 
+                    isActivated
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+
+            /* Update App Info Async */
+            await this.updateAppInfoAsync();
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     editTopBarCustomization = async ({ textColor, backgroundColor, text, isActive, language, useStandardLanguage }) => {
         try{
             /* Cancel Withdraw Response */ 
