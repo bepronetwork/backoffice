@@ -93,11 +93,13 @@ class Footer extends React.Component {
                         placeholder="Language"
                         onChange={this.onChangeLanguage}
                         >
-                            { languages && languages.map(language => (
+                            { languages && languages.filter(language => language.isActivated).map(language => (
                                 <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
                             ))}
                         </Select>
-                        <Checkbox style={{ marginLeft: 10 }} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                        { language !== 'EN' && (
+                            <Checkbox style={{ marginLeft: 10 }} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use the English Language Setup</Checkbox>
+                        )}
                     </div>
                     <br/>
                     

@@ -144,7 +144,7 @@ class SubSections extends Component {
     }
 
     render() {
-        const { isLoading, locked, subSections, editedSubSection, open, openNewSubSection, languages, useStandardLanguage } = this.state;
+        const { isLoading, locked, subSections, editedSubSection, open, openNewSubSection, languages, useStandardLanguage, language } = this.state;
         
         return (
             <Container>
@@ -163,11 +163,13 @@ class SubSections extends Component {
                             onChange={this.onChangeLanguage}
                             disabled={isLoading || locked}
                             >
-                                { languages && languages.map(language => (
+                                { languages && languages.filter(language => language.isActivated).map(language => (
                                     <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
                                 ))}
                             </Select>
-                            <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                            { language !== 'EN' && (
+                                <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use the English Language Setup</Checkbox>
+                            )}
                         </div>
                         <br/>
                     <Header>

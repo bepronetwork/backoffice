@@ -10,6 +10,7 @@ import { TextField } from './styles';
 import styled from 'styled-components'
 
 import { Select, Checkbox } from 'antd';
+import _ from 'lodash'
 
 import './styles.css';
 
@@ -134,7 +135,13 @@ class AnnouncementTab extends Component {
 
         this.setState({ isLoading: true });
 
-        await profile.getApp().editTopBarCustomization({ textColor, backgroundColor, text, isActive, language: lang._id, useStandardLanguage });
+        await profile.getApp().editTopBarCustomization({ 
+            textColor: !_.isEmpty(textColor) ? textColor : "#0000000", 
+            backgroundColor: !_.isEmpty(backgroundColor) ? backgroundColor : "#0000000", 
+            text: text, 
+            isActive: isActive, 
+            language: lang._id, 
+            useStandardLanguage: useStandardLanguage });
 
         this.setState({ isLoading: false, locked: true });
 
@@ -142,7 +149,7 @@ class AnnouncementTab extends Component {
     }
 
     render() {
-        const { isLoading, locked, isActive, textColor, backgroundColor, text, languages, useStandardLanguage } = this.state;
+        const { isLoading, locked, isActive, textColor, backgroundColor, text, languages, useStandardLanguage, language } = this.state;
 
         return (
             <Card>
@@ -165,11 +172,13 @@ class AnnouncementTab extends Component {
                                     onChange={this.onChangeLanguage}
                                     disabled={isLoading || locked}
                                     >
-                                        { languages && languages.map(language => (
+                                        { languages && languages.filter(language => language.isActivated).map(language => (
                                             <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
                                         ))}
                                     </Select>
-                                    <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                                    { language !== 'EN' && (
+                                        <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use the English Language Setup</Checkbox>
+                                    )}
                                 </div>
                                 <br/>
                                 <div style={{ marginBottom: 10 }}>
