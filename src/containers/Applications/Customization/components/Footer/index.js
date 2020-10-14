@@ -93,7 +93,7 @@ class Footer extends React.Component {
                         placeholder="Language"
                         onChange={this.onChangeLanguage}
                         >
-                            { languages && languages.map(language => (
+                            { languages && languages.filter(language => language.isActivated).map(language => (
                                 <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
                             ))}
                         </Select>

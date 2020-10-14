@@ -161,7 +161,7 @@ class Tabs extends Component {
                             onChange={this.onChangeLanguage}
                             disabled={isLoading || locked}
                             >
-                                { languages && languages.map(language => (
+                                { languages && languages.filter(language => language.isActivated).map(language => (
                                     <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
                                 ))}
                             </Select>

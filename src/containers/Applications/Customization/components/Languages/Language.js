@@ -113,6 +113,7 @@ class Language extends React.Component {
             this.setState({ isLoading: true });
 
             await profile.getApp().editLanguage({ logo: logo, isActivated: isActivated, language_id: _id });
+            await profile.getApp().getData();
     
             this.setState({ isLoading: false, locked: true });
         }

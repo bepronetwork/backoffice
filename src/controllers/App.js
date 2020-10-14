@@ -608,9 +608,6 @@ class App{
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
 
-            /* Update App Info Async */
-            await this.updateAppInfoAsync();
-
             return res;
         }catch(err){
             throw err;
