@@ -10,6 +10,7 @@ import { TextField } from './styles';
 import styled from 'styled-components'
 
 import { Select, Checkbox } from 'antd';
+import _ from 'lodash'
 
 import './styles.css';
 
@@ -134,7 +135,13 @@ class AnnouncementTab extends Component {
 
         this.setState({ isLoading: true });
 
-        await profile.getApp().editTopBarCustomization({ textColor, backgroundColor, text, isActive, language: lang._id, useStandardLanguage });
+        await profile.getApp().editTopBarCustomization({ 
+            textColor: !_.isEmpty(textColor) ? textColor : "#0000000", 
+            backgroundColor: !_.isEmpty(backgroundColor) ? backgroundColor : "#0000000", 
+            text: text, 
+            isActive: isActive, 
+            language: lang._id, 
+            useStandardLanguage: useStandardLanguage });
 
         this.setState({ isLoading: false, locked: true });
 
