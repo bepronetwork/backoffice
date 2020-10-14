@@ -113,7 +113,8 @@ class Language extends React.Component {
             this.setState({ isLoading: true });
 
             await profile.getApp().editLanguage({ logo: logo, isActivated: isActivated, language_id: _id });
-            await profile.getApp().getData();
+            await profile.getApp().updateAppInfoAsync();
+            await profile.update();
     
             this.setState({ isLoading: false, locked: true });
         }
@@ -158,7 +159,7 @@ class Language extends React.Component {
                             <BooleanInput
                                 checked={isActivated === true} 
                                 onChange={this.onChange}
-                                disabled={locked}
+                                disabled={locked || prefix === "EN"}
                                 type={'isActivated'}
                                 id={'isActivated'}
                             />

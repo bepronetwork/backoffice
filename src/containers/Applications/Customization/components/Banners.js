@@ -257,7 +257,7 @@ class Banners extends Component {
     handleOnDragStart = (e) => e.preventDefault()
 
     render() {
-        const { isLoading, locked, autoDisplay, banners, fullWidth, languages, useStandardLanguage } = this.state; 
+        const { isLoading, locked, autoDisplay, banners, fullWidth, languages, useStandardLanguage, language } = this.state; 
         const { classes } = this.props;
         
         return (
@@ -286,7 +286,9 @@ class Banners extends Component {
                                             <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
                                         ))}
                                     </Select>
-                                    <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                                    { language !== 'EN' && (
+                                        <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use the English Language Setup</Checkbox>
+                                    )}
                                 </div>
                                 <br/>
                                 <div style={{width : '96%', margin : 'auto'}}>

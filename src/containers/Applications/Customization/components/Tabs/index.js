@@ -142,7 +142,7 @@ class Tabs extends Component {
     }
 
     render() {
-        const { isLoading, locked, tabs, isTransparent, languages, useStandardLanguage } = this.state;
+        const { isLoading, locked, tabs, isTransparent, languages, useStandardLanguage, language } = this.state;
         
         return (
             <Container>
@@ -165,7 +165,9 @@ class Tabs extends Component {
                                     <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
                                 ))}
                             </Select>
-                            <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                            { language !== 'EN' && (
+                                <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use the English Language Setup</Checkbox>
+                            )}
                         </div>
                         <br/>
                     <div style={{ margin: "10px 0px" }}>

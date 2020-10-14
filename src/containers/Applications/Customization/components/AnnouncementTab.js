@@ -142,7 +142,7 @@ class AnnouncementTab extends Component {
     }
 
     render() {
-        const { isLoading, locked, isActive, textColor, backgroundColor, text, languages, useStandardLanguage } = this.state;
+        const { isLoading, locked, isActive, textColor, backgroundColor, text, languages, useStandardLanguage, language } = this.state;
 
         return (
             <Card>
@@ -169,7 +169,9 @@ class AnnouncementTab extends Component {
                                             <Option key={language.prefix}>{this.getLanguageImage(language)}</Option>
                                         ))}
                                     </Select>
-                                    <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use default language</Checkbox>
+                                    { language !== 'EN' && (
+                                        <Checkbox style={{ marginLeft: 10 }} disabled={isLoading || locked} checked={useStandardLanguage} onChange={() => this.setState({ useStandardLanguage: !useStandardLanguage})}>Use the English Language Setup</Checkbox>
+                                    )}
                                 </div>
                                 <br/>
                                 <div style={{ marginBottom: 10 }}>
