@@ -53,6 +53,7 @@ class Banners extends Component {
     }
 
     componentWillReceiveProps(props){
+        this.projectData(props);
     }
 
     onAddedFile = async (files) => {
