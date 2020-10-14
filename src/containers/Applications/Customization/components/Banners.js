@@ -295,7 +295,7 @@ class Banners extends Component {
                                     <div style={{ marginTop: 10 }}>
                                         <FormLabel component="legend">Show full width banner</FormLabel>
                                         <BooleanInput
-                                            checked={fullWidth} 
+                                            checked={fullWidth === true} 
                                             onChange={this.onChangeFullwidth}
                                             disabled={locked}
                                             type={'isFullWidth'}
