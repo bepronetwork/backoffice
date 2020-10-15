@@ -9,6 +9,7 @@ import SubSections from './SubSections';
 import Skins from './Skins'
 import Icons from '../components/Icons'
 import Social from '../components/Social'
+import Languages from '../components/Languages'
 
 export { 
     Banners,
@@ -21,5 +22,6 @@ export {
     SubSections,
     Skins,
     Icons,
-    Social
+    Social,
+    Languages
 }
