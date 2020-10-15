@@ -10,9 +10,10 @@ import EnhancedTable from './components/EnhancedTable';
 import TransactionsOpen from './components/TransactionsOpen';
 import TransactionsProfile from './components/TransactionsProfile';
 
-import DepositsTable from './components/deposit/DepositsTable'
+import DepositsTable from './components/DepositsTable'
 
 import HorizontalTabs from '../HorizontalTabs'
+import WithdrawalsTable from './components/WithdrawalsTable';
 
 
 class TransactionsContainer extends React.Component{
@@ -94,22 +95,11 @@ class TransactionsContainer extends React.Component{
                             tabs={[
                                 {
                                     label : 'Deposits',
-                                    tab : <DepositsTable
-                                    disabled={false}
-                                    confirmDeposit={this.confirmDeposit} 
-                                    currencies={currencies} data={deposits}
-                                    />
+                                    tab : <DepositsTable/>
                                 },
                                 {
                                     label : 'Withdrawals',
-                                    tab : <EnhancedTable
-                                    allowWithdraw={this.allowWithdraw}
-                                    cancelWithdraw={this.cancelWithdraw}
-                                    data={{
-                                        withdraws : this.props.profile.getApp().getSummaryData('withdraws'),
-                                        wallet : this.props.profile.getApp().getSummaryData('wallet')
-                                    }}
-                                />
+                                    tab : <WithdrawalsTable/>
                                 } 
                             ]}
                         />

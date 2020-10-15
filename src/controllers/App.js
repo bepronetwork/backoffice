@@ -41,7 +41,7 @@ class App{
                 }),
                 this.getGamesAsync({ currency: currency._id }),
                 this.getUsersAsync({size: 100, offset: 0 }),
-                !_.isEmpty(currency) ? this.getWithdrawsAsync({ size: 1000, currency: currency._id }) : []
+                this.getWithdrawsAsync({ size: 100, offset: 0 })
             ]);
 
             let serverApiInfo = {   
@@ -402,6 +402,24 @@ class App{
 
     getDeposits = ({currency}) => this.params.deposits.filter( d => new String(d.currency).toString() == new String(currency._id).toString()) || [];
 
+    getUsersDeposits = async ({ size, offset }) => {
+        try{
+            let res = await ConnectionSingleton.getDeposits({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    size,
+                    offset
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+    
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     getDexDepositsAsync = async (address) => {
         let depositsApp = this.params.deposits || [];
         let allTxsDeposits = await this.getUnconfirmedBlockchainDeposits(address);
@@ -507,7 +525,7 @@ class App{
         }
     }
 
-    getWithdrawsAsync = async ({size=1000, offset=0}) => {
+    getWithdrawsAsync = async ({ size, offset }) => {
         try{
             this.data.summary.withdraws = (await ConnectionSingleton.getWithdraws({
                 params : {
