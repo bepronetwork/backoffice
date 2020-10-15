@@ -99,7 +99,8 @@ class DepositsTable extends React.Component {
 
     getConfirmedStatus = ({ value }) => (
         <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
-            <Text style={{ color: value ? '#63c965' : '#e6536e' }}>{value ? "Confirmed" : "Pending"}</Text> 
+            {/* <Text style={{ color: value ? '#63c965' : '#e6536e' }}>{value ? "Confirmed" : "Pending"}</Text>  */}
+            <Text style={{ color: '#63c965' }}>{"Succeded"}</Text> 
         </div>
     )
 
@@ -236,7 +237,7 @@ class DepositsTable extends React.Component {
         let jsonData = [];
     
         if (!_.isEmpty(data)) {
-            csvData = data.map(row => ({...row, currency: row.currency.name, confirmed: row.confirmed ? "Yes" : "No", createdAt: moment(row.timestamp).format("lll")}));
+            csvData = data.map(row => ({...row, currency: row.currency.name, confirmed: "Succeded", createdAt: moment(row.timestamp).format("lll")}));
     
             jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'confirmed', 'amount', 'bonusAmount', 'transactionHash', 'createdAt']));
         }
