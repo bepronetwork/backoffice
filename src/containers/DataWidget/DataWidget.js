@@ -47,7 +47,7 @@ class DataWidget extends React.Component{
         return (
             hasData ? 
                 this.props.children
-            : null
+            : this.props.children
         )
     }
 

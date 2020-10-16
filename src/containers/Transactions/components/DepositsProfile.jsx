@@ -1,12 +1,10 @@
 /* eslint-disable react/no-array-index-key */
+import Skeleton from '@material-ui/lab/Skeleton';
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col } from 'reactstrap';
-import { BarChart, Bar, Cell, ResponsiveContainer } from 'recharts';
-import TrendingUpIcon from 'mdi-react/TrendingUpIcon';
 import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
-import Numbers from '../../../services/numbers';
 
-class UsersProfile extends PureComponent {
+class DepositsProfile extends PureComponent {
  
     constructor() {
         super();
@@ -22,19 +20,22 @@ class UsersProfile extends PureComponent {
     };
 
     render() {
-        let withdraws = this.props.data.data;
+        let deposits = this.props.data;
+        const { loading } = this.props;
 
         return (
             <Col md={12} xl={12} lg={12} xs={12}>
                 <Card>
                     <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    {loading ? (
+                        <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/> ) : (
                         <div className="dashboard__visitors-chart">
                             <p className="dashboard__visitors-chart-number-second" style={
                                 {color : '#646777'}
-                            }><AnimationNumber decimals={0} number={withdraws.length}/></p>
-                        </div>
+                            }><AnimationNumber decimals={0} number={deposits.length}/></p>
+                        </div>)}
                         <div className="dashboard__visitors-chart">
-                            <p className="dashboard__visitors-chart-title"> Total Withdraws <span> All </span></p>
+                            <p className="dashboard__visitors-chart-title"> Total Deposits <span> All </span></p>
                         </div>
                     </CardBody>
                 </Card>
@@ -43,4 +44,4 @@ class UsersProfile extends PureComponent {
     }
 }
 
-export default UsersProfile;
+export default DepositsProfile;

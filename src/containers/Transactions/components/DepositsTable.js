@@ -45,12 +45,14 @@ class DepositsTable extends React.Component {
     }
 
     projectData = async (props) => {
-        const { profile } = props;
+        const { profile, setLoading, setDeposits } = props;
         const { App } = profile;
 
         this.setState({
             isLoading: true
         })
+
+        setLoading(true)
 
         const userDeposits = await App.getUsersDeposits({ size: 100, offset: 0 });
 
@@ -63,6 +65,9 @@ class DepositsTable extends React.Component {
             currencies: currencies,
             isLoading: false
         })
+
+        setLoading(false)
+        setDeposits(deposits)
     }
 
     prepareTableData = (deposits, currencies) => {
@@ -135,13 +140,15 @@ class DepositsTable extends React.Component {
     }
 
     fetchMoreData = async (dataSize) => {
-        const { profile } = this.props;
+        const { profile, setLoading, setDeposits } = this.props;
         const { App } = profile;
         const { data } = this.state;
 
         this.setState({
             isLoading: true
         })
+
+        setLoading(true)
 
         const response = await App.getUsersDeposits({ size: 100, offset: dataSize });
 
@@ -152,6 +159,9 @@ class DepositsTable extends React.Component {
             data: _.isEmpty(deposits) ? data : _.concat(data, this.prepareTableData(deposits, currencies)),
             isLoading: false
         })
+
+        setLoading(false)
+        setDeposits(deposits)
     }
 
     getColumnSearchProps = dataIndex => ({

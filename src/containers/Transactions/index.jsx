@@ -6,20 +6,45 @@ import { translate } from 'react-i18next';
 import { connect } from "react-redux";
 import { CardBody, Col, Container, Row } from 'reactstrap';
 import DataWidget from '../DataWidget/DataWidget';
-import EnhancedTable from './components/EnhancedTable';
-import TransactionsOpen from './components/TransactionsOpen';
-import TransactionsProfile from './components/TransactionsProfile';
+import WithdrawalsOpen from './components/WithdrawalsOpen';
+import WithdrawalsProfile from './components/WithdrawalsProfile';
+import DepositsProfile from './components/DepositsProfile';
 
 import DepositsTable from './components/DepositsTable'
 
 import HorizontalTabs from '../HorizontalTabs'
 import WithdrawalsTable from './components/WithdrawalsTable';
 
+import _ from 'lodash';
 
 class TransactionsContainer extends React.Component{
 
     constructor(props){
         super(props)
+        this.state = {
+            withdrawals: [],
+            deposits: [],
+            loadingWithdrawals: false,
+            loadingDeposits: false
+        }
+    }
+
+    setWithdrawals = (newWithdrawals) => {
+        const { withdrawals } = this.state;
+        this.setState({ withdrawals: _.concat(withdrawals, newWithdrawals) })
+    }
+
+    setDeposits = (newDeposits) => {
+        const { deposits } = this.state;
+        this.setState({ deposits: _.concat(deposits, newDeposits) })
+    }
+    
+    setLoadingWithdrawals = (value) => {
+        this.setState({ loadingWithdrawals: value })
+    }
+
+    setLoadingDeposits = (value) => {
+        this.setState({ loadingDeposits: value })
     }
 
     allowWithdraw = async (withdraw) => {
@@ -59,11 +84,7 @@ class TransactionsContainer extends React.Component{
       }
 
     render = () => {
-        const { profile } = this.props;
-        const app = profile.getApp();
-
-        const deposits = app.params.deposits;
-        const currencies = app.params.currencies;
+        const { withdrawals, deposits, loadingDeposits, loadingWithdrawals } = this.state;
 
         return (
             <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
@@ -71,12 +92,17 @@ class TransactionsContainer extends React.Component{
                 <Row>
                     <Col lg={3}>
                         <DataWidget>
-                            <TransactionsProfile data={this.props.profile.getApp().getSummaryData('withdraws')}/>
+                            <DepositsProfile data={deposits} loading={loadingDeposits}/>
                         </DataWidget>
                     </Col>
                     <Col lg={3}>
                         <DataWidget>
-                            <TransactionsOpen data={this.props.profile.getApp().getSummaryData('withdraws')}/>
+                            <WithdrawalsProfile data={withdrawals} loading={loadingWithdrawals}/>
+                        </DataWidget>
+                    </Col>
+                    <Col lg={3}>
+                        <DataWidget>
+                            <WithdrawalsOpen data={withdrawals} loading={loadingWithdrawals}/>
                         </DataWidget>
                     </Col>
                    {/* <Col lg={6}>         
@@ -95,11 +121,11 @@ class TransactionsContainer extends React.Component{
                             tabs={[
                                 {
                                     label : 'Deposits',
-                                    tab : <DepositsTable/>
+                                    tab : <DepositsTable setDeposits={this.setDeposits} setLoading={this.setLoadingDeposits}/>
                                 },
                                 {
                                     label : 'Withdrawals',
-                                    tab : <WithdrawalsTable/>
+                                    tab : <WithdrawalsTable setWithdrawals={this.setWithdrawals} setLoading={this.setLoadingWithdrawals}/>
                                 } 
                             ]}
                         />

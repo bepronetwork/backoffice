@@ -14,6 +14,7 @@ import { export2JSON } from '../../../utils/export2JSON';
 import { AddressConcat } from '../../../lib/string';
 
 import Highlighter from 'react-highlight-words';
+import { TrainRounded } from '@material-ui/icons';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -45,12 +46,14 @@ class WithdrawalsTable extends React.Component {
     }
 
     projectData = async (props) => {
-        const { profile } = props;
+        const { profile, setWithdrawals, setLoading } = props;
         const { App } = profile;
 
         this.setState({
             isLoading: true
         })
+
+        setLoading(true)
 
         const usersWithdrawals = await App.getWithdrawsAsync({ size: 100, offset: 0 });
 
@@ -63,6 +66,9 @@ class WithdrawalsTable extends React.Component {
             currencies: currencies,
             isLoading: false
         })
+
+        setLoading(false)
+        setWithdrawals(withdrawals)
     }
 
     prepareTableData = (withdrawals, currencies) => {
@@ -131,13 +137,15 @@ class WithdrawalsTable extends React.Component {
     }
 
     fetchMoreData = async (dataSize) => {
-        const { profile } = this.props;
+        const { profile, setWithdrawals, setLoading } = this.props;
         const { App } = profile;
         const { data } = this.state;
 
         this.setState({
             isLoading: true
         })
+
+        setLoading(true)
 
         const response = await App.getWithdrawsAsync({ size: 100, offset: dataSize });
 
@@ -148,6 +156,9 @@ class WithdrawalsTable extends React.Component {
             data: _.isEmpty(withdrawals) ? data : _.concat(data, this.prepareTableData(withdrawals, currencies)),
             isLoading: false
         })
+
+        setLoading(false)
+        setWithdrawals(withdrawals)
     }
 
     getColumnSearchProps = dataIndex => ({

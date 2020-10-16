@@ -1,11 +1,10 @@
 /* eslint-disable react/no-array-index-key */
+import Skeleton from '@material-ui/lab/Skeleton';
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
-import AnimationNumber from '../../UI/Typography/components/AnimationNumber';
-import Numbers from '../../../services/numbers';
-const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
+import AnimationNumber from '../../UI/Typography/components/AnimationNumber'
 
-class TransactionsOpen extends PureComponent {
+class WithdrawalsOpen extends PureComponent {
  
     constructor(props) {
         super(props);
@@ -25,7 +24,8 @@ class TransactionsOpen extends PureComponent {
     }
 
     render() {        
-        let withdraws = this.props.data.data;
+        let withdraws = this.props.data;
+        const { loading } = this.props;
 
         let openWithdraws = withdraws.reduce( (acc, w) => {
             if(w.status == 'Queue'){
@@ -42,11 +42,13 @@ class TransactionsOpen extends PureComponent {
                     <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
                         <Row>
                             <Col md={4}>
+                            {   loading ? (
+                                <Skeleton variant="rect" height={29} style={{ marginTop: 10, marginBottom: 10 }}/> ) : (
                                 <div className="dashboard__visitors-chart">
                                     <p className="dashboard__visitors-chart-number-second" style={
                                         {color : openWithdraws >= 0 ? '#76d076' : '#646777'}
                                     }><AnimationNumber decimals={0} number={openWithdraws}/></p>
-                                </div>
+                                </div>)}
                               
                             </Col>                         
                         </Row>
@@ -61,4 +63,4 @@ class TransactionsOpen extends PureComponent {
     }
 }
 
-export default TransactionsOpen;
+export default WithdrawalsOpen;
