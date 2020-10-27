@@ -44,7 +44,7 @@ const fromDatabasetoTable = (data, otherInfo, currency) => {
             _id :  key._id,
             full_info : {...d, ...key}, 
 			username : key.username,
-			wallet: wallet.playBalance ? parseFloat(wallet.playBalance) : 0,
+			wallet: wallet && wallet.playBalance ? parseFloat(wallet.playBalance) : 0,
 			bets: parseFloat(key.bets.length),
             email: key.email,
             turnoverAmount: d ? parseFloat(d.betAmount) : 0,
