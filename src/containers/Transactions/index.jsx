@@ -99,7 +99,7 @@ class TransactionsContainer extends React.Component{
                                 },
                                 {
                                     label : 'Withdrawals',
-                                    tab : <WithdrawalsTable/>
+                                    tab : <WithdrawalsTable cancelWithdraw={this.cancelWithdraw} allowWithdraw={this.allowWithdraw}/>
                                 } 
                             ]}
                         />
