@@ -65,8 +65,8 @@ class WithdrawalsTable extends React.Component {
         const { currencies } = App.params;
 
         this.setState({
-            data: _.isEmpty(withdrawals) ? [] : this.prepareTableData(withdrawals, currencies),
-            columns: this.prepareTableColumns(withdrawals),
+            data: _.isEmpty(withdrawals) ? [] : this.prepareTableData(_.orderBy(withdrawals, 'creation_timestamp', ['desc']), currencies),
+            columns: this.prepareTableColumns(_.orderBy(withdrawals, 'creation_timestamp', ['desc'])),
             currencies: currencies,
             isLoading: false
         })
@@ -208,7 +208,7 @@ class WithdrawalsTable extends React.Component {
 
         const dataSize = _.size(currentDataSource);
 
-        if (parseInt(dataSize / pageSize) === current) {
+        if (Math.ceil(dataSize / pageSize) === current) {
             await this.fetchMoreData(dataSize);
         }
     }
@@ -228,12 +228,12 @@ class WithdrawalsTable extends React.Component {
         const { currencies } = App.params;
 
         this.setState({
-            data: _.isEmpty(withdrawals) ? data : _.concat(data, this.prepareTableData(withdrawals, currencies)),
+            data: _.isEmpty(withdrawals) ? data : _.orderBy(_.concat(data, this.prepareTableData(withdrawals, currencies)), 'timestamp', ['desc']),
             isLoading: false
         })
     }
 
-    getColumnSearchProps = dataIndex => ({
+    getColumnSearchProps = dataIndex => ({ 
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
             <Input
