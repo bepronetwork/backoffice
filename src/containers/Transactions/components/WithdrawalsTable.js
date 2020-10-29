@@ -192,9 +192,9 @@ class WithdrawalsTable extends React.Component {
             { title: 'Id', dataIndex: '_id', key: '_id', render: _id => <Text>{_id}</Text>, ...this.getColumnSearchProps('_id') },
             { title: 'User', dataIndex: 'user', key: 'user', render: user => <Text>{user}</Text>, ...this.getColumnSearchProps('user') },
             { title: 'Transaction Hash', dataIndex: 'transactionHash', key: 'transactionHash', render: (transactionHash, link_url) => transactionHash ? <a href={link_url.link_url} target="_blank" rel="noopener noreferrer"><Text>{AddressConcat(transactionHash)}</Text></a> : <Text>N/A</Text>},
-            { title: 'Amount', dataIndex: 'amount', key: 'amount', render: (amount, currency) => this.getFormatedAmount({ value: amount, currency: currency, colorized: false }) },
-            { title: 'Created At', dataIndex: 'timestamp', key: 'timestamp', render: timestamp => <Text>{ moment(timestamp).format("lll") }</Text> },
-            { title: 'Status', dataIndex: 'status', key: 'status', render: (_id, status) => this.getConfirmedStatus({ _id: _id, status: status }) }
+            { title: 'Amount', dataIndex: 'amount', key: 'amount', render: (amount, currency) => this.getFormatedAmount({ value: amount, currency: currency, colorized: false }), sorter: (a, b) => a.amount - b.amount },
+            { title: 'Created At', dataIndex: 'timestamp', key: 'timestamp', render: timestamp => <Text>{ moment(timestamp).format("lll") }</Text>, sorter: (a, b) => moment(a.timestamp) - moment(b.timestamp) },
+            { title: 'Status', dataIndex: 'status', key: 'status', render: (_id, status) => this.getConfirmedStatus({ _id: _id, status: status }), sorter: (a, b) => a.status.length - b.status.length }
         ]
     }
 

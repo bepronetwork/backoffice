@@ -111,10 +111,10 @@ class DepositsTable extends React.Component {
             { title: 'Id', dataIndex: '_id', key: '_id', render: _id => <Text>{_id}</Text>, ...this.getColumnSearchProps('_id') },
             { title: 'User', dataIndex: 'user', key: 'user', render: user => <Text>{user}</Text>, ...this.getColumnSearchProps('user') },
             { title: 'Transaction Hash', dataIndex: 'transactionHash', key: 'transactionHash', render: (transactionHash, link_url) => <a href={link_url.link_url} target="_blank" rel="noopener noreferrer"><Text>{AddressConcat(transactionHash)}</Text></a> },
-            { title: 'Status', dataIndex: 'confirmed', key: 'confirmed', render: confirmed => this.getConfirmedStatus({ value: confirmed }) },
-            { title: 'Amount', dataIndex: 'amount', key: 'amount', render: (amount, currency) => this.getFormatedAmount({ value: amount, currency: currency, colorized: false }) },
-            { title: 'Bonus', dataIndex: 'bonusAmount', key: 'bonusAmount', render: (bonusAmount, currency) => this.getFormatedAmount({ value: bonusAmount, currency: currency, colorized: false }) },
-            { title: 'Created At', dataIndex: 'timestamp', key: 'timestamp', render: timestamp => <Text>{ moment(timestamp).format("lll") }</Text> }
+            { title: 'Status', dataIndex: 'confirmed', key: 'confirmed', render: confirmed => this.getConfirmedStatus({ value: confirmed }), sorter: (a, b) => a.confirmed - b.confirmed },
+            { title: 'Amount', dataIndex: 'amount', key: 'amount', render: (amount, currency) => this.getFormatedAmount({ value: amount, currency: currency, colorized: false }), sorter: (a, b) => a.amount - b.amount },
+            { title: 'Bonus', dataIndex: 'bonusAmount', key: 'bonusAmount', render: (bonusAmount, currency) => this.getFormatedAmount({ value: bonusAmount, currency: currency, colorized: false }), sorter: (a, b) => a.bonusAmount - b.bonusAmount },
+            { title: 'Created At', dataIndex: 'timestamp', key: 'timestamp', render: timestamp => <Text>{ moment(timestamp).format("lll") }</Text>, sorter: (a, b) => moment(a.timestamp) - moment(b.timestamp) }
         ]
     }
 
