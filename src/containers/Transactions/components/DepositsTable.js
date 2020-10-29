@@ -58,8 +58,8 @@ class DepositsTable extends React.Component {
         const { currencies } = App.params;
 
         this.setState({
-            data: _.isEmpty(deposits) ? [] : this.prepareTableData(deposits, currencies),
-            columns: this.prepareTableColumns(deposits),
+            data: _.isEmpty(deposits) ? [] : this.prepareTableData(_.orderBy(deposits, 'timestamp', ['desc']), currencies),
+            columns: this.prepareTableColumns(_.orderBy(deposits, 'timestamp', ['desc'])),
             currencies: currencies,
             isLoading: false
         })
@@ -128,7 +128,7 @@ class DepositsTable extends React.Component {
 
         const dataSize = _.size(currentDataSource);
 
-        if (parseInt(dataSize / pageSize) === current) {
+        if (Math.ceil(dataSize / pageSize) === current) {
             await this.fetchMoreData(dataSize);
         }
     }
@@ -148,7 +148,7 @@ class DepositsTable extends React.Component {
         const { currencies } = App.params;
 
         this.setState({
-            data: _.isEmpty(deposits) ? data : _.concat(data, this.prepareTableData(deposits, currencies)),
+            data: _.isEmpty(deposits) ? data : _.orderBy(_.concat(data, this.prepareTableData(deposits, currencies)), 'timestamp', ['desc']),
             isLoading: false
         })
     }
