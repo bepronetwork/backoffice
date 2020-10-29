@@ -193,7 +193,7 @@ class WithdrawalsTable extends React.Component {
             { title: 'User', dataIndex: 'user', key: 'user', render: user => <Text>{user}</Text>, ...this.getColumnSearchProps('user') },
             { title: 'Transaction Hash', dataIndex: 'transactionHash', key: 'transactionHash', render: (transactionHash, link_url) => transactionHash ? <a href={link_url.link_url} target="_blank" rel="noopener noreferrer"><Text>{AddressConcat(transactionHash)}</Text></a> : <Text>N/A</Text>},
             { title: 'Amount', dataIndex: 'amount', key: 'amount', render: (amount, currency) => this.getFormatedAmount({ value: amount, currency: currency, colorized: false }) },
-            { title: 'Created At', dataIndex: 'creation_timestamp', key: 'creation_timestamp', render: creation_timestamp => <Text>{ moment(creation_timestamp).format("lll") }</Text> },
+            { title: 'Created At', dataIndex: 'timestamp', key: 'timestamp', render: timestamp => <Text>{ moment(timestamp).format("lll") }</Text> },
             { title: 'Status', dataIndex: 'status', key: 'status', render: (_id, status) => this.getConfirmedStatus({ _id: _id, status: status }) }
         ]
     }
@@ -315,7 +315,7 @@ class WithdrawalsTable extends React.Component {
         let jsonData = [];
     
         if (!_.isEmpty(data)) {
-            csvData = data.map(row => ({...row, currency: row.currency.name, transactionHash: row.transactionHash ? row.transactionHash : "N/A", createdAt: moment(row.creation_timestamp).format("lll")}));
+            csvData = data.map(row => ({...row, currency: row.currency.name, transactionHash: row.transactionHash ? row.transactionHash : "N/A", createdAt: moment(row.timestamp).format("lll")}));
     
             jsonData = csvData.map(row => _.pick(row, ['_id', 'user', 'currency', 'confirmed', 'amount', 'bonusAmount', 'transactionHash', 'createdAt']));
         }
