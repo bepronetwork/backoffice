@@ -99,7 +99,8 @@ class DepositsTable extends React.Component {
 
     getConfirmedStatus = ({ value }) => (
         <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
-            <Text style={{ color: value ? '#63c965' : '#e6536e' }}>{value ? "Confirmed" : "Pending"}</Text> 
+            {/* <Text style={{ color: value ? '#63c965' : '#e6536e' }}>{value ? "Confirmed" : "Pending"}</Text>  */}
+            <Text style={{ color: '#63c965' }}>{"Success"}</Text> 
         </div>
     )
 
