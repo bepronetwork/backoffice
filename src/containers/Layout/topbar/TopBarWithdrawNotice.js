@@ -29,7 +29,7 @@ class TopbarWithdrawNotice extends Component {
         const user = !_.isEmpty(props.profile) ? props.profile : null;
 
         if(user && user !== null) {
-            const withdrawsInQueue = withdrawals ? withdrawals.filter( w => w.status === 'Processed') : [];
+            const withdrawsInQueue = withdrawals ? withdrawals.filter( w => w.status === 'Queue') : [];
 
             this.setState({ openWithdraws:  withdrawsInQueue.length });
         }
