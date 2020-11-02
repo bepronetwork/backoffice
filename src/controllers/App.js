@@ -4,7 +4,7 @@ import Numbers from "../services/numbers";
 import { getNonce } from "../lib/number";
 import { getPastTransactions, getTransactionDataERC20 } from "../lib/etherscan";
 import { setCurrencyView } from "../redux/actions/currencyReducer";
-import { setGamesData, setUsersData, setBetsData, setRevenueData, setWalletData } from "../redux/actions/summaryActions";
+import { setGamesData, setUsersData, setBetsData, setRevenueData, setWalletData, setWithdrawalsData } from "../redux/actions/summaryActions";
 import { getAuthFromCookies } from "./services/services";
 import _, { identity } from 'lodash';
 import { getVideoGamesAll, getAllVideogames, getMatchesAll, getSeriesMatches, getSpecificMatch, setBookedMatch, removeBookedMatch, getTeamStats, getPlayerStats, getBookedMatches, getBookedSeriesMatches } from "../esports/services";
@@ -527,7 +527,7 @@ class App{
 
     getWithdrawsAsync = async ({ size, offset }) => {
         try{
-            this.data.summary.withdraws = (await ConnectionSingleton.getWithdraws({
+            const data = (await ConnectionSingleton.getWithdraws({
                 params : {
                     size,
                     offset,
@@ -536,7 +536,8 @@ class App{
                 },
                 headers : authHeaders(this.getBearerToken(), this.getAdminId()),
             })).data.message;
-            return this.data.summary.withdraws;
+            data ? store.dispatch(setWithdrawalsData(data)) : store.dispatch(setWithdrawalsData([]))
+            return data;
         }catch(err){
             throw err;   
         }
