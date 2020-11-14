@@ -23,11 +23,13 @@ class TopbarWithdrawNotice extends Component {
     }
     
     projectData = async (props) => {
+        const { summary } = props;
+        const { withdrawals } = summary;
+
         const user = !_.isEmpty(props.profile) ? props.profile : null;
 
         if(user && user !== null) {
-            const withdraws = user.getApp().getSummaryData('withdraws').data;
-            const withdrawsInQueue = withdraws ? withdraws.filter( w => w.status === 'Queue') : [];
+            const withdrawsInQueue = withdrawals ? withdrawals.filter( w => w.status === 'Queue') : [];
 
             this.setState({ openWithdraws:  withdrawsInQueue.length });
         }
@@ -52,7 +54,8 @@ class TopbarWithdrawNotice extends Component {
 
 function mapStateToProps(state){
     return {
-        profile: state.profile
+        profile: state.profile,
+        summary: state.summary
     };
 }
 

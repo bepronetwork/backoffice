@@ -66,17 +66,22 @@ class EsportsPage extends React.Component {
         const { connection } = this.context;
 
         if (connection) {
-            connection.on("matchUpdate", _.debounce(this.updateMatch, 10000));
+            connection.on("matchUpdate", _.debounce(this.updateMatch, 1000));
         }
     }
 
     updateMatch = async (data) => {
-        const { App } = this.props.profile;
-        
-        const matchUpdated = await App.getSpecificMatch({ match_id: data.message });
+        const { profile, matches } = this.props;
+        const { App } = profile;
 
-        if (matchUpdated.data.message) {
-            store.dispatch(updateMatchData(matchUpdated.data.message));
+        const matchesIds = matches ? matches.map(match => match.id) : [];
+
+        if (matchesIds.includes(data.message)) {
+            const matchUpdated = await App.getSpecificMatch({ match_id: data.message });
+
+            if (matchUpdated.data.message) {
+                store.dispatch(updateMatchData(matchUpdated.data.message));
+            }
         }
     }
 
@@ -483,7 +488,8 @@ function mapStateToProps(state){
     return {
         profile: state.profile,
         videogames: state.videogames,
-        series: state.series
+        series: state.series,
+        matches: state.matches
     };
 }
 

@@ -16,6 +16,8 @@ import MarketsPage from '../MarketsPage';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 import { Tabs } from 'antd';
+
+import socketConnection from '../../../../../esports/WebSocket'
 const { TabPane } = Tabs;
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
@@ -27,6 +29,8 @@ const results = Object.freeze({
 })
 
 class MatchPage extends React.Component {
+    static contextType = socketConnection;
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -36,11 +40,33 @@ class MatchPage extends React.Component {
       }
 
     componentDidMount(){
+        this.createSocketConnection(this.props);
         this.projectData(this.props);
     }
 
     componentWillReceiveProps(props){
        this.projectData(props);
+    }
+
+    createSocketConnection = () => {
+        const { connection } = this.context;
+
+        if (connection) {
+            connection.on("matchUpdate", _.debounce(this.updateMatch, 1000));
+        }
+    }
+
+    updateMatch = async (data) => {
+        const { profile, matchId } = this.props;
+        const { App } = profile;
+
+        if (matchId === data.message) {
+            const matchUpdated = await App.getSpecificMatch({ match_id: data.message });
+
+            if (!_.isEmpty(matchUpdated.data.message)) {
+                this.setState({ match: matchUpdated.data.message });
+            }
+        }
     }
 
     projectData = async (props) => {
