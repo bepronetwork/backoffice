@@ -12,6 +12,7 @@ const defaultState = {
     _id: '',
     clientId: '',
     flowId: '',
+    client_secret: '',
     integration_type: 'kyc',
     locked: true
 }
@@ -52,13 +53,14 @@ class KYC extends Component {
 
         const kyc = App.params.integrations.kyc;
 
-        const { _id, isActive, clientId, flowId } = kyc;
+        const { _id, isActive, clientId, flowId, client_secret } = kyc;
         
         this.setState({
             _id: _id,
             isActive: isActive,
             clientId: clientId,
-            flowId: flowId
+            flowId: flowId,
+            client_secret: client_secret ? client_secret : ""
         })
     }
     
@@ -82,9 +84,13 @@ class KYC extends Component {
         this.setState({ flowId: value })
     }
 
+    handleChangeClientSecret = value => {
+        this.setState({ client_secret: value })
+    }
+
     confirmChanges = async () => {
         const { profile } = this.props;
-        const { _id, isActive, clientId, flowId } = this.state;
+        const { _id, isActive, clientId, flowId, client_secret } = this.state;
 
         this.setState({ isLoading: true});
         
@@ -92,7 +98,8 @@ class KYC extends Component {
             kyc_id: _id,
             isActive: isActive,
             clientId: clientId ? clientId : "",
-            flowId: flowId ? flowId : ""
+            flowId: flowId ? flowId : "",
+            client_secret: client_secret ? client_secret : ""
         });
 
         this.setState({ isLoading: false, locked: true})
@@ -102,7 +109,7 @@ class KYC extends Component {
 
 
     render() {
-        const { isLoading, locked, isActive, clientId, flowId } = this.state; 
+        const { isLoading, locked, isActive, clientId, flowId, client_secret } = this.state; 
 
         return (
             <Card>
@@ -139,6 +146,9 @@ class KYC extends Component {
 
                         <p>Flow ID</p>
                         <InputField disabled={locked || isLoading} value={flowId} onChange={(e) => this.handleChangeFlowID(e.target.value)}/>
+
+                        <p>Client Secret</p>
+                        <InputField disabled={locked || isLoading} value={client_secret} onChange={(e) => this.handleChangeClientSecret(e.target.value)}/>
                     </Actions>
                 </EditLock>
                 </CardBody>
