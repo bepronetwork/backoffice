@@ -68,13 +68,13 @@ class DepositBonus extends PureComponent {
 
         this.setState({
             currency: data._id,
-            isDepositBonus: depositBonus.isDepositBonus,
+            isDepositBonus: depositBonus.isDepositBonus.find(deposit => deposit.currency === data._id).value,
             maxDeposit: depositBonus.max_deposit.find(deposit => deposit.currency === data._id).amount,
             minDeposit: depositBonus.min_deposit.find(deposit => deposit.currency === data._id).amount,
             percentage: depositBonus.percentage.find(deposit => deposit.currency === data._id).amount,
             multiplier: depositBonus.multiplier.find(deposit => deposit.currency === data._id).multiple
         })
-
+        
     }
 
     confirmChanges = async () => {
