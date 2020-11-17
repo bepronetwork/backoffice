@@ -4,8 +4,10 @@ import { connect } from "react-redux";
 import { FormLabel } from '@material-ui/core';
 import { Card, CardBody } from 'reactstrap';
 
-import { Actions, InputField } from './styles'
+import { Actions, InputField, CopyButton } from './styles'
 import BooleanInput from '../../../../../shared/components/BooleanInput.js';
+
+import copy from "copy-to-clipboard";
 
 const defaultState = {
     isActive: true,
@@ -13,7 +15,8 @@ const defaultState = {
     clientId: '',
     flowId: '',
     integration_type: 'kyc',
-    locked: true
+    locked: true,
+    copied: false
 }
 
 const cardBodyStyle = {
@@ -30,7 +33,15 @@ const labelStyle = {
     color: "#646777"
 }
 
+const groupStyle = {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20
+}
+
 const mati = `${process.env.PUBLIC_URL}/img/landing/mati.png`;
+const MS_MASTER_URL = process.env.REACT_APP_API_MASTER;
 
 class KYC extends Component {
     constructor(props){
@@ -60,6 +71,17 @@ class KYC extends Component {
             clientId: clientId,
             flowId: flowId
         })
+    }
+
+    copyToClipboard = () => {
+
+        copy(`${MS_MASTER_URL}/api/app/kyc_webhook`);
+
+        this.setState({ copied: true })
+
+        setTimeout(() => {
+            this.setState({ copied: false });
+        }, 5000)
     }
     
     unlockField = () => {
@@ -102,7 +124,7 @@ class KYC extends Component {
 
 
     render() {
-        const { isLoading, locked, isActive, clientId, flowId } = this.state; 
+        const { isLoading, locked, isActive, clientId, flowId, copied } = this.state; 
 
         return (
             <Card>
@@ -139,6 +161,16 @@ class KYC extends Component {
 
                         <p>Flow ID</p>
                         <InputField disabled={locked || isLoading} value={flowId} onChange={(e) => this.handleChangeFlowID(e.target.value)}/>
+
+                        <hr/>
+
+                        <p>Copy our Webhook URL</p>
+                        <div style={groupStyle}>
+                            <InputField disabled={true} value={`${MS_MASTER_URL}/api/app/kyc_webhook`}/>
+                            <CopyButton variant="contained" onClick={() => this.copyToClipboard()} disabled={copied || locked}>
+                                {copied ? 'Copied!' : 'Copy'}
+                            </CopyButton>
+                        </div>
                     </Actions>
                 </EditLock>
                 </CardBody>

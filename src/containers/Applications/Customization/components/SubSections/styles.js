@@ -155,12 +155,11 @@ export const Cancel = styled(MaterialButton)`
 `;
 
 export const CreateNewSubSection = styled(MaterialButton)`
-    width: 250px;
+    width: 220px;
 
     text-transform: none !important;
     background-color: #63c965 !important;
     box-shadow: none !important;
-    height: 30px !important;
     color: white !important;
     margin: 0px 5px !important;
 `;
