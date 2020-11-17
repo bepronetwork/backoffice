@@ -150,7 +150,6 @@ export const UploadButton = styled(MaterialButton)`
     text-transform: none !important;
     background-color: #63c965 !important;
     box-shadow: none !important;
-    height: 30px !important;
     color: white !important;
     opacity: ${props => props.disabled ? 0.7 : 1};
 `;
