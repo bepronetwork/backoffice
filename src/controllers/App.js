@@ -748,7 +748,7 @@ class App{
         }
     }
 
-    editKYCIntegration = async ({ kyc_id, isActive, clientId, flowId, client_secret }) => {
+    editKYCIntegration = async ({ kyc_id, isActive, clientId, flowId }) => {
         try{
             let res = await ConnectionSingleton.editKYCIntegration({   
                 params : {
@@ -757,8 +757,7 @@ class App{
                     kyc_id,
                     isActive,
                     clientId, 
-                    flowId,
-                    client_secret
+                    flowId
                 },         
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
