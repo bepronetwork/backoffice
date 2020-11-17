@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Input } from 'reactstrap';
+import { Button } from '@material-ui/core';
 
 export const InputField = styled(Input)`
     margin: 12px 0px;
@@ -19,4 +20,21 @@ export const Actions = styled.section`
         font-family: Poppins;
         font-size: 13px;
     }
+`;
+
+export const CopyButton = styled(Button)`
+    margin: 0px !important;
+    margin-left: 10px !important;
+    height: 100% !important;
+    border-radius: 6px !important;
+    background-color: #814c94 !important;
+    min-width: 100px !important;
+    text-transform: none !important;
+    box-shadow: none !important;
+
+    font-family: Poppins !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    overflow: hidden !important;
 `;

@@ -309,7 +309,7 @@ class AddSection extends Component {
 
                         <div style={{ display: "flex", justifyContent: "flex-end", padding: "10px 0px" }}>
                             <ConfirmButton onClick={() => this.addNewSubSection()}>
-                                <ContentSaveIcon style={{ margin: "0px 7px" }}/> Create a new Subsection
+                                <ContentSaveIcon style={{ marginRight: 7 }}/> Create a new Subsection
                             </ConfirmButton>
                         </div>
                     </div>
