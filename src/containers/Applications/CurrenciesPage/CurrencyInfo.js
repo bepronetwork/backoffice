@@ -10,6 +10,7 @@ class CurrencyInfo extends React.Component {
         super();
         this.state = {
             newInitialBalance: 0,
+            newMultiplier: 0,
             currencies: [],
             lock: true
         };
@@ -35,6 +36,10 @@ class CurrencyInfo extends React.Component {
         this.setState({...this.state, newInitialBalance: value ? parseFloat(value) : 0})
     }
 
+    onChangeMultiplier = (value) => {
+        this.setState({...this.state, newMultiplier: value ? parseFloat(value) : 0})
+    }
+
     projectData = async (props) => {
         const { profile } = props;
 
@@ -56,11 +61,11 @@ class CurrencyInfo extends React.Component {
 
     confirmChanges = async () => {
         const { profile, data } = this.props;
-        const { newInitialBalance } = this.state;
+        const { newInitialBalance, newMultiplier } = this.state;
 
         this.setState({...this.state, loading: true })
 
-        await profile.getApp().editInitialBalance({balance: newInitialBalance, currency: data._id })
+        await profile.getApp().editInitialBalance({ balance: newInitialBalance, currency: data._id, multiplier: newMultiplier })
         await profile.getApp().updateAppInfoAsync();
         await profile.update();
 
@@ -112,6 +117,22 @@ class CurrencyInfo extends React.Component {
                             />
 
                         </Col>
+
+                        <Col lg={8} style={{ marginTop: 15 }}>
+                        <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Multiplier</h3>
+
+                        <div style={{ display: "flex"}}>
+                                <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{currency.multiplier}</h3>
+                        </div>
+                            <TextInput
+                                name="multiplier"
+                                label={<h6 style={{ fontSize: 11 }}>New Multiplier</h6>}
+                                type="text"
+                                disabled={lock}
+                                changeContent={(type, value) => this.onChangeMultiplier(value)}
+                            />
+
+                    </Col>
                     </Row>
                     </EditLock>
                 </CardBody>

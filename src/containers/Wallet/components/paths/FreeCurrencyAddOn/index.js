@@ -45,13 +45,14 @@ class FreeCurrencyAddOn extends React.Component {
         const freeCurrency = profile.App.params.addOn.freeCurrency;
         const currentWallet = freeCurrency.wallets.find(wallet => wallet.currency === currency._id);
 
-        const { activated, time, value, _id } = currentWallet;
+        const { activated, time, value, _id, multiplier } = currentWallet;
 
         this.setState({ 
             activated: activated, 
             currency: currency, 
             time: time / 60000, 
             value: value,
+            multiplier: multiplier,
             _id: _id
         })
     }
@@ -85,6 +86,10 @@ class FreeCurrencyAddOn extends React.Component {
         this.setState({ time: value ? value : null })
     }
 
+    onChangeMultiplier = value => {
+        this.setState({ multiplier: value ? value : null })
+    }
+
     onChangeValue = value => {
         this.setState({ value: value ? value : null })
     }
@@ -94,10 +99,10 @@ class FreeCurrencyAddOn extends React.Component {
     }
 
     confirmChanges = async () => {
-        const { activated, currency, time, value } = this.state;
+        const { activated, currency, time, value, multiplier } = this.state;
         const { profile } = this.props;
 
-        if (!time || !value || time < 1) {
+        if (!time || !value || !multiplier || time < 1) {
             this.setState({ isLoading: false, locked: true });
             this.projectData(this.props);
         } else {
@@ -108,7 +113,8 @@ class FreeCurrencyAddOn extends React.Component {
                 activated: activated, 
                 currency: currency._id, 
                 time: time * 60000, 
-                value: parseFloat(value)
+                value: parseFloat(value),
+                multiplier: parseFloat(multiplier)
             });
 
             await profile.getApp().updateAppInfoAsync();
@@ -122,7 +128,7 @@ class FreeCurrencyAddOn extends React.Component {
     }
 
     render() {
-        const { locked, isLoading, currency, activated, time, value } = this.state;
+        const { locked, isLoading, currency, activated, time, value, multiplier } = this.state;
 
         if (_.isEmpty(currency)) return null;
 
@@ -163,6 +169,11 @@ class FreeCurrencyAddOn extends React.Component {
                         <TextField disabled={locked} value={value} type="number" onChange={(e) => this.onChangeValue(e.target.value)}/>
                     </InputGroup>
                 
+                    <br/>
+
+                    <Label>Multiplier</Label>
+                    <TextField placeholder="" disabled={locked} value={multiplier} type="number" onChange={(e) => this.onChangeMultiplier(e.target.value)}/>
+
                     <br/>
 
                     <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
