@@ -47,7 +47,9 @@ class AddOnStorePageContainer extends React.Component{
     isAdded = (AddOn) => {
         const { appAddOns } = this.state;
 
-        return !!Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().replace(/\s+/g, '').includes(k.toLowerCase()));
+        const addOnName = Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().replace(/\s+/g, '').includes(k.toLowerCase()));
+
+        return !_.isEmpty(appAddOns[addOnName])
     }
 
     hasRestriction = (addOn, appUseVirtualCurrencies) => {
