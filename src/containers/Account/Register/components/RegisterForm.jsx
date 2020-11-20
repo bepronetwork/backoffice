@@ -197,7 +197,6 @@ class RegisterForm extends PureComponent {
                     name="password"
                     label="Password"
                     type="password"
-                    placeholder="**********"
                     onChange={(e) => this.onChangePassword(e.target.value)}
                 />
                 </FormGroup>
