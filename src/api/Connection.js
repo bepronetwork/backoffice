@@ -1,6 +1,10 @@
+import React from 'react';
 import config from "./config";
-import Numbers from "../services/numbers";
-import { API_URL, API_URL_WITHDRAW, processResponse } from "../config/apiConfig";
+import { API_URL, API_URL_WITHDRAW } from "../config/apiConfig";
+import { BasicNotification } from "../shared/components/Notification";
+import Notification from 'rc-notification';
+
+import _ from 'lodash';
 
 const URL = API_URL;
 
@@ -11,6 +15,36 @@ class Connection {
     /**
      *  @param
      */
+
+     handleResponse = async response => {
+        const json = await response.json();
+
+        const { message, errors } = json;
+
+        if (message && errors && errors[0].message) {
+
+            !_.isEmpty(errors[0].errors) 
+            ? this.showNotification(message, errors[0].errors[0].message)
+            : this.showNotification(message, errors[0].message)
+        }
+
+        return json;
+     }
+
+    showNotification = (title, message) => {
+        Notification.newInstance({}, notification => {
+
+        notification.notice({
+            content: <BasicNotification
+                title={title}
+                message={message}
+            />,
+            duration: 5,
+            closable: true,
+            style: { top: 0, left: 'calc(100vw - 100%)' },
+            className: 'right-up',
+        }); })
+    };
 
     auth = async ({admin, headers}) => {
         try{
@@ -155,7 +189,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -168,7 +202,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({admin, app, game, tableLimit : parseFloat(tableLimit), wallet})
             });
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -181,7 +215,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({admin, app, game, edge})
             });
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -194,7 +228,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify({admin, app, esports_edge})
             });
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -208,7 +242,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response)
         }catch(err){
             throw err;
         }
@@ -356,7 +390,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -371,7 +405,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             console.log(err);
             throw err;
@@ -387,7 +421,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             console.log(err);
             throw err;
@@ -403,7 +437,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             console.log(err);
             throw err;
@@ -419,7 +453,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             console.log(err);
             throw err;
@@ -434,7 +468,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -448,7 +482,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -462,7 +496,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -476,7 +510,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -562,7 +596,7 @@ class Connection {
                 })
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -588,7 +622,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -602,7 +636,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -616,7 +650,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -630,7 +664,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -644,7 +678,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -658,7 +692,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -672,7 +706,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -686,7 +720,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -700,7 +734,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -715,7 +749,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -729,7 +763,7 @@ class Connection {
                 body : JSON.stringify(params)
             });
             
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -742,7 +776,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -768,7 +802,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -781,7 +815,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -794,7 +828,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -807,7 +841,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -820,7 +854,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -833,7 +867,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -846,7 +880,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -858,8 +892,9 @@ class Connection {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
-            });            
-            return response.json();
+            }); 
+            
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -872,7 +907,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -885,7 +920,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -898,7 +933,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -911,7 +946,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -924,7 +959,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -937,7 +972,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -950,7 +985,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -963,7 +998,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -976,7 +1011,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -989,7 +1024,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1002,7 +1037,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1015,7 +1050,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1028,7 +1063,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1041,7 +1076,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1054,7 +1089,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1067,7 +1102,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1080,7 +1115,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1093,7 +1128,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1106,7 +1141,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1119,7 +1154,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1132,7 +1167,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1221,7 +1256,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1234,7 +1269,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
@@ -1247,7 +1282,7 @@ class Connection {
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
             });            
-            return response.json();
+            return this.handleResponse(response);
         }catch(err){
             throw err;
         }
