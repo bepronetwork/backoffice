@@ -19,13 +19,16 @@ class Connection {
      handleResponse = async response => {
         const json = await response.json();
 
-        const { message, errors } = json;
+        const { message, status, errors } = json;
 
         if (message && errors && errors[0].message) {
 
             !_.isEmpty(errors[0].errors) 
             ? this.showNotification(message, errors[0].errors[0].message)
             : this.showNotification(message, errors[0].message)
+
+        } else if (message && status && parseInt(status) !== 200 ) {
+            this.showNotification("There is a problem with your request", message);
         }
 
         return json;
