@@ -12,8 +12,7 @@ export const MatchContainer = styled.div`
 export const MatchSummary = styled.section`
     background-color: #fafcff;
     border: solid 1px rgba(164, 161, 161, 0.35);
-
-    height: 30%;
+    
     width: 100%;
     min-width: 450px;
 
@@ -50,7 +49,7 @@ export const MatchStatus = styled.section`
 
     display: flex;
     justify-content: center;
-    align-self: baseline;
+    align-self: flex-start;
 
     border-top: ${props => `6px solid ${props.color}`};
 `;
