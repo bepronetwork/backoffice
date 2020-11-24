@@ -178,9 +178,7 @@ class MatchPage extends React.Component {
         if (_.isEmpty(match)) {
             return (
                 <MatchContainer>
-                    <MatchSummary style={{ backgroundColor: "none" }}>
-                        <Skeleton variant="rect" height="213px" width="100%" animation="wave"/>
-                    </MatchSummary>
+                    <Skeleton variant="rect" height="209px" width="100%" animation="wave"/>
                 </MatchContainer>
             );
         }
