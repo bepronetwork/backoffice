@@ -1669,7 +1669,7 @@ class App{
         }
     }
 
-    editFreeCurrency = async ({ activated, currency, time, value }) => {
+    editFreeCurrency = async ({ activated, currency, time, value, multiplier }) => {
         try{
             return await ConnectionSingleton.editFreeCurrency({   
                 params : {
@@ -1677,6 +1677,7 @@ class App{
                     currency,
                     time,
                     value,
+                    multiplier,
                     admin : this.getAdminId(),
                     app : this.getId()
                 },     
@@ -1722,11 +1723,12 @@ class App{
         }
     }
 
-    editInitialBalance = async ({balance, currency}) => {
+    editInitialBalance = async ({ balance, currency, multiplier }) => {
         try{
             return await ConnectionSingleton.editInitialBalance({   
                 params : {
                     balance,
+                    multiplier,
                     currency,
                     admin : this.getAdminId(),
                     app : this.getId()

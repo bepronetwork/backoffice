@@ -7,12 +7,6 @@ import EditLock from '../../Shared/EditLock';
 import Dropzone from 'react-dropzone'
 import _ from 'lodash';
 const image2base64 = require('image-to-base64');
-
-const currenciesEnum = Object.freeze({
-    BTC: "5e710b90f6e2b0765fac2304",
-    ETH: "5e108498049eba079930ae1c"
-})
-
 class VirtualCurrencyInfo extends React.Component {
  
     constructor() {
@@ -40,7 +34,11 @@ class VirtualCurrencyInfo extends React.Component {
     }
 
     onChangeInitialBalance = (value) => {
-        this.setState({ newInitialBalance: value ? parseFloat(value) : 0})
+        this.setState({ initialBalance: value ? parseFloat(value) : 0})
+    }
+
+    onChangeMultiplier = (value) => {
+        this.setState({ multiplier: value ? parseFloat(value) : 0})
     }
 
     onChange = (type, value) => {
@@ -81,20 +79,25 @@ class VirtualCurrencyInfo extends React.Component {
 
         this.setState({...this.state, loading: true })
 
-        if (this.state.newInitialBalance) {
-            await app.editInitialBalance({ balance: this.state.newInitialBalance, currency: data._id });
+        if (this.state.initialBalance || this.state.multiplier) {
+            
+            await app.editInitialBalance({ 
+                balance: this.state.initialBalance ? this.state.initialBalance : this.getCurrency(data._id).initialBalance, 
+                currency: data._id, 
+                multiplier: this.state.multiplier ? this.state.multiplier : this.getCurrency(data._id).multiplier 
+            });
         }
 
         if (this.state.newImage) {
             await app.editVirtualCurrency({ params: { image: this.state.newImage } });
         }
 
-        if (this.state.newBTC) {
-            await app.editVirtualCurrency({ params: { price: this.state.newBTC, currency: currenciesEnum.BTC, image: this.state.newImage ? this.state.newImage : this.getCurrencyImage(data._id) } });
-        }
+        const prices = _.pickBy(this.state, (value, key) => key.startsWith("new"))
 
-        if (this.state.newETH) {
-            await app.editVirtualCurrency({ params: { price: this.state.newETH, currency: currenciesEnum.ETH, image: this.state.newImage ? this.state.newImage : this.getCurrencyImage(data._id) } });
+        for (const [key, value] of Object.entries(prices)) {
+            const currency = key.replace("new", "");
+
+            await app.editVirtualCurrency({ params: { price: value, currency: currency, image: this.state.newImage ? this.state.newImage : this.getCurrencyImage(data._id) } });
         }
 
         await profile.getApp().updateAppInfoAsync();
@@ -186,25 +189,43 @@ class VirtualCurrencyInfo extends React.Component {
                         </Col>
 
                         { hasInitialBalanceAddOn && (this.getCurrency(_id) !== undefined) ? (
-                            <Col lg={8} >
-                            <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Inital Balance</h3>
+                            <>
+                                <Col lg={8} >
+                                <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Inital Balance</h3>
 
-                            <div style={{ display: "flex"}}>
-                                    <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{this.getCurrency(_id).initialBalance.toFixed(6)}</h3>
-                                    <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{ticker}</h3>
-                            </div>
-                                <TextInput
-                                    icon={BankIcon}
-                                    name="initialBalance"
-                                    label={<h6 style={{ fontSize: 11 }}>New Intial Balance</h6>}
-                                    type="text"
-                                    disabled={lock}
-                                    changeContent={(type, value) => this.onChangeInitialBalance(value)}
-                                />
+                                <div style={{ display: "flex"}}>
+                                        <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{this.getCurrency(_id).initialBalance.toFixed(6)}</h3>
+                                        <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>{ticker}</h3>
+                                </div>
+                                    <TextInput
+                                        icon={BankIcon}
+                                        name="initialBalance"
+                                        label={<h6 style={{ fontSize: 11 }}>New Intial Balance</h6>}
+                                        type="text"
+                                        disabled={lock}
+                                        changeContent={(type, value) => this.onChangeInitialBalance(value)}
+                                    />
 
-                            </Col>
+                                </Col>
 
-                        ) : null}
+                                <Col lg={8} style={{ margin: "15px 0px" }}>
+                                <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Multiplier</h3>
+
+                                <div style={{ display: "flex"}}>
+                                        <h3 style={{marginTop: 20, marginRight: 0}} className={"dashboard__total-stat"}>{this.getCurrency(_id).multiplier}</h3>
+                                </div>
+                                    <TextInput
+                                        name="multiplier"
+                                        label={<h6 style={{ fontSize: 11 }}>New Multiplier</h6>}
+                                        type="text"
+                                        disabled={lock}
+                                        changeContent={(type, value) => this.onChangeMultiplier(value)}
+                                    />
+
+                                </Col>
+                            </>
+
+                        ) : null}   
                     
                         <Col lg={8}>
                         { !_.isEmpty(wallet.price) ? <h3 style={{ fontSize: 17, marginLeft: 0 }} className={"dashboard__total-stat"}>Price</h3> : null }
@@ -215,7 +236,7 @@ class VirtualCurrencyInfo extends React.Component {
                         <p className='bold-text' style={{margin: 0}}>{p.amount} {this.getCurrencyInfo(p.currency).name}</p>
                             <TextInput
                             style={{ margin: 0}}
-                            name={this.getCurrencyInfo(p.currency).name}
+                            name={p.currency}
                             label={<h6 style={{ fontSize: 11 }}>{`New ${this.getCurrencyInfo(p.currency).name} price`}</h6>}
                             type="text"
                             disabled={lock}

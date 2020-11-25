@@ -14,6 +14,7 @@ import UserTransactionsTable from './components/UserTransactionsTable';
 import UserPageSkeleton from './components/UserPageSkeleton';
 import { Button, ButtonBase, Popover } from '@material-ui/core';
 import { ArrowUpIcon, SearchIcon, SwapHorizontalIcon } from 'mdi-react';
+import { ProgressBar } from 'react-bootstrap';
 
 import BetsTable from './components/BetsTable'
 import EsportsBetsTable from './components/EsportsBetsTable'
@@ -313,20 +314,73 @@ class UserPage extends React.Component{
         }
     }
 
+    renderBonusAmount = ({title, bonusAmount, incrementBetAmountForBonus, minBetAmountForBonusUnlocked, span, loading, decimals}) => {
+
+        const percenteToBonus = 100 * (incrementBetAmountForBonus / minBetAmountForBonusUnlocked);
+
+        return (
+            <Card style={{ minWidth: minBetAmountForBonusUnlocked > 0 ? 230 : 0 }}>
+                <CardBody className="dashboard__card-widget" style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
+                    <p className='text-small pink-text'> {title} </p>
+                    {loading ? (
+                        minBetAmountForBonusUnlocked > 0 ? (
+                            <>
+                                <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                <hr/>
+                                <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                <Skeleton variant="rect" height={20} style={{ marginTop: 10, marginBottom: 10 }}/>
+                                <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                            </>
+                        ) : (
+                            <Skeleton variant="rect" height={12} style={{ marginTop: 10, marginBottom: 10 }}/>
+                        )
+                    ) : (
+                        <>
+                        <h4 className='secondary-text' style={{marginTop : 5}}> <AnimationNumber decimals={6} font={'11pt'} number={bonusAmount}/> <span className='text-x-small'>{span}</span></h4>
+                        { minBetAmountForBonusUnlocked > 0 ? (
+                            <>
+                            <hr/>
+                            <p className='text-small' style={{ fontSize: 8, margin: "0px 3px" }}>
+                                Progress to withdraw the full balance
+                            </p>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0px" }}>
+                                <p className='text-small pink-text' style={{ fontSize: 10, margin: "0px 3px" }}>
+                                    {`Progress (${percenteToBonus.toFixed(2)}%)`}
+                                </p>
+                            </div>
+
+                            <ProgressBar striped variant="success" now={percenteToBonus}/>
+
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0px" }}>
+                                <h4 className='secondary-text'> 
+                                    <AnimationNumber decimals={decimals} font={'8pt'} number={incrementBetAmountForBonus}/> <span className='text-x-small'>{span}</span>
+                                </h4>
+                                <h4 className='secondary-text'> 
+                                    <AnimationNumber decimals={decimals} font={'8pt'} number={minBetAmountForBonusUnlocked}/> <span className='text-x-small'>{span}</span>
+                                </h4>
+                            </div>
+                            </>
+                        ) : null }
+                        </>
+                    )}
+                </CardBody>
+            </Card>
+        )
+    }
+
     render = () => {
         const { user, currencyTicker, loading, kycActive } = this.state;
         
         if (!user || _.isEmpty(user)) { return <UserPageSkeleton/> };
 
         const { currency, isLoading, profile } = this.props;
-        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, points, kyc_status, kyc_needed } = user;
+        const { username, email, _id, winAmount, withdraws, deposits, affiliate, profit, address, betAmount, points, kyc_status, kyc_needed, bonusAmount } = user;
         
         const wallet = user.wallet.find(wallet => wallet.currency._id === currency._id);
 
         const playBalance = wallet.playBalance;
 
         const transactions = withdraws.map( w => {return {...w, isWithdraw : true}}).concat(deposits);
-        const bets = this.props.user.bets;
         const affiliateWallet = affiliate.wallet.filter(w => w.currency._id === currency._id);
 
         const app = profile.getApp();
@@ -399,11 +453,16 @@ class UserPage extends React.Component{
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliates', data : affiliate.affiliatedLinks.length, loading: isLoading, decimals: 0})}
                             </Col>
+                            
                             { this.hasAddOn('pointSystem') && (
                                 <Col sd={12} md={4} lg={3}>
                                     { this.renderPointsData({ addon: this.getAddOnObj('pointSystem'), points: points, loading: isLoading }) } 
                                 </Col>
                             )}
+
+                            <Col sd={12} md={4} lg={3}>
+                                {this.renderBonusAmount({ title : 'Bonus', bonusAmount: bonusAmount, incrementBetAmountForBonus: wallet.incrementBetAmountForBonus, minBetAmountForBonusUnlocked: wallet.minBetAmountForBonusUnlocked, loading: isLoading, span: currencyTicker, decimals: 6 })}
+                            </Col>
                         </Row>
                     </Col>
                 </Row>
