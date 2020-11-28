@@ -1,5 +1,5 @@
 /* eslint-disable no-return-assign */
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -31,58 +31,52 @@ const showNotification = () => {
   });
 };
 
-class Layout extends Component {
-  static propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    sidebar: SidebarProps.isRequired,
-    customizer: CustomizerProps.isRequired,
-    theme: ThemeProps.isRequired,
-  };
+const Layout = ({ dispatch, customizer, sidebar, theme }) => {
 
-  componentDidMount() {
+  useEffect(() => {
     NotificationSystem.newInstance({}, n => notification = n);
     setTimeout(() => showNotification(), 700);
-  }
+    
+    return function clearNotification() {
+      if (notification) {
+        notification.destroy();
+      }
+    }
+  }, [])
 
-  componentWillUnmount() {
-    notification.destroy();
-  }
-
-  changeSidebarVisibility = () => {
-    this.props.dispatch(changeSidebarVisibility());
+  const changeSidebarVisibility = () => {
+    dispatch(changeSidebarVisibility());
   };
 
-  changeMobileSidebarVisibility = () => {
-    this.props.dispatch(changeMobileSidebarVisibility());
+  const changeMobileSidebarVisibility = () => {
+    dispatch(changeMobileSidebarVisibility());
   };
 
-  changeToDark = () => {
-    this.props.dispatch(changeThemeToDark());
+  const changeToDark = () => {
+    dispatch(changeThemeToDark());
   };
 
-  changeToLight = () => {
-    this.props.dispatch(changeThemeToLight());
+  const changeToLight = () => {
+    dispatch(changeThemeToLight());
   };
 
-  toggleTopNavigation = () => {
-    this.props.dispatch(toggleTopNavigation());
+  const toggleTopNavigation = () => {
+    dispatch(toggleTopNavigation());
   };
 
-  changeBorderRadius = () => {
-    this.props.dispatch(changeBorderRadius());
+  const changeBorderRadius = () => {
+    dispatch(changeBorderRadius());
   };
 
-  toggleBoxShadow = () => {
-    this.props.dispatch(toggleBoxShadow());
+  const toggleBoxShadow = () => {
+    dispatch(toggleBoxShadow());
   };
 
-  render() {
-    const { customizer, sidebar, theme } = this.props;
-    const layoutClass = classNames({
+  const layoutClass = classNames({
       layout: true,
       'layout--collapse': sidebar.collapse,
       'layout--top-navigation': customizer.topNavigation,
-    });
+  });
 
     return (
       <div className={layoutClass}>
@@ -99,32 +93,31 @@ class Layout extends Component {
           toggleBoxShadow={this.toggleBoxShadow}
         />
         */}
-        {this.props.customizer.topNavigation ?
+        {customizer.topNavigation ?
           <TopbarWithNavigation
-            changeMobileSidebarVisibility={this.changeMobileSidebarVisibility}
+            changeMobileSidebarVisibility={changeMobileSidebarVisibility}
           /> :
           <Topbar
-            changeMobileSidebarVisibility={this.changeMobileSidebarVisibility}
-            changeSidebarVisibility={this.changeSidebarVisibility}
+            changeMobileSidebarVisibility={changeMobileSidebarVisibility}
+            changeSidebarVisibility={changeSidebarVisibility}
           />
         }
-        {this.props.customizer.topNavigation ?
+        {customizer.topNavigation ?
           <SidebarMobile
             sidebar={sidebar}
-            changeToDark={this.changeToDark}
-            changeToLight={this.changeToLight}
-            changeMobileSidebarVisibility={this.changeMobileSidebarVisibility}
+            changeToDark={changeToDark}
+            changeToLight={changeToLight}
+            changeMobileSidebarVisibility={changeMobileSidebarVisibility}
           /> :
           <Sidebar
             sidebar={sidebar}
-            changeToDark={this.changeToDark}
-            changeToLight={this.changeToLight}
-            changeMobileSidebarVisibility={this.changeMobileSidebarVisibility}
+            changeToDark={changeToDark}
+            changeToLight={changeToLight}
+            changeMobileSidebarVisibility={changeMobileSidebarVisibility}
           />
         }
       </div>
     );
-  }
 }
 
 export default withRouter(connect(state => ({

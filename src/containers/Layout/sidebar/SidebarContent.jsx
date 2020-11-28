@@ -1,21 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import SidebarLink from './SidebarLink';
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { compose } from 'lodash/fp';
 import _ from 'lodash';
 import { Casino, Wallet, Phone, User, Arrow, Confirmed, Bet, Hand, Settings, Reward, LogOut } from '../../../components/Icons';
 
-class SidebarContent extends Component {
-    static propTypes = {
-        changeToDark: PropTypes.func.isRequired,
-        changeToLight: PropTypes.func.isRequired,
-        onClick: PropTypes.func.isRequired,
-    };
-
-    constructor(props){
-        super(props)
-        this.state = {
+const SidebarContent = ({ onClick }) => {
+    const profile = useSelector(state => state.profile);
+    
+    const [links, setLinks] = useState({
             home : true,
             application : true,
             users : true,
@@ -26,75 +20,60 @@ class SidebarContent extends Component {
             affiliates : true,
             settings : true,
             developers : true
-        }
-    }
+    })
 
-    componentDidMount(){
-        this.getData(this.props);
-    }
+    useEffect(() => {
+        getData();
+    }, [profile])
 
-    hideSidebar = () => {
-        this.props.onClick();
+    function hideSidebar(){
+        onClick();
     };
 
-    componentWillReceiveProps(props){
-        this.getData(props);
-    }
+    const hasData = (summary) => summary && !_.isEmpty(summary.data);
 
-    hasData = (summary) => summary && !_.isEmpty(summary.data);
+    const hasInfo = data => data ? true : false ;
 
-    hasInfo = data => data ? true : false ;
-
-    getData = (props) => {
-        const User = props.profile.User;
+    function getData() {
+        const profile = useSelector(state => state.profile);
+        const User = profile.User;
 
         let newState = {
             home        : User.permission.super_admin || User.permission.financials,
             application : User.permission.super_admin || User.permission.customization || User.permission.financials,
-            users       : this.hasData(props.profile.hasAppStats('usersInfoSummary')) && 
+            users       : hasData(profile.hasAppStats('usersInfoSummary')) && 
                           (User.permission.super_admin || User.permission.financials),
-            stats       : this.hasData(props.profile.hasAppStats('revenue')) &&
+            stats       : hasData(profile.hasAppStats('revenue')) &&
                           (User.permission.super_admin || User.permission.financials),
             wallet      : User.permission.super_admin || User.permission.financials || 
                           User.permission.withdraw,
             settings    : User.permission.super_admin,//this.hasInfo(getApp().isDeployed()),
-            affiliates  : this.hasData(props.profile.hasAppStats('affiliates')) && User.permission.super_admin,
-            transactions: this.hasData(props.profile.hasAppStats('withdraws')) && (User.permission.super_admin || 
+            affiliates  : hasData(profile.hasAppStats('affiliates')) && User.permission.super_admin,
+            transactions: hasData(profile.hasAppStats('withdraws')) && (User.permission.super_admin || 
                           User.permission.financials || User.permission.user_withdraw),
             bets        : User.permission.super_admin || User.permission.financials,
             developers  : User.permission.super_admin
         }
-        this.setState({...this.state, ...newState})
+        setLinks({...links, ...newState})
     }
 
-    render() {
-        return (
-            <div className="sidebar__content">
-                <ul className="sidebar__block">
-                    <SidebarLink disabled={!this.state.home} title="Home" icon={<Casino/>} route="/home" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.application} title="Application" icon={<Phone/>} route="/application" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.users} title="Users" icon={<User/>} route="/users" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.bets} title="Bets" icon={<Bet/>} route="/bets" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.transactions} title="Transactions" icon={<Arrow/>} route="/transactions" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.stats} title="Stats" icon={<Confirmed/>} route="/stats" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.wallet} title="Wallet" icon={<Wallet/>} route="/wallet" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.affiliates} title="Affiliates" icon={<Hand/>} route="/affiliates" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.settings} title="Settings" icon={<Settings/>} route="/settings" onClick={this.hideSidebar} />
-                    <SidebarLink disabled={!this.state.developers} title="Developers" icon={<Reward/>} route="/developers" onClick={this.hideSidebar} />
-                    {/* <SidebarLink title="Log Out" icon={<LogOut/>} route="/login" /> */}
-                </ul>
-            </div>
-        );
-    }
+    return (
+        <div className="sidebar__content">
+            <ul className="sidebar__block">
+                <SidebarLink disabled={!links.home} title="Home" icon={<Casino/>} route="/home" onClick={() => hideSidebar()} />
+                <SidebarLink disabled={!links.application} title="Application" icon={<Phone/>} route="/application" onClick={() => hideSidebar()} />
+                <SidebarLink disabled={!links.users} title="Users" icon={<User/>} route="/users" onClick={() => hideSidebar()} />
+                <SidebarLink disabled={!links.bets} title="Bets" icon={<Bet/>} route="/bets" onClick={() => hideSidebar()} />
+                <SidebarLink disabled={!links.transactions} title="Transactions" icon={<Arrow/>} route="/transactions" onClick={() => hideSidebar()} />
+                <SidebarLink disabled={!links.stats} title="Stats" icon={<Confirmed/>} route="/stats" onClick={() => hideSidebar()} />
+                <SidebarLink disabled={!links.wallet} title="Wallet" icon={<Wallet/>} route="/wallet" onClick={() => hideSidebar()} />
+                <SidebarLink disabled={!links.affiliates} title="Affiliates" icon={<Hand/>} route="/affiliates" onClick={() => hideSidebar()} />
+                <SidebarLink disabled={!links.settings} title="Settings" icon={<Settings/>} route="/settings" onClick={() => hideSidebar()} />
+                <SidebarLink disabled={!links.developers} title="Developers" icon={<Reward/>} route="/developers" onClick={() => hideSidebar()} />
+                {/* <SidebarLink title="Log Out" icon={<LogOut/>} route="/login" /> */}
+            </ul>
+        </div>
+    );
 }
 
-function mapStateToProps(state){
-    return {
-        profile: state.profile
-    };
-}
-
-
-export default compose(
-    connect(mapStateToProps)
-)(SidebarContent);
+export default SidebarContent;

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../../scss/app.scss';
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { compose } from 'lodash/fp'
 import Layout from '../Layout';
 import { Route, Link } from 'react-router-dom';
@@ -24,32 +24,19 @@ import Applications from '../Applications';
 
 const loadingBetprotocol = `${process.env.PUBLIC_URL}/img/loading-betprotocol.gif`;
 
-class MainRoute extends React.Component {
-	constructor() {
-		super();
-		this.state = {
-            loaded : false,
-            loading : true
-		};
-	}
+const MainRoute = ({ history, location }) => {
+    const [loaded, setLoaded] = useState(false);
+    const [loading, setLoading] = useState(true);
+    
+    const profile = useSelector(state => state.profile);
 
-	asyncCalls = async () => {
-        try{
-            await this.loginAccount();
-            this.enterWebsite();
-        }catch(err){
-            console.log(err);
-            this.props.history.push('/login')
-        }
-	}
-
-	enterWebsite = () => {
-        setTimeout(() => this.setState({ loaded: true }), 300);
-        this.setState({ loading: false });
+	function enterWebsite(){
+        setTimeout(() => setLoaded(true), 300);
+        setLoading(false);
     }
 
-    async loginAccount(){        
-        let Acc = this.props.profile;
+    async function loginAccount(){        
+        let Acc = profile;
         //If there is no Account
         if(_.isEmpty(Acc)){ Acc = new Account() };
         try{
@@ -59,34 +46,43 @@ class MainRoute extends React.Component {
         }
     }
 
-    getName(object, path){
+    useEffect(() => {
+        async function fetchAsyncData() {
+            try{
+                await loginAccount();
+                enterWebsite();
+            }catch(err){
+                history.push('/login')
+            }
+        }
+
+        fetchAsyncData()
+    }, [])
+
+
+    function getName(object, path) {
         return object.filter(obj => {
             return obj.path === path
         })[0]
     }
 
-    getrouteHistoryObjects = (object, full_path) => {
+    function getrouteHistoryObjects(object, full_path){
         let paths = full_path.split("/").filter(el =>  el !== "");
         let objectPaths = [];
     
         for(var i = 0; i < paths.length; i++){
             let search_object = i < 1 ? object : objectPaths[i-1].children;
-            objectPaths.push(this.getName(search_object, "/" + paths[i]));
+            objectPaths.push(getName(search_object, "/" + paths[i]));
         }
     
         return objectPaths;
     
     }
     
+    const Main = () => {
+        const routeHistory = getrouteHistoryObjects(routesStructure, location.pathname);
     
-	componentDidMount() {
-		this.asyncCalls();
-    }
-    
-    Main = (props) => {
-        let { profile } = this.props;
-        let routeHistory = this.getrouteHistoryObjects(routesStructure, props.location.pathname);
-        if(!profile.hasAppStats()) { return null; }
+        if (!profile.hasAppStats()) { return null; }
 
         return (
             <>
@@ -122,27 +118,25 @@ class MainRoute extends React.Component {
         )
     }
 
-	render() {
-        const { loaded, loading } = this.state;
-        
-		return (
-            <div>
-                {!loaded &&
-					<div className={`load${loading ? '' : ' loaded'}`}>
-					    <div class="load__icon-wrap">
-                            <img src={loadingBetprotocol} alt="loading..."/>
-                        </div>
-					</div>
-                }
-                {loaded ? 
-                    <div>
-                        {this.Main(this.props)}
+	return (
+        <div>
+            {!loaded &&
+                <div className={`load${loading ? '' : ' loaded'}`}>
+                    <div class="load__icon-wrap">
+                        <img src={loadingBetprotocol} alt="loading..."/>
                     </div>
-                : null
-                }
-                
-            </div>
-    )};
+                </div>
+            }
+            {loaded ? 
+                <div>
+                    <Main/>
+                </div>
+            : null
+            }
+            
+        </div>
+
+    )
 }
 
 const wrappedWalletRoutes = (props) => {
@@ -173,13 +167,5 @@ const wrappedApplicationRoutes = (props) => {
 	)
 }
 
-function mapStateToProps(state){
-    return {
-        profile: state.profile
-    };
-}
 
-
-export default compose(
-    connect(mapStateToProps)
-)(MainRoute);
+export default MainRoute;

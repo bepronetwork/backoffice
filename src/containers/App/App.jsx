@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
@@ -24,34 +24,11 @@ const loadingBetprotocol = `${process.env.PUBLIC_URL}/img/loading-betprotocol.gi
 
 i18next.init(i18nextConfig);
 
-class App extends Component {
-	constructor() {
-		super();
-		this.state = {
-			loading: true,
-			loaded: false,
-		};
-    }
+const App = () => {
+    const [loading, setLoading] = useState(true);
+    const [loaded, setLoaded] = useState(false);
 
-	asyncCalls = async () => {
-		this.enterWebsite();
-
-	}
-
-	enterWebsite = () => {
-		 window.addEventListener('load', () => {
-			this.setState({ loading: false });
-			setTimeout(() => this.setState({ loaded: true }), 500);
-		}); 
-	}
-
-	componentDidMount() {
-        this.asyncCalls();
-        this.startWallet();
-        
-    }
-    
-    startWallet = async () => {
+    async function startWallet() {
         // Modern dapp browsers...
         if (window.ethereum) {
 
@@ -85,36 +62,48 @@ class App extends Component {
         }        
 
     }
-    
 
-	render() {
-		const { loaded, loading } = this.state;
-		return (
-			<Provider store={store}>
-                <BrowserRouter basename="/">
-                    <I18nextProvider i18n={i18next}>
-                    <ScrollToTop>
-                    {!loaded &&
-                        <div className={`load${loading ? '' : ' loaded'}`}>
-                            <div class="load__icon-wrap">
-                                <img src={loadingBetprotocol} alt="loading..."/>
-                            </div>
+    useEffect(() => {
+        async function fetchAsyncData() {
+            window.addEventListener('load', () => {
+
+                setLoading(false);
+
+                setTimeout(() => setLoaded(true), 500);
+            }); 
+
+            await startWallet()
+        }
+
+        fetchAsyncData()
+    }, [])
+
+    
+    return (
+        <Provider store={store}>
+            <BrowserRouter basename="/">
+                <I18nextProvider i18n={i18next}>
+                <ScrollToTop>
+                {!loaded &&
+                    <div className={`load${loading ? '' : ' loaded'}`}>
+                        <div className="load__icon-wrap">
+                            <img src={loadingBetprotocol} alt="loading..."/>
                         </div>
-                    }
-                    <div>
-                        <ModalAddCurrencyWallet/>
-                        <Modal2FA/>
-                        <ModalError/>
-                        <AbstractModal/>
-                        <Router />
-                        <GlobalStyle/>
                     </div>
-                    </ScrollToTop>
-                    </I18nextProvider>
-                </BrowserRouter>
-			</Provider>
-		);
-		}
+                }
+                <div>
+                    <ModalAddCurrencyWallet/>
+                    <Modal2FA/>
+                    <ModalError/>
+                    <AbstractModal/>
+                    <Router />
+                    <GlobalStyle/>
+                </div>
+                </ScrollToTop>
+                </I18nextProvider>
+            </BrowserRouter>
+        </Provider>
+    );
 }
 
-export default hot(module)(App);
+export default App;

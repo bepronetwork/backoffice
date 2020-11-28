@@ -1,8 +1,8 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Col, Container, Row, Nav, NavItem, TabContent, TabPane } from 'reactstrap';
 import Fade from '@material-ui/core/Fade';
 
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { fromCodesToServices } from '../../controllers/services/services';
 import TabsContainer from '../../shared/components/tabs/Tabs';
 import HostingLink from './components/HostingLink';
@@ -20,6 +20,7 @@ import GameStorePageContainer from './GameStore/index.js';
 import ThirdPartiesContainer from './ThirdParties/index.js';
 import GamesContainer from './components/GamesContainer';
 import LanguageStorePageContainer from './LanguagesPage/'
+import ReduxTest from './ReduxTest';
 
 const EsportsPage = React.lazy(() => import('./EsportsPage'));
 
@@ -40,38 +41,51 @@ const PlatformIcon = styled.section`
     opacity: 0.56;
 `
 
-class ApplicationsContainer extends React.Component{
-
-    constructor(props){
-        super(props)
-        this.state = {
-            activeTab: 'platform'
-        }
+const widgets = {
+    casino : () => {
+        return (
+            <CasinoCard>
+                <CasinoContainer>
+                    <span>Casino</span>
+                    <Icon>
+                        <CasinoWhite/>
+                    </Icon>
+                </CasinoContainer>
+            </CasinoCard>       
+        )
     }
+}
+
+const ApplicationsContainer = props => {
+    const [activeTab, setActiveTab] = useState('platform');
+    const profile = useSelector(state => state.profile);
+
+    const services = profile.getApp().getServices();
+    const servicesCodes = fromCodesToServices(services);
+
+    const permission = profile.User.permission;
    
-    isAdded = (AddOn) => {
-        const { appAddOns } = this.props.profile.App.addOn;
+    const isAdded = (AddOn) => {
+        const { appAddOns } = profile.App.addOn;
 
         return !!Object.keys(appAddOns).find(k => AddOn.name.toLowerCase().includes(k.toLowerCase()));
     }
 
-    toggle = (tab) => {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-            activeTab: tab
-            });
+    const toggle = (tab) => {
+        if (activeTab !== tab) {
+            setActiveTab(tab);
         }
     }
 
-    getTabs = () => {
+   const getTabs = () => {
         return {
             myGames: {
                 title : 'My Games',
                 container : (
                     <GamesContainer  data={{
-                        games : this.props.profile.getApp().getSummaryData('games'),
-                        wallet : this.props.profile.getApp().getSummaryData('wallet'),
-                    }} {...this.props}/>
+                        games : profile.getApp().getSummaryData('games'),
+                        wallet : profile.getApp().getSummaryData('wallet'),
+                    }} {...props}/>
                 ),
                 icon : <Bet/>
             },
@@ -126,9 +140,9 @@ class ApplicationsContainer extends React.Component{
         }
     }
 
-    getCasinoTabs = permission => {
+    const getCasinoTabs = permission => {
 
-        const tabs = this.getTabs();
+        const tabs = getTabs();
 
         switch (true) {
             case permission.super_admin:
@@ -149,9 +163,9 @@ class ApplicationsContainer extends React.Component{
         }
     }
 
-    getPlatformTabs = permission => {
+    const getPlatformTabs = permission => {
 
-        const tabs = this.getTabs();
+        const tabs = getTabs();
 
         switch (true) {
             case permission.super_admin:
@@ -172,133 +186,105 @@ class ApplicationsContainer extends React.Component{
         }
     }
 
-    render = () => {
-        const { profile } = this.props;
-        const services = this.props.profile.getApp().getServices();
-        const servicesCodes = fromCodesToServices(services);
-
-        const permission = profile.User.permission;
-        
-        return (
-            <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
-                 <Container className="dashboard">
-                <Row>
-                    <Col lg={12}>
-                        <div>
-                            <Row>
-                                <Col md={4} style={{ padding: 0 }}>
-                                <Nav pills style={{ justifyContent: "flex-start", marginBottom: 25 }}>
+    return (
+        <Fade in timeout={{ appear: 200, enter: 200, exit: 200 }}>
+                <Container className="dashboard">
+                    <ReduxTest />
+            <Row>
+                <Col lg={12}>
+                    <div>
+                        <Row>
+                            <Col md={4} style={{ padding: 0 }}>
+                            <Nav pills style={{ justifyContent: "flex-start", marginBottom: 25 }}>
+                                <NavItem style={{ height: 80, marginTop: "20px" }}>
+                                        <StyledNavLink
+                                            className={classnames({ active: activeTab === 'platform' })}
+                                            onClick={() => {
+                                            toggle('platform');
+                                            }}
+                                        >
+                                            <span>Platform</span>
+                                            <PlatformIcon>
+                                                <SettingsWhite isActive={activeTab === 'platform'}/>
+                                            </PlatformIcon>
+                                        </StyledNavLink>
+                                    </NavItem>
                                     <NavItem style={{ height: 80, marginTop: "20px" }}>
-                                            <StyledNavLink
-                                                className={classnames({ active: this.state.activeTab === 'platform' })}
-                                                onClick={() => {
-                                                this.toggle('platform');
-                                                }}
-                                            >
-                                                <span>Platform</span>
-                                                <PlatformIcon>
-                                                    <SettingsWhite isActive={this.state.activeTab === 'platform'}/>
-                                                </PlatformIcon>
-                                            </StyledNavLink>
-                                        </NavItem>
-                                        <NavItem style={{ height: 80, marginTop: "20px" }}>
-                                            <StyledNavLink
-                                                className={classnames({ active: this.state.activeTab === 'casino' })}
-                                                onClick={() => {
-                                                this.toggle('casino');
-                                                }}
-                                            >
-                                                <span>Casino</span>
-                                                <Icon>
-                                                    <CasinoWhite/>
-                                                </Icon>
-                                            </StyledNavLink>
-                                        </NavItem>
-                                        <NavItem style={{ height: 80, marginTop: "20px" }}>
-                                            <StyledNavLink
-                                                className={classnames({ active: this.state.activeTab === 'esports' })}
-                                                onClick={() => {
-                                                this.toggle('esports');
-                                                }}
-                                            >
-                                                <span>Esports</span>
-                                                <EsportsIcon>
-                                                    <EsportsWhite isActive={this.state.activeTab === 'esports'}/>
-                                                </EsportsIcon>
-                                            </StyledNavLink>
-                                        </NavItem>
-                                </Nav>
-                                    {/* <Row>
-                                        {servicesCodes.map( (key) => {
-                                            return widgets[key] ? widgets[key]() : null;
-                                        })}
-                                    </Row> */}
-                                </Col>
-                                <Col md={8} style={{ height: 70 }}>
-                                    <MobileWrapper>
-                                        <Link>Application link</Link>
-                                    </MobileWrapper>
-                                    <HostingLink/>
-                                </Col>
-                            </Row>
-                            <TabContainer>
-                                <TabContent activeTab={this.state.activeTab}>
-                                <Suspense fallback={<div class="load">
-                                                        <div class="load__icon-wrap">
-                                                        <img src={loading} alt="loading..."/>
-                                                        </div>
-                                                    </div>}>
-                                    <TabPane tabId={'platform'} style={{ paddingTop: 30 }}>
-                                        <TabsContainer 
-                                            items={
-                                                this.getPlatformTabs(permission)
-                                            }
-                                        />
-                                    </TabPane>
-                                    <TabPane tabId={'casino'} style={{ paddingTop: 30 }}>
-                                        <TabsContainer 
-                                            items={
-                                                this.getCasinoTabs(permission)
-                                            }
-                                        />
-                                    </TabPane>
-                                    <TabPane tabId={'esports'} style={{ paddingTop: 30 }}>
-                                        { this.state.activeTab === 'esports' && <EsportsPage/> }
-                                    </TabPane>
-                                </Suspense>
-                                </TabContent>
-                            </TabContainer>
-                        </div>   
-                    </Col>
-                </Row>
-            </Container>
-            </Fade>
-        )
-    }
+                                        <StyledNavLink
+                                            className={classnames({ active: activeTab === 'casino' })}
+                                            onClick={() => {
+                                            toggle('casino');
+                                            }}
+                                        >
+                                            <span>Casino</span>
+                                            <Icon>
+                                                <CasinoWhite/>
+                                            </Icon>
+                                        </StyledNavLink>
+                                    </NavItem>
+                                    <NavItem style={{ height: 80, marginTop: "20px" }}>
+                                        <StyledNavLink
+                                            className={classnames({ active: activeTab === 'esports' })}
+                                            onClick={() => {
+                                            toggle('esports');
+                                            }}
+                                        >
+                                            <span>Esports</span>
+                                            <EsportsIcon>
+                                                <EsportsWhite isActive={activeTab === 'esports'}/>
+                                            </EsportsIcon>
+                                        </StyledNavLink>
+                                    </NavItem>
+                            </Nav>
+                                {/* <Row>
+                                    {servicesCodes.map( (key) => {
+                                        return widgets[key] ? widgets[key]() : null;
+                                    })}
+                                </Row> */}
+                            </Col>
+                            <Col md={8} style={{ height: 70 }}>
+                                <MobileWrapper>
+                                    <Link>Application link</Link>
+                                </MobileWrapper>
+                                <HostingLink/>
+                            </Col>
+                        </Row>
+                        <TabContainer>
+                            <TabContent activeTab={activeTab}>
+                            <Suspense fallback={<div class="load">
+                                                    <div class="load__icon-wrap">
+                                                    <img src={loading} alt="loading..."/>
+                                                    </div>
+                                                </div>}>
+                                <TabPane tabId={'platform'} style={{ paddingTop: 30 }}>
+                                    <TabsContainer 
+                                        items={
+                                            getPlatformTabs(permission)
+                                        }
+                                    />
+                                </TabPane>
+                                <TabPane tabId={'casino'} style={{ paddingTop: 30 }}>
+                                    <TabsContainer 
+                                        items={
+                                            getCasinoTabs(permission)
+                                        }
+                                    />
+                                </TabPane>
+                                <TabPane tabId={'esports'} style={{ paddingTop: 30 }}>
+                                    { activeTab === 'esports' && <EsportsPage/> }
+                                </TabPane>
+                            </Suspense>
+                            </TabContent>
+                        </TabContainer>
+                    </div>   
+                </Col>
+            </Row>
+        </Container>
+        </Fade>
+    )
 
 }
 
-const widgets = {
-    casino : () => {
-        return (
-            <CasinoCard>
-                <CasinoContainer>
-                    <span>Casino</span>
-                    <Icon>
-                        <CasinoWhite/>
-                    </Icon>
-                </CasinoContainer>
-            </CasinoCard>       
-        )
-    }
-} 
 
-
-function mapStateToProps(state){
-    return {
-        profile: state.profile
-    };
-}
-
-export default connect(mapStateToProps)(ApplicationsContainer);
+export default ApplicationsContainer;
 
