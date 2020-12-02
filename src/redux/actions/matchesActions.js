@@ -7,20 +7,20 @@ export const actions = Object.freeze({
 export function setMatchesData(data) {
     return {
         type: actions.SET_MATCHES_DATA,
-        payload: data
+        payload: data && typeof data !== 'string' ? data : []
     }
 }
 
 export function addMatchesData(data) {
     return {
         type: actions.ADD_MATCHES_DATA,
-        payload: data
+        payload: data && typeof data !== 'string' ? data : []
     }
 }
 
 export function updateMatchData(data) {
     return {
         type: actions.UPDATE_MATCH_DATA,
-        payload: data
+        payload: data && typeof data !== 'string' ? data : []
     }
 }
