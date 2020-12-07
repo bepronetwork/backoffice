@@ -1,23 +1,6 @@
 import api, { master } from './api';
 
 /**
- * User login
- * @param {Object} credentials
- * @param {String} credentials.username
- * @param {String} credentials.password
- */
-async function userLogin({ username, password }) {
-  return api.post(
-    `${master}/api/admins/login`,
-    {
-      username,
-      password
-    },
-    { interceptor: true }
-  );
-}
-
-/**
  * User login 2FA
  * @param {Object} credentials
  * @param {String} credentials.username
@@ -36,4 +19,4 @@ async function userLogin2FA({ username, password, token }) {
   );
 }
 
-export { userLogin, userLogin2FA };
+export { userLogin2FA };

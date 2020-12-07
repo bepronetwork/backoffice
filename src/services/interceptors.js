@@ -1,4 +1,5 @@
 import has from 'lodash/has';
+import isEmpty from 'lodash/isEmpty';
 
 /**
  * Check if intercetor is enabled in Axios config
@@ -9,29 +10,57 @@ const isInterceptorEnabled = (config = {}) => {
 };
 
 /**
- * Handle Axios success response
+ * Intercept Axios response
  * @param {*} response
  */
-
-const successHandler = response => {
+function responseInterceptor(response) {
   if (isInterceptorEnabled(response.config)) {
     const { data } = response.data;
-    return data.message;
+    const { message, status, errors } = data;
+
+    if (message && errors && errors[0].message) {
+      const errorObj = !isEmpty(errors[0].errors)
+        ? { name: message, message: errors[0].errors[0].message }
+        : { name: message, message: errors[0].message };
+
+      throw errorObj;
+    } else if (message && status && parseInt(status, 10) !== 200) {
+      const errorObj = {
+        name: 'There is a problem with your request',
+        message
+      };
+
+      throw errorObj;
+    } else {
+      return message;
+    }
   }
-  return 'Please apply sucessHandler interceptor';
-};
+
+  return 'Please apply response interceptor';
+}
 
 /**
- * Handle Axios error response
- * @param {*} response
+ * Intercept Axios error
+ * @param {String} msg Error message
+ * @param {*} response Error response
+ * @param {*} config Axios config
  */
+function errorInterceptor(msg, response, config) {
+  if (isInterceptorEnabled(config)) {
+    const { message, errors } = response.data;
 
-const errorHandler = error => {
-  if (isInterceptorEnabled(error.config)) {
-    const { message } = error;
-    return message;
+    if (message && errors && errors[0].message) {
+      const errorObj = !isEmpty(errors[0].errors)
+        ? { name: message, message: errors[0].errors[0].message }
+        : { name: message, message: errors[0].message };
+
+      throw errorObj;
+    } else {
+      return msg;
+    }
   }
-  return 'Please apply sucessHandler interceptor';
-};
 
-export { successHandler, errorHandler };
+  return 'Please apply error interceptor';
+}
+
+export { responseInterceptor, errorInterceptor };

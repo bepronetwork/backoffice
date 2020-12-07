@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { successHandler, errorHandler } from './interceptors';
+import { responseInterceptor, errorInterceptor } from './interceptors';
 
 const api = axios.create();
 
 api.interceptors.response.use(
-  response => successHandler(response),
-  error => errorHandler(error)
+  response => responseInterceptor(response),
+  error => errorInterceptor(error.message, error.response, error.config)
 );
 
 export default api;

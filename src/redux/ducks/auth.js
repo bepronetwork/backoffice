@@ -1,3 +1,6 @@
+/* eslint-disable func-names */
+import api, { master } from '../../services/api';
+
 // Action types
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -30,7 +33,8 @@ export function loginError(error) {
 const initialState = {
   isAuthenticated: false,
   isLoading: false,
-  user: {}
+  user: null,
+  error: null
 };
 
 export default function authReducer(state = initialState, action) {
@@ -38,7 +42,50 @@ export default function authReducer(state = initialState, action) {
     case LOGIN_REQUEST:
       return { ...state, isLoading: true };
 
+    case LOGIN_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        user: action.data,
+        isAuthenticated: true,
+        error: null
+      };
+
+    case LOGIN_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        error: action.error,
+        user: action.data
+      };
+
     default:
       return state;
   }
+}
+
+/**
+ * User login
+ * @param {Object} credentials
+ * @param {String} credentials.username
+ * @param {String} credentials.password
+ */
+export function userLogin({ username, password }) {
+  return async function (dispatch) {
+    dispatch(loginRequest());
+    try {
+      const response = await api.post(
+        `${master}/api/admins/login`,
+        {
+          username,
+          password
+        },
+        { interceptor: true }
+      );
+
+      dispatch(loginSuccess(response));
+    } catch (error) {
+      dispatch(loginError(error));
+    }
+  };
 }
