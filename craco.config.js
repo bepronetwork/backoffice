@@ -13,8 +13,7 @@ module.exports = {
                 dark: false
               }),
               '@primary-color': '#984EFB',
-              '@border-radius-base': '6px',
-              '@font-size-base': '13px'
+              '@border-radius-base': '6px'
             },
             javascriptEnabled: true
           }
