@@ -1303,7 +1303,7 @@ class App{
         }
     }
 
-    addCurrencyWallet = async ({currency, passphrase}) => {
+    addCurrencyWallet = async ({ currency, address, subWalletId }) => {
         try{    
 
             // Send info to server
@@ -1311,17 +1311,16 @@ class App{
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId(),
-                    passphrase : passphrase,
-                    currency_id : currency._id
+                    currency_id : currency._id,
+                    address,
+                    subWalletId
                 },
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
-            console.log(res);
 
             await setCurrencyView(currency)
             return res;
         }catch(err){
-            console.log("err", err)
             throw err;
         }
     }

@@ -58,11 +58,11 @@ class ModalContainer extends React.Component {
                     onClick={this.handleContentClick}
                     >
                         <div className="flex-container">
-                            <dvi style={{flexGrow: 7}}>
+                            <div style={{flexGrow: 7}}>
                                 <p className="dashboard__visitors-chart-title text-left" style={{fontSize : 18, marginBottom : 10}}> {title} </p>
                                 <hr></hr>
-                            </dvi>
-                            <dvi style={{flexGrow: 3}}>
+                            </div>
+                            <div style={{ marginLeft: 10 }}>
                                 <button
                                 className="button-hover modal-icon"
                                 onClick={this.handleOutsideClick}
@@ -70,7 +70,7 @@ class ModalContainer extends React.Component {
                             >
                                 <CloseIcon/>
                                 </button>
-                            </dvi>
+                            </div>
                         </div>
                 
                     {children}
