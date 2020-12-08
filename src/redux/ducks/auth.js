@@ -1,5 +1,6 @@
 /* eslint-disable func-names */
 import api, { master } from '../../services/api';
+import { saveUserAuth, removeUserAuth } from '../../utils/localStorage';
 
 // Action types
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
@@ -55,6 +56,7 @@ export default function authReducer(state = initialState, action) {
       return {
         ...state,
         isLoading: false,
+        isAuthenticated: false,
         error: action.error,
         user: action.data
       };
@@ -83,8 +85,12 @@ export function userLogin({ username, password }) {
         { interceptor: true }
       );
 
+      const { id, bearerToken } = response;
+      saveUserAuth(id, bearerToken);
+
       dispatch(loginSuccess(response));
     } catch (error) {
+      removeUserAuth();
       dispatch(loginError(error));
     }
   };
