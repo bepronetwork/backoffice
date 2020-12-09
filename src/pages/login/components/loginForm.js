@@ -10,26 +10,20 @@ import { userLogin } from '../../../redux/ducks/auth';
 
 function LoginForm() {
   const dispatch = useDispatch();
+  const { isLoading } = useSelector(state => state.auth);
 
-  const onFinish = async values => {
+  const onFinish = values => {
     const { username, password } = values;
 
     dispatch(userLogin({ username, password }));
   };
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
-  };
-
-  const auth = useSelector(state => state.auth);
-
   return (
     <Form
       layout="vertical"
       style={{ marginTop: 20 }}
-      name="basic"
+      name="login"
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
     >
       <Form.Item
         label="Username or E-mail"
@@ -37,11 +31,14 @@ function LoginForm() {
         rules={[
           {
             required: true,
-            message: 'Please input your username or e-mail!'
+            message: 'Please input your username or e-mail'
           }
         ]}
       >
-        <Input prefix={<UserOutlined className={styles.formIcon} />} />
+        <Input
+          prefix={<UserOutlined className={styles.formIcon} />}
+          autoFocus
+        />
       </Form.Item>
 
       <Form.Item
@@ -50,7 +47,7 @@ function LoginForm() {
         rules={[
           {
             required: true,
-            message: 'Please input your password!'
+            message: 'Please input your password'
           }
         ]}
       >
@@ -58,7 +55,7 @@ function LoginForm() {
       </Form.Item>
 
       <Form.Item style={{ textAlign: 'right' }}>
-        <a href="/passwor/forgot">Forgot password?</a>
+        <a href="/forgot">Forgot password?</a>
       </Form.Item>
 
       <Form.Item>
@@ -67,7 +64,7 @@ function LoginForm() {
           htmlType="submit"
           className={styles.fullwidth}
           size="large"
-          loading={auth.isLoading}
+          loading={isLoading}
         >
           Log In
         </Button>

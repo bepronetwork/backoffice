@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 
@@ -8,7 +9,8 @@ import AppRoutes from './app.routes';
 import { getUserAuth } from '../utils/localStorage';
 
 export default function Routes() {
-  const auth = useSelector(state => state.auth);
+  const history = useHistory();
+  const { isAuthenticated } = useSelector(state => state.auth);
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -18,10 +20,10 @@ export default function Routes() {
       if (!isEmpty(userAuth)) {
         setAuthenticated(true);
       }
+      history.push('/');
     }
-
     checkAuthentication();
-  }, [auth]);
+  }, [isAuthenticated]);
 
   return authenticated ? <AppRoutes /> : <AuthRoutes />;
 }

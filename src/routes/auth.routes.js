@@ -5,7 +5,7 @@ const Login = lazy(() => import('../pages/login'));
 
 function AuthRoutes() {
   return (
-    <Suspense fallback={<div />}>
+    <Suspense fallback={null}>
       <Switch>
         <Route exact path="/">
           <Redirect to="/login" />

@@ -5,7 +5,7 @@ const Home = lazy(() => import('../pages/home'));
 
 function AppRoutes() {
   return (
-    <Suspense fallback={<div />}>
+    <Suspense fallback={null}>
       <Switch>
         <Route exact path="/">
           <Redirect to="/home" />
