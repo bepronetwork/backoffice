@@ -418,7 +418,7 @@ class Connection {
     changeMaxWithdraw = async ({params, headers}) => {
         try{
             params.amount = parseFloat(params.amount)
-            let response = await fetch( API_URL_WITHDRAW + `/api/withdraw/max/set`, {
+            let response = await fetch( URL + `/api/withdraw/max/set`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -434,7 +434,7 @@ class Connection {
     changeMinWithdraw = async ({params, headers}) => {
         try{
             params.amount = parseFloat(params.amount)
-            let response = await fetch( API_URL_WITHDRAW + `/api/withdraw/min/set`, {
+            let response = await fetch( URL + `/api/withdraw/min/set`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -450,7 +450,7 @@ class Connection {
     changeAffiliateMinWithdraw = async ({params, headers}) => {
         try{
             params.amount = parseFloat(params.amount)
-            let response = await fetch( API_URL_WITHDRAW + `/api/affiliate/withdraw/min/set`, {
+            let response = await fetch( URL + `/api/affiliate/withdraw/min/set`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -1061,7 +1061,7 @@ class Connection {
 
     addCurrencyWallet = async ({params, headers}) => {
         try{
-            let response = await fetch( URL + `/api/app/wallet/currency/add`, {
+            let response = await fetch( API_URL_WITHDRAW + `/api/app/wallet/currency/add`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -1241,7 +1241,7 @@ class Connection {
 
     getWithdraws = async ({params, headers}) => {
         try{
-            let response = await fetch( API_URL_WITHDRAW + `/api/app/users/withdraws`, {
+            let response = await fetch( URL + `/api/app/users/withdraws`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
