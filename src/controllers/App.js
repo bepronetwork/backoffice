@@ -1303,17 +1303,13 @@ class App{
         }
     }
 
-    addCurrencyWallet = async ({ currency, address, subWalletId }) => {
+    addCurrencyWallet = async ({ currency }) => {
         try{    
-
-            // Send info to server
             let res = await ConnectionSingleton.addCurrencyWallet({          
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId(),
-                    currency_id : currency._id,
-                    address,
-                    subWalletId
+                    currency_id : currency._id
                 },
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });

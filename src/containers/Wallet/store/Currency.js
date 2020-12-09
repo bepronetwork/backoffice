@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { PureComponent } from 'react';
-import { Card, CardBody, Col, Row, Button } from 'reactstrap';
+import {  Button } from 'reactstrap';
 import { AddIcon } from 'mdi-react';
 import { CurrencyStoreCard, CardHeader, CardContent } from './styles';
 import { connect } from 'react-redux';
@@ -12,22 +12,25 @@ class CurrencyStoreContainer extends PureComponent {
     constructor() {
         super();
         this.state = {
-            activeIndex: 0,
+            isLoading: false
         };
     }
 
-    onClick = async () => {
-        const { onClick, currency } = this.props;
-        this.setState({...this.state, isLoading : true})
-        if(onClick){ await onClick(currency) }
-        this.setState({...this.state, isLoading : false})
+    handleAddCurrency = async () => {
+        const { currency, profile } = this.props;
+
+        this.setState({ isLoading: true });
+        
+        await profile.getApp().addCurrencyWallet({ currency });
+
+        this.setState({ isLoading: false });
     }
 
     render() {
         const { currency, isAdded, loading } = this.props;
         const { isLoading } = this.state;
         if(!currency){return null}
-        const { image, _id, ticker, name } = currency;
+        const { image, ticker } = currency;
 
         return (
             <CurrencyStoreCard>
@@ -51,7 +54,7 @@ class CurrencyStoreContainer extends PureComponent {
                     </CardContent>
                     <div className="flex-container">
                         <div style={{flexGrow: 5}} >
-                            <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.onClick()} >
+                            <Button disabled={isLoading || isAdded} style={{margin : 0, marginTop : 10}} className="icon" onClick={() => this.handleAddCurrency()} >
                                 {   
                                     isLoading ?
                                         "Adding"
@@ -75,6 +78,7 @@ class CurrencyStoreContainer extends PureComponent {
 
 function mapStateToProps(state){
     return {
+        profile: state.profile,
         loading: state.isLoading
     };
 }

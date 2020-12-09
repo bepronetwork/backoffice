@@ -1,10 +1,6 @@
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 import { connect } from "react-redux";
-import store from '../App/store';
-import { setCurrencyView } from '../../redux/actions/currencyReducer';
-import { setLoadingStatus } from '../../redux/actions/loadingAction';
-import { addCurrencyWallet } from '../../redux/actions/addCurrencyWallet';
 import CurrencyStoreContainer from './store/Currency';
 import { Header } from './components/LiquidityWalletContainer/styles';
 
@@ -30,11 +26,6 @@ class CurrencyStore extends React.Component{
 
     componentWillReceiveProps(props){
        this.projectData(props);
-    }
-
-    addCurrency = async currency => {
-        await store.dispatch(setCurrencyView(currency));
-        await store.dispatch(addCurrencyWallet({isActive : true}));
     }
     
     projectData = async (props) => {
@@ -116,7 +107,7 @@ class CurrencyStore extends React.Component{
                         {currencies.map(currency => {
                             return (
                                 <Col lg={4} key={currency._id} style={{ minWidth: 250 }}>
-                                    <CurrencyStoreContainer onClick={this.addCurrency} currency={currency} isAdded={currency.isAdded}/>
+                                    <CurrencyStoreContainer currency={currency} isAdded={currency.isAdded}/>
                                 </Col>
                             )
                         })}
