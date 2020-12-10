@@ -149,7 +149,7 @@ class LimitsWidget extends React.Component{
             <TabContainer>
                 <Paragraph style={{ marginBottom: 15 }}>Choose the limits to deposit and withdraw of your wallet</Paragraph>
             <Row>
-                <Col lg={5}>
+                <Col xl="6" lg="6" md="12" sm="12" xs="12">
                     <LimitsBox
                         title={'Max Deposit'}
                         inputIcon={ArrowExpandDownIcon}
@@ -167,7 +167,7 @@ class LimitsWidget extends React.Component{
                         confirmChanges={this.confirmChanges} 
                     />
                 </Col>
-                <Col lg={5}>
+                <Col xl="6" lg="6" md="12" sm="12" xs="12">
                     <LimitsBox
                         title={'Max Withdrawal'}
                         inputIcon={ArrowExpandDownIcon}
@@ -185,7 +185,7 @@ class LimitsWidget extends React.Component{
                         confirmChanges={this.confirmChanges} 
                     />
                 </Col>
-                <Col lg={5}>
+                <Col xl="6" lg="6" md="12" sm="12" xs="12">
                     <LimitsBox
                         title={'Min Withdrawal'}
                         inputIcon={ArrowExpandDownIcon}
@@ -202,7 +202,7 @@ class LimitsWidget extends React.Component{
                         confirmChanges={this.confirmChanges} 
                     />
                 </Col>
-                <Col lg={5}>
+                <Col xl="6" lg="6" md="12" sm="12" xs="12" >
                     <LimitsBox
                         title={'Affiliate Min Withdrawal'}
                         inputIcon={ArrowExpandDownIcon}
