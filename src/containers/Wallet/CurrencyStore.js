@@ -15,7 +15,7 @@ class CurrencyStore extends React.Component{
         super(props);
         this.state = {
             ecosystemCurrencies : [],
-            integratedWallets : [],
+            currencies: [],
             isLoading: false
         }
     }
@@ -27,48 +27,43 @@ class CurrencyStore extends React.Component{
     componentWillReceiveProps(props){
        this.projectData(props);
     }
+
+    isAdded = (currency, wallet) => {
+        return !_.isUndefined(wallet.find(w => w.currency._id === currency._id));
+    }
     
     projectData = async (props) => {
-        let { profile } = props;
+        const { profile } = props;
+        const app = await profile.getApp();
         
         this.setState({ isLoading: true });
 
-        let ecosystemCurrencies = await profile.getApp().getEcosystemCurrencies();
-        if(!(await profile.getApp().getSummaryData('walletSimple').data)){return null}
-        let integratedWallets = (await profile.getApp().getSummaryData('walletSimple')).data;
-        const { virtual } = await profile.getApp().getParams();
+        const ecosystemCurrencies = await app.getEcosystemCurrencies();
+        const { wallet, virtual } = app.params;
 
-        ecosystemCurrencies = ecosystemCurrencies.map( ecoCurrency => {
-            let exists = false;
-            integratedWallets.map( w => {
-                if(new String(w.currency._id).toString().toLowerCase().trim() == new String(ecoCurrency._id).toString().toLowerCase().trim()){
-                    exists = true;
-                };
-            })
-            if(!exists){return ecoCurrency}
-            else{ return {...ecoCurrency, isAdded : true}}
-        }).filter(el => el != null && ((virtual === true && !el.virtual) || (virtual === false && !el.hasOwnProperty('virtual')) || el.virtual === virtual));
+        const filteredCurrencies = virtual ? ecosystemCurrencies : ecosystemCurrencies.filter(currency => !currency.virtual);
+        const currencies = filteredCurrencies.map(currency => ({ ...currency, isAdded: this.isAdded(currency, wallet)}));
 
         this.setState({...this.state, 
             ecosystemCurrencies,
-            integratedWallets,
+            currencies: currencies || [],
             isLoading: false
         })
     }
 
     hasRestriction = (appUseVirtualCurrencies, currency) => {
-        return appUseVirtualCurrencies && currency._id === "5e108498049eba079930ae1c";
+        return appUseVirtualCurrencies && currency.ticker === 'ETH';
     }
 
     render = () => {
-        const { ecosystemCurrencies, isLoading } = this.state;
+        const { currencies, isLoading } = this.state;
         const { profile, loading } = this.props;
 
         const appUseVirtualCurrencies = profile.App.params.virtual;
 
-        const currencies = ecosystemCurrencies.filter(currency => !this.hasRestriction(appUseVirtualCurrencies, currency));
+        const filteredCurrencies = currencies.filter(currency => !this.hasRestriction(appUseVirtualCurrencies, currency));
 
-        if ((_.isEmpty(currencies) && isLoading) || loading ) {
+        if ((_.isEmpty(filteredCurrencies) && isLoading) || loading ) {
             return (
                 <div style={{ margin: 10 }}>
                 <Header style={{ paddingLeft: 10 }}>
@@ -104,7 +99,7 @@ class CurrencyStore extends React.Component{
                 </Header>
                 <div style={{marginTop: 20}}>
                     <Row>
-                        {currencies.map(currency => {
+                        {filteredCurrencies.map(currency => {
                             return (
                                 <Col lg={4} key={currency._id} style={{ minWidth: 250 }}>
                                     <CurrencyStoreContainer currency={currency} isAdded={currency.isAdded}/>
