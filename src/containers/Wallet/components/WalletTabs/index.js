@@ -14,7 +14,7 @@ import FreeCurrencyWidget from '../paths/FreeCurrencyWidget'
 
 const tabs = [
     { name: "Deposit", container: (wallet) => <Deposit data={wallet}/> },
-    { name: "Withdraw", container: (wallet) => <Withdraw data={wallet}/> },
+    // { name: "Withdraw", container: (wallet) => <Withdraw data={wallet}/> },
     { name: "Limits", container: (wallet) => <LimitsWidget data={wallet}/> },
     { name: "Fees", container: (wallet) => <FeesWidget data={wallet}/> },
     { name: "Bonus", container: (wallet) => <BonusWidget data={wallet}/> },

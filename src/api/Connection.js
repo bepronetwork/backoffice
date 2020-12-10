@@ -198,6 +198,19 @@ class Connection {
         }
     }
 
+    updateAppBalance =  async ({params, headers}) => {
+        try{
+            let response = await fetch(URL+ '/api/app/update/balance', {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            return this.handleResponse(response);
+        }catch(err){
+            throw err;
+        }
+    }
+
     editTableLimit = async ({admin, app, game, tableLimit, wallet, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/games/editTableLimit', {
