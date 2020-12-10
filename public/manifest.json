@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "BackOffice",
+  "name": "BackOffice Platform for Operator to Control Operations",
   "icons": [
     {
       "src": "favicon.ico",
