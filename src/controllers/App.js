@@ -244,6 +244,24 @@ class App{
         }
     }
 
+    updateAppBalance = async ({ increase_amount, currency }) => {
+        try{
+            let res = await ConnectionSingleton.updateAppBalance({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    increase_amount,
+                    currency
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+            
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     setGamesAsync = async () => {
         try{
             const { currency } = store.getState();
