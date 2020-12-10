@@ -22,6 +22,8 @@ class CurrencyStoreContainer extends PureComponent {
         this.setState({ isLoading: true });
         
         await profile.getApp().addCurrencyWallet({ currency });
+        await profile.getApp().updateAppInfoAsync();
+        await profile.update();
 
         this.setState({ isLoading: false });
     }
