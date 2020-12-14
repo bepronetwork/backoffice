@@ -6,11 +6,8 @@ import CurrencyStore from './CurrencyStore';
 import { Wallet, Cash } from '../../components/Icons';
 import LiquidityWalletContainer from './components/LiquidityWalletContainer';
 
+import _ from 'lodash';
 class WalletContainer extends React.Component{
-
-    constructor(props){
-        super(props)
-    }
 
     render = () => {
         const { profile } = this.props;
@@ -22,23 +19,16 @@ class WalletContainer extends React.Component{
             <Container className="dashboard">
                 <TabsContainer 
                     items={
-                        [
-                            {
-                                title : 'My Wallet',
-                                container : (
-                                    <LiquidityWalletContainer wallets={wallets} />
-                                ),
-                                icon : <Wallet/>
-                            },
-                            {
-                                title : 'Currency Store',
-                                container : (
-                                    <CurrencyStore/>
-                                ),
-                                icon : <Cash/>
-                            }
-                        ]
-                    }
+                        [ { 
+                            title : 'My Wallet', 
+                            container : ( <LiquidityWalletContainer wallets={wallets} /> ), 
+                            icon : <Wallet/>, 
+                            disabled: _.isEmpty(wallets) },
+                          { 
+                            title : 'Currency Store', 
+                            container : ( <CurrencyStore/> ), 
+                            icon : <Cash/> }
+                        ] }
                 />
           </Container>
         )
