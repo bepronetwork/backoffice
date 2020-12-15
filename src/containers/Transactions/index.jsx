@@ -6,7 +6,6 @@ import { translate } from 'react-i18next';
 import { connect } from "react-redux";
 import { CardBody, Col, Container, Row } from 'reactstrap';
 import DataWidget from '../DataWidget/DataWidget';
-import EnhancedTable from './components/EnhancedTable';
 import TransactionsOpen from './components/TransactionsOpen';
 import TransactionsProfile from './components/TransactionsProfile';
 
@@ -79,13 +78,6 @@ class TransactionsContainer extends React.Component{
                             <TransactionsOpen data={this.props.profile.getApp().getSummaryData('withdraws')}/>
                         </DataWidget>
                     </Col>
-                   {/* <Col lg={6}>         
-                        <div className="dashboard__visitors-chart">
-                            <p className="dashboard__visitors-chart-title" style={{fontSize : 20, marginLeft : 20, marginBottom : 10}}> Filters <span>  </span></p>
-                        </div>  
-                        <TransactionsFilterUserId data={this.props.profile.getApp().getSummaryData('transactions')}/>
-                    </Col>
-                    */}
                 </Row>
                 <Row>
                     <Col lg={12}>
