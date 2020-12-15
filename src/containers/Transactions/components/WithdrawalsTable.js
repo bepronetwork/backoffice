@@ -4,7 +4,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { Container, Header, TableContainer, Filters, Export, Text } from './styles';
-import { Table, Spin, DatePicker, Select, Input, Space, Button } from 'antd';
+import { Table, Spin, Input, Space, Button } from 'antd';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 
 import { CSVLink } from "react-csv";
@@ -14,11 +14,6 @@ import { export2JSON } from '../../../utils/export2JSON';
 import { AddressConcat } from '../../../lib/string';
 
 import Highlighter from 'react-highlight-words';
-import ConfirmWithdrawDialog from './ConfirmWithdrawDialog';
-import CancelWithdrawDialog from './CancelWithdrawDialog';
-
-
-const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
 class WithdrawalsTable extends React.Component {
         constructor(props){
@@ -34,11 +29,7 @@ class WithdrawalsTable extends React.Component {
             currency: null,
             searchText: '',
             searchedColumn: '',
-            withdraw: null,
-            open: false,
-            openConfirm: false,
-            isLoadingObj : {},
-            isLoadingCancel : {},
+            withdraw: null
         };
 
     }
@@ -70,63 +61,6 @@ class WithdrawalsTable extends React.Component {
             currencies: currencies,
             isLoading: false
         })
-    }
-
-    openDialog = (withdrawObj) => {
-        this.setState({ 
-            open: true,
-            withdraw: withdrawObj
-        })
-    }
-
-    openConfirmDialog = (withdrawObj) => {
-        this.setState({ 
-            openConfirm: true,
-            withdraw: withdrawObj
-        })
-    }
-
-    closeDialog = () => {
-        this.setState({ 
-            open: false
-        })
-    }
-
-    closeConfirmDialog = () => {
-        this.setState({ 
-            openConfirm: false
-        })
-    }
-
-    allowWithdraw = async (withdrawObject) => {
-
-        this.setState({...this.state, isLoadingObj : {
-            ...this.state.isLoadingObj, [withdrawObject._id] : true
-        }})
-
-        await this.props.allowWithdraw(withdrawObject);
-
-        this.setState({...this.state, isLoadingObj : {
-            ...this.state.isLoadingObj, [withdrawObject._id] : false
-        }})
-
-        this.closeConfirmDialog();
-    }
-
-    cancelWithdraw = async (reason) => {
-        const withdrawObject = this.state.withdraw;
-
-        this.setState({...this.state, isLoadingCancel : {
-            ...this.state.isLoadingCancel, [withdrawObject._id] : true
-        }})
-
-        await this.props.cancelWithdraw({ withdraw: withdrawObject, reason });
-
-        this.setState({...this.state, isLoadingCancel : {
-            ...this.state.isLoadingCancel, [withdrawObject._id] : false
-        }})
-
-        this.closeDialog();
     }
 
     prepareTableData = (withdrawals, currencies) => {
@@ -161,27 +95,7 @@ class WithdrawalsTable extends React.Component {
     )
 
     getConfirmedStatus = ({ _id, status }) => (
-        status.status === 'Queue'
-        ?
-        <div style={{ display: "flex" }}>
-            <button disabled={this.state.isLoadingObj[status._id]} className={`clean_button button-normal button-hover`} style={{ height: "24px", margin: "5px", backgroundColor: this.state.isLoadingObj[status._id] ? "grey" : "#63c965" }} onClick={ () => this.openConfirmDialog(status)}> 
-                {
-                    !this.state.isLoadingObj[status._id] ? 
-                        <p className='text-small text-white'>Confirm</p>
-                    : <img src={loading} style={{width : 20, height : 20, marginTop: -5 }}/>
-                }
-            </button>
-
-            <button disabled={this.state.isLoadingCancel[status._id]} className={`clean_button button-normal button-hover`} style={{ height: "24px", margin: "5px", backgroundColor: this.state.isLoadingCancel[status._id] ? "grey" : "#e6536e" }} onClick={ () => this.openDialog(status)}> 
-                {
-                    !this.state.isLoadingCancel[status._id] ? 
-                        <p className='text-small text-white'>Cancel</p>
-                    : <img src={loading} style={{width : 20, height : 20, marginTop: -5 }}/>
-                }
-            </button>
-        </div>
-            
-    :  <p className={`text-small ${status.status === "Canceled" ? "background-white-red text-red" : "background-white-green text-green"} `}>{status.status}</p> 
+        <p className={`text-small ${["Canceled", "Queue"].includes(status.status) ? "background-white-red text-red" : "background-white-green text-green"} `}>{status.status}</p> 
     )
 
     prepareTableColumns = withdrawals => {
@@ -299,7 +213,7 @@ class WithdrawalsTable extends React.Component {
       };
 
     render() {
-        const { data, columns, pagination, isLoading, isLoadingObj, withdraw, isLoadingCancel, openConfirm, open } = this.state;
+        const { data, columns, pagination, isLoading } = this.state;
 
         const headers = [
             { label: "Id", key: "_id" },
@@ -326,8 +240,6 @@ class WithdrawalsTable extends React.Component {
                 <Header>
                     <Filters>
                     </Filters>
-                    <ConfirmWithdrawDialog open={openConfirm} onClose={this.closeConfirmDialog} allowWithdraw={this.allowWithdraw} withdraw={withdraw} isLoading={isLoadingObj}/>
-                    <CancelWithdrawDialog open={open} onClose={this.closeDialog} cancelWithdraw={this.cancelWithdraw} withdraw={withdraw} isLoading={isLoadingCancel}/>
                     <Export>
                         <CSVLink data={csvData} filename={"withdrawals.csv"} headers={headers}>
                             <MaterialButton variant="contained" size="small" style={{ textTransform: "none", backgroundColor: "#008000", color: "#ffffff", boxShadow: "none", margin: 10}}>
