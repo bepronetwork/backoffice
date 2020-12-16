@@ -11,11 +11,10 @@ import {
     TableSortLabel, Toolbar, Typography, Paper, Tooltip, FormControl, TextField
       } from '@material-ui/core';
 import { Col, Row } from 'reactstrap';
-import TextInput from '../../../shared/components/TextInput';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
-import { FilterListIcon, TableIcon, JsonIcon, HelpIcon, AlertCircleOutlineIcon } from 'mdi-react';
+import { FilterListIcon, TableIcon, JsonIcon, AlertCircleOutlineIcon } from 'mdi-react';
 import { compareIDS } from '../../../lib/string';
-import _, { isObject } from 'lodash';
+import _ from 'lodash';
 import { CSVLink } from "react-csv";
 import { export2JSON } from "../../../utils/export2JSON";
 import { Button as MaterialButton } from "@material-ui/core";
@@ -43,7 +42,8 @@ const fromDatabasetoTable = (data, otherInfo, currency) => {
         return {
             _id :  key._id,
             full_info : {...d, ...key}, 
-			username : key.username,
+            username : key.username,
+            kyc_status: key.kyc_status,
 			wallet: wallet && wallet.playBalance ? parseFloat(wallet.playBalance) : 0,
 			bets: parseFloat(key.bets.length),
             email: key.email,
@@ -75,6 +75,11 @@ const rows = [
         numeric: false
     },
     {
+        id: 'kyc_status',
+        label: 'KYC',
+        numeric: false
+    },
+    {
         id: 'wallet',
         label: 'Balance',
         numeric: false
@@ -102,7 +107,7 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+        const { order, orderBy } = this.props;
 
         return (
             <TableHead>
@@ -420,13 +425,14 @@ class UsersTable extends React.Component {
             { label: "Id", key: "_id" },
             { label: "Username", key: "username" },
             { label: "Email", key: "email" },
+            { label: "KYC", key: "kyc_status"},
             { label: "Balance", key: "wallet" },
             { label: "Bets", key: "bets" },
             { label: "Turnover", key: "turnoverAmount" },
             { label: "Profit", key: "profit"}
         ];
 
-        const jsonData = data.map(row => _.pick(row, ['_id', 'username', 'email', 'wallet', 'bets', 'turnoverAmount', 'profit']));
+        const jsonData = data.map(row => _.pick(row, ['_id', 'username', 'email', 'kyc_status', 'wallet', 'bets', 'turnoverAmount', 'profit']));
 
         return (
             <Paper className={classes.root} style={{ borderRadius: "10px", border: "solid 1px rgba(164, 161, 161, 0.35)", backgroundColor: "#fafcff", boxShadow: "none" }}>
@@ -544,6 +550,11 @@ class UsersTable extends React.Component {
                                             <TableCell align="left">
                                                 <p className='text-small'>
                                                     {n.email}
+                                                </p>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <p className='text-small'>
+                                                    {n.kyc_status}
                                                 </p>
                                             </TableCell>
                                             <TableCell align="left">
