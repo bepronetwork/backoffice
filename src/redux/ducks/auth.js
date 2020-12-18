@@ -2,81 +2,48 @@
 import api, { master } from 'services/api';
 import { saveAdminAuth, removeAdminAuth } from 'utils/localStorage';
 
-// Action types
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_ERROR = 'LOGIN_ERROR';
-export const LOGOUT = 'LOGOUT';
-
-// Actions
-export function loginRequest() {
-  return {
-    type: LOGIN_REQUEST
-  };
-}
-
-export function loginSuccess(results) {
-  return {
-    type: LOGIN_SUCCESS,
-    data: results,
-    error: null
-  };
-}
-
-export function loginError(error) {
-  return {
-    type: LOGIN_ERROR,
-    data: null,
-    error
-  };
-}
-
-export function logout() {
-  return {
-    type: LOGOUT
-  };
-}
+import { createSlice } from '@reduxjs/toolkit';
 
 // Reducer
 const initialState = {
+  admin: null,
   isLoading: false,
   isAuthenticated: false,
-  admin: null,
   error: null
 };
 
-export default function authReducer(state = initialState, action) {
-  switch (action.type) {
-    case LOGIN_REQUEST:
-      return { ...state, isLoading: true };
-
-    case LOGIN_SUCCESS:
-      return {
-        isLoading: false,
-        admin: action.data,
-        isAuthenticated: true,
-        error: null
-      };
-
-    case LOGIN_ERROR:
-      return {
-        isLoading: false,
-        isAuthenticated: false,
-        error: action.error,
-        admin: action.data
-      };
-    case LOGOUT:
-      return {
-        isLoading: false,
-        isAuthenticated: false,
-        error: null,
-        admin: null
-      };
-
-    default:
-      return state;
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    request: state => ({
+      ...state,
+      isLoading: true
+    }),
+    success: (_state, action) => ({
+      admin: action.payload,
+      isLoading: false,
+      isAuthenticated: true,
+      error: null
+    }),
+    error: (_state, action) => ({
+      admin: null,
+      isLoading: false,
+      isAuthenticated: false,
+      error: action.payload
+    }),
+    logout: () => ({
+      admin: null,
+      isLoading: false,
+      isAuthenticated: false,
+      error: null
+    })
   }
-}
+});
+
+export default authSlice.reducer;
+
+const { request, success, error, logout } = authSlice.actions;
 
 /**
  * Admin login
@@ -86,7 +53,7 @@ export default function authReducer(state = initialState, action) {
  */
 export function adminLogin({ username, password }) {
   return async function (dispatch) {
-    dispatch(loginRequest());
+    dispatch(request());
     try {
       const response = await api.post(
         `${master}/api/admins/login`,
@@ -100,10 +67,10 @@ export function adminLogin({ username, password }) {
       const { id, bearerToken } = response;
       saveAdminAuth(id, bearerToken);
 
-      dispatch(loginSuccess(response));
-    } catch (error) {
+      dispatch(success(response));
+    } catch (err) {
       removeAdminAuth();
-      dispatch(loginError(error));
+      dispatch(error(err));
     }
   };
 }
