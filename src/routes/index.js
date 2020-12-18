@@ -10,7 +10,7 @@ import { getUserAuth } from '../utils/localStorage';
 
 export default function Routes() {
   const history = useHistory();
-  const { isAuthenticated } = useSelector(state => state.auth);
+  const { isAuthenticated, user } = useSelector(state => state.auth);
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -21,11 +21,12 @@ export default function Routes() {
         setAuthenticated(true);
         history.push('/');
       } else {
+        setAuthenticated(false);
         history.push('/login');
       }
     }
     checkUserAuthentication();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
   return authenticated ? <AppRoutes /> : <AuthRoutes />;
 }

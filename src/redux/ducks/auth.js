@@ -6,6 +6,7 @@ import { saveUserAuth, removeUserAuth } from '../../utils/localStorage';
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
+export const LOGOUT = 'LOGOUT';
 
 // Actions
 export function loginRequest() {
@@ -30,10 +31,16 @@ export function loginError(error) {
   };
 }
 
+export function logout() {
+  return {
+    type: LOGOUT
+  };
+}
+
 // Reducer
 const initialState = {
-  isAuthenticated: false,
   isLoading: false,
+  isAuthenticated: false,
   user: null,
   error: null
 };
@@ -45,7 +52,6 @@ export default function authReducer(state = initialState, action) {
 
     case LOGIN_SUCCESS:
       return {
-        ...state,
         isLoading: false,
         user: action.data,
         isAuthenticated: true,
@@ -54,11 +60,17 @@ export default function authReducer(state = initialState, action) {
 
     case LOGIN_ERROR:
       return {
-        ...state,
         isLoading: false,
         isAuthenticated: false,
         error: action.error,
         user: action.data
+      };
+    case LOGOUT:
+      return {
+        isLoading: false,
+        isAuthenticated: false,
+        error: null,
+        user: null
       };
 
     default:
@@ -93,5 +105,15 @@ export function userLogin({ username, password }) {
       removeUserAuth();
       dispatch(loginError(error));
     }
+  };
+}
+
+/**
+ * User logout
+ */
+export function userLogout() {
+  return function (dispatch) {
+    removeUserAuth();
+    dispatch(logout());
   };
 }
