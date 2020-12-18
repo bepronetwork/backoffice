@@ -14,15 +14,17 @@ export default function Routes() {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    function checkAuthentication() {
+    function checkUserAuthentication() {
       const userAuth = getUserAuth();
 
       if (!isEmpty(userAuth)) {
         setAuthenticated(true);
+        history.push('/');
+      } else {
+        history.push('/login');
       }
-      history.push('/');
     }
-    checkAuthentication();
+    checkUserAuthentication();
   }, [isAuthenticated]);
 
   return authenticated ? <AppRoutes /> : <AuthRoutes />;

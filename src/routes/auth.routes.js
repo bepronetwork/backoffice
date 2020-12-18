@@ -10,7 +10,7 @@ function AuthRoutes() {
         <Route exact path="/">
           <Redirect to="/login" />
         </Route>
-        <Route component={Login} path="/login" exact />
+        <Route component={Login} path="/login" />
       </Switch>
     </Suspense>
   );
