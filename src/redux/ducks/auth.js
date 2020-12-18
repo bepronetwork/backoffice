@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
 import api, { master } from '../../services/api';
-import { saveUserAuth, removeUserAuth } from '../../utils/localStorage';
+import { saveAdminAuth, removeAdminAuth } from '../../utils/localStorage';
 
 // Action types
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
@@ -41,7 +41,7 @@ export function logout() {
 const initialState = {
   isLoading: false,
   isAuthenticated: false,
-  user: null,
+  admin: null,
   error: null
 };
 
@@ -53,7 +53,7 @@ export default function authReducer(state = initialState, action) {
     case LOGIN_SUCCESS:
       return {
         isLoading: false,
-        user: action.data,
+        admin: action.data,
         isAuthenticated: true,
         error: null
       };
@@ -63,14 +63,14 @@ export default function authReducer(state = initialState, action) {
         isLoading: false,
         isAuthenticated: false,
         error: action.error,
-        user: action.data
+        admin: action.data
       };
     case LOGOUT:
       return {
         isLoading: false,
         isAuthenticated: false,
         error: null,
-        user: null
+        admin: null
       };
 
     default:
@@ -79,12 +79,12 @@ export default function authReducer(state = initialState, action) {
 }
 
 /**
- * User login
+ * Admin login
  * @param {Object} credentials
  * @param {String} credentials.username
  * @param {String} credentials.password
  */
-export function userLogin({ username, password }) {
+export function adminLogin({ username, password }) {
   return async function (dispatch) {
     dispatch(loginRequest());
     try {
@@ -98,22 +98,22 @@ export function userLogin({ username, password }) {
       );
 
       const { id, bearerToken } = response;
-      saveUserAuth(id, bearerToken);
+      saveAdminAuth(id, bearerToken);
 
       dispatch(loginSuccess(response));
     } catch (error) {
-      removeUserAuth();
+      removeAdminAuth();
       dispatch(loginError(error));
     }
   };
 }
 
 /**
- * User logout
+ * Admin logout
  */
-export function userLogout() {
+export function adminLogout() {
   return function (dispatch) {
-    removeUserAuth();
+    removeAdminAuth();
     dispatch(logout());
   };
 }

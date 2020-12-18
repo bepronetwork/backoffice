@@ -6,18 +6,18 @@ import isEmpty from 'lodash/isEmpty';
 import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
 
-import { getUserAuth } from '../utils/localStorage';
+import { getAdminAuth } from '../utils/localStorage';
 
 export default function Routes() {
   const history = useHistory();
-  const { isAuthenticated, user } = useSelector(state => state.auth);
+  const { isAuthenticated, admin } = useSelector(state => state.auth);
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    function checkUserAuthentication() {
-      const userAuth = getUserAuth();
+    function checkAdminAuthentication() {
+      const adminAuth = getAdminAuth();
 
-      if (!isEmpty(userAuth)) {
+      if (!isEmpty(adminAuth)) {
         setAuthenticated(true);
         history.push('/');
       } else {
@@ -25,8 +25,8 @@ export default function Routes() {
         history.push('/login');
       }
     }
-    checkUserAuthentication();
-  }, [isAuthenticated, user]);
+    checkAdminAuthentication();
+  }, [isAuthenticated, admin]);
 
   return authenticated ? <AppRoutes /> : <AuthRoutes />;
 }
