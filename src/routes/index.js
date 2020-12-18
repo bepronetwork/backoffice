@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 
+import { getAdminAuth } from 'utils/localStorage';
+
 import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
-
-import { getAdminAuth } from '../utils/localStorage';
 
 export default function Routes() {
   const history = useHistory();

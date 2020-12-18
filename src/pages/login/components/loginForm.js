@@ -4,9 +4,9 @@ import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
-import styles from '../login.module.scss';
+import { adminLogin } from 'redux/ducks/auth';
 
-import { adminLogin } from '../../../redux/ducks/auth';
+import styles from '../login.module.scss';
 
 function LoginForm() {
   const dispatch = useDispatch();

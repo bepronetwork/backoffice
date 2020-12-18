@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
+
+import configureAppStore from 'redux/store';
+
 import reportWebVitals from './reportWebVitals';
 
 import App from './App';
-import configureAppStore from './redux/store';
 
 const store = configureAppStore();
 

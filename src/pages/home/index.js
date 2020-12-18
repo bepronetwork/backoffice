@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import { adminLogout } from '../../redux/ducks/auth';
+import { adminLogout } from 'redux/ducks/auth';
 
 function Home() {
   const dispatch = useDispatch();

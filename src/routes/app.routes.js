@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-const Home = lazy(() => import('../pages/home'));
+const Home = lazy(() => import('pages/home'));
 
 function AppRoutes() {
   return (

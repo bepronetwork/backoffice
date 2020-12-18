@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
-import api, { master } from '../../services/api';
-import { saveAdminAuth, removeAdminAuth } from '../../utils/localStorage';
+import api, { master } from 'services/api';
+import { saveAdminAuth, removeAdminAuth } from 'utils/localStorage';
 
 // Action types
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';

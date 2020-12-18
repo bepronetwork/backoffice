@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-const Login = lazy(() => import('../pages/login'));
+const Login = lazy(() => import('pages/login'));
 
 function AuthRoutes() {
   return (
