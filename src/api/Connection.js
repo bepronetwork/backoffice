@@ -1074,7 +1074,7 @@ class Connection {
 
     addCurrencyWallet = async ({params, headers}) => {
         try{
-            let response = await fetch( API_URL_WITHDRAW + `/api/app/wallet/currency/add`, {
+            let response = await fetch( URL + `/api/app/wallet/currency/add`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
