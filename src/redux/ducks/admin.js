@@ -12,8 +12,8 @@ const initialState = {
   error: null
 };
 
-const authSlice = createSlice({
-  name: 'auth',
+const adminSlice = createSlice({
+  name: 'admin',
   initialState,
   reducers: {
     request: state => ({
@@ -32,7 +32,7 @@ const authSlice = createSlice({
       isAuthenticated: false,
       error: action.payload
     }),
-    logout: () => ({
+    reset: () => ({
       admin: null,
       isLoading: false,
       isAuthenticated: false,
@@ -41,9 +41,9 @@ const authSlice = createSlice({
   }
 });
 
-export default authSlice.reducer;
+export default adminSlice.reducer;
 
-const { request, success, error, logout } = authSlice.actions;
+const { request, success, error, reset } = adminSlice.actions;
 
 /**
  * Admin login
@@ -51,7 +51,7 @@ const { request, success, error, logout } = authSlice.actions;
  * @param {String} credentials.username
  * @param {String} credentials.password
  */
-export function adminLogin({ username, password }) {
+export function login({ username, password }) {
   return async function (dispatch) {
     dispatch(request());
     try {
@@ -78,9 +78,32 @@ export function adminLogin({ username, password }) {
 /**
  * Admin logout
  */
-export function adminLogout() {
+export function logout() {
   return function (dispatch) {
     removeAdminAuth();
-    dispatch(logout());
+    dispatch(reset());
+  };
+}
+
+/**
+ * Get admin authentication data
+ * @param {String} admin Admin id
+ */
+export function getAdmin({ admin }) {
+  return async function (dispatch) {
+    dispatch(request());
+    try {
+      const response = await api.post(
+        `${master}/api/admins/auth`,
+        {
+          admin
+        },
+        { interceptor: true }
+      );
+
+      dispatch(success(response));
+    } catch (err) {
+      dispatch(error(err));
+    }
   };
 }

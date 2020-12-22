@@ -10,7 +10,7 @@ import AppRoutes from './app.routes';
 
 export default function Routes() {
   const history = useHistory();
-  const { isAuthenticated, admin } = useSelector(state => state.auth);
+  const { isAuthenticated, admin } = useSelector(state => state.admin);
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {

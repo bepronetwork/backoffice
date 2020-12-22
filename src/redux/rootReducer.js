@@ -1,9 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import auth from './ducks/auth';
+import admin from './ducks/admin';
 
 const rootReducer = combineReducers({
-  auth
+  admin
 });
 
 export default rootReducer;

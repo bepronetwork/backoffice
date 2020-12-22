@@ -4,18 +4,18 @@ import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { adminLogin } from 'redux/ducks/auth';
+import { login } from 'redux/ducks/admin';
 
 import styles from '../login.module.scss';
 
 function LoginForm() {
   const dispatch = useDispatch();
-  const { isLoading } = useSelector(state => state.auth);
+  const { isLoading } = useSelector(state => state.admin);
 
   const onFinish = values => {
     const { username, password } = values;
 
-    dispatch(adminLogin({ username, password }));
+    dispatch(login({ username, password }));
   };
 
   return (
