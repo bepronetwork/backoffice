@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Paragraph } from '../LiquidityWalletContainer/styles';
-import { TabContainer, DepositContent, DepositAddress, CopyButton, InputAddOn, AmountInput, DepositButton } from './styles';
+import { TabContainer, DepositContent, InputAddOn, AmountInput, DepositButton } from './styles';
 import { InputGroup, InputGroupAddon } from 'reactstrap';
 import _, { isNull } from 'lodash';
-import copy from "copy-to-clipboard";  
-var QRCode = require('qrcode.react');
 
 const loading = `${process.env.PUBLIC_URL}/img/loading.gif`;
 
@@ -14,7 +12,6 @@ class Deposit extends Component {
         super(props);
 
         this.state = {
-            copied: false,
             isLoading: false,
             newBalance: null
         };
@@ -33,8 +30,7 @@ class Deposit extends Component {
 
         if (!_.isEmpty(data)) {
             this.setState({
-                wallet: data.wallet,
-                bank_address: data.wallet.bank_address
+                wallet: data.wallet
             })
         } else {
             this.setState({
@@ -42,22 +38,6 @@ class Deposit extends Component {
             })
         }
 
-    }
-
-    copyToClipboard = () => {
-        const { bank_address } = this.state;
-
-        copy(bank_address);
-
-        this.setState({
-            copied: true
-        })
-
-        setTimeout(() => {
-            this.setState({ 
-                copied: false 
-            });
-        }, 5000)
     }
 
     handleChangeAmount = value => {
@@ -82,7 +62,7 @@ class Deposit extends Component {
     }
 
     render() {
-        const { wallet, copied, isLoading, newBalance } = this.state;
+        const { wallet, isLoading, newBalance } = this.state;
         if (_.isEmpty(wallet)) return null
 
         const { image, name } = wallet.currency;
@@ -106,14 +86,6 @@ class Deposit extends Component {
                             </DepositButton>
                         </InputGroupAddon>
                     </InputGroup>
-                    <hr/>
-                    <QRCode value={wallet.bank_address} size={225} bgColor={'#ffffff'} fgColor={'#000000'} style={{ marginBottom: 60 }}/>
-                    <DepositAddress>
-                        <h6>{wallet.bank_address}</h6>
-                        <CopyButton variant="contained" onClick={() => this.copyToClipboard()} disabled={copied}>
-                            {copied ? 'Copied!' : 'Copy'}
-                        </CopyButton>
-                    </DepositAddress>
                 </DepositContent>
            </TabContainer>
            </>
