@@ -4,11 +4,14 @@ import './App.less';
 import Routes from 'routes';
 
 import ViewportProvider from 'contexts/viewport';
+import CurrencyProvider from 'contexts/currency';
 
 function App() {
   return (
     <ViewportProvider>
-      <Routes />
+      <CurrencyProvider>
+        <Routes />
+      </CurrencyProvider>
     </ViewportProvider>
   );
 }
