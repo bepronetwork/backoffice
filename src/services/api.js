@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { responseInterceptor, errorInterceptor } from './interceptors';
+import {
+  responseInterceptor,
+  errorInterceptor,
+  authenticationInterceptor
+} from './interceptors';
 
 const api = axios.create();
 
@@ -7,6 +11,8 @@ api.interceptors.response.use(
   response => responseInterceptor(response),
   error => errorInterceptor(error.message, error.response, error.config)
 );
+
+api.interceptors.request.use(config => authenticationInterceptor(config));
 
 export default api;
 

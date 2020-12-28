@@ -3,6 +3,9 @@ import { useDispatch } from 'react-redux';
 
 import { logout } from '../../redux/ducks/admin';
 
+/**
+ * Home page
+ */
 function Home() {
   const dispatch = useDispatch();
 

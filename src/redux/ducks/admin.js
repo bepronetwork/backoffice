@@ -98,7 +98,7 @@ export function getAdmin({ admin }) {
         {
           admin
         },
-        { interceptor: true }
+        { interceptor: true, authentication: true }
       );
 
       dispatch(success(response));

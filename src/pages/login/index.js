@@ -2,12 +2,15 @@ import React from 'react';
 import { Tabs, Card } from 'antd';
 
 import LoginForm from './components/loginForm';
-import RegisterForm from './components/registerForm';
+// import RegisterForm from './components/registerForm';
 
 import styles from './login.module.scss';
 
 const { TabPane } = Tabs;
 
+/**
+ * Login page
+ */
 function Login() {
   return (
     <div className={styles.background}>
@@ -19,9 +22,9 @@ function Login() {
               <TabPane tab="Login" key="login">
                 <LoginForm />
               </TabPane>
-              <TabPane tab="Register" key="register" forceRender={false}>
+              {/* <TabPane tab="Register" key="register" forceRender={false}>
                 <RegisterForm />
-              </TabPane>
+              </TabPane> */}
             </Tabs>
           </Card>
         </div>

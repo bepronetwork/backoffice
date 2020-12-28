@@ -1,5 +1,6 @@
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
+import { getAdminAuth } from 'utils/localStorage';
 
 /**
  * Check if intercetor is enabled in Axios config
@@ -7,6 +8,14 @@ import isEmpty from 'lodash/isEmpty';
  */
 const isInterceptorEnabled = (config = {}) => {
   return !(has(config, 'interceptor') && !config.interceptor);
+};
+
+/**
+ * Check if authentication is enabled in Axios config
+ * @param {*} config
+ */
+const isAuthenticationEnabled = (config = {}) => {
+  return !(has(config, 'authentication') && !config.authentication);
 };
 
 /**
@@ -63,4 +72,29 @@ function errorInterceptor(msg, response, config) {
   return 'Please apply error interceptor';
 }
 
-export { responseInterceptor, errorInterceptor };
+/**
+ * Intercept Axios authentication
+ * @param {*} config Axios request
+ */
+function authenticationInterceptor(config = {}) {
+  if (isAuthenticationEnabled(config)) {
+    const adminAuth = getAdminAuth();
+
+    if (!isEmpty(adminAuth)) {
+      const { admin, bearerToken } = adminAuth;
+
+      // eslint-disable-next-line no-param-reassign
+      config.headers = {
+        ...config.headers,
+        authorization: `Bearer ${bearerToken}`,
+        payload: JSON.stringify({ id: admin })
+      };
+    }
+
+    return config;
+  }
+
+  return 'Please apply auth interceptor';
+}
+
+export { responseInterceptor, errorInterceptor, authenticationInterceptor };

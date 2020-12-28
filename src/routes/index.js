@@ -8,6 +8,10 @@ import { getAdminAuth } from 'utils/localStorage';
 import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
 
+/**
+ * Global routes wrapper
+ * @returns A set of auth based routes
+ */
 export default function Routes() {
   const history = useHistory();
   const { isAuthenticated, admin } = useSelector(state => state.admin);
