@@ -8,6 +8,7 @@ import isEmpty from 'lodash/isEmpty';
 
 import { getAdminAuth } from 'utils/localStorage';
 import { getAdmin } from 'redux/ducks/admin';
+import { getApp } from 'redux/ducks/app';
 
 import Loading from 'pages/loading';
 
@@ -23,6 +24,8 @@ function AppRoutes() {
       const adminAuth = getAdminAuth();
 
       if (!isNull(admin) && !isEmpty(adminAuth)) {
+        const { id, app } = admin;
+        dispatch(getApp({ admin: id, app: app.id }));
         setAuthenticated(true);
       } else {
         setAuthenticated(false);
