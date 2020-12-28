@@ -1,12 +1,13 @@
 import React from 'react';
 
-import { viewportContext } from 'contexts/viewport';
+import { ViewportContext } from 'contexts/viewport';
 
 /**
  * Hook to handle viewport changes
+ * @returns {(number|number)} width and height of viewport
  */
 function useViewport() {
-  const { width, height } = React.useContext(viewportContext);
+  const { width, height } = React.useContext(ViewportContext);
 
   return { width, height };
 }
