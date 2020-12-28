@@ -6,6 +6,7 @@
     "parser": "babel-eslint",
     "extends": [
         "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
         "airbnb",
         "prettier",
         "prettier/react"
@@ -23,6 +24,7 @@
     },
     "plugins": [
         "react",
+        "react-hooks",
         "prettier"
     ],
     "rules": {
@@ -30,7 +32,9 @@
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/state-in-constructor": "off",
         "react/jsx-props-no-spreading": "off",
-        "react/prop-types": [1, { "ignore": ["children", "className"] }]
+        "react/prop-types": [1, { "ignore": ["children", "className"] }],
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn"
     },
     "settings": {
         "import/resolver": {
