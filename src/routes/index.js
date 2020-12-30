@@ -30,7 +30,7 @@ export default function Routes() {
       }
     }
     checkAdminAuthentication();
-  }, [isAuthenticated, admin]);
+  }, [isAuthenticated, admin, history]);
 
   return authenticated ? <AppRoutes /> : <AuthRoutes />;
 }

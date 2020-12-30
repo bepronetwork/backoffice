@@ -33,7 +33,7 @@ function AppRoutes() {
       }
     }
     checkAdminAuthentication();
-  }, [admin]);
+  }, [admin, dispatch]);
 
   return authenticated ? (
     <Suspense fallback={null}>
