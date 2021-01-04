@@ -17,7 +17,7 @@ function Login() {
       <div className={styles.box}>
         <div className={styles.card}>
           <Card bordered={false}>
-            <div className={styles.backofficeLogo} />
+            <div className={styles.logo} />
             <Tabs defaultActiveKey="login" centered size="large">
               <TabPane tab="Login" key="login">
                 <LoginForm />

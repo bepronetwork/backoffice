@@ -62,7 +62,7 @@ function LoginForm() {
         <Button
           type="primary"
           htmlType="submit"
-          className={styles.fullwidth}
+          className={styles.fullWidth}
           size="large"
           loading={isLoading}
         >
