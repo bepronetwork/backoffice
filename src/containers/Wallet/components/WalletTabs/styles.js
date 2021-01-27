@@ -51,8 +51,6 @@ export const DepositContent = styled.section`
     justify-content: center;
     height: 100%;
     width: 100%;
-    padding-top: 50px;
-
 `;
 
 export const DepositAddress = styled.section`
@@ -93,6 +91,15 @@ export const CopyButton = styled(MaterialButton)`
     overflow: hidden !important;
 `;
 
+export const DepositButton = styled(CopyButton)`
+    margin-left: 0px !important;
+    height: 35px !important;
+
+    &:disabled {
+        opacity: 0.7;
+    }
+`;
+
 export const WithdrawContent = styled.section`
     display: flex;
     flex-direction: column;
@@ -101,7 +108,6 @@ export const WithdrawContent = styled.section`
     height: 100%;
     width: 100%;
     padding-top: 50px;
-
 `;
 
 export const AddressInput = styled(Input)`

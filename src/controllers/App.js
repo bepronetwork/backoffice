@@ -244,6 +244,24 @@ class App{
         }
     }
 
+    updateAppBalance = async ({ increase_amount, currency }) => {
+        try{
+            let res = await ConnectionSingleton.updateAppBalance({   
+                params : {
+                    admin : this.getAdminId(),
+                    app : this.getId(),
+                    increase_amount,
+                    currency
+                },         
+                headers : authHeaders(this.getBearerToken(), this.getAdminId())
+            });
+            
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     setGamesAsync = async () => {
         try{
             const { currency } = store.getState();
@@ -1303,25 +1321,20 @@ class App{
         }
     }
 
-    addCurrencyWallet = async ({currency, passphrase}) => {
+    addCurrencyWallet = async ({ currency }) => {
         try{    
-
-            // Send info to server
             let res = await ConnectionSingleton.addCurrencyWallet({          
                 params : {
                     admin : this.getAdminId(),
                     app : this.getId(),
-                    passphrase : passphrase,
                     currency_id : currency._id
                 },
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             });
-            console.log(res);
 
             await setCurrencyView(currency)
             return res;
         }catch(err){
-            console.log("err", err)
             throw err;
         }
     }

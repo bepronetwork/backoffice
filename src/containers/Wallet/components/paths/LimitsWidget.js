@@ -52,11 +52,10 @@ class LimitsWidget extends React.Component{
     }
 
     projectData = async (props) => {
-        let { wallet } = props.data;
+        const { wallet } = props.data;
 
         let currencyTicker, maxDeposit, maxWithdrawal, minWithdrawal, affiliateMinWithdrawal;
         currencyTicker = wallet.currency.ticker;
-        wallet = props.profile.getApp().getSummaryData('walletSimple').data.find(c => {return c.currency.ticker === currencyTicker });
         
         currencyTicker = wallet.currency.ticker;
         maxDeposit = wallet.max_deposit;
@@ -149,7 +148,7 @@ class LimitsWidget extends React.Component{
             <TabContainer>
                 <Paragraph style={{ marginBottom: 15 }}>Choose the limits to deposit and withdraw of your wallet</Paragraph>
             <Row>
-                <Col lg={5}>
+                <Col xl="6" lg="6" md="12" sm="12" xs="12">
                     <LimitsBox
                         title={'Max Deposit'}
                         inputIcon={ArrowExpandDownIcon}
@@ -167,7 +166,7 @@ class LimitsWidget extends React.Component{
                         confirmChanges={this.confirmChanges} 
                     />
                 </Col>
-                <Col lg={5}>
+                <Col xl="6" lg="6" md="12" sm="12" xs="12">
                     <LimitsBox
                         title={'Max Withdrawal'}
                         inputIcon={ArrowExpandDownIcon}
@@ -185,7 +184,7 @@ class LimitsWidget extends React.Component{
                         confirmChanges={this.confirmChanges} 
                     />
                 </Col>
-                <Col lg={5}>
+                <Col xl="6" lg="6" md="12" sm="12" xs="12">
                     <LimitsBox
                         title={'Min Withdrawal'}
                         inputIcon={ArrowExpandDownIcon}
@@ -202,7 +201,7 @@ class LimitsWidget extends React.Component{
                         confirmChanges={this.confirmChanges} 
                     />
                 </Col>
-                <Col lg={5}>
+                <Col xl="6" lg="6" md="12" sm="12" xs="12" >
                     <LimitsBox
                         title={'Affiliate Min Withdrawal'}
                         inputIcon={ArrowExpandDownIcon}

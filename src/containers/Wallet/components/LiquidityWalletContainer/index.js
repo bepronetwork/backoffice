@@ -73,8 +73,8 @@ class LiquidityWalletContainer extends Component {
                         <p>Current Liquidity</p>
                     </Header>
                     <Content>
-                    <Grid container direction="row" spacing={6}>
-                        <Grid item xs={3}>
+                    <Grid container direction="row" spacing={4}>
+                        <Grid item xs>
                             <CurrenciesTabContainer>
                                 <Nav vertical pills>
                                     {wallets.map(wallet => (
@@ -92,7 +92,7 @@ class LiquidityWalletContainer extends Component {
                                 </Nav>
                             </CurrenciesTabContainer>
                         </Grid>
-                        <Grid item xs>
+                        <Grid item lg="8" md="12" xs="12">
                             <TabsContainer>
                                 <TabContent activeTab={this.state.activeTab}>
                                     {wallets.map(wallet => (

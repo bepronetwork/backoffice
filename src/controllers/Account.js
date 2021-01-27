@@ -257,7 +257,7 @@ class Account{
 
                 if(ecosystemCurrencies) {
                     const currency = ecosystemCurrencies[0];
-                    await this.getApp().addCurrencyWallet({currency : currency, passphrase : 'none'});
+                    await this.getApp().addCurrencyWallet({ currency: currency });
                 }
 
             }
