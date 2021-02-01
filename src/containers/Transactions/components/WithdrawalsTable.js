@@ -219,8 +219,6 @@ class WithdrawalsTable extends React.Component {
     render() {
         const { data, columns, pagination, isLoading } = this.state;
 
-        console.log(this.state)
-
         const headers = [
             { label: "Id", key: "_id" },
             { label: "User", key: "user" },
