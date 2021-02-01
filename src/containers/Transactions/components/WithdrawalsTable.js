@@ -50,7 +50,7 @@ class WithdrawalsTable extends React.Component {
             isLoading: true
         })
 
-        const usersWithdrawals = await App.getWithdrawsAsync({ size: 100, offset: 0 });
+        const usersWithdrawals = await App.getUsersWithdrawals({ size: 100, offset: 0 });
 
         const withdrawals = usersWithdrawals ? usersWithdrawals : [];
         const { currencies } = App.params;
@@ -75,8 +75,8 @@ class WithdrawalsTable extends React.Component {
                 _id: withdraw._id,
                 address: withdraw.address,
                 user: withdraw.user,
-                currency: currency, 
-                ticker: currency.ticker,
+                currency: currency || { ticker: 'N/A'}, 
+                ticker: currency ? currency.ticker : 'NA',
                 amount: withdraw.amount,
                 timestamp: withdraw.creation_timestamp,
                 transactionHash: withdraw.transactionHash,
@@ -130,13 +130,13 @@ class WithdrawalsTable extends React.Component {
     fetchMoreData = async (dataSize) => {
         const { profile } = this.props;
         const { App } = profile;
-        const { data } = this.state;
+        const { data, _id, user } = this.state;
 
         this.setState({
             isLoading: true
         })
 
-        const response = await App.getWithdrawsAsync({ size: 100, offset: dataSize });
+        const response = await App.getUsersWithdrawals({ size: 100, offset: dataSize, filters: { transactionId: _id, user } });
 
         const withdrawals = response;
         const { currencies } = App.params;
@@ -199,21 +199,27 @@ class WithdrawalsTable extends React.Component {
           ),
       });
     
-    handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
+    handleSearch = async (selectedKeys, confirm, dataIndex) => {
         this.setState({
+        [dataIndex]: selectedKeys[0],
           searchText: selectedKeys[0],
           searchedColumn: dataIndex,
         });
+
+        await this.fetchMoreData();
+        confirm()
       };
     
-    handleReset = clearFilters => {
+    handleReset = async clearFilters => {
         clearFilters();
-        this.setState({ searchText: '' });
+        this.setState({ searchText: '', _id: '', user: '' });
+        await this.fetchMoreData();
       };
 
     render() {
         const { data, columns, pagination, isLoading } = this.state;
+
+        console.log(this.state)
 
         const headers = [
             { label: "Id", key: "_id" },
