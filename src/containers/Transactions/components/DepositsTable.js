@@ -15,9 +15,6 @@ import { AddressConcat } from '../../../lib/string';
 
 import Highlighter from 'react-highlight-words';
 
-const { RangePicker } = DatePicker;
-const { Option } = Select;
-
 class DepositsTable extends React.Component {
         constructor(props){
         super(props)
@@ -76,8 +73,8 @@ class DepositsTable extends React.Component {
                 key: deposit._id, 
                 _id: deposit._id,
                 user: deposit.user,
-                currency: currency, 
-                ticker: currency.ticker,
+                currency: currency || { ticker: 'N/A'}, 
+                ticker: currency ? currency.ticker : 'NA',
                 confirmed: deposit.confirmed,
                 amount: deposit.amount,
                 hasBonus: deposit.hasBonus ? deposit.hasBonus : false,
@@ -137,13 +134,13 @@ class DepositsTable extends React.Component {
     fetchMoreData = async (dataSize) => {
         const { profile } = this.props;
         const { App } = profile;
-        const { data } = this.state;
+        const { data, _id, user } = this.state;
 
         this.setState({
             isLoading: true
         })
 
-        const response = await App.getUsersDeposits({ size: 100, offset: dataSize });
+        const response = await App.getUsersDeposits({ size: 100, offset: dataSize, filters: { transactionId: _id, user: user } });
 
         const deposits = response.data.message;
         const { currencies } = App.params;
@@ -206,17 +203,21 @@ class DepositsTable extends React.Component {
           ),
       });
     
-    handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
+    handleSearch = async (selectedKeys, confirm, dataIndex) => {
         this.setState({
-          searchText: selectedKeys[0],
-          searchedColumn: dataIndex,
+            [dataIndex]: selectedKeys[0],
+              searchText: selectedKeys[0],
+              searchedColumn: dataIndex,
         });
+    
+        await this.fetchMoreData();
+        confirm()
       };
     
-    handleReset = clearFilters => {
+    handleReset = async clearFilters => {
         clearFilters();
-        this.setState({ searchText: '' });
+        this.setState({ searchText: '', _id: '', user: '' });
+        await this.fetchMoreData();
       };
 
     render() {
@@ -247,48 +248,6 @@ class DepositsTable extends React.Component {
             <Container>
                 <Header>
                     <Filters>
-                        {/* <RangePicker 
-                        style={{ margin: 5 }}
-                        onChange={this.onChangeDate} 
-                        // onOk={this.onOk}
-                        ranges={{
-                            'Today': [moment().utc(), moment().utc()],
-                            'Yesterday': [moment().subtract(1, 'days').utc(), moment().subtract(1, 'days').utc()],
-                            'Last 7 days': [moment().subtract(7, 'days').utc(), moment().utc()],
-                            'Last month': [moment().subtract(1, 'month').utc(), moment().utc()]
-                        }}/>
-                        <Input style={{ width: 150, height: 32, margin: 5 }} placeholder="Bet Id" onChange={event => this.onChangeBetId(event)}/>
-                        <Select
-                        // mode="multiple"
-                        style={{ minWidth: 120, margin: 5 }}
-                        placeholder="Currency"
-                        onChange={this.onChangeCurrency}
-                        >   
-                            <Option key={''}>All</Option>
-                            { currencies.map(currency => (
-                                <Option key={currency._id}>{this.getCurrencyImage(currency)}</Option>
-                            ))}
-                        </Select>
-                        <Select
-                        mode="multiple"
-                        style={{ minWidth: 170, margin: 5 }}
-                        placeholder="Videogame"
-                        onChange={this.onChangeVideogames}
-                        >   
-                            { Object.keys(videogames).map(key => (
-                                <Option key={videogames[key]._id}>{videogames[key].name}</Option>
-                            ))}
-                        </Select>
-                        <Select
-                        // mode="multiple"
-                        style={{ minWidth: 100, margin: 5 }}
-                        placeholder="Type"
-                        onChange={this.onChangeBetType}
-                        >   
-                            <Option key={''}>All</Option>
-                            <Option key="simple">Simple</Option>
-                            <Option key="multiple">Multiple</Option>
-                        </Select> */}
                     </Filters>
                     <Export>
                         <CSVLink data={csvData} filename={"deposits.csv"} headers={headers}>

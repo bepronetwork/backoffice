@@ -41,7 +41,7 @@ class App{
                 }),
                 this.getGamesAsync({ currency: currency._id }),
                 this.getUsersAsync({size: 100, offset: 0 }),
-                this.getWithdrawsAsync({ size: 100, offset: 0 })
+                this.getUsersWithdrawals({ size: 100, offset: 0 })
             ]);
 
             let serverApiInfo = {   
@@ -203,6 +203,46 @@ class App{
                     filters,
                     headers : authHeaders(this.getBearerToken(), this.getAdminId())
                 });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getUsersDeposits = async ({ size, offset, filters={} }) => {
+        try{
+            return await ConnectionSingleton.getUsersTransactions(
+                {   
+                    params: {
+                        size,
+                        offset,
+                        type: "deposit",
+                        ..._.pickBy(filters, identity)
+                    },
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
+                });
+
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getUsersWithdrawals = async ({ size, offset, filters={} }) => {
+        try{
+            const response = await ConnectionSingleton.getUsersTransactions(
+                {   
+                    params: {
+                        size,
+                        offset,
+                        type: "withdraw",
+                        ..._.pickBy(filters, identity)
+                    },
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
+                });
+
+                const data = response.data.message;
+                data ? store.dispatch(setWithdrawalsData(data)) : store.dispatch(setWithdrawalsData([]))
+
+                return data;
         }catch(err){
             throw err;
         }
@@ -420,23 +460,6 @@ class App{
 
     getDeposits = ({currency}) => this.params.deposits.filter( d => new String(d.currency).toString() == new String(currency._id).toString()) || [];
 
-    getUsersDeposits = async ({ size, offset }) => {
-        try{
-            let res = await ConnectionSingleton.getDeposits({   
-                params : {
-                    admin : this.getAdminId(),
-                    app : this.getId(),
-                    size,
-                    offset
-                },         
-                headers : authHeaders(this.getBearerToken(), this.getAdminId())
-            });
-    
-            return res;
-        }catch(err){
-            throw err;
-        }
-    }
 
     getDexDepositsAsync = async (address) => {
         let depositsApp = this.params.deposits || [];

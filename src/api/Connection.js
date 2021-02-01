@@ -277,6 +277,20 @@ class Connection {
         }
     }
 
+    getUsersTransactions = async ({params, headers}) => {
+        try{
+            let response = await fetch(API_URL_WITHDRAW + `/api/user/transactions/backoffice`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return this.handleResponse(response)
+        }catch(err){
+            throw err;
+        }
+    }
+
     getDepositReference = async ({currency, entity, headers}) => {
         try{
             let response = await fetch(URL+ '/api/app/deposit/generateReference', {
