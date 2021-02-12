@@ -1,6 +1,6 @@
 import React from 'react';
 import config from "./config";
-import { API_URL, API_URL_WITHDRAW } from "../config/apiConfig";
+import { API_URL, API_URL_WITHDRAW, REACT_APP_EXTERNAL_APPROVE_WITHDRAW, REACT_APP_EXTERNAL_CANCEL_WITHDRAW } from "../config/apiConfig";
 import { BasicNotification } from "../shared/components/Notification";
 import Notification from 'rc-notification';
 
@@ -280,6 +280,34 @@ class Connection {
     getUsersTransactions = async ({params, headers}) => {
         try{
             let response = await fetch(API_URL_WITHDRAW + `/api/user/transactions/backoffice`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return this.handleResponse(response)
+        }catch(err){
+            throw err;
+        }
+    }
+
+    externalApproveWithdraw = async ({params, headers}) => {
+        try{
+            let response = await fetch(REACT_APP_EXTERNAL_APPROVE_WITHDRAW + `/api/withdraw/approve`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return this.handleResponse(response)
+        }catch(err){
+            throw err;
+        }
+    }
+
+    externalCancelWithdraw = async ({params, headers}) => {
+        try{
+            let response = await fetch(REACT_APP_EXTERNAL_CANCEL_WITHDRAW + `/api/withdraw/cancel`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
