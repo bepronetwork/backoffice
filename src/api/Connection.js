@@ -293,7 +293,7 @@ class Connection {
 
     externalApproveWithdraw = async ({params, headers}) => {
         try{
-            let response = await fetch(REACT_APP_EXTERNAL_APPROVE_WITHDRAW + `/api/withdraw/approve`, {
+            let response = await fetch(`${REACT_APP_EXTERNAL_APPROVE_WITHDRAW}`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
@@ -307,7 +307,7 @@ class Connection {
 
     externalCancelWithdraw = async ({params, headers}) => {
         try{
-            let response = await fetch(REACT_APP_EXTERNAL_CANCEL_WITHDRAW + `/api/withdraw/cancel`, {
+            let response = await fetch(`${REACT_APP_EXTERNAL_CANCEL_WITHDRAW}`, {
                 method : 'POST',
                 headers : addHeaders(config, headers),
                 body : JSON.stringify(params)
