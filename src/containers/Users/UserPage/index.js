@@ -380,7 +380,7 @@ class UserPage extends React.Component{
 
         const playBalance = wallet.playBalance;
 
-        const transactions = withdraws.map( w => {return {...w, isWithdraw : true}}).concat(deposits);
+        const transactions = withdraws ? withdraws.map( w => {return {...w, isWithdraw : true}}).concat(deposits) : [];
         const affiliateWallet = affiliate.wallet.filter(w => w.currency._id === currency._id);
 
         const app = profile.getApp();
@@ -441,12 +441,16 @@ class UserPage extends React.Component{
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Profit', data :  profit ? parseFloat(profit).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>
-                            <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length), loading: isLoading, decimals: 0})}
-                            </Col>
-                            <Col sd={12} md={4} lg={3}>
-                                {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length), loading: isLoading, decimals: 0})}
-                            </Col>
+                            { withdraws && (
+                                <Col sd={12} md={4} lg={3}>
+                                    {this.renderDataTitle({title : 'Withdraws', data :  parseFloat(withdraws.length), loading: isLoading, decimals: 0})}
+                                </Col>
+                            )}
+                            { deposits && (
+                                <Col sd={12} md={4} lg={3}>
+                                    {this.renderDataTitle({title : 'Deposits', data :  parseFloat(deposits.length), loading: isLoading, decimals: 0})}
+                                </Col>
+                            )}
                             <Col sd={12} md={4} lg={3}>
                                 {this.renderDataTitle({title : 'Affiliate Wallet', data :  !_.isEmpty(affiliateWallet) ? parseFloat(affiliateWallet[0].playBalance).toFixed(6) : 0, span : currencyTicker, loading: isLoading, decimals: 6})}
                             </Col>

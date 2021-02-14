@@ -584,12 +584,14 @@ class App{
         }
     }
 
-    approveWithdraw = async ({user, _id, currency}) => {
-        try{
+    externalApproveWithdraw = async ({ withdraw }) => {
+        const { _id } = withdraw;
 
-            let res = await ConnectionSingleton.finalizeUserWithdraw({
+        try{
+            let res = await ConnectionSingleton.externalApproveWithdraw({
                 params : {
-                    admin : this.getAdminId(), user, app : this.getId(), transactionHash : null, withdraw_id : _id, currency : currency._id
+                    admin: this.getAdminId(), 
+                    withdraw_id : _id
                 },
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             })
@@ -600,13 +602,14 @@ class App{
         }
     }
 
-    cancelUserWithdraw = async ({withdraw, note}) => {
-        const { user, _id, currency } = withdraw;
+    externalCancelWithdraw = async ({ withdraw }) => {
+        const { _id } = withdraw;
 
         try{
-            let res = await ConnectionSingleton.cancelUserWithdraw({
+            let res = await ConnectionSingleton.externalCancelWithdraw({
                 params : {
-                    admin : this.getAdminId(), user, app : this.getId(), transactionHash : null, withdraw_id : _id, note: note, currency : currency._id
+                    admin: this.getAdminId(), 
+                    withdraw_id : _id
                 },
                 headers : authHeaders(this.getBearerToken(), this.getAdminId())
             })
