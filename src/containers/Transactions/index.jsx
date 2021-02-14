@@ -23,24 +23,16 @@ class TransactionsContainer extends React.Component{
 
     allowWithdraw = async (withdraw) => {
         const { profile } = this.props;
-        const wallet = this.props.profile.getApp().getWallet({currency_id : withdraw.currency._id});
-        /** Do Withdraw to User */
-        await profile.getApp().approveWithdraw({...withdraw, currency : wallet.currency, bank_address : wallet.bank_address});
 
-        /** Update Info */
-        await profile.getApp().getWithdrawsAsync({});
-        await profile.update();
+        await profile.getApp().externalApproveWithdraw({ withdraw });
+        await profile.getApp().getUsersWithdrawals({ size: 100, offset: 0 });
     }
 
-    cancelWithdraw = async ({ withdraw, reason }) => {
+    cancelWithdraw = async ({ withdraw }) => {
         const { profile } = this.props;
 
-        /** Do Withdraw to User */
-        await profile.getApp().cancelUserWithdraw({ withdraw, note: reason });
-
-        /** Update Info */
-        await profile.getApp().getWithdrawsAsync({});
-        await profile.update();
+        await profile.getApp().externalCancelWithdraw({ withdraw });
+        await profile.getApp().getUsersWithdrawals({ size: 100, offset: 0 });
     }
 
     confirmDeposit = async (depositObject) => {
