@@ -413,6 +413,7 @@ class UsersTable extends React.Component {
     }
 
     handleConfirmUserAction = async ({ id }) => {
+        const { data } = this.state;
         const { profile } = this.props;
 
         this.setState({ confirmingAnyProcess: {
@@ -424,6 +425,19 @@ class UsersTable extends React.Component {
         this.setState({ confirmingAnyProcess: {
             ...this.state.confirmingAnyProcess, [id] : false
         }})
+
+        const user = !_.isEmpty(data) && data.find(u => u._id === id);
+
+        if (user) {
+            const index = data.indexOf(user);
+
+            let newData = [...data];
+            newData[index] = {...user, isWithdrawing: false };
+    
+            this.setState({
+                data: newData
+            })
+        }
     }
 
     render() {
