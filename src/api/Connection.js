@@ -291,6 +291,20 @@ class Connection {
         }
     }
 
+    confirmUserAction = async ({params, headers}) => {
+        try{
+            let response = await fetch(URL + `/api/app/process/confirm`, {
+                method : 'POST',
+                headers : addHeaders(config, headers),
+                body : JSON.stringify(params)
+            });
+            
+            return this.handleResponse(response)
+        }catch(err){
+            throw err;
+        }
+    }
+
     externalApproveWithdraw = async ({params, headers}) => {
         try{
             let response = await fetch(`${REACT_APP_EXTERNAL_APPROVE_WITHDRAW}`, {

@@ -1260,6 +1260,21 @@ class App{
         }
     }
 
+    confirmUserAction = async ({ id }) => {
+        try{
+            return await ConnectionSingleton.confirmUserAction(
+                {   
+                    params: {
+                        user: id,
+                        admin: this.getAdminId(),
+                    },
+                    headers : authHeaders(this.getBearerToken(), this.getAdminId())
+                });
+        }catch(err){
+            throw err;
+        }
+    }
+
     cancelWithdraw = async () => {
         try{
             /* Cancel Withdraw Response */
