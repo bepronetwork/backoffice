@@ -22,6 +22,8 @@ import Skeleton from '@material-ui/lab/Skeleton';
 
 import { DebounceInput } from 'react-debounce-input';
 
+const loadingImg  = `${process.env.PUBLIC_URL}/img/loading.gif`;
+
 function getSorting(data, order, orderBy) {
 
     const sortedData = _.orderBy(data, [orderBy], order);
@@ -48,17 +50,13 @@ const fromDatabasetoTable = (data, otherInfo, currency) => {
 			bets: parseFloat(key.bets.length),
             email: key.email,
             turnoverAmount: d ? parseFloat(d.betAmount) : 0,
-            profit: d ? parseFloat(d.profit) : 0
+            profit: d ? parseFloat(d.profit) : 0,
+            isWithdrawing: key.isWithdrawing
 		}
 	})
 }
 
 const rows = [
-    {
-        id: 'avatar',
-        label: 'Avatar',
-        position: 'center'
-    },
     {
         id: '_id',
         label: 'Id',
@@ -67,6 +65,11 @@ const rows = [
     {
         id: 'username',
         label: 'Username',
+        numeric: false
+    },
+    {
+        id: 'actionToConfirm',
+        label: 'Action to confirm',
         numeric: false
     },
     {
@@ -245,7 +248,8 @@ class UsersTable extends React.Component {
             emailFilter: null,
             idFilter: null,
             showFilter: false,
-            ...defaultProps
+            ...defaultProps,
+            confirmingAnyProcess: {}
         };
     }
 
@@ -396,7 +400,6 @@ class UsersTable extends React.Component {
     setLoading = (status) => {
         this.setState(state => ({ loading: status }));
     }
-    
 
     handleChangeRowsPerPage = event => {
         this.setState({ rowsPerPage: event.target.value });
@@ -407,6 +410,34 @@ class UsersTable extends React.Component {
     handleFilterClick = () => {
         const { showFilter } = this.state;
         this.setState({ showFilter: showFilter ? false : true });
+    }
+
+    handleConfirmUserAction = async ({ id }) => {
+        const { data } = this.state;
+        const { profile } = this.props;
+
+        this.setState({ confirmingAnyProcess: {
+            ...this.state.confirmingAnyProcess, [id] : true
+        }})
+
+        await profile.getApp().confirmUserAction({ id: id });
+
+        this.setState({ confirmingAnyProcess: {
+            ...this.state.confirmingAnyProcess, [id] : false
+        }})
+
+        const user = !_.isEmpty(data) && data.find(u => u._id === id);
+
+        if (user) {
+            const index = data.indexOf(user);
+
+            let newData = [...data];
+            newData[index] = {...user, isWithdrawing: false };
+    
+            this.setState({
+                data: newData
+            })
+        }
     }
 
     render() {
@@ -535,9 +566,6 @@ class UsersTable extends React.Component {
                                             selected={isSelected}
                                         >
                                             <TableCell align="left">
-                                                <img src={`https://avatars.dicebear.com/v2/avataaars/${n._id}.svg`} className={'avatar-image-small'}/>
-                                            </TableCell>
-                                            <TableCell align="left">
                                                 <p className='text-small'>
                                                     {n._id}
                                                 </p>
@@ -545,6 +573,27 @@ class UsersTable extends React.Component {
                                             <TableCell align="left">
                                                 <p className='text-small'>
                                                     {n.username}
+                                                </p>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <p className='text-small'>
+                                                    { n.isWithdrawing ? (
+                                                        <button 
+                                                        disabled={this.state.confirmingAnyProcess[n._id]} 
+                                                        className={`clean_button button-normal button-hover`} 
+                                                        style={{ 
+                                                            height: "24px", 
+                                                            width: "110px",
+                                                            padding: "5px 15px",
+                                                            margin: "5px", 
+                                                            backgroundColor: this.state.confirmingAnyProcess[n._id] ? "grey" : "#63c965" 
+                                                        }} 
+                                                        onClick={ () => this.handleConfirmUserAction({ id: n._id })}> 
+                                                            {!this.state.confirmingAnyProcess[n._id] 
+                                                                ? <p className='text-small text-white'>Yes, confirm</p>
+                                                                : <img src={loadingImg} alt="Loading" style={{ width: 20, height: 20, marginTop: -5 }}/>}
+                                                         </button>
+                                                    ) : 'No'}
                                                 </p>
                                             </TableCell>
                                             <TableCell align="left">
